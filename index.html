@@ -1065,7 +1065,17 @@ function showToast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
-function resetSeason(){document.getElementById('modalOverlay').classList.add('open');}
+function resetSeason(){
+  if (!isAdmin) {
+    pendingReset = true;
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').style.display = 'none';
+    document.getElementById('pwOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
+    return;
+  }
+  document.getElementById('modalOverlay').classList.add('open');
+}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
 function confirmReset(){
   matches=[];clearFirebase();closeModal();renderTable();renderLog();
