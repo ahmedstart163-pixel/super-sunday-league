@@ -565,7 +565,7 @@ td.td-club{text-align:left;padding-left:0;}
       </div>
       <div class="hero-right">
         <div class="season-badge">2026</div>
-        <button class="reset-btn" onclick="resetSeason()">↺ Reset</button>
+        <button class="reset-btn" onclick="checkAdminReset()">↺ Reset</button>
       </div>
     </div>
 
@@ -596,8 +596,8 @@ td.td-club{text-align:left;padding-left:0;}
             <tr>
               <th>#</th>
               <th class="th-club">Club</th>
-              <th>MP</th><th>W</th><th>D</th><th>L</th>
               <th class="th-pts">Pts</th>
+              <th>MP</th><th>W</th><th>D</th><th>L</th>
               <th>GF</th><th>GA</th><th>GD</th>
             </tr>
           </thead>
@@ -760,6 +760,41 @@ td.td-club{text-align:left;padding-left:0;}
   </div>
 </div>
 
+<!-- Edit Result Modal -->
+<div class="modal-overlay" id="editOverlay">
+  <div class="modal">
+    <div class="modal-icon">✏️</div>
+    <h3>Edit Result</h3>
+    <div id="editTeams" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:10px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+        <div id="editHomeBadge" class="badge" style="width:36px;height:36px;font-size:12px;"></div>
+        <span id="editHomeName" style="font-size:12px;font-weight:600;color:#334155;"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <select id="editHomeGoals" style="width:62px;text-align:center;padding:10px 4px;border:1.5px solid #e8edf5;border-radius:10px;font-family:'Oswald',sans-serif;font-size:24px;font-weight:600;color:#0f172a;background:#fff;outline:none;appearance:none;-webkit-appearance:none;">
+          <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+          <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+        </select>
+        <span style="font-size:20px;font-weight:700;color:#cbd5e1;">:</span>
+        <select id="editAwayGoals" style="width:62px;text-align:center;padding:10px 4px;border:1.5px solid #e8edf5;border-radius:10px;font-family:'Oswald',sans-serif;font-size:24px;font-weight:600;color:#0f172a;background:#fff;outline:none;appearance:none;-webkit-appearance:none;">
+          <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+          <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+        <div id="editAwayBadge" class="badge" style="width:36px;height:36px;font-size:12px;"></div>
+        <span id="editAwayName" style="font-size:12px;font-weight:600;color:#334155;"></span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="m-confirm" style="background:#c9a84c;" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- Reset Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -790,10 +825,21 @@ let matches = [];
 
 // ── Firebase REST helpers ──
 async function saveToFirebase(match) {
-  await fetch(`${DB_URL}/matches.json`, {
-    method: 'POST',
-    body: JSON.stringify(match)
-  });
+  try {
+    const res = await fetch(`${DB_URL}/matches.json`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(match)
+    });
+    const data = await res.json();
+    if (data.error) {
+      showToast('❌ Firebase error: ' + data.error);
+    } else {
+      showToast('✅ Saved to Firebase!');
+    }
+  } catch(e) {
+    showToast('❌ Error: ' + e.message);
+  }
 }
 
 async function deleteFromFirebase(idx) {
@@ -826,16 +872,16 @@ function startLiveSync() {
     renderLog();
   });
   evtSource.addEventListener('patch', e => {
-    const payload = JSON.parse(e.data);
-    const data = payload.data;
-    if (data) {
-      Object.values(data).forEach(m => { if(m) matches.push(m); });
-      renderTable();
-      renderLog();
-    }
+    // On any patch just reload full data to stay in sync
+    fetch(`${DB_URL}/matches.json`)
+      .then(r => r.json())
+      .then(data => {
+        matches = data ? Object.values(data) : [];
+        renderTable();
+        renderLog();
+      });
   });
   evtSource.onerror = () => {
-    // Reconnect silently
     evtSource.close();
     setTimeout(startLiveSync, 3000);
   };
@@ -941,8 +987,8 @@ function renderTable() {
         <div class="badge" style="background:${t.color}">${t.abbr}</div>
         <span class="club-name">Team ${t.name}</span>
       </div></td>
-      <td>${t.mp}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
       <td><span class="pts-pill">${t.pts}</span></td>
+      <td>${t.mp}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
       <td>${t.gf}</td><td>${t.ga}</td><td>${gd}</td>
     `;
     tbody.appendChild(tr);
@@ -971,7 +1017,10 @@ function renderLog() {
         <div class="log-bdg" style="background:${away.color}">${away.abbr}</div>
         Team ${away.name}
       </div>
-      <button class="log-del" onclick="deleteMatch(${realIdx})" style="display:${isAdmin?'inline':'none'}">✕</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="log-edit" onclick="openEditModal(${realIdx})" style="display:${isAdmin?'inline-flex':'none'};align-items:center;justify-content:center;width:28px;height:28px;background:#f1f5f9;border:none;border-radius:6px;cursor:pointer;font-size:14px;">✏️</button>
+        <button class="log-del" onclick="deleteMatch(${realIdx})" style="display:${isAdmin?'inline':'none'}">✕</button>
+      </div>
     `;
     list.appendChild(div);
   });
@@ -1028,10 +1077,85 @@ function confirmReset(){
 }
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
-/* ══ PASSWORD ══ */
+/* ══ EDIT RESULT ══ */
+let editingIdx = null;
+
+function openEditModal(idx) {
+  editingIdx = idx;
+  const m = matches[idx];
+  const home = TEAMS[m.homeIdx], away = TEAMS[m.awayIdx];
+  document.getElementById('editHomeBadge').style.background = home.color;
+  document.getElementById('editHomeBadge').textContent = home.abbr;
+  document.getElementById('editHomeName').textContent = 'Team ' + home.name;
+  document.getElementById('editAwayBadge').style.background = away.color;
+  document.getElementById('editAwayBadge').textContent = away.abbr;
+  document.getElementById('editAwayName').textContent = 'Team ' + away.name;
+  document.getElementById('editHomeGoals').value = m.hg;
+  document.getElementById('editAwayGoals').value = m.ag;
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('editOverlay').classList.remove('open');
+  editingIdx = null;
+}
+
+async function saveEdit() {
+  if (editingIdx === null) return;
+  const hg = parseInt(document.getElementById('editHomeGoals').value);
+  const ag = parseInt(document.getElementById('editAwayGoals').value);
+
+  try {
+    const matchToEdit = matches[editingIdx];
+    // Get all Firebase keys
+    const res = await fetch(`${DB_URL}/matches.json`);
+    const data = await res.json();
+    if (!data) return;
+
+    // Find and delete the old entry
+    for (const key of Object.keys(data)) {
+      const m = data[key];
+      if (m.homeIdx === matchToEdit.homeIdx && m.awayIdx === matchToEdit.awayIdx &&
+          m.hg === matchToEdit.hg && m.ag === matchToEdit.ag) {
+        await fetch(`${DB_URL}/matches/${key}.json`, { method: 'DELETE' });
+        break;
+      }
+    }
+
+    // Save updated match
+    const updated = { homeIdx: matchToEdit.homeIdx, awayIdx: matchToEdit.awayIdx, hg, ag };
+    await fetch(`${DB_URL}/matches.json`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updated)
+    });
+
+    closeEditModal();
+    showToast('✔ Result updated!');
+  } catch(e) {
+    showToast('⚠ Error: ' + e.message);
+  }
+}
+
+document.getElementById('editOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+
+
 const ADMIN_PASS = '99';
 let isAdmin = false;
 let pendingAdminBtn = null;
+let pendingReset = false;
+
+function checkAdminReset() {
+  if (isAdmin) { resetSeason(); return; }
+  pendingAdminBtn = null;
+  pendingReset = true;
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').style.display = 'none';
+  document.getElementById('pwOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
 
 function checkAdmin(btn) {
   if (isAdmin) { switchTab('entry', btn); return; }
@@ -1050,7 +1174,10 @@ function checkPw() {
     document.querySelectorAll('.tab-btn').forEach(b => {
       if (b.textContent.includes('Add Score')) b.textContent = '🔓 Add Score';
     });
-    if (pendingAdminBtn) {
+    if (pendingReset) {
+      pendingReset = false;
+      resetSeason();
+    } else if (pendingAdminBtn) {
       pendingAdminBtn.textContent = '🔓 Add Score';
       switchTab('entry', pendingAdminBtn);
     }
