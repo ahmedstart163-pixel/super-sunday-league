@@ -651,35 +651,58 @@ async function saveResult() {
   const ag=parseInt(document.getElementById('awayGoals').value)||0;
   const newMatch={homeIdx:+hi,awayIdx:+ai,hg,ag};
 
-  try {
-    const res = await fetch(`${DB_URL}/matches.json`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(newMatch)
-    });
-    const data = await res.json();
-    if (data.error) {
-      showToast('❌ Error: ' + data.error);
+  // Show loading state
+  const yesBtn = document.querySelector('.c-yes');
+  yesBtn.textContent = '⏳ Saving...';
+  yesBtn.disabled = true;
+
+  const trySave = async (attempt) => {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000); // 8 sec timeout
+      const res = await fetch(`${DB_URL}/matches.json`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(newMatch),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      // Success!
+      matches.push(newMatch);
+      renderTable(); renderLog();
+      showToast(`✔ ${TEAMS[+hi].name} ${hg}–${ag} ${TEAMS[+ai].name} saved!`);
+      document.getElementById('inlineConfirm').classList.remove('show');
+      document.getElementById('homeTeam').value='';
+      document.getElementById('awayTeam').value='';
+      document.getElementById('homeGoals').value=0;
+      document.getElementById('awayGoals').value=0;
+      document.getElementById('homeBtn').innerHTML='<span class="cs-placeholder">Select team…</span>';
+      document.getElementById('awayBtn').innerHTML='<span class="cs-placeholder">Select team…</span>';
+      filterSelects();
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.getElementById('tab-table').classList.add('active');
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+
+    } catch(e) {
+      if (attempt < 3) {
+        // Retry
+        showToast(`⏳ Retrying... (${attempt}/3)`);
+        setTimeout(() => trySave(attempt + 1), 2000);
+      } else {
+        showToast('❌ Failed after 3 attempts — check connection');
+        yesBtn.textContent = 'Yes, Save';
+        yesBtn.disabled = false;
+      }
       return;
     }
-    matches.push(newMatch);
-    renderTable(); renderLog();
-    showToast(`✔ ${TEAMS[+hi].name} ${hg}–${ag} ${TEAMS[+ai].name} saved!`);
-    document.getElementById('inlineConfirm').classList.remove('show');
-    document.getElementById('homeTeam').value='';
-    document.getElementById('awayTeam').value='';
-    document.getElementById('homeGoals').value=0;
-    document.getElementById('awayGoals').value=0;
-    document.getElementById('homeBtn').innerHTML='<span class="cs-placeholder">Select team…</span>';
-    document.getElementById('awayBtn').innerHTML='<span class="cs-placeholder">Select team…</span>';
-    filterSelects();
-    // Switch back to standings
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('tab-table').classList.add('active');
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-  } catch(e) {
-    showToast('❌ Connection error — try again');
-  }
+    yesBtn.textContent = 'Yes, Save';
+    yesBtn.disabled = false;
+  };
+
+  await trySave(1);
 }
 
 function deleteMatch(idx) {
