@@ -728,6 +728,7 @@ function checkPw() {
     isAdmin=true;
     closePwModal();
     document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.includes('Add Score'))b.textContent='🔓 Add Score';});
+    renderLog();
     if (pendingReset) { pendingReset=false; document.getElementById('modalOverlay').classList.add('open'); }
     else if (pendingAdminBtn) { pendingAdminBtn.textContent='🔓 Add Score'; switchTab('entry',pendingAdminBtn); }
   } else {
