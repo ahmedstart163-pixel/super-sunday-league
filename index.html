@@ -202,12 +202,12 @@ thead tr{
 thead th{
   padding:11px 12px;
   font-size:9.5px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:rgba(201,168,76,0.7);
+  text-transform:uppercase;color:#ffffff;
   text-align:center;white-space:nowrap;
 }
 thead th:first-child{padding-left:20px;text-align:left;width:36px;}
 thead th.th-club{text-align:left;padding-left:8px;}
-thead th.th-pts{color:var(--gold);font-size:10px;}
+thead th.th-pts{color:#ffffff;font-size:10px;}
 
 tbody tr{
   border-bottom:1px solid #f1f5f9;
@@ -244,11 +244,10 @@ td.td-club{text-align:left;padding-left:8px;}
 /* pts */
 .pts-pill{
   display:inline-block;
-  background:var(--ink);color:var(--gold);
+  background:#000000;color:#ffffff;
   font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;
   padding:5px 14px;border-radius:7px;
   letter-spacing:.06em;min-width:46px;text-align:center;
-  border:1px solid rgba(201,168,76,0.2);
 }
 
 .gd-pos{color:var(--green);font-weight:700;}
@@ -584,9 +583,10 @@ td.td-club{text-align:left;padding-left:8px;}
       </div>
       <div class="hero-actions">
         <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:5px 14px 5px 6px;">
-          <div style="background:#09101f;border:1.5px solid #c9a84c;border-radius:6px;padding:2px 7px;display:flex;flex-direction:column;align-items:center;min-width:36px;">
-            <span style="font-size:7px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;line-height:1.3;">SUN</span>
-            <span id="calDate" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1;">--</span>
+          <div id="calBadge" style="background:#09101f;border:1.5px solid #c9a84c;border-radius:6px;padding:3px 8px;display:flex;flex-direction:column;align-items:center;min-width:44px;">
+            <span id="calMonth" style="font-size:7px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;line-height:1.3;">MAY</span>
+            <span id="calDate" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;line-height:1;">--</span>
+            <span id="calLabel" style="font-size:6px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.4);line-height:1.4;">NEXT MATCH</span>
           </div>
           <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:var(--gold2);letter-spacing:.08em;">Season 2026</span>
         </div>
@@ -1271,11 +1271,19 @@ function playBuzzer(){
 /* ── Calendar badge ── */
 (function(){
   const today = new Date();
-  const day = today.getDay();
-  const diff = day === 0 ? 0 : 7 - day;
+  const day = today.getDay(); // 0 = Sunday
+  const isGameDay = day === 0;
+  const diff = isGameDay ? 0 : 7 - day;
   const sunday = new Date(today);
   sunday.setDate(today.getDate() + diff);
+  const label = isGameDay ? 'TODAY' : 'NEXT';
+  const color = isGameDay ? '#10b981' : '#c9a84c';
+  document.getElementById('calLabel').textContent = label;
+  document.getElementById('calLabel').style.color = color;
   document.getElementById('calDate').textContent = sunday.getDate();
+  if (isGameDay) {
+    document.getElementById('calBadge').style.borderColor = '#10b981';
+  }
 })();
 
 /* ── Schedule ── */
