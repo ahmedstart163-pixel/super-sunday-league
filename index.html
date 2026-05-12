@@ -202,12 +202,12 @@ thead tr{
 thead th{
   padding:11px 12px;
   font-size:9.5px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:#ffffff;
+  text-transform:uppercase;color:rgba(201,168,76,0.7);
   text-align:center;white-space:nowrap;
 }
 thead th:first-child{padding-left:20px;text-align:left;width:36px;}
 thead th.th-club{text-align:left;padding-left:8px;}
-thead th.th-pts{color:#ffffff;font-size:10px;}
+thead th.th-pts{color:var(--gold);font-size:10px;}
 
 tbody tr{
   border-bottom:1px solid #f1f5f9;
@@ -244,10 +244,11 @@ td.td-club{text-align:left;padding-left:8px;}
 /* pts */
 .pts-pill{
   display:inline-block;
-  background:#000000;color:#ffffff;
+  background:var(--ink);color:var(--gold);
   font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;
   padding:5px 14px;border-radius:7px;
   letter-spacing:.06em;min-width:46px;text-align:center;
+  border:1px solid rgba(201,168,76,0.2);
 }
 
 .gd-pos{color:var(--green);font-weight:700;}
@@ -521,7 +522,7 @@ td.td-club{text-align:left;padding-left:8px;}
 
   <div class="hero-inner">
     <div class="hero-strip">
-      <span>🍁 Edmonton, Canada</span>
+      <span>🇸🇴 Somalia · Ottawa, Canada</span>
       <div class="hero-strip-right">
         <span id="liveIndicator" style="display:flex;align-items:center;gap:5px;">
           <span style="width:6px;height:6px;background:#10b981;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
@@ -533,47 +534,21 @@ td.td-club{text-align:left;padding-left:8px;}
     <div class="hero-main">
       <div class="brand">
         <div class="brand-logo-wrap">
-          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <clipPath id="ballClip"><circle cx="24" cy="24" r="22"/></clipPath>
-              <radialGradient id="ballGrad" cx="35%" cy="30%" r="70%">
-                <stop offset="0%" stop-color="#5aaff5"/>
-                <stop offset="100%" stop-color="#1a6cc9"/>
-              </radialGradient>
-              <radialGradient id="shineGrad" cx="30%" cy="20%" r="50%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
-                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-              </radialGradient>
-            </defs>
-            <!-- shadow -->
-            <ellipse cx="24" cy="46" rx="16" ry="3" fill="rgba(0,0,0,0.2)"/>
-            <!-- ball base gradient -->
-            <circle cx="24" cy="24" r="22" fill="url(#ballGrad)"/>
-            <!-- pentagon patches -->
-            <g clip-path="url(#ballClip)" fill="#1059a8" opacity="0.5">
-              <polygon points="24,3 29,12 24,16 19,12"/>
-              <polygon points="39,12 43,21 37,25 32,19"/>
-              <polygon points="38,36 33,43 27,39 29,32"/>
-              <polygon points="19,39 13,43 10,36 16,30"/>
-              <polygon points="5,21 9,12 15,16 13,25"/>
-              <polygon points="24,16 32,19 32,30 24,33 16,30 16,19"/>
+          <svg width="40" height="40" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+            <defs><clipPath id="bc2"><circle cx="22" cy="22" r="20"/></clipPath></defs>
+            <circle cx="22" cy="22" r="20" fill="#4189DD"/>
+            <g clip-path="url(#bc2)" fill="#1a5fad" opacity="0.6">
+              <polygon points="22,3 26.5,9 24,15 20,15 17.5,9"/>
+              <polygon points="6,12 12,10 15,16 11,20 5,18"/>
+              <polygon points="38,12 32,10 29,16 33,20 39,18"/>
+              <polygon points="3,26 7,21 12,24 11,30 5,32"/>
+              <polygon points="41,26 37,21 32,24 33,30 39,32"/>
+              <polygon points="8,38 12,33 17,35 16,41 10,42"/>
+              <polygon points="36,38 32,33 27,35 28,41 34,42"/>
+              <polygon points="22,41 17.5,35 20,30 24,30 26.5,35"/>
             </g>
-            <!-- seam lines -->
-            <g clip-path="url(#ballClip)" stroke="rgba(255,255,255,0.2)" stroke-width="0.7" fill="none">
-              <line x1="24" y1="2" x2="24" y2="16"/>
-              <line x1="39" y1="12" x2="32" y2="19"/>
-              <line x1="38" y1="36" x2="29" y2="32"/>
-              <line x1="24" y1="46" x2="24" y2="33"/>
-              <line x1="10" y1="36" x2="16" y2="30"/>
-              <line x1="5" y1="12" x2="16" y2="19"/>
-            </g>
-            <!-- shine -->
-            <circle cx="24" cy="24" r="22" fill="url(#shineGrad)"/>
-            <!-- white Somali star -->
-            <polygon points="24,14 26.1,20.5 33,20.5 27.5,24.5 29.6,31 24,27 18.4,31 20.5,24.5 15,20.5 21.9,20.5" fill="white" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.2))"/>
-            <!-- outer ring -->
-            <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+            <polygon points="22,13 23.8,18.5 29.5,18.5 24.9,21.8 26.7,27.3 22,24 17.3,27.3 19.1,21.8 14.5,18.5 20.2,18.5" fill="white"/>
+            <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
           </svg>
         </div>
         <div class="brand-text">
@@ -582,14 +557,7 @@ td.td-club{text-align:left;padding-left:8px;}
         </div>
       </div>
       <div class="hero-actions">
-        <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:5px 14px 5px 6px;">
-          <div id="calBadge" style="background:#09101f;border:1.5px solid #c9a84c;border-radius:6px;padding:3px 8px;display:flex;flex-direction:column;align-items:center;min-width:44px;">
-            <span id="calMonth" style="font-size:7px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;line-height:1.3;">MAY</span>
-            <span id="calDate" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;line-height:1;">--</span>
-            <span id="calLabel" style="font-size:6px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.4);line-height:1.4;">NEXT MATCH</span>
-          </div>
-          <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:var(--gold2);letter-spacing:.08em;">Season 2026</span>
-        </div>
+        <div class="season-pill">Season 2026</div>
         <button class="btn-ghost refresh" onclick="refreshData()">⟳ Refresh</button>
         <button class="btn-ghost danger" onclick="resetSeason()">↺ Reset</button>
       </div>
@@ -599,7 +567,6 @@ td.td-club{text-align:left;padding-left:8px;}
       <button class="tab-btn active" onclick="switchTab('table',this)">🏆 Standings</button>
       <button class="tab-btn" onclick="checkAdmin(this)">🔒 Add Score</button>
       <button class="tab-btn" onclick="switchTab('results',this)">📋 Results</button>
-      <button class="tab-btn" onclick="switchTab('schedule',this)">📅 Schedule</button>
       <button class="tab-btn" onclick="switchTab('timer',this)">⏱ Timer</button>
     </nav>
   </div>
@@ -725,19 +692,6 @@ td.td-club{text-align:left;padding-left:8px;}
     </div>
   </div>
 
-  <!-- SCHEDULE -->
-  <div id="tab-schedule" class="tab-panel">
-    <div class="card">
-      <div class="card-header">
-        <div>
-          <div class="card-title">📅 Match Schedule</div>
-          <div class="card-sub">Every Sunday · 7:00 PM – 10:00 PM · Edmonton</div>
-        </div>
-      </div>
-      <div id="scheduleList" style="padding:16px 20px;display:flex;flex-direction:column;gap:10px;"></div>
-    </div>
-  </div>
-
   <!-- TIMER -->
   <div id="tab-timer" class="tab-panel">
     <div class="timer-card">
@@ -840,10 +794,10 @@ td.td-club{text-align:left;padding-left:8px;}
 
 <script>
 const TEAMS = [
-  { name:"Orange", color:"#f97316", abbr:"OR", emoji:"🍊" },
-  { name:"Yellow", color:"#eab308", abbr:"YL", emoji:"🍋" },
-  { name:"Red",    color:"#ef4444", abbr:"RD", emoji:"🍓" },
-  { name:"Blue",   color:"#3b82f6", abbr:"BL", emoji:"🫐" },
+  { name:"Orange", color:"#f97316", abbr:"OR" },
+  { name:"Yellow", color:"#eab308", abbr:"YL" },
+  { name:"Red",    color:"#ef4444", abbr:"RD" },
+  { name:"Blue",   color:"#3b82f6", abbr:"BL" },
 ];
 const RANK_COLORS = ["#f5c842","#94a3b8","#cd7f32","#e2e8f0"];
 const DB_URL = "https://super-sunday-league-75f93-default-rtdb.firebaseio.com";
@@ -928,7 +882,7 @@ function buildDrop(side) {
     const div = document.createElement('div');
     div.className = 'cs-option';
     div.dataset.value = i;
-    div.innerHTML = `<div class="cs-badge" style="background:${t.color};font-size:14px;">${t.emoji}</div><span>Team ${t.name}</span>`;
+    div.innerHTML = `<div class="cs-badge" style="background:${t.color}">${t.abbr}</div><span>Team ${t.name}</span>`;
     div.onclick = () => selectTeam(side, i);
     drop.appendChild(div);
   });
@@ -945,7 +899,7 @@ function toggleDrop(side) {
 function selectTeam(side, idx) {
   const t=TEAMS[idx];
   const btn=document.getElementById(side+'Btn');
-  btn.innerHTML=`<div class="cs-badge" style="background:${t.color};font-size:14px;">${t.emoji}</div><span class="cs-name">Team ${t.name}</span>`;
+  btn.innerHTML=`<div class="cs-badge" style="background:${t.color}">${t.abbr}</div><span class="cs-name">Team ${t.name}</span>`;
   btn.dataset.value=idx;
   document.getElementById(side+'Team').value=idx;
   document.getElementById(side+'Drop').classList.remove('open');
@@ -991,7 +945,7 @@ function renderTable() {
     tr.style.animation=`fadeIn .3s ease ${rank*.05}s both`;
     tr.innerHTML=`
       <td><div class="rank-wrap"><div class="pos-bar" style="background:${RANK_COLORS[rank]||'#e2e8f0'}"></div><span class="rank-num">${rank+1}</span></div></td>
-      <td class="td-club"><div class="club-inner"><div class="badge" style="background:${t.color};font-size:16px;">${t.emoji}</div><span class="club-name">Team ${t.name}</span></div></td>
+      <td class="td-club"><div class="club-inner"><div class="badge" style="background:${t.color}">${t.abbr}</div><span class="club-name">Team ${t.name}</span></div></td>
       <td><span class="pts-pill">${t.pts}</span></td>
       <td>${t.mp}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
       <td>${t.gf}</td><td>${t.ga}</td><td>${gd}</td>
@@ -1015,12 +969,12 @@ function renderLog() {
     const div=document.createElement('div');
     div.className='log-item';
     div.innerHTML=`
-      <div class="log-team"><div class="log-bdg" style="background:${home.color};font-size:13px;">${home.emoji}</div>Team ${home.name}</div>
+      <div class="log-team"><div class="log-bdg" style="background:${home.color}">${home.abbr}</div>Team ${home.name}</div>
       <div class="log-score-wrap">
         <div class="log-score">${m.hg} – ${m.ag}</div>
         ${m.date?`<div class="log-date">${m.date}</div>`:''}
       </div>
-      <div class="log-team away"><div class="log-bdg" style="background:${away.color};font-size:13px;">${away.emoji}</div>Team ${away.name}</div>
+      <div class="log-team away"><div class="log-bdg" style="background:${away.color}">${away.abbr}</div>Team ${away.name}</div>
       <div class="log-actions">
         <button class="log-edit-btn ${isAdmin?'admin-visible':''}" onclick="openEditModal(${realIdx})">✏️</button>
         <button class="log-del ${isAdmin?'admin-visible-block':''}" onclick="deleteMatch(${realIdx})">✕</button>
@@ -1268,92 +1222,9 @@ function playBuzzer(){
   }catch(e){}
 }
 
-/* ── Calendar badge ── */
-(function(){
-  const today = new Date();
-  const day = today.getDay(); // 0 = Sunday
-  const isGameDay = day === 0;
-  const diff = isGameDay ? 0 : 7 - day;
-  const sunday = new Date(today);
-  sunday.setDate(today.getDate() + diff);
-  const label = isGameDay ? 'TODAY' : 'NEXT';
-  const color = isGameDay ? '#10b981' : '#c9a84c';
-  document.getElementById('calLabel').textContent = label;
-  document.getElementById('calLabel').style.color = color;
-  document.getElementById('calDate').textContent = sunday.getDate();
-  if (isGameDay) {
-    document.getElementById('calBadge').style.borderColor = '#10b981';
-  }
-})();
-
-/* ── Schedule ── */
-function renderSchedule() {
-  const list = document.getElementById('scheduleList');
-  list.innerHTML = '';
-  const today = new Date();
-  // Find next Sunday
-  const day = today.getDay();
-  const daysUntilSunday = day === 0 ? 0 : 7 - day;
-  const nextSunday = new Date(today);
-  nextSunday.setDate(today.getDate() + daysUntilSunday);
-  nextSunday.setHours(0,0,0,0);
-
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-  // Show next 12 Sundays
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(nextSunday);
-    d.setDate(nextSunday.getDate() + i * 7);
-    const isToday = d.toDateString() === today.toDateString();
-    const isPast = d < today && !isToday;
-    const weekNum = i + 1;
-
-    const div = document.createElement('div');
-    div.style.cssText = `
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px 18px;border-radius:12px;gap:12px;flex-wrap:wrap;
-      background:${isToday ? 'linear-gradient(135deg,#050d1a,#112240)' : isPast ? '#f8fafc' : '#fff'};
-      border:1.5px solid ${isToday ? 'rgba(201,168,76,0.4)' : isPast ? '#f1f5f9' : '#e2e8f0'};
-      opacity:${isPast ? '0.5' : '1'};
-    `;
-
-    div.innerHTML = `
-      <div style="display:flex;align-items:center;gap:14px;">
-        <div style="
-          width:48px;height:48px;border-radius:12px;flex-shrink:0;
-          background:${isToday ? 'rgba(201,168,76,0.15)' : isPast ? '#f1f5f9' : '#f0f7ff'};
-          border:1px solid ${isToday ? 'rgba(201,168,76,0.3)' : '#e2e8f0'};
-          display:flex;flex-direction:column;align-items:center;justify-content:center;
-        ">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${isToday ? '#c9a84c' : '#94a3b8'};">${months[d.getMonth()]}</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:${isToday ? '#fff' : '#0f172a'};line-height:1;">${d.getDate()}</div>
-        </div>
-        <div>
-          <div style="font-weight:700;font-size:14px;color:${isToday ? '#fff' : '#0f172a'};">
-            ${isToday ? '🔴 TODAY — ' : ''}Matchday ${weekNum}
-          </div>
-          <div style="font-size:12px;color:${isToday ? 'rgba(255,255,255,0.5)' : '#94a3b8'};margin-top:2px;">
-            Sunday ${d.getDate()} ${months[d.getMonth()]} · 7:00 PM – 10:00 PM
-          </div>
-        </div>
-      </div>
-      <div style="
-        padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;
-        letter-spacing:.06em;text-transform:uppercase;
-        background:${isToday ? 'rgba(201,168,76,0.2)' : isPast ? 'transparent' : 'rgba(65,137,221,0.08)'};
-        color:${isToday ? '#c9a84c' : isPast ? '#94a3b8' : '#4189DD'};
-        border:1px solid ${isToday ? 'rgba(201,168,76,0.3)' : isPast ? '#e2e8f0' : 'rgba(65,137,221,0.15)'};
-      ">${isPast ? 'Played' : isToday ? 'Today' : 'Upcoming'}</div>
-    `;
-    list.appendChild(div);
-  }
-}
-
 /* ── Init ── */
 initSelects();
 startLiveSync();
-renderSchedule();
 </script>
 </body>
 </html>
