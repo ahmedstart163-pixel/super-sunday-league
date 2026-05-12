@@ -583,7 +583,13 @@ td.td-club{text-align:left;padding-left:8px;}
         </div>
       </div>
       <div class="hero-actions">
-        <div class="season-pill">Season 2026</div>
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:5px 14px 5px 6px;">
+          <div style="background:#09101f;border:1.5px solid #c9a84c;border-radius:6px;padding:2px 7px;display:flex;flex-direction:column;align-items:center;min-width:36px;">
+            <span style="font-size:7px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c9a84c;line-height:1.3;">SUN</span>
+            <span id="calDate" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1;">--</span>
+          </div>
+          <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:var(--gold2);letter-spacing:.08em;">Season 2026</span>
+        </div>
         <button class="btn-ghost refresh" onclick="refreshData()">⟳ Refresh</button>
         <button class="btn-ghost danger" onclick="resetSeason()">↺ Reset</button>
       </div>
@@ -1261,6 +1267,16 @@ function playBuzzer(){
     o2.start(ctx.currentTime+1.1);o2.stop(ctx.currentTime+2.6);
   }catch(e){}
 }
+
+/* ── Calendar badge ── */
+(function(){
+  const today = new Date();
+  const day = today.getDay();
+  const diff = day === 0 ? 0 : 7 - day;
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() + diff);
+  document.getElementById('calDate').textContent = sunday.getDate();
+})();
 
 /* ── Schedule ── */
 function renderSchedule() {
