@@ -789,9 +789,7 @@ td.td-club{text-align:left;padding-left:10px;}
 
 <!-- STATS BAR -->
 <div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-cell"><div class="stat-val" id="statMatches">0</div><div class="stat-lbl">Matches Played</div></div>
-    <div class="stat-cell"><div class="stat-val" id="statGoals">0</div><div class="stat-lbl">Total Goals</div></div>
+  <div class="stats-inner" style="grid-template-columns:repeat(2,1fr);">
     <div class="stat-cell"><div class="stat-val" id="statLeader">—</div><div class="stat-lbl">League Leader</div></div>
     <div class="stat-cell"><div class="stat-val">4</div><div class="stat-lbl">Teams</div></div>
   </div>
@@ -1073,7 +1071,14 @@ function updateStats() {
   const leader = TEAMS[stats.indexOf(stats.reduce((a,b)=>b.pts>a.pts?b:a))];
   document.getElementById('statMatches').textContent = total;
   document.getElementById('statGoals').textContent = goals;
-  document.getElementById('statLeader').textContent = leader ? leader.abbr : '—';
+  if (leader) {
+    const el = document.getElementById('statLeader');
+    el.textContent = leader.name;
+    el.style.color = leader.color;
+    el.style.fontSize = '20px';
+  } else {
+    document.getElementById('statLeader').textContent = '—';
+  }
 }
 
 /* ── Tabs ── */
