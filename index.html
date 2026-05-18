@@ -1065,19 +1065,19 @@ function startLiveSync() {
 
 /* ── Stats strip ── */
 function updateStats() {
-  const total = matches.length;
-  const goals = matches.reduce((s,m)=>s+m.hg+m.ag, 0);
   const stats = computeStats();
-  const leader = TEAMS[stats.indexOf(stats.reduce((a,b)=>b.pts>a.pts?b:a))];
-  document.getElementById('statMatches').textContent = total;
-  document.getElementById('statGoals').textContent = goals;
+  const maxPts = Math.max(...stats.map(s=>s.pts));
+  const leaderIdx = stats.findIndex(s=>s.pts===maxPts);
+  const leader = maxPts > 0 ? TEAMS[leaderIdx] : null;
+  const el = document.getElementById('statLeader');
   if (leader) {
-    const el = document.getElementById('statLeader');
     el.textContent = leader.name;
     el.style.color = leader.color;
     el.style.fontSize = '20px';
   } else {
-    document.getElementById('statLeader').textContent = '—';
+    el.textContent = '—';
+    el.style.color = '';
+    el.style.fontSize = '';
   }
 }
 
