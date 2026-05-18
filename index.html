@@ -13,11 +13,11 @@
 html{scroll-behavior:smooth;}
 
 :root{
-  --bg:       #0a0f1e;
-  --bg2:      #0f1628;
-  --bg3:      #151e35;
-  --card:     #111827;
-  --card2:    #1a2440;
+  --bg:       #0f1628;
+  --bg2:      #162540;
+  --bg3:      #1c2e4a;
+  --card:     #162038;
+  --card2:    #1e2d4e;
   --gold:     #c9a84c;
   --gold2:    #e8c96a;
   --gold3:    #f5e199;
@@ -25,16 +25,16 @@ html{scroll-behavior:smooth;}
   --blue2:    #5ba3f5;
   --green:    #10b981;
   --red:      #ef4444;
-  --muted:    #6b7a99;
-  --border:   rgba(255,255,255,0.06);
+  --muted:    #8595b0;
+  --border:   rgba(255,255,255,0.1);
   --border2:  rgba(201,168,76,0.2);
-  --text:     #e2e8f0;
+  --text:     #f0f4fa;
   --text2:    #94a3b8;
   --white:    #ffffff;
 }
 
 body{
-  background:var(--bg);
+  background:#111e35;
   font-family:'Inter',sans-serif;
   color:var(--text);
   min-height:100vh;
@@ -46,7 +46,7 @@ body{
    SCROLLBAR
 ══════════════════════ */
 ::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-track{background:#111e35;}
 ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
 
 /* ══════════════════════
@@ -122,7 +122,7 @@ body{
   border-radius:10px;padding:5px 12px 5px 6px;
 }
 .cal-box{
-  background:var(--bg);border:1.5px solid var(--gold);
+  background:#111e35;border:1.5px solid var(--gold);
   border-radius:6px;padding:2px 7px;
   display:flex;flex-direction:column;align-items:center;min-width:38px;
 }
@@ -467,7 +467,7 @@ td.td-club{text-align:left;padding-left:10px;}
 }
 .log-score-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .log-score{
-  background:var(--bg);color:var(--white);
+  background:#111e35;color:var(--white);
   padding:5px 14px;border-radius:8px;
   font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
   letter-spacing:.1em;border:1px solid var(--border2);
@@ -656,12 +656,82 @@ td.td-club{text-align:left;padding-left:10px;}
    RESPONSIVE
 ══════════════════════ */
 @media(max-width:560px){
-  .matchup{grid-template-columns:1fr;gap:14px;}
+  /* table */
   .table-scroll table{min-width:480px;}
-  .tab-btn{padding:12px 10px;font-size:10px;}
+  thead th, tbody td{padding:11px 8px;}
+
+  /* stats */
   .stats-inner{grid-template-columns:repeat(2,1fr);}
-  .brand-row{gap:8px;}
-  .top-strip{padding:7px 14px;font-size:10px;}
+  .stat-val{font-size:22px;}
+
+  /* top strip */
+  .top-strip{padding:6px 12px;font-size:10px;}
+  .strip-stars{display:none;}
+
+  /* header */
+  .header-inner{padding:0 12px;}
+  .brand-row{flex-direction:column;align-items:flex-start;padding:12px 0 10px;gap:10px;}
+  .header-right{width:100%;justify-content:space-between;}
+  .brand-name{font-size:22px;}
+  .brand-eyebrow{font-size:8px;}
+  .brand-logo img{width:42px;height:42px;}
+  .cal-pill{padding:4px 10px 4px 5px;}
+  .cal-day{font-size:13px;}
+  .cal-season{font-size:12px;}
+  .btn-header{padding:7px 10px;font-size:10px;}
+
+  /* nav tabs - scroll horizontally */
+  .nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .nav-tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{padding:11px 12px;font-size:10px;white-space:nowrap;flex-shrink:0;}
+
+  /* page */
+  .page{padding:16px 12px;}
+
+  /* section header */
+  .section-hd{flex-direction:column;align-items:flex-start;gap:4px;}
+
+  /* add score form */
+  .matchup{grid-template-columns:1fr;gap:14px;}
+  .score-card-head{padding:14px 16px;}
+  .score-body{padding:20px 16px 16px;}
+  .score-block{flex-direction:row;align-items:flex-end;justify-content:center;gap:12px;}
+  .score-block label{display:none;}
+  .score-row{gap:6px;}
+  .score-select{width:58px;font-size:26px;padding:10px 4px;}
+
+  /* results */
+  .results-head{padding:14px 16px;}
+  .log-body{padding:12px 12px;}
+  .log-item{padding:11px 12px;gap:8px;}
+  .log-team{font-size:12px;}
+  .log-score{font-size:15px;padding:4px 10px;}
+
+  /* schedule */
+  .sched-head{padding:14px 16px;}
+  .sched-body{padding:12px 12px;}
+  .sched-item{padding:12px 14px;}
+  .sched-title{font-size:13px;}
+  .sched-time{font-size:11px;}
+
+  /* timer */
+  .timer-wrap{padding:24px 16px 20px;}
+  .timer-digits{font-size:48px;}
+  .timer-btns{max-width:260px;}
+
+  /* modals */
+  .modal{padding:28px 20px 22px;border-radius:16px;}
+  .modal h3{font-size:18px;}
+
+  /* standings card */
+  .standings-wrap{border-radius:12px;}
+  .table-footer{padding:10px 14px;gap:12px;}
+}
+
+@media(max-width:380px){
+  .brand-name{font-size:18px;}
+  .tab-btn{padding:10px 8px;font-size:9px;}
+  .stat-val{font-size:18px;}
 }
 </style>
 </head>
