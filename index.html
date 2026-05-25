@@ -714,20 +714,27 @@ async function clearFirebase() {
   await fetch(`${DB_URL}/matches.json`, {method:'DELETE'});
 }
 
+let esInstance = null;
 function startLiveSync() {
-  const es = new EventSource(`${DB_URL}/matches.json`);
-  es.addEventListener('put', e => {
-    const d = JSON.parse(e.data).data;
-    matches = d ? Object.values(d) : [];
-    renderTable(); renderLog(); updateStats();
-  });
-  es.addEventListener('patch', e => {
-    fetch(`${DB_URL}/matches.json`).then(r=>r.json()).then(d=>{
-      matches = d ? Object.values(d) : [];
-      renderTable(); renderLog(); updateStats();
-    });
-  });
-  es.onerror = () => { es.close(); setTimeout(startLiveSync, 3000); };
+  if (esInstance) { esInstance.close(); esInstance = null; }
+  esInstance = new EventSource(`${DB_URL}/matches.json`);
+  let debounceTimer = null;
+
+  const reload = () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      fetch(`${DB_URL}/matches.json`)
+        .then(r=>r.json())
+        .then(d=>{
+          matches = d ? Object.values(d) : [];
+          renderTable(); renderLog(); updateStats();
+        });
+    }, 300);
+  };
+
+  esInstance.addEventListener('put', reload);
+  esInstance.addEventListener('patch', reload);
+  esInstance.onerror = () => { esInstance.close(); esInstance = null; setTimeout(startLiveSync, 3000); };
 }
 
 /* ── Stats strip ── */
