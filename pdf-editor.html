@@ -152,8 +152,8 @@
     background:var(--danger); color:#fff; border:2px solid #fff; font-size:13px; line-height:1;
     display:grid; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.3);
   }
-  .anno.text{padding:0; color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-width:24px; min-height:1em; cursor:text}
-  .anno.text.placed{cursor:move}
+  .anno.text{padding:0; color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-width:24px; min-height:1em; cursor:move}
+  .anno.text[contenteditable="true"]{cursor:text}
   .anno.image img, .anno.sign img{width:100%; height:100%; display:block; pointer-events:none}
   .anno.image, .anno.sign{cursor:move}
   .anno.rect{border:2px solid #c0492f; background:transparent; cursor:move}
@@ -606,8 +606,7 @@ function bindPage(rec){
     if(tool==="text"){
       const a=makeAnno({type:"text",page:rec.index,x:start.x,y:start.y,w:180,h:0,
                         fontSize:+fontRange.value,color:colorPick.value,font:"helv",bold:false,italic:false,text:""});
-      annos.push(a); renderAnno(a); select(a);
-      a._node.focus(); placeCaretEnd(a._node);
+      annos.push(a); renderAnno(a); enterEdit(a);
       snapshot(); return;
     }
     if(tool==="stamp"){
@@ -710,10 +709,11 @@ function renderAnno(a){
     n._del=del; n._handle=handle;
     n.addEventListener("pointerdown",ev=>startMove(ev,a));
     if(a.type==="text"){
-      n.contentEditable="true";
-      n.addEventListener("input",()=>{ a.text=n.innerText; });
-      n.addEventListener("blur",()=>{ a.text=n.innerText; if(!a.text.trim()){ removeAnno(a); } else snapshot(); });
+      n.contentEditable="false";
+      n.addEventListener("input",()=>{ a.text=n.innerText; positionTextbar(); });
+      n.addEventListener("blur",()=>{ n.contentEditable="false"; a._editing=false; a.text=n.innerText; if(!a.text.trim()){ removeAnno(a); } else snapshot(); });
       n.addEventListener("focus",()=>select(a));
+      n.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
     }
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
@@ -834,7 +834,7 @@ window.addEventListener("resize",positionTextbar);
 
 /* move / resize */
 function startMove(e,a){
-  if(a.type==="text" && document.activeElement===a._node) return; // editing text
+  if(a.type==="text" && a._editing) return; // typing — let the caret work
   if(e.target.classList.contains("handle")||e.target.classList.contains("del")) return;
   e.preventDefault(); e.stopPropagation();
   select(a);
@@ -865,6 +865,13 @@ function startResize(e,a){
   a._node._handle.addEventListener("pointermove",move); a._node._handle.addEventListener("pointerup",up);
 }
 
+function enterEdit(a){
+  if(!a || a.type!=="text") return;
+  select(a);
+  a._editing=true;
+  a._node.contentEditable="true";
+  a._node.focus(); placeCaretEnd(a._node);
+}
 function placeCaretEnd(node){
   const r=document.createRange(); r.selectNodeContents(node); r.collapse(false);
   const s=getSelection(); s.removeAllRanges(); s.addRange(r);
