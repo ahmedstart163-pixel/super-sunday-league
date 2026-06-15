@@ -66,7 +66,7 @@
   /* ---------- Toolbar ---------- */
   .toolbar{
     background:var(--white); border-bottom:1px solid var(--line);
-    display:flex; align-items:center; gap:10px; padding:9px 14px; flex-wrap:wrap; min-height:54px;
+    display:flex; align-items:center; justify-content:center; gap:10px; padding:9px 14px; flex-wrap:wrap; min-height:54px;
   }
   .toolgroup{
     display:flex; align-items:stretch; border:1px solid #bcdcf7; border-radius:9px;
@@ -174,14 +174,18 @@
     display:none; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.3); z-index:6;
   }
   .anno.selected .del{display:grid}
-  .anno.text{padding:0; color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-width:24px; min-height:1em; cursor:move}
-  .anno.text[contenteditable="true"]{cursor:text}
-  .anno.text:empty::before{content:"Type\2026"; color:#9aa3b2;}
+  .anno.text{padding:0; min-width:24px; cursor:move}
+  .anno.text .text-edit{color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-height:1em}
+  .anno.text .text-edit[contenteditable="true"]{cursor:text}
+  .anno.text .text-edit:empty::before{content:"Type\2026"; color:#9aa3b2;}
   .anno.image img, .anno.sign img{width:100%; height:100%; display:block; pointer-events:none}
   .anno.image, .anno.sign{cursor:move}
   .anno.rect{border:2px solid #c0492f; background:transparent; cursor:move}
   .anno.highlight{background:rgba(255,221,0,.4); cursor:move; mix-blend-mode:multiply}
   .anno.whiteout{background:#fff; cursor:move}
+  .swatches{display:flex; gap:6px; align-items:center}
+  .swatches .sw{width:20px; height:20px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #cfd6e0; padding:0; cursor:pointer}
+  .swatches .sw:hover{transform:scale(1.12)}
   .stroke-bar{position:fixed; z-index:120}
   .stroke-bar.hide{display:none}
   .stroke-bar button{display:flex; align-items:center; gap:6px; background:var(--danger); color:#fff;
@@ -345,16 +349,16 @@
   <button class="tool" data-tool="text"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Text</span></button>
   <button class="tool" data-tool="edittext"><svg viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg><span>Edit</span></button>
   <button class="tool" id="formsBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>Forms</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Image</span></button>
+  <button class="tool" id="signBtn"><svg viewBox="0 0 24 24"><path d="M3 18c4 0 4-9 8-9s4 6 8 1"/><path d="M3 21h18"/></svg><span>Sign</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" data-tool="whiteout"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/><path d="M4 12h16"/></svg><span>Whiteout</span></button>
   <button class="tool" data-tool="highlight"><svg viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg><span>Highlight</span></button>
   <button class="tool" data-tool="rect"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg><span>Box</span></button>
-  <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Image</span></button>
   <button class="tool" data-tool="draw"><svg viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg><span>Draw</span></button>
-  <button class="tool" id="signBtn"><svg viewBox="0 0 24 24"><path d="M3 18c4 0 4-9 8-9s4 6 8 1"/><path d="M3 21h18"/></svg><span>Sign</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   </div>
 
   <div class="ctx" id="ctx">
-    <div class="field" id="ctxColor"><span>Color</span><input type="color" id="colorPick" value="#1a1a1a"></div>
+    <div class="field" id="ctxColor"><span>Color</span><input type="color" id="colorPick" value="#1a1a1a"><div class="swatches" id="swatches"></div></div>
     <div class="field" id="ctxFont"><span>Size</span><input type="range" id="fontRange" min="8" max="64" value="16"><span class="val" id="fontVal">16</span></div>
     <div class="field" id="ctxStroke"><span>Pen</span><input type="range" id="strokeRange" min="1" max="14" value="3"><span class="val" id="strokeVal">3</span></div>
   </div>
@@ -704,21 +708,38 @@ function formsAction(act){
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
-  const showColor = ["text","highlight","rect","draw","stamp"].includes(tool) || (selected && ["text","rect","stamp"].includes(selected.type));
+  const colorable = ["text","rect","stamp","draw"];
+  const showColor = ["text","highlight","rect","draw","stamp"].includes(tool) || (selected && colorable.includes(selected.type));
   const showFont  = tool==="text" || (selected && selected.type==="text");
-  const showStroke= tool==="draw";
+  const showStroke= tool==="draw" || (selected && selected.type==="draw");
   $("#ctxColor").classList.toggle("hide", !showColor);
   $("#ctxFont").classList.toggle("hide", !showFont);
   $("#ctxStroke").classList.toggle("hide", !showStroke);
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
-  if(selected && (selected.type==="rect"||selected.type==="stamp")){ colorPick.value=selected.color; }
+  if(selected && ["rect","stamp","draw"].includes(selected.type)){ colorPick.value=selected.color; }
+  if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
   layout();
+}
+// quick colour palette
+const SWATCHES=["#1a1a1a","#1f5fbf","#c0392b","#2f7d57","#e08a1e","#7b3ff2","#ffffff"];
+(function(){
+  const host=$("#swatches"); if(!host) return;
+  SWATCHES.forEach(c=>{
+    const b=el("button","sw"); b.style.background=c; b.title=c;
+    b.onclick=()=>{ colorPick.value=c; applyColor(c); };
+    host.appendChild(b);
+  });
+})();
+function applyColor(c){
+  if(selected && ["text","rect","stamp","draw"].includes(selected.type)){ selected.color=c; renderAnno(selected); snapshot(); }
 }
 fontRange.oninput=()=>{ fontVal.textContent=fontRange.value;
   if(selected && selected.type==="text"){ selected.fontSize=+fontRange.value; renderAnno(selected); } };
 fontRange.onchange=()=>{ if(selected&&selected.type==="text") snapshot(); };
-strokeRange.oninput=()=>strokeVal.textContent=strokeRange.value;
-colorPick.oninput=()=>{ if(selected && ["text","rect","stamp"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);} };
+strokeRange.oninput=()=>{ strokeVal.textContent=strokeRange.value;
+  if(selected && selected.type==="draw"){ selected.width=+strokeRange.value; renderAnno(selected); } };
+strokeRange.onchange=()=>{ if(selected&&selected.type==="draw") snapshot(); };
+colorPick.oninput=()=>{ if(selected && ["text","rect","stamp","draw"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);} };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
 /* ---------------- coordinate mapping (no rotation) ---------------- */
@@ -1007,11 +1028,12 @@ function renderAnno(a){
     });
     n.addEventListener("pointerdown",ev=>startMove(ev,a));
     if(a.type==="text"){
-      n.contentEditable="false";
-      n.addEventListener("input",()=>{ a.text=n.innerText; positionTextbar(); });
-      n.addEventListener("blur",()=>{ n.contentEditable="false"; a._editing=false; a.text=n.innerText; snapshot(); });
-      n.addEventListener("focus",()=>select(a));
-      n.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
+      const ed=el("div","text-edit"); ed.contentEditable="false"; a._edit=ed;
+      n.insertBefore(ed, del);
+      ed.addEventListener("input",()=>{ a.text=ed.innerText; positionTextbar(); });
+      ed.addEventListener("blur",()=>{ ed.contentEditable="false"; a._editing=false; a.text=ed.innerText; snapshot(); });
+      ed.addEventListener("focus",()=>select(a));
+      ed.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
     }
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
@@ -1020,12 +1042,13 @@ function renderAnno(a){
   n.style.left=a.x+"px"; n.style.top=a.y+"px";
   if(a.type==="text"){
     n.style.width=a.w+"px";
-    n.style.fontSize=a.fontSize+"px";
-    n.style.color=a.color;
-    n.style.fontWeight=a.bold?"700":"400";
-    n.style.fontStyle=a.italic?"italic":"normal";
-    n.style.fontFamily=cssFont(a.font||"helv");
-    if(document.activeElement!==n && n.innerText!==a.text) n.innerText=a.text;
+    const ed=a._edit;
+    ed.style.fontSize=a.fontSize+"px";
+    ed.style.color=a.color;
+    ed.style.fontWeight=a.bold?"700":"400";
+    ed.style.fontStyle=a.italic?"italic":"normal";
+    ed.style.fontFamily=cssFont(a.font||"helv");
+    if(document.activeElement!==ed && ed.innerText!==a.text) ed.innerText=a.text;
     if(a===selected) positionTextbar();
   }else{
     n.style.width=a.w+"px"; n.style.height=a.h+"px";
@@ -1261,8 +1284,8 @@ function enterEdit(a){
   if(!a || a.type!=="text") return;
   select(a);
   a._editing=true;
-  a._node.contentEditable="true";
-  a._node.focus(); placeCaretEnd(a._node);
+  a._edit.contentEditable="true";
+  a._edit.focus(); placeCaretEnd(a._edit);
 }
 function placeCaretEnd(node){
   const r=document.createRange(); r.selectNodeContents(node); r.collapse(false);
@@ -1277,10 +1300,33 @@ $("#stage").addEventListener("pointerdown",e=>{
   if(pageEl && pageEl._rec){
     const rec=pageEl._rec, p=clientToLocal(rec,e.clientX,e.clientY);
     const hit=hitStroke(rec.index,p.x,p.y);
-    if(hit){ select(hit); return; }
+    if(hit){ e.preventDefault(); select(hit); startStrokeMove(rec,hit,e); return; }
   }
   select(null);
 });
+function startStrokeMove(rec, s, e){
+  const start=clientToLocal(rec,e.clientX,e.clientY);
+  const orig=s.pts.map(q=>[q[0],q[1]]);
+  let moved=false;
+  try{ e.target.setPointerCapture(e.pointerId); }catch(_){}
+  const move=ev=>{
+    const p=clientToLocal(rec,ev.clientX,ev.clientY);
+    const dx=p.x-start.x, dy=p.y-start.y;
+    if(Math.abs(dx)+Math.abs(dy)>2) moved=true;
+    s.pts=orig.map(q=>[q[0]+dx,q[1]+dy]);
+    redrawPageStrokes(rec.index);
+    positionStrokeBar();
+  };
+  const up=()=>{
+    window.removeEventListener("pointermove",move);
+    window.removeEventListener("pointerup",up);
+    window.removeEventListener("pointercancel",up);
+    if(moved) snapshot();
+  };
+  window.addEventListener("pointermove",move);
+  window.addEventListener("pointerup",up);
+  window.addEventListener("pointercancel",up);
+}
 
 /* ---------------- images & signature ---------------- */
 let pendingImg=null;
@@ -1601,7 +1647,7 @@ function stdFontName(key,b,i){
 
 $("#downloadBtn").onclick = exportPdf;
 async function buildBytes(){
-  if(selected && selected.type==="text") selected._node.blur();
+  if(selected && selected.type==="text" && selected._edit) selected._edit.blur();
   const doc = await PDFDocument.load(originalBytes);
     if(window.fontkit){ try{ doc.registerFontkit(window.fontkit); }catch(_){} }
     const fontCache={};
