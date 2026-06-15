@@ -121,7 +121,7 @@
   .tbSel:hover{border-color:#bcdcf7}
   .tbColor{position:relative; width:30px; height:30px; border-radius:7px; border:1px solid #dfe7f2; overflow:hidden; cursor:pointer}
   .tbColor input{position:absolute; inset:-6px; width:42px; height:42px; border:0; padding:0; cursor:pointer}
-  .ctx{display:flex; align-items:center; gap:10px; margin-left:auto; flex-wrap:wrap}
+  .ctx{display:flex; align-items:center; justify-content:center; gap:10px; flex-basis:100%; flex-wrap:wrap}
   .ctx .field{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted)}
   .ctx input[type=color]{width:30px; height:30px; padding:0; border:1px solid var(--line); border-radius:7px; background:none}
   .ctx input[type=range]{width:120px; accent-color:var(--gold)}
@@ -149,6 +149,8 @@
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
   .overlay{position:absolute; inset:0; z-index:10}
+  .margin-guide{position:absolute; left:54px; top:54px; right:54px; bottom:54px;
+    border:1px dashed rgba(30,40,70,.18); pointer-events:none; z-index:2}
 
   /* annotations */
   .anno{position:absolute; box-sizing:border-box; touch-action:none; pointer-events:auto}
@@ -595,6 +597,9 @@ async function renderAll(){
     const overlay = el("div","overlay");
     pageEl.appendChild(overlay);
 
+    const mg = el("div","margin-guide");   // faint 0.5" margin box (guide only, never printed)
+    pageEl.appendChild(mg);
+
     // page tools (delete)
     const ptools=el("div","page-tools");
     const delBtn=el("button"); delBtn.title="Delete page";
@@ -606,7 +611,7 @@ async function renderAll(){
     wrap.appendChild(pageEl);
     host.appendChild(wrap);
 
-    const rec={wrap,pageEl,overlay,drawCanvas:draw,dctx:draw.getContext("2d"),canvas,_page:page,
+    const rec={wrap,pageEl,overlay,margin:mg,drawCanvas:draw,dctx:draw.getContext("2d"),canvas,_page:page,
                wPt:vp1.width,hPt:vp1.height,deleted:false,index:i,rendered:false,_rendering:false};
     pageEl._rec=rec;
     pages.push(rec);
@@ -1608,6 +1613,8 @@ function applyZoom(){
   const ps=$("#pagesScale"), wrap=$("#scaleWrap");
   ps.style.transform="scale("+zoom+")";
   if(wrap){ wrap.style.width=(ps.offsetWidth*zoom)+"px"; wrap.style.height=(ps.offsetHeight*zoom)+"px"; }
+  const mw=Math.max(0.8, 1/(zoom||1))+"px";
+  pages.forEach(p=>{ if(p.margin) p.margin.style.borderWidth=mw; });
   $("#zoomLabel").textContent=Math.round(zoom*100)+"%";
   if(typeof positionTextbar==="function") positionTextbar();
   if(typeof positionStrokeBar==="function") positionStrokeBar();
