@@ -149,8 +149,6 @@
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
   .overlay{position:absolute; inset:0; z-index:10}
-  .margin-guide{position:absolute; left:54px; top:54px; right:54px; bottom:54px;
-    border:1px dashed rgba(30,40,70,.18); pointer-events:none; z-index:2}
 
   /* annotations */
   .anno{position:absolute; box-sizing:border-box; touch-action:none; pointer-events:auto}
@@ -495,6 +493,7 @@ let originalBytes = null;    // Uint8Array of loaded PDF
 let pdfDoc = null;           // pdf.js document
 let pages = [];              // [{wrap, pageEl, overlay, drawCanvas, dctx, wPt, hPt, deleted}]
 let pageObserver = null;     // lazily paints pages as they scroll into view
+let draggingAnno = false;    // true while dragging an object (hides the format bar)
 const FONT_BYTES = {};       // cache of downloaded web-font bytes, reused across exports
 let annos = [];              // annotation objects (see makeAnno)
 let nextId = 1;
@@ -597,9 +596,6 @@ async function renderAll(){
     const overlay = el("div","overlay");
     pageEl.appendChild(overlay);
 
-    const mg = el("div","margin-guide");   // faint 0.5" margin box (guide only, never printed)
-    pageEl.appendChild(mg);
-
     // page tools (delete)
     const ptools=el("div","page-tools");
     const delBtn=el("button"); delBtn.title="Delete page";
@@ -611,7 +607,7 @@ async function renderAll(){
     wrap.appendChild(pageEl);
     host.appendChild(wrap);
 
-    const rec={wrap,pageEl,overlay,margin:mg,drawCanvas:draw,dctx:draw.getContext("2d"),canvas,_page:page,
+    const rec={wrap,pageEl,overlay,drawCanvas:draw,dctx:draw.getContext("2d"),canvas,_page:page,
                wPt:vp1.width,hPt:vp1.height,deleted:false,index:i,rendered:false,_rendering:false};
     pageEl._rec=rec;
     pages.push(rec);
@@ -877,9 +873,8 @@ function makeAnno(o){ return Object.assign({id:nextId++, color:"#1a1a1a"}, o); }
 function bindPage(rec){
   // create-by-drag on overlay (text=click, others=drag)
   rec.overlay.addEventListener("pointerdown", e=>{
-    if(e.target.closest(".anno")) return;            // let element handlers run
-    if(tool==="edittext"){ handleEditText(rec, clientToLocal(rec,e.clientX,e.clientY)); return; }
-    if(!CREATING.includes(tool)) return;
+    if(tool==="edittext"){ if(e.target.closest(".anno")) return; handleEditText(rec, clientToLocal(rec,e.clientX,e.clientY)); return; }
+    if(!CREATING.includes(tool)) return;        // creating tools may place on top of existing objects (e.g. text over whiteout)
     const start=clientToLocal(rec,e.clientX,e.clientY);
 
     if(tool==="text"){
@@ -1141,6 +1136,7 @@ function updateTextbar(){
   positionTextbar();
 }
 function positionTextbar(){
+  if(draggingAnno){ textbar.classList.add("hide"); return; }
   if(!selected || selected.type!=="text" || !selected._node){ textbar.classList.add("hide"); return; }
   const r=selected._node.getBoundingClientRect();
   const bw=textbar.offsetWidth, bh=textbar.offsetHeight;
@@ -1216,6 +1212,7 @@ function drawGuides(rec, guides){
 function clearGuides(rec){ if(rec._guides) rec._guides.forEach(n=>n.remove()); rec._guides=[]; }
 
 function startMove(e,a){
+  if(tool!=="select") return;     // creating tools should place on top, not move existing objects
   if(pinchActive) return;
   if(a.type==="text" && a._editing) return; // typing — let the caret work
   if(e.target.classList.contains("handle")||e.target.classList.contains("del")) return;
@@ -1228,7 +1225,7 @@ function startMove(e,a){
   let moved=false;
   try{ a._node.setPointerCapture(e.pointerId); }catch(_){}
   const move=ev=>{
-    if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>4) moved=true;
+    if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>4){ if(!moved){ moved=true; draggingAnno=true; textbar.classList.add("hide"); } }
     const p=clientToLocal(rec,ev.clientX,ev.clientY);
     const s=computeSnap(rec,a, ox+(p.x-start.x), oy+(p.y-start.y));
     a.x=s.x; a.y=s.y; renderAnno(a);
@@ -1239,7 +1236,8 @@ function startMove(e,a){
     window.removeEventListener("pointerup",up);
     window.removeEventListener("pointercancel",up);
     clearGuides(rec);
-    if(moved) snapshot();
+    draggingAnno=false;
+    if(moved){ snapshot(); positionTextbar(); }
     else if(a.type==="text" && wasSelected) enterEdit(a); // tap an already-selected text box → edit
   };
   window.addEventListener("pointermove",move);
@@ -1613,8 +1611,6 @@ function applyZoom(){
   const ps=$("#pagesScale"), wrap=$("#scaleWrap");
   ps.style.transform="scale("+zoom+")";
   if(wrap){ wrap.style.width=(ps.offsetWidth*zoom)+"px"; wrap.style.height=(ps.offsetHeight*zoom)+"px"; }
-  const mw=Math.max(0.8, 1/(zoom||1))+"px";
-  pages.forEach(p=>{ if(p.margin) p.margin.style.borderWidth=mw; });
   $("#zoomLabel").textContent=Math.round(zoom*100)+"%";
   if(typeof positionTextbar==="function") positionTextbar();
   if(typeof positionStrokeBar==="function") positionStrokeBar();
