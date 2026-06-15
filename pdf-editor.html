@@ -186,6 +186,7 @@
   .swatches{display:flex; gap:6px; align-items:center}
   .swatches .sw{width:20px; height:20px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #cfd6e0; padding:0; cursor:pointer}
   .swatches .sw:hover{transform:scale(1.12)}
+  .swatches .sw.on{box-shadow:0 0 0 2px var(--navy)}
   .stroke-bar{position:fixed; z-index:120}
   .stroke-bar.hide{display:none}
   .stroke-bar button{display:flex; align-items:center; gap:6px; background:var(--danger); color:#fff;
@@ -718,18 +719,23 @@ function refreshCtx(){
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
   if(selected && ["rect","stamp","draw"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
+  if(typeof markSwatch==="function") markSwatch();
   layout();
 }
 // quick colour palette
-const SWATCHES=["#1a1a1a","#1f5fbf","#c0392b","#2f7d57","#e08a1e","#7b3ff2","#ffffff"];
+const SWATCHES=["#1a1a1a","#e02424","#1f9d4d","#f5c211","#1f6fe0"]; // black, red, green, yellow, blue
 (function(){
   const host=$("#swatches"); if(!host) return;
   SWATCHES.forEach(c=>{
-    const b=el("button","sw"); b.style.background=c; b.title=c;
-    b.onclick=()=>{ colorPick.value=c; applyColor(c); };
+    const b=el("button","sw"); b.style.background=c; b.title=c; b.dataset.c=c;
+    b.onclick=()=>{ colorPick.value=c; applyColor(c); markSwatch(); };
     host.appendChild(b);
   });
 })();
+function markSwatch(){
+  const cur=(colorPick.value||"").toLowerCase();
+  $("#swatches") && [...$("#swatches").children].forEach(b=> b.classList.toggle("on", b.dataset.c.toLowerCase()===cur));
+}
 function applyColor(c){
   if(selected && ["text","rect","stamp","draw"].includes(selected.type)){ selected.color=c; renderAnno(selected); snapshot(); }
 }
