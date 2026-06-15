@@ -154,18 +154,22 @@
   .anno{position:absolute; box-sizing:border-box; touch-action:none; pointer-events:auto}
   .guide-v{position:absolute; width:0; border-left:1px dashed #ff3b81; pointer-events:none; z-index:40}
   .guide-h{position:absolute; height:0; border-top:1px dashed #ff3b81; pointer-events:none; z-index:40}
-  .anno.selected{outline:2px solid var(--gold); outline-offset:1px}
+  .anno.selected{outline:1.5px dashed #3b82f6; outline-offset:2px}
   .anno .handle{
-    position:absolute; width:14px; height:14px; background:var(--gold);
-    border:2px solid #fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.3); display:none; z-index:5;
+    position:absolute; width:11px; height:11px; background:#fff;
+    border:1.5px solid #3b82f6; border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,.25); display:none; z-index:5;
   }
-  .anno .handle.nw{left:-7px; top:-7px; cursor:nwse-resize}
-  .anno .handle.ne{right:-7px; top:-7px; cursor:nesw-resize}
-  .anno .handle.sw{left:-7px; bottom:-7px; cursor:nesw-resize}
-  .anno .handle.se{right:-7px; bottom:-7px; cursor:nwse-resize}
+  .anno .handle.nw{left:-6px; top:-6px; cursor:nwse-resize}
+  .anno .handle.ne{right:-6px; top:-6px; cursor:nesw-resize}
+  .anno .handle.sw{left:-6px; bottom:-6px; cursor:nesw-resize}
+  .anno .handle.se{right:-6px; bottom:-6px; cursor:nwse-resize}
+  .anno .handle.n{left:50%; top:-6px; transform:translateX(-50%); cursor:ns-resize}
+  .anno .handle.s{left:50%; bottom:-6px; transform:translateX(-50%); cursor:ns-resize}
+  .anno .handle.w{left:-6px; top:50%; transform:translateY(-50%); cursor:ew-resize}
+  .anno .handle.e{right:-6px; top:50%; transform:translateY(-50%); cursor:ew-resize}
   .anno.selected .handle{display:block}
   .anno .del{
-    position:absolute; right:-10px; top:-12px; width:22px; height:22px; border-radius:50%;
+    position:absolute; right:-9px; top:-30px; width:22px; height:22px; border-radius:50%;
     background:var(--danger); color:#fff; border:2px solid #fff; font-size:13px; line-height:1;
     display:none; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.3); z-index:6;
   }
@@ -996,7 +1000,7 @@ function renderAnno(a){
     del.onpointerdown=ev=>ev.stopPropagation();
     del.onclick=ev=>{ ev.stopPropagation(); removeAnno(a); };
     n.appendChild(del); n._del=del;
-    ["nw","ne","sw","se"].forEach(corner=>{
+    ["nw","ne","sw","se","n","s","e","w"].forEach(corner=>{
       const h=el("div","handle "+corner);
       h.onpointerdown=ev=>startResize(ev,a,corner);
       n.appendChild(h);
@@ -1211,38 +1215,35 @@ function startResize(e,a,corner){
   if(pinchActive) return;
   e.preventDefault(); e.stopPropagation(); select(a);
   const rec=pages[a.page];
-  const start=clientToLocal(rec,e.clientX,e.clientY);
   const ox=a.x, oy=a.y, ow=a.w, oh=a.h || (a._node?a._node.offsetHeight:0);
-  const isWest = corner==="nw"||corner==="sw";
-  const isNorth= corner==="nw"||corner==="ne";
-  const anchorX = isWest ? ox+ow : ox;     // the edge that stays put
-  const anchorY = isNorth ? oy+oh : oy;
+  const mW = corner.includes("w"), mE = corner.includes("e");
+  const mN = corner.includes("n"), mS = corner.includes("s");
+  const isCorner = corner.length===2;
   const keepRatio = (a.type==="sign"||a.type==="image"||a.type==="stamp") && ow>0 && oh>0;
-  const ratio = oh/ow;
   const MINW=20, MINH=12;
   try{ e.target.setPointerCapture(e.pointerId); }catch(_){}
 
   const move=ev=>{
     const p=clientToLocal(rec,ev.clientX,ev.clientY);
 
-    if(a.type==="text"){ // width only; left corners move the left edge
-      if(isWest){ a.w=Math.max(MINW, (ox+ow)-p.x); a.x=(ox+ow)-a.w; }
-      else { a.w=Math.max(MINW, p.x-ox); a.x=ox; }
+    if(a.type==="text"){ // width only
+      if(mW){ a.w=Math.max(MINW,(ox+ow)-p.x); a.x=(ox+ow)-a.w; }
+      else if(mE){ a.w=Math.max(MINW,p.x-ox); a.x=ox; }
       renderAnno(a); return;
     }
 
-    // raw new width/height from the dragged corner, anchor fixed
-    let nw_ = isWest ? (anchorX - p.x) : (p.x - anchorX);
-    let nh_ = isNorth ? (anchorY - p.y) : (p.y - anchorY);
-    nw_=Math.max(MINW, nw_); nh_=Math.max(MINH, nh_);
+    let nw_=ow, nh_=oh;
+    if(mW) nw_=(ox+ow)-p.x; else if(mE) nw_=p.x-ox;
+    if(mN) nh_=(oy+oh)-p.y; else if(mS) nh_=p.y-oy;
+    nw_=Math.max(MINW,nw_); nh_=Math.max(MINH,nh_);
 
-    if(keepRatio){
-      const s=Math.max(nw_/ow, nh_/oh);   // follow the farther drag, keep proportions
+    if(keepRatio && isCorner){            // corners keep the signature's proportions
+      const s=Math.max(nw_/ow, nh_/oh);
       nw_=ow*s; nh_=oh*s;
     }
     a.w=nw_; a.h=nh_;
-    a.x = isWest ? (anchorX - nw_) : anchorX;
-    a.y = isNorth ? (anchorY - nh_) : anchorY;
+    a.x = mW ? (ox+ow)-nw_ : ox;          // anchor the opposite edge
+    a.y = mN ? (oy+oh)-nh_ : oy;
     renderAnno(a);
   };
   const up=()=>{
