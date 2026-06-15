@@ -1200,10 +1200,11 @@ function computeSnap(rec, a, nx, ny){
 function drawGuides(rec, guides){
   clearGuides(rec);
   const PW=rec.wPt*BASE, PH=rec.hPt*BASE;
+  const lw=Math.max(1.5, 2/(zoom||1));     // keep ~2px on screen at any zoom
   guides.forEach(g=>{
     const line=el("div", g.type==="v"?"guide-v":"guide-h");
-    if(g.type==="v"){ line.style.left=g.pos+"px"; line.style.top="0"; line.style.height=PH+"px"; }
-    else { line.style.top=g.pos+"px"; line.style.left="0"; line.style.width=PW+"px"; }
+    if(g.type==="v"){ line.style.left=g.pos+"px"; line.style.top="0"; line.style.height=PH+"px"; line.style.borderLeftWidth=lw+"px"; }
+    else { line.style.top=g.pos+"px"; line.style.left="0"; line.style.width=PW+"px"; line.style.borderTopWidth=lw+"px"; }
     rec.overlay.appendChild(line); rec._guides.push(line);
   });
 }
