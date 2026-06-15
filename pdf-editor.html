@@ -893,7 +893,7 @@ function bindPage(rec){
       }
       const a=makeAnno(Object.assign({type:annoType,page:rec.index,
         x:Math.min(p.x,start.x), y:Math.min(p.y,start.y), w, h,
-        color: annoType==="rect"?colorPick.value:"#1f5fbf"}, extra));
+        color: annoType==="rect"?colorPick.value : (annoType==="whiteout"?"#ffffff":"#1f5fbf")}, extra));
       annos.push(a); renderAnno(a); select(a); snapshot();
     };
     rec.overlay.addEventListener("pointermove",move);
