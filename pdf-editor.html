@@ -141,7 +141,7 @@
   .overlay{position:absolute; inset:0; z-index:10}
 
   /* annotations */
-  .anno{position:absolute; box-sizing:border-box}
+  .anno{position:absolute; box-sizing:border-box; touch-action:none}
   .anno.selected{outline:2px solid var(--gold); outline-offset:1px}
   .anno .handle{
     position:absolute; right:-7px; bottom:-7px; width:14px; height:14px; background:var(--gold);
@@ -223,8 +223,18 @@
     color:var(--muted); font-size:14px; cursor:pointer}
   .uploadbox:hover{border-color:var(--gold); background:#fffaf0}
   .uploadbox img{max-height:230px; max-width:100%; border-radius:6px}
-  .camwrap{text-align:center}
-  #sigVideo{width:100%; max-height:300px; background:#10151f; border-radius:12px; display:block}
+  .uploadbox.chosen{cursor:default; padding:18px; text-align:center}
+  .sig-ver-title{font-size:13px; font-weight:600; color:var(--ink); margin:2px 0 14px}
+  .sig-ver-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  .sig-ver{border:2px solid var(--line); border-radius:10px; padding:6px; cursor:pointer}
+  .sig-ver:hover{border-color:#bcdcf7}
+  .sig-ver.active{border-color:var(--gold); background:#fffaf0}
+  .sig-ver-img{height:88px; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden;
+    background-image:linear-gradient(45deg,#dcdcdc 25%,transparent 25%),linear-gradient(-45deg,#dcdcdc 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dcdcdc 75%),linear-gradient(-45deg,transparent 75%,#dcdcdc 75%);
+    background-size:12px 12px; background-position:0 0,0 6px,6px -6px,-6px 0}
+  .sig-ver-img img{max-height:100%; max-width:100%}
+  .sig-ver-lbl{font-size:11px; color:var(--muted); margin-top:7px; font-weight:600}
+  .sig-reupload{margin-top:16px; background:none; border:0; color:#2275c9; font-size:12.5px; font-weight:600; cursor:pointer}
 
   /* toast */
   .toast{
@@ -354,7 +364,6 @@
       <button class="sigtab active" data-tab="type"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h0M11 10h0M15 10h0M8 14h8"/></svg>Type</button>
       <button class="sigtab" data-tab="draw"><svg viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg>Draw</button>
       <button class="sigtab" data-tab="upload"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>Upload Image</button>
-      <button class="sigtab" data-tab="camera"><svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Camera</button>
     </div>
     <div class="body">
       <div class="pane" id="paneType">
@@ -367,13 +376,6 @@
       </div>
       <div class="pane hide" id="paneUpload">
         <div class="uploadbox" id="sigUploadBox">Click to choose an image — a PNG with a transparent background works best.</div>
-      </div>
-      <div class="pane hide" id="paneCamera">
-        <div class="camwrap">
-          <video id="sigVideo" autoplay playsinline muted></video>
-          <p class="camnote" style="color:var(--muted);font-size:12.5px;margin:12px 0 0">Allow camera access, then press Capture.</p>
-          <button class="lbtn gold" id="sigCapture" style="margin-top:12px">Capture</button>
-        </div>
       </div>
     </div>
     <footer>
@@ -905,7 +907,7 @@ const SIG_FONTS=["Dancing Script","Caveat","Satisfy","Pacifico","Great Vibes","S
 const SIG_COLORS=["#1f4fd1","#2b6fd6","#1414e6","#5a6472","#3a3f47","#111111"];
 let sigMode="type", sigColor=SIG_COLORS[0], sigFont=SIG_FONTS[0], sigBuilt=false;
 let sctx, sigDrawing=false, sigHas=false;
-let sigUploadData=null, camStream=null, camShot=null;
+let sigUploadData=null;
 
 function buildSigUI(){
   if(sigBuilt) return; sigBuilt=true;
@@ -918,23 +920,32 @@ function buildSigUI(){
     card.textContent="Your name";
     card.onclick=()=>{ sigFont=f; [...grid.children].forEach(x=>x.classList.remove("active")); card.classList.add("active"); };
     grid.appendChild(card); });
+  updateSigPreviews();
+  // handwriting fonts load asynchronously — re-render previews once they're ready
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=>updateSigPreviews()); }
 }
 function updateSigPreviews(){
   const name=$("#sigName").value.trim()||"Your name";
   [...$("#fontGrid").children].forEach(c=>{ c.textContent=name; c.style.color=sigColor; });
 }
 
-function openSig(){ buildSigUI(); sigModal.classList.remove("hide"); switchSigTab("type"); setTimeout(()=>$("#sigName").focus(),30); }
+function openSig(){
+  buildSigUI();
+  // reset the upload pane so old versions don't linger
+  const ub=$("#sigUploadBox");
+  ub.classList.remove("chosen");
+  ub.textContent="Click to choose an image — a PNG with a transparent background works best.";
+  sigUploadData=null;
+  sigModal.classList.remove("hide"); switchSigTab("type"); setTimeout(()=>$("#sigName").focus(),30);
+}
 
 function switchSigTab(mode){
   sigMode=mode;
   document.querySelectorAll(".sigtab").forEach(t=>t.classList.toggle("active",t.dataset.tab===mode));
-  const ids={type:"paneType",draw:"paneDraw",upload:"paneUpload",camera:"paneCamera"};
+  const ids={type:"paneType",draw:"paneDraw",upload:"paneUpload"};
   Object.entries(ids).forEach(([m,id])=> $("#"+id).classList.toggle("hide", m!==mode));
   $("#sigClear").style.visibility = (mode==="draw") ? "visible" : "hidden";
-  if(mode!=="camera") stopCam();
   if(mode==="draw") initPad();
-  if(mode==="camera") startCam();
 }
 document.querySelectorAll(".sigtab").forEach(t=> t.onclick=()=>switchSigTab(t.dataset.tab));
 $("#sigName").addEventListener("input",updateSigPreviews);
@@ -953,29 +964,50 @@ sigpad.addEventListener("pointermove",e=>{ if(!sigDrawing)return; const[x,y]=sig
 window.addEventListener("pointerup",()=>sigDrawing=false);
 $("#sigClear").onclick=()=>{ if(sctx) sctx.clearRect(0,0,sigpad.width,sigpad.height); sigHas=false; };
 
-/* upload */
-$("#sigUploadBox").onclick=()=>$("#sigImgInput").click();
+/* upload — Original / Transparent A / Transparent B */
+$("#sigUploadBox").onclick=()=>{ if(!$("#sigUploadBox").classList.contains("chosen")) $("#sigImgInput").click(); };
 $("#sigImgInput").onchange=e=>{ const f=e.target.files[0]; e.target.value=""; if(!f)return;
-  const r=new FileReader(); r.onload=()=>{ sigUploadData={src:r.result,mime:f.type};
-    const b=$("#sigUploadBox"); b.innerHTML=""; const img=el("img"); img.src=r.result; b.appendChild(img); };
-  r.readAsDataURL(f); };
-
-/* camera */
-async function startCam(){
-  camShot=null; $("#sigVideo").style.opacity="";
-  try{
-    camStream=await navigator.mediaDevices.getUserMedia({video:true});
-    $("#sigVideo").srcObject=camStream;
-    $("#paneCamera").querySelector(".camnote").textContent="Allow camera access, then press Capture.";
-  }catch(err){ $("#paneCamera").querySelector(".camnote").textContent="Camera unavailable or permission denied. Try Upload Image instead."; }
-}
-function stopCam(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } }
-$("#sigCapture").onclick=()=>{
-  const v=$("#sigVideo"); if(!v.videoWidth){ toast("Camera not ready yet.",true); return; }
-  const c=el("canvas"); c.width=v.videoWidth; c.height=v.videoHeight;
-  c.getContext("2d").drawImage(v,0,0); camShot=c.toDataURL("image/png");
-  v.style.opacity=".5"; $("#paneCamera").querySelector(".camnote").textContent="Captured — press Place signature.";
+  const r=new FileReader();
+  r.onload=()=>{ const img=new Image(); img.onload=()=>buildSigVersions(img); img.onerror=()=>toast("Couldn't read that image.",true); img.src=r.result; };
+  r.readAsDataURL(f);
 };
+function buildSigVersions(img){
+  const v=sigVariants(img);
+  const box=$("#sigUploadBox"); box.classList.add("chosen");
+  box.innerHTML='<div class="sig-ver-title">Choose an image version:</div><div class="sig-ver-grid"></div><button class="sig-reupload">Choose a different image</button>';
+  const grid=box.querySelector(".sig-ver-grid");
+  [["Original",v.original],["Transparent A",v.a],["Transparent B",v.b]].forEach(([lbl,src],i)=>{
+    const card=el("div","sig-ver"+(i===1?" active":""));
+    const im=el("div","sig-ver-img"); const g=el("img"); g.src=src; im.appendChild(g);
+    const cap=el("div","sig-ver-lbl"); cap.textContent=lbl;
+    card.appendChild(im); card.appendChild(cap);
+    card.onclick=()=>{ grid.querySelectorAll(".sig-ver").forEach(x=>x.classList.remove("active")); card.classList.add("active"); sigUploadData={src,mime:"image/png"}; };
+    grid.appendChild(card);
+  });
+  sigUploadData={src:v.a,mime:"image/png"}; // default to Transparent A
+  box.querySelector(".sig-reupload").onclick=()=>$("#sigImgInput").click();
+}
+function sigVariants(img){
+  const w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+  const base=el("canvas"); base.width=w; base.height=h;
+  const bc=base.getContext("2d"); bc.drawImage(img,0,0);
+  const original=base.toDataURL("image/png");
+  let d; try{ d=bc.getImageData(0,0,w,h).data; }catch(_){ return {original,a:original,b:original}; }
+  const A=el("canvas"); A.width=w; A.height=h; const Ax=A.getContext("2d"); const ia=Ax.createImageData(w,h); const da=ia.data;
+  const B=el("canvas"); B.width=w; B.height=h; const Bx=B.getContext("2d"); const ib=Bx.createImageData(w,h); const db=ib.data;
+  for(let i=0;i<d.length;i+=4){
+    const r=d[i],g=d[i+1],b=d[i+2],al=d[i+3];
+    const lum=0.299*r+0.587*g+0.114*b;
+    // A: keep original ink colour, knock out the near-white background
+    da[i]=r; da[i+1]=g; da[i+2]=b; da[i+3]= al<8?0 : (lum>205?0:al);
+    // B: clean dark ink, soft alpha from darkness (also clears grey paper / shadows)
+    let a2; if(lum>=235)a2=0; else if(lum<=70)a2=255; else a2=Math.round((235-lum)/165*255);
+    if(al<8)a2=0;
+    db[i]=20; db[i+1]=22; db[i+2]=30; db[i+3]=a2;
+  }
+  Ax.putImageData(ia,0,0); Bx.putImageData(ib,0,0);
+  return {original, a:A.toDataURL("image/png"), b:B.toDataURL("image/png")};
+}
 
 /* produce a signature image from the active mode */
 async function produceSig(){
@@ -994,11 +1026,10 @@ async function produceSig(){
   }
   if(sigMode==="draw"){ return sigHas ? {src:trimCanvas(sigpad),mime:"image/png"} : null; }
   if(sigMode==="upload"){ return sigUploadData; }
-  if(sigMode==="camera"){ return camShot ? {src:camShot,mime:"image/png"} : null; }
   return null;
 }
 
-function closeSig(){ stopCam(); sigModal.classList.add("hide"); }
+function closeSig(){ sigModal.classList.add("hide"); }
 $("#sigCancel").onclick=()=>{ closeSig(); setTool("select"); };
 $("#sigClose").onclick=()=>{ closeSig(); setTool("select"); };
 $("#sigPlace").onclick=async()=>{
@@ -1051,8 +1082,10 @@ function updateUI(){
   $("#redoBtn").disabled = hIndex>=history.length-1;
 }
 document.addEventListener("keydown",e=>{
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){ e.preventDefault(); e.shiftKey?$("#redoBtn").click():$("#undoBtn").click(); }
-  if((e.key==="Delete"||e.key==="Backspace") && selected && document.activeElement?.tagName!=="DIV"){ removeAnno(selected); }
+  const ae=document.activeElement, tag=ae&&ae.tagName;
+  const typing = tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(ae&&ae.isContentEditable);
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?$("#redoBtn").click():$("#undoBtn").click(); }
+  if((e.key==="Delete"||e.key==="Backspace") && selected && !typing){ e.preventDefault(); removeAnno(selected); }
 });
 
 /* ---------------- export ---------------- */
