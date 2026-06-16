@@ -322,7 +322,10 @@
   /* organize modal */
   .modal.org{width:min(860px,96vw)}
   .org-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:14px; padding:18px; max-height:62vh; overflow:auto}
-  .org-card{border:1px solid var(--line); border-radius:10px; padding:8px; background:#fff}
+  .org-card{border:1.5px solid #f59042; border-radius:10px; padding:8px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
+  .org-card:active{cursor:grabbing}
+  .org-card.dragging{opacity:.35}
+  .org-card.drop-target{border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-soft); transform:translateY(-2px)}
   .org-thumb-wrap{height:140px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--paper); border-radius:6px}
   .org-thumb{box-shadow:0 1px 4px rgba(0,0,0,.18); background:#fff; transition:transform .15s}
   .org-no{font-size:11px; color:var(--muted); text-align:center; margin-top:7px; font-weight:600}
@@ -393,6 +396,7 @@
     <span id="zoomLabel">100%</span>
     <button id="zoomIn" title="Zoom in">+</button>
   </div>
+  <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
 </div>
@@ -578,7 +582,7 @@
     <header class="head"><span>Organize pages</span><button class="x" id="orgClose">×</button></header>
     <div class="org-grid" id="orgGrid"></div>
     <footer>
-      <span style="font-size:12px;color:var(--muted)">Reorder, rotate, duplicate or remove pages</span>
+      <span style="font-size:12px;color:var(--muted)">Drag pages to reorder · rotate, duplicate or remove with the buttons</span>
       <div class="row">
         <button class="lbtn" id="orgCancel">Cancel</button>
         <button class="lbtn gold" id="orgApply">Apply</button>
@@ -667,6 +671,7 @@ async function loadDoc(bytes, name){
     $("#toolbar").style.display="flex";
     $("#zoomBox").style.display="flex";
     $("#downloadBtn").disabled=false;
+    $("#organizeTop").disabled=false;
     await renderAll();
     await detectFields();
     fitToWidth();
@@ -2117,22 +2122,40 @@ async function exportPdf(){
 
 /* ---------------- Organize & Merge ---------------- */
 let orgPlan=[];
+let orgDragFrom=null;
+let orgThumbCache={};   // page index -> small canvas rendered straight from the PDF
+async function buildThumbCache(){
+  orgThumbCache={};
+  const visible = pages.filter(p=>!p.deleted);
+  for(const rec of visible){
+    try{
+      const page = rec._page || (rec._page = await pdfDoc.getPage(rec.index+1));
+      const base = page.getViewport({scale:1});
+      const scale = 150/base.width;
+      const vp = page.getViewport({scale});
+      const c=el("canvas"); c.width=Math.round(vp.width); c.height=Math.round(vp.height);
+      await page.render({canvasContext:c.getContext("2d"), viewport:vp}).promise;
+      orgThumbCache[rec.index]=c;
+    }catch(e){ /* leave this page without a cached thumb */ }
+  }
+}
 async function openOrganize(){
   if(!pdfDoc) return;
   const visible = pages.filter(p=>!p.deleted);
   if(!visible.length) return;
   busy(true);
-  try{ await ensureAllRendered(); } finally{ busy(false); }
+  try{ await buildThumbCache(); } finally{ busy(false); }
   orgPlan = visible.map((p,i)=>({pi:i, rot:0}));
   renderOrganize();
   $("#orgModal").classList.remove("hide");
 }
-function orgThumb(visRec, rot, maxW){
-  const sc = visRec.pageEl.querySelector("canvas.pdf");
-  const c=el("canvas"); const ratio=sc.height/sc.width;
-  c.width=maxW; c.height=Math.round(maxW*ratio);
-  c.getContext("2d").drawImage(sc,0,0,c.width,c.height);
-  c.className="org-thumb"; if(rot) c.style.transform="rotate("+rot+"deg)";
+function orgThumb(visRec, rot){
+  const src = orgThumbCache[visRec.index];
+  const c=el("canvas","org-thumb");
+  if(src){ c.width=src.width; c.height=src.height; try{ c.getContext("2d").drawImage(src,0,0); }catch(e){} }
+  else { c.width=120; c.height=156; }
+  c.style.maxWidth="100%"; c.style.maxHeight="100%";
+  if(rot) c.style.transform="rotate("+rot+"deg)";
   return c;
 }
 function renderOrganize(){
@@ -2140,10 +2163,23 @@ function renderOrganize(){
   const visible = pages.filter(p=>!p.deleted);
   orgPlan.forEach((item,idx)=>{
     const card=el("div","org-card");
-    const wrap=el("div","org-thumb-wrap"); wrap.appendChild(orgThumb(visible[item.pi], item.rot, 96));
+    card.draggable=true;
+    // ---- drag to reorder (desktop) ----
+    card.addEventListener("dragstart",e=>{ orgDragFrom=idx; card.classList.add("dragging"); e.dataTransfer.effectAllowed="move"; });
+    card.addEventListener("dragend",()=>{ orgDragFrom=null; card.classList.remove("dragging"); grid.querySelectorAll(".org-card").forEach(c=>c.classList.remove("drop-target")); });
+    card.addEventListener("dragover",e=>{ e.preventDefault(); e.dataTransfer.dropEffect="move"; if(orgDragFrom!==null&&orgDragFrom!==idx) card.classList.add("drop-target"); });
+    card.addEventListener("dragleave",()=>card.classList.remove("drop-target"));
+    card.addEventListener("drop",e=>{ e.preventDefault(); card.classList.remove("drop-target");
+      if(orgDragFrom===null||orgDragFrom===idx) return;
+      const moved=orgPlan.splice(orgDragFrom,1)[0]; orgPlan.splice(idx,0,moved); orgDragFrom=null; renderOrganize(); });
+
+    const wrap=el("div","org-thumb-wrap"); wrap.appendChild(orgThumb(visible[item.pi], item.rot, 120));
     const no=el("div","org-no"); no.textContent="Page "+(idx+1);
     const ctl=el("div","org-ctl");
-    const mk=(html,title,fn,cls)=>{ const b=el("button",cls||""); b.innerHTML=html; b.title=title; b.onclick=fn; return b; };
+    const mk=(html,title,fn,cls)=>{ const b=el("button",cls||""); b.innerHTML=html; b.title=title;
+      b.draggable=false;
+      b.onpointerdown=ev=>ev.stopPropagation();
+      b.onclick=ev=>{ ev.stopPropagation(); fn(); }; return b; };
     ctl.appendChild(mk("&#9664;","Move left",()=>{ if(idx>0){ const t=orgPlan[idx-1]; orgPlan[idx-1]=orgPlan[idx]; orgPlan[idx]=t; renderOrganize(); } }));
     ctl.appendChild(mk("&#8635;","Rotate",()=>{ item.rot=(item.rot+90)%360; renderOrganize(); }));
     ctl.appendChild(mk("&#10697;","Duplicate",()=>{ orgPlan.splice(idx+1,0,{pi:item.pi,rot:item.rot}); renderOrganize(); }));
@@ -2176,6 +2212,7 @@ const navEdit=$("#navEdit");
 function setNav(b){ [navEdit,$("#organizeBtn"),$("#mergeBtn")].forEach(x=>{ if(x) x.classList.toggle("active",x===b); }); }
 navEdit.onclick=()=>setNav(navEdit);
 $("#organizeBtn").onclick=()=>{ setNav($("#organizeBtn")); openOrganize(); };
+$("#organizeTop").onclick=()=>{ if(typeof setNav==="function") setNav($("#organizeBtn")); openOrganize(); };
 const orgHide=()=>{ $("#orgModal").classList.add("hide"); setNav(navEdit); };
 $("#orgClose").onclick=$("#orgCancel").onclick=orgHide;
 $("#orgApply").onclick=applyOrganize;
