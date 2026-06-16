@@ -53,14 +53,15 @@
   .zoom button:hover{background:rgba(255,255,255,.22)}
   .zoom span{font-size:12px; color:#cdd6e6; min-width:42px; text-align:center}
 
-  /* mode nav (Edit / Organize / Merge) */
-  .editnav{background:var(--navy); display:flex; align-items:stretch; gap:2px; padding:0 14px; border-bottom:1px solid #28365a; overflow-x:auto}
-  .enav{background:none; border:0; color:#9fb0cf; font-family:inherit; font-size:13px; font-weight:600; white-space:nowrap;
-    padding:11px 16px; display:flex; align-items:center; gap:8px; border-bottom:2px solid transparent; cursor:pointer}
-  .enav svg{width:16px; height:16px; stroke:#9fb0cf; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
-  .enav:hover{color:#dfe6f2}
-  .enav.active{color:#fff; border-bottom-color:var(--gold)}
-  .enav.active svg{stroke:var(--gold-soft)}
+  /* mode nav (Edit / Organize / Merge) — modern segmented tabs */
+  .editnav{background:#fff; display:flex; align-items:center; gap:6px; padding:8px 14px; border-bottom:1px solid var(--line); overflow-x:auto}
+  .enav{background:none; border:0; color:var(--muted); font-family:inherit; font-size:13px; font-weight:600; white-space:nowrap;
+    padding:8px 15px; display:flex; align-items:center; gap:8px; border-radius:9px; cursor:pointer; transition:background .12s, color .12s}
+  .enav svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+  .enav:hover{background:var(--tint); color:var(--ink)}
+  .enav.active{background:var(--gold); color:#fff}
+  .enav.active svg{stroke:#fff}
+  .enav.active:hover{background:var(--accent-d)}
 
   /* ---------- Toolbar ---------- */
   .toolbar{
@@ -320,8 +321,14 @@
   .ss-del:hover{background:#fdecec; border-color:#f0b4ab}
 
   /* organize modal */
+  .orgview{position:fixed; left:0; right:0; bottom:0; background:var(--paper); z-index:40; display:flex; flex-direction:column}
+  .orgview-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:12px 18px; background:var(--white); border-bottom:1px solid var(--line)}
+  .orgview-title{font-size:15px; font-weight:700; color:var(--navy)}
+  .orgview-hint{font-size:12px; color:var(--muted); flex:1; min-width:120px}
+  .orgview-top .row{display:flex; gap:10px}
   .modal.org{width:min(860px,96vw)}
   .org-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:14px; padding:18px; max-height:62vh; overflow:auto}
+  .orgview .org-grid{flex:1; max-height:none}
   .org-card{border:1.5px solid #f59042; border-radius:10px; padding:8px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
   .org-card:active{cursor:grabbing}
   .org-card.dragging{opacity:.35}
@@ -577,18 +584,16 @@
 </div>
 
 <!-- Organize pages modal -->
-<div class="modal-bg hide" id="orgModal">
-  <div class="modal org">
-    <header class="head"><span>Organize pages</span><button class="x" id="orgClose">×</button></header>
-    <div class="org-grid" id="orgGrid"></div>
-    <footer>
-      <span style="font-size:12px;color:var(--muted)">Drag pages to reorder · rotate, duplicate or remove with the buttons</span>
-      <div class="row">
-        <button class="lbtn" id="orgCancel">Cancel</button>
-        <button class="lbtn gold" id="orgApply">Apply</button>
-      </div>
-    </footer>
+<div class="orgview hide" id="orgView">
+  <div class="orgview-top">
+    <span class="orgview-title">Organize pages</span>
+    <span class="orgview-hint">Drag pages to reorder · rotate, duplicate or remove with the buttons</span>
+    <div class="row">
+      <button class="lbtn" id="orgCancel">Back to editor</button>
+      <button class="lbtn gold" id="orgApply">Apply changes</button>
+    </div>
   </div>
+  <div class="org-grid" id="orgGrid"></div>
 </div>
 
 <div class="busy hide" id="busy"><div class="spin"></div></div>
@@ -672,6 +677,7 @@ async function loadDoc(bytes, name){
     $("#zoomBox").style.display="flex";
     $("#downloadBtn").disabled=false;
     $("#organizeTop").disabled=false;
+    { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
     await renderAll();
     await detectFields();
     fitToWidth();
@@ -2147,7 +2153,6 @@ async function openOrganize(){
   try{ await buildThumbCache(); } finally{ busy(false); }
   orgPlan = visible.map((p,i)=>({pi:i, rot:0}));
   renderOrganize();
-  $("#orgModal").classList.remove("hide");
 }
 function orgThumb(visRec, rot){
   const src = orgThumbCache[visRec.index];
@@ -2173,7 +2178,7 @@ function renderOrganize(){
       if(orgDragFrom===null||orgDragFrom===idx) return;
       const moved=orgPlan.splice(orgDragFrom,1)[0]; orgPlan.splice(idx,0,moved); orgDragFrom=null; renderOrganize(); });
 
-    const wrap=el("div","org-thumb-wrap"); wrap.appendChild(orgThumb(visible[item.pi], item.rot, 120));
+    const wrap=el("div","org-thumb-wrap"); wrap.appendChild(orgThumb(visible[item.pi], item.rot));
     const no=el("div","org-no"); no.textContent="Page "+(idx+1);
     const ctl=el("div","org-ctl");
     const mk=(html,title,fn,cls)=>{ const b=el("button",cls||""); b.innerHTML=html; b.title=title;
@@ -2190,8 +2195,7 @@ function renderOrganize(){
   });
 }
 async function applyOrganize(){
-  $("#orgModal").classList.add("hide");
-  if(typeof setNav==="function") setNav(navEdit);
+  showEditView();
   busy(true);
   try{
     const baked = await buildBytes();
@@ -2210,13 +2214,32 @@ async function applyOrganize(){
 }
 const navEdit=$("#navEdit");
 function setNav(b){ [navEdit,$("#organizeBtn"),$("#mergeBtn")].forEach(x=>{ if(x) x.classList.toggle("active",x===b); }); }
-navEdit.onclick=()=>setNav(navEdit);
-$("#organizeBtn").onclick=()=>{ setNav($("#organizeBtn")); openOrganize(); };
-$("#organizeTop").onclick=()=>{ if(typeof setNav==="function") setNav($("#organizeBtn")); openOrganize(); };
-const orgHide=()=>{ $("#orgModal").classList.add("hide"); setNav(navEdit); };
-$("#orgClose").onclick=$("#orgCancel").onclick=orgHide;
+function positionOrgView(){
+  const nav=$("#editNav");
+  const anchor = (nav && nav.style.display!=="none") ? nav : $("#topbar");
+  $("#orgView").style.top = Math.max(0, anchor.getBoundingClientRect().bottom) + "px";
+}
+async function showOrganizeView(){
+  if(!pdfDoc) return;
+  setNav($("#organizeBtn"));
+  $("#toolbar").style.display="none";
+  $("#stage").style.display="none";
+  positionOrgView();
+  $("#orgView").classList.remove("hide");
+  await openOrganize();
+}
+function showEditView(){
+  setNav(navEdit);
+  $("#orgView").classList.add("hide");
+  $("#toolbar").style.display="flex";
+  $("#stage").style.display="block";
+}
+navEdit.onclick=showEditView;
+$("#organizeBtn").onclick=showOrganizeView;
+$("#organizeTop").onclick=showOrganizeView;
+$("#orgCancel").onclick=showEditView;
 $("#orgApply").onclick=applyOrganize;
-$("#orgModal").addEventListener("click",e=>{ if(e.target===$("#orgModal")) orgHide(); });
+window.addEventListener("resize",()=>{ if(!$("#orgView").classList.contains("hide")) positionOrgView(); });
 
 $("#mergeBtn").onclick=()=>{ setNav($("#mergeBtn")); $("#mergeInput").click(); };
 $("#mergeInput").onchange=async e=>{
