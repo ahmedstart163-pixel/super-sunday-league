@@ -660,6 +660,11 @@ async function detectFields(){
       const ft=ann.fieldType;                       // Tx text, Btn checkbox/radio, Ch choice
       if(ft!=="Tx" && ft!=="Btn") return;
       if(ann.readOnly) return;
+      if(ft==="Btn"){
+        const flags=ann.fieldFlags||0;
+        // leave push buttons (Save/Reset/Print/link buttons) and radio groups exactly as they are
+        if(ann.pushButton || ann.radioButton || (flags & 0x10000) || (flags & 0x8000)) return;
+      }
       const va=vp.convertToViewportRectangle(ann.rect);
       const left=Math.min(va[0],va[2]), top=Math.min(va[1],va[3]);
       const w=Math.abs(va[2]-va[0]), h=Math.abs(va[3]-va[1]);
