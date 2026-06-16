@@ -149,6 +149,13 @@
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
   .overlay{position:absolute; inset:0; z-index:10}
+  .field-input{position:absolute; box-sizing:border-box; border:1px solid #8fb8ec; background:#e9f1fc;
+    color:#0a1a3a; font-family:Helvetica,Arial,sans-serif; padding:1px 4px; border-radius:2px;
+    pointer-events:auto; outline:none; resize:none; line-height:1.1}
+  .field-input:focus{background:#dcebfb; background:#dceafb; border-color:#2275c9; box-shadow:0 0 0 2px rgba(34,117,201,.25)}
+  .field-check{position:absolute; box-sizing:border-box; border:1px solid #8fb8ec; background:#e9f1fc;
+    pointer-events:auto; cursor:pointer; border-radius:2px; display:grid; place-items:center; color:#0a1a3a; font-weight:800}
+  .field-check.on::after{content:"✓"; font-size:90%}
 
   /* annotations */
   .anno{position:absolute; box-sizing:border-box; touch-action:none; pointer-events:auto}
@@ -496,6 +503,7 @@ let pageObserver = null;     // lazily paints pages as they scroll into view
 let draggingAnno = false;    // true while dragging an object (hides the format bar)
 const FONT_BYTES = {};       // cache of downloaded web-font bytes, reused across exports
 let annos = [];              // annotation objects (see makeAnno)
+let fieldMeta = {};          // existing AcroForm fields: name -> {type, value}
 let nextId = 1;
 let tool = "select";
 let zoom = 1;
@@ -550,7 +558,7 @@ async function loadDoc(bytes, name){
     originalBytes = bytes;
     // pdf.js may detach the buffer it's given — hand it a copy.
     pdfDoc = await pdfjsLib.getDocument({ data: originalBytes.slice() }).promise;
-    annos=[]; selected=null; nextId=1; zoom=1; history=[]; hIndex=-1;
+    annos=[]; selected=null; nextId=1; zoom=1; history=[]; hIndex=-1; fieldMeta={};
     if(name) $("#filename").textContent = name;
     $("#empty").style.display="none";
     $("#stage").style.display="block";
@@ -559,6 +567,7 @@ async function loadDoc(bytes, name){
     $("#zoomBox").style.display="flex";
     $("#downloadBtn").disabled=false;
     await renderAll();
+    await detectFields();
     fitToWidth();
     layout();
     snapshot();
@@ -637,6 +646,49 @@ async function renderPageCanvas(rec){
 // make sure every (non-deleted) page is painted — used before Organize/thumbnails
 async function ensureAllRendered(){
   for(const p of pages){ if(!p.deleted) await renderPageCanvas(p); }
+}
+
+// Read the PDF's existing fillable fields and overlay editable inputs on them (Sejda-style)
+async function detectFields(){
+  fieldMeta={};
+  for(const rec of pages){
+    let anns, vp;
+    try{ anns=await rec._page.getAnnotations(); vp=rec._page.getViewport({scale:BASE}); }
+    catch(_){ continue; }
+    anns.forEach(ann=>{
+      if(ann.subtype!=="Widget" || !ann.fieldName) return;
+      const ft=ann.fieldType;                       // Tx text, Btn checkbox/radio, Ch choice
+      if(ft!=="Tx" && ft!=="Btn") return;
+      if(ann.readOnly) return;
+      const va=vp.convertToViewportRectangle(ann.rect);
+      const left=Math.min(va[0],va[2]), top=Math.min(va[1],va[3]);
+      const w=Math.abs(va[2]-va[0]), h=Math.abs(va[3]-va[1]);
+      if(w<6 || h<6) return;
+      if(!(ann.fieldName in fieldMeta)){
+        const v = ft==="Tx" ? (ann.fieldValue||"") : !!(ann.fieldValue && ann.fieldValue!=="Off");
+        fieldMeta[ann.fieldName]={type:ft, value:v};
+      }
+      const meta=fieldMeta[ann.fieldName];
+      if(ft==="Tx"){
+        const inp=document.createElement(ann.multiLine?"textarea":"input");
+        if(!ann.multiLine) inp.type="text";
+        inp.className="field-input"; inp.value=meta.value;
+        inp.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;font-size:${Math.max(9,Math.min(h*0.6,15))}px`;
+        inp.addEventListener("pointerdown",e=>e.stopPropagation());
+        inp.addEventListener("input",()=>{ meta.value=inp.value; });
+        rec.overlay.appendChild(inp);
+      } else {
+        const box=document.createElement("div");
+        box.className="field-check"+(meta.value?" on":"");
+        box.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px`;
+        box.addEventListener("pointerdown",e=>e.stopPropagation());
+        box.addEventListener("click",()=>{ meta.value=!meta.value; box.classList.toggle("on",meta.value); });
+        rec.overlay.appendChild(box);
+      }
+    });
+  }
+  const n=Object.keys(fieldMeta).length;
+  if(n) toast(n+" fillable field"+(n>1?"s":"")+" found — tap a blue box to fill it.");
 }
 
 function deletePage(i){
@@ -1660,6 +1712,20 @@ async function buildBytes(){
   if(selected && selected.type==="text" && selected._edit) selected._edit.blur();
   const doc = await PDFDocument.load(originalBytes);
     if(window.fontkit){ try{ doc.registerFontkit(window.fontkit); }catch(_){} }
+    // write values into the PDF's own fillable fields (stays an interactive form)
+    if(Object.keys(fieldMeta).length){
+      try{
+        const form=doc.getForm();
+        Object.keys(fieldMeta).forEach(name=>{
+          const f=fieldMeta[name];
+          try{
+            if(f.type==="Tx"){ form.getTextField(name).setText(String(f.value||"")); }
+            else { const cb=form.getCheckBox(name); f.value?cb.check():cb.uncheck(); }
+          }catch(_){}
+        });
+        try{ form.updateFieldAppearances(); }catch(_){}
+      }catch(_){}
+    }
     const fontCache={};
     const getFont = async name => fontCache[name] || (fontCache[name] = await doc.embedFont(StandardFonts[name]));
     const embedTextFont = async (key,bold,italic)=>{
