@@ -104,8 +104,18 @@
 
   /* symbol stamps + form fields on the page */
   .anno.stamp{display:flex; align-items:center; justify-content:center; line-height:1; font-weight:700; cursor:move}
-  .anno.field{border:1.5px dashed #2275c9; background:rgba(34,117,201,.07); cursor:move; display:flex; align-items:center; padding:0 6px}
-  .anno.field .field-label{font-size:11px; color:#1f5fbf; font-weight:600; pointer-events:none; white-space:nowrap; overflow:hidden}
+  .anno.field{border:1.5px solid #2f6fed; background:rgba(47,111,237,.10); cursor:move; display:flex; align-items:center; padding:0 6px}
+  .anno.field.fld-radio{border-radius:50%; padding:0; justify-content:center}
+  .anno.field.fld-radio .field-label{font-size:9px}
+  .anno.field.fld-sign{background:rgba(47,111,237,.06); border-style:solid; align-items:flex-end; padding-bottom:3px}
+  .anno.field.fld-dd{background:#e7f0ff}
+  .anno.field .field-fill{position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent;
+    font:13px/1.35 Inter,system-ui,sans-serif; color:#16213b; padding:3px 7px; box-sizing:border-box; resize:none; outline:none}
+  .anno.field .field-fill[readonly]{pointer-events:none; cursor:move}
+  .anno.field .field-fill::placeholder{color:#7d93c0; font-style:italic}
+  #pages.form-edit .anno.field{outline:2px solid #2f6fed; outline-offset:1px}
+  #pages.form-edit .field-input, #pages.form-edit .field-check{outline:2px dashed #2f6fed; outline-offset:1px}
+  .anno.field .field-label{font-size:11px; color:#1b4ed1; font-weight:600; pointer-events:none; white-space:nowrap; overflow:hidden}
 
   /* floating text formatting bar */
   .textbar{position:fixed; z-index:130; display:flex; align-items:center; gap:2px; background:#fff;
@@ -119,6 +129,20 @@
   .tbSel{border:1px solid #dfe7f2; border-radius:7px; height:30px; font-size:13px; color:#16223f; padding:0 4px; background:#fff; cursor:pointer}
   .tbSel:hover{border-color:#bcdcf7}
   .tbColor{position:relative; width:30px; height:30px; border-radius:7px; border:1px solid #dfe7f2; overflow:hidden; cursor:pointer}
+  .fldprops{position:fixed; z-index:131; width:240px; background:#fff; border:1px solid #cfe2f7;
+    border-radius:12px; box-shadow:0 10px 30px rgba(13,24,48,.22); padding:12px; font-size:13px; color:#16213b}
+  .fldprops .fp-title{font-weight:700; margin-bottom:8px; color:#1b4ed1}
+  .fldprops .fp-row{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .fldprops .fp-row span{flex:0 0 56px; color:#64708a; font-size:12px}
+  .fldprops .fp-row.fp-col{flex-direction:column; align-items:stretch; gap:4px}
+  .fldprops .fp-row.fp-col span{flex:none}
+  .fldprops input[type=text], .fldprops textarea{flex:1; border:1px solid #dfe7f2; border-radius:7px;
+    padding:6px 8px; font:inherit; color:#16213b; width:100%; box-sizing:border-box; resize:vertical}
+  .fldprops input:focus, .fldprops textarea:focus{outline:none; border-color:#2f6fed}
+  .fldprops .fp-check{display:flex; align-items:center; gap:7px; margin-bottom:10px; color:#16213b; cursor:pointer}
+  .fldprops .fp-del{width:100%; border:1px solid #f3c9c3; background:#fdeeec; color:#c0392b;
+    border-radius:8px; padding:8px; font-weight:600; cursor:pointer}
+  .fldprops .fp-del:hover{background:#fbe2de}
   .tbColor input{position:absolute; inset:-6px; width:42px; height:42px; border:0; padding:0; cursor:pointer}
   .ctx{display:flex; align-items:center; justify-content:center; gap:10px; flex-basis:100%; flex-wrap:wrap}
   .ctx .field{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted)}
@@ -191,6 +215,11 @@
   .anno.rect{border:2px solid #c0492f; background:transparent; cursor:move}
   .anno.highlight{background:rgba(255,221,0,.4); cursor:move; mix-blend-mode:multiply}
   .anno.whiteout{background:#fff; cursor:move}
+  /* live drag preview — always visible so you can size whiteout/box/highlight precisely */
+  .anno.ghost{outline:2px dashed #2f6fed !important; outline-offset:0 !important;
+    background:rgba(47,111,237,.14) !important; mix-blend-mode:normal !important; pointer-events:none; z-index:50}
+  .anno.ghost .szbadge{position:absolute; left:0; top:-20px; background:#16213b; color:#fff;
+    font:600 11px/1 Inter,system-ui,sans-serif; padding:3px 6px; border-radius:5px; white-space:nowrap}
   .swatches{display:flex; gap:6px; align-items:center}
   .swatches .sw{width:20px; height:20px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #cfd6e0; padding:0; cursor:pointer}
   .swatches .sw:hover{transform:scale(1.12)}
@@ -442,6 +471,17 @@
   <button class="tbBtn" id="tbDel" title="Delete"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
 </div>
 
+<!-- Field settings popover -->
+<div class="fldprops hide" id="fldProps">
+  <div class="fp-title" id="fpTitle">Field</div>
+  <label class="fp-row"><span>Name</span><input type="text" id="fpName" placeholder="field name"></label>
+  <label class="fp-row" id="fpGroupRow"><span>Group</span><input type="text" id="fpGroup" placeholder="choice1"></label>
+  <label class="fp-row" id="fpOptRow"><span>Value</span><input type="text" id="fpOpt" placeholder="option value"></label>
+  <label class="fp-row fp-col" id="fpOptionsRow"><span>List options (one per line)</span><textarea id="fpOptions" rows="3" placeholder="Option 1&#10;Option 2"></textarea></label>
+  <label class="fp-check" id="fpReqRow"><input type="checkbox" id="fpReq"> Required</label>
+  <button class="fp-del" id="fpDel">Delete field</button>
+</div>
+
 <div class="empty" id="empty">
   <div class="drop" id="drop">
     <svg class="drop-logo" viewBox="0 0 32 32" aria-hidden="true">
@@ -505,6 +545,30 @@
         <button class="lbtn gold" id="sigPlace">Place signature</button>
       </div>
     </footer>
+  </div>
+</div>
+
+<!-- Tab order modal -->
+<div class="modal-bg hide" id="tabModal">
+  <div class="modal" style="width:min(460px,94vw)">
+    <header class="head"><span>Change tab order</span><button class="x" id="tabClose">×</button></header>
+    <div class="body">
+      <p style="margin:0 0 12px;color:var(--muted);font-size:13px">The order people move through your fields when pressing Tab. Use the arrows to reorder.</p>
+      <div id="tabList" style="display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto"></div>
+    </div>
+    <footer><span></span><div class="row"><button class="lbtn gold" id="tabDone">Done</button></div></footer>
+  </div>
+</div>
+
+<!-- Publish modal -->
+<div class="modal-bg hide" id="pubModal">
+  <div class="modal" style="width:min(480px,94vw)">
+    <header class="head"><span>Share for others to fill &amp; sign</span><button class="x" id="pubClose">×</button></header>
+    <div class="body">
+      <p style="margin:0 0 12px;color:var(--ink);font-size:14px;line-height:1.5">Your fields are real, interactive PDF fields. The simplest way to let others fill and sign is to download the finished PDF and send it — they can complete it in any free reader (Edge, Acrobat Reader, Preview) and send it back.</p>
+      <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">A hosted "fill online via a link" flow would need a server and accounts — it isn't part of this in-browser app, which keeps every file private to the device.</p>
+    </div>
+    <footer><button class="lbtn" id="pubCancel">Close</button><div class="row"><button class="lbtn gold" id="pubDownload">Download fillable PDF</button></div></footer>
   </div>
 </div>
 
@@ -748,8 +812,9 @@ function deletePage(i){
 /* ---------------- tools ---------------- */
 const tools=[...document.querySelectorAll(".tool[data-tool]")];
 tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
-const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check"];
+const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign"];
 let stampType="check";
+let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t){
   tool=t;
   tools.forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
@@ -793,13 +858,64 @@ function formsAction(act){
   if(act==="f-text"){ setTool("field-text"); toast("Drag on the page to draw a fillable text field."); return; }
   if(act==="f-multiline"){ setTool("field-multiline"); toast("Drag to draw a multi-line text field."); return; }
   if(act==="f-check"){ setTool("field-check"); toast("Drag to draw a checkbox field."); return; }
-  if(["f-radio","f-dropdown","f-sign"].includes(act)){
-    toast("Radio groups, drop-downs and signature fields aren't in this build yet — want me to add them?",true); return;
-  }
-  if(["form-edit","tab-order","publish"].includes(act)){
-    toast("That one needs accounts + hosting (the published fill-and-sign flow). Not in the in-browser build.",true); return;
-  }
+  if(act==="f-radio"){ setTool("field-radio"); toast("Drag to add a radio button. Place several with the same group to make them one choice."); return; }
+  if(act==="f-dropdown"){ setTool("field-dropdown"); toast("Drag to draw a drop-down. Select it to set the list options."); return; }
+  if(act==="f-sign"){ setTool("field-sign"); toast("Drag to draw a signature box the recipient can sign or type into."); return; }
+  if(act==="form-edit"){ toggleFormEdit(); return; }
+  if(act==="tab-order"){ openTabOrder(); return; }
+  if(act==="publish"){ openPublish(); return; }
 }
+
+/* ---- Form edit mode: outline every field + jump to select so fields are editable ---- */
+function toggleFormEdit(){
+  formEditMode=!formEditMode;
+  $("#pages").classList.toggle("form-edit", formEditMode);
+  if(formEditMode){ setTool("select"); toast("Form edit mode on — every field is outlined. Click any field to rename it, set its group/options, or delete it."); }
+  else { toast("Form edit mode off."); }
+}
+
+/* ---- Change tab order: reorder field annotations (export adds them in this order) ---- */
+function fieldList(){ return annos.filter(a=>a.type==="field"); }
+function fieldName(a,i){
+  const t={text:"Text field",check:"Checkbox",radio:"Radio",dropdown:"Drop-down",sign:"Signature"}[a.fieldType]||"Field";
+  return (i+1)+". "+t+(a.name?` · ${a.name}`:a.fieldType==="radio"&&a.group?` · ${a.group}`:"")+`  (p.${a.page+1})`;
+}
+function openTabOrder(){
+  const list=fieldList();
+  if(!list.length){ toast("No form fields yet — add some first.",true); return; }
+  renderTabList();
+  $("#tabModal").classList.remove("hide");
+}
+function renderTabList(){
+  const wrap=$("#tabList"); wrap.innerHTML="";
+  const list=fieldList();
+  list.forEach((a,i)=>{
+    const row=el("div"); row.style.cssText="display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:8px 10px";
+    const lab=el("span"); lab.textContent=fieldName(a,i); lab.style.cssText="flex:1;font-size:13px;color:var(--ink)";
+    const up=el("button","lbtn"); up.textContent="↑"; up.style.cssText="padding:4px 9px"; up.disabled=i===0;
+    const dn=el("button","lbtn"); dn.textContent="↓"; dn.style.cssText="padding:4px 9px"; dn.disabled=i===list.length-1;
+    up.onclick=()=>{ moveField(a,-1); }; dn.onclick=()=>{ moveField(a,1); };
+    row.append(lab,up,dn); wrap.appendChild(row);
+  });
+}
+function moveField(a,dir){
+  const idx=annos.indexOf(a);
+  // find neighbour field in annos in the requested direction
+  const fields=fieldList(); const fi=fields.indexOf(a); const target=fields[fi+dir];
+  if(!target) return;
+  const ti=annos.indexOf(target);
+  annos.splice(idx,1); annos.splice(ti,0,a);
+  renderTabList(); snapshot();
+}
+$("#tabClose").onclick=$("#tabDone").onclick=()=>$("#tabModal").classList.add("hide");
+
+/* ---- Publish: honest in-browser path = download the fillable PDF ---- */
+function openPublish(){
+  if(!originalBytes){ toast("Open a PDF first.",true); return; }
+  $("#pubModal").classList.remove("hide");
+}
+$("#pubClose").onclick=$("#pubCancel").onclick=()=>$("#pubModal").classList.add("hide");
+$("#pubDownload").onclick=()=>{ $("#pubModal").classList.add("hide"); exportPdf(); };
 
 /* contextual controls */
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
@@ -998,14 +1114,20 @@ function bindPage(rec){
     if(tool==="field-text"){ annoType="field"; extra={fieldType:"text"}; }
     else if(tool==="field-multiline"){ annoType="field"; extra={fieldType:"text",multiline:true}; }
     else if(tool==="field-check"){ annoType="field"; extra={fieldType:"check"}; }
-    const ghost=el("div","anno "+annoType);
+    else if(tool==="field-radio"){ annoType="field"; extra={fieldType:"radio", group:curRadioGroup, optval:"opt"+(++radioOptSeq)}; }
+    else if(tool==="field-dropdown"){ annoType="field"; extra={fieldType:"dropdown", options:["Option 1","Option 2","Option 3"]}; }
+    else if(tool==="field-sign"){ annoType="field"; extra={fieldType:"sign"}; }
+    const ghost=el("div","anno ghost "+annoType);
     ghost.style.left=start.x+"px"; ghost.style.top=start.y+"px";
+    const badge=el("span","szbadge"); badge.textContent="0 × 0"; ghost.appendChild(badge);
     rec.overlay.appendChild(ghost);
     const move=ev=>{
       const p=clientToLocal(rec,ev.clientX,ev.clientY);
       const x=Math.min(p.x,start.x), y=Math.min(p.y,start.y);
+      const w=Math.abs(p.x-start.x), h=Math.abs(p.y-start.y);
       ghost.style.left=x+"px"; ghost.style.top=y+"px";
-      ghost.style.width=Math.abs(p.x-start.x)+"px"; ghost.style.height=Math.abs(p.y-start.y)+"px";
+      ghost.style.width=w+"px"; ghost.style.height=h+"px";
+      badge.textContent=Math.round(w/BASE)+" × "+Math.round(h/BASE)+" pt";
     };
     const up=ev=>{
       rec.overlay.removeEventListener("pointermove",move);
@@ -1014,13 +1136,18 @@ function bindPage(rec){
       let w=Math.abs(p.x-start.x), h=Math.abs(p.y-start.y);
       ghost.remove();
       if(w<6||h<6){
-        if(annoType==="field"){ w=extra.multiline?200:140; h=extra.fieldType==="check"?20:26; } // click = default-size field
+        if(annoType==="field"){
+          if(extra.fieldType==="check"||extra.fieldType==="radio"){ w=32; h=32; }
+          else if(extra.fieldType==="sign"){ w=200; h=46; }
+          else { w=extra.multiline?200:140; h=extra.multiline?60:26; }
+        } // click = default-size field
         else return;
       }
       const a=makeAnno(Object.assign({type:annoType,page:rec.index,
         x:Math.min(p.x,start.x), y:Math.min(p.y,start.y), w, h,
         color: annoType==="rect"?colorPick.value : (annoType==="whiteout"?"#ffffff":"#1f5fbf")}, extra));
       annos.push(a); renderAnno(a); select(a); snapshot();
+      if(a.type==="field" && a.fieldType==="text"){ enterFieldFill(a); toast("Type a default value, or leave it blank for others to fill. Drag the edge to move it."); }
     };
     rec.overlay.addEventListener("pointermove",move);
     rec.overlay.addEventListener("pointerup",up);
@@ -1138,7 +1265,20 @@ function renderAnno(a){
     }
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
-    if(a.type==="field"){ const lab=el("span","field-label"); n.insertBefore(lab,del); n._lab=lab; }
+    if(a.type==="field"){
+      if(a.fieldType==="text"){
+        const inp=el(a.multiline?"textarea":"input","field-fill");
+        if(!a.multiline) inp.type="text";
+        inp.readOnly=true; a._fill=inp;
+        inp.placeholder=a.multiline?"Type here…":"Type here…";
+        inp.addEventListener("input",()=>{ a.value=inp.value; });
+        inp.addEventListener("focus",()=>select(a));
+        inp.addEventListener("blur",()=>{ inp.readOnly=true; snapshot(); });
+        n.insertBefore(inp,del);
+      }
+      const lab=el("span","field-label"); n.insertBefore(lab,del); n._lab=lab;
+      n.addEventListener("dblclick",ev=>{ if(a._fill){ ev.preventDefault(); enterFieldFill(a); } });
+    }
   }
   n.style.left=a.x+"px"; n.style.top=a.y+"px";
   if(a.type==="text"){
@@ -1159,7 +1299,26 @@ function renderAnno(a){
       n._g.textContent = a.stamp==="dot"?"●":a.stamp==="check"?"✓":"✗";
       n.style.fontSize=(Math.min(a.w,a.h)*0.95)+"px"; n.style.color=a.color;
     }
-    if(a.type==="field"){ n._lab.textContent = a.fieldType==="check"?"☑": (a.multiline?"Text (multiline)":"Text field"); }
+    if(a.type==="field"){
+      n.classList.toggle("fld-radio", a.fieldType==="radio");
+      n.classList.toggle("fld-sign", a.fieldType==="sign");
+      n.classList.toggle("fld-dd", a.fieldType==="dropdown");
+      if(a._fill){
+        if(document.activeElement!==a._fill) a._fill.value=a.value||"";
+        n._lab.style.display="none";
+      }else{
+        n._lab.style.display="";
+        n._lab.textContent =
+          a.fieldType==="check" ? "☑" :
+          a.fieldType==="radio" ? "◉" :
+          a.fieldType==="dropdown" ? ((a.options&&a.options[0])||"Choose…")+" ▾" :
+          a.fieldType==="sign" ? "✗ Signature" : "Text field";
+        if(a.fieldType==="check"||a.fieldType==="radio"){
+          n._lab.style.fontSize = Math.max(10, Math.min(a.w,a.h)*0.78) + "px";
+          n._lab.style.lineHeight = "1";
+        } else { n._lab.style.fontSize=""; n._lab.style.lineHeight=""; }
+      }
+    }
   }
 }
 
@@ -1182,6 +1341,7 @@ function select(a){
   positionStrokeBar();
   refreshCtx();
   updateTextbar();
+  updateFieldProps();
 }
 
 /* ---------------- floating text formatting bar ---------------- */
@@ -1239,6 +1399,44 @@ function positionTextbar(){
   let left=Math.max(8, Math.min(r.left, innerWidth-bw-8));
   textbar.style.left=left+"px"; textbar.style.top=top+"px";
 }
+
+/* ---------------- field settings popover ---------------- */
+const fldProps=$("#fldProps");
+const FP={title:$("#fpTitle"),name:$("#fpName"),group:$("#fpGroup"),groupRow:$("#fpGroupRow"),
+  opt:$("#fpOpt"),optRow:$("#fpOptRow"),options:$("#fpOptions"),optionsRow:$("#fpOptionsRow"),
+  req:$("#fpReq"),reqRow:$("#fpReqRow"),del:$("#fpDel")};
+function updateFieldProps(){
+  if(!selected || selected.type!=="field" || !selected._node){ fldProps.classList.add("hide"); return; }
+  const a=selected;
+  const titles={text:"Text field",check:"Checkbox",radio:"Radio button",dropdown:"Drop-down list",sign:"Signature box"};
+  FP.title.textContent=titles[a.fieldType]||"Field";
+  FP.name.value=a.name||"";
+  FP.groupRow.style.display = a.fieldType==="radio"?"flex":"none";
+  FP.optRow.style.display   = a.fieldType==="radio"?"flex":"none";
+  FP.optionsRow.style.display = a.fieldType==="dropdown"?"flex":"none";
+  FP.reqRow.style.display   = (a.fieldType==="dropdown"||a.fieldType==="check")?"none":"flex";
+  FP.name.parentElement.style.display = a.fieldType==="radio"?"none":"flex"; // radios are named by group
+  if(a.fieldType==="radio"){ FP.group.value=a.group||""; FP.opt.value=a.optval||""; }
+  if(a.fieldType==="dropdown"){ FP.options.value=(a.options||[]).join("\n"); }
+  FP.req.checked=!!a.required;
+  fldProps.classList.remove("hide");
+  positionFieldProps();
+}
+function positionFieldProps(){
+  if(fldProps.classList.contains("hide") || !selected || !selected._node) return;
+  const r=selected._node.getBoundingClientRect();
+  const pw=fldProps.offsetWidth, ph=fldProps.offsetHeight;
+  let left=r.right+10; if(left+pw>innerWidth-8) left=Math.max(8,r.left-pw-10);
+  let top=Math.max(64, Math.min(r.top, innerHeight-ph-8));
+  fldProps.style.left=left+"px"; fldProps.style.top=top+"px";
+}
+FP.name.oninput=()=>{ if(selected&&selected.type==="field"){ selected.name=FP.name.value; } };
+FP.group.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.group=FP.group.value||"choice1"; curRadioGroup=selected.group; renderAnno(selected); } };
+FP.opt.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.optval=FP.opt.value||("opt"+selected.id); } };
+FP.options.oninput=()=>{ if(selected&&selected.fieldType==="dropdown"){ selected.options=FP.options.value.split("\n").map(s=>s.trim()).filter(Boolean); renderAnno(selected); } };
+[FP.name,FP.group,FP.opt,FP.options].forEach(inp=> inp.addEventListener("change",()=>{ if(selected) snapshot(); }));
+FP.req.onchange=()=>{ if(selected&&selected.type==="field"){ selected.required=FP.req.checked; snapshot(); } };
+FP.del.onclick=()=>{ if(selected) removeAnno(selected); fldProps.classList.add("hide"); };
 $("#tbBold").addEventListener("mousedown",e=>e.preventDefault());
 $("#tbItalic").addEventListener("mousedown",e=>e.preventDefault());
 $("#tbBold").onclick=()=>{ if(!selected)return; selected.bold=!selected.bold; renderAnno(selected); updateTextbar(); snapshot(); };
@@ -1262,8 +1460,8 @@ $("#tbMove").addEventListener("pointerdown",e=>{
   const up=()=>{ btn.removeEventListener("pointermove",mv); btn.removeEventListener("pointerup",up); snapshot(); };
   btn.addEventListener("pointermove",mv); btn.addEventListener("pointerup",up);
 });
-$("#stage").addEventListener("scroll",()=>{ positionTextbar(); positionStrokeBar(); });
-window.addEventListener("resize",positionTextbar);
+$("#stage").addEventListener("scroll",()=>{ positionTextbar(); positionStrokeBar(); positionFieldProps(); });
+window.addEventListener("resize",()=>{ positionTextbar(); positionFieldProps(); });
 
 /* move / resize */
 /* ---- alignment guides (snap to page margins / center / other items) ---- */
@@ -1310,6 +1508,7 @@ function startMove(e,a){
   if(tool!=="select") return;     // creating tools should place on top, not move existing objects
   if(pinchActive) return;
   if(a.type==="text" && a._editing) return; // typing — let the caret work
+  if(a.type==="field" && a._fill && !a._fill.readOnly) return; // filling a field — let the caret work
   if(e.target.classList.contains("handle")||e.target.classList.contains("del")) return;
   e.preventDefault(); e.stopPropagation();
   const wasSelected=(selected===a);
@@ -1320,7 +1519,7 @@ function startMove(e,a){
   let moved=false;
   try{ a._node.setPointerCapture(e.pointerId); }catch(_){}
   const move=ev=>{
-    if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>4){ if(!moved){ moved=true; draggingAnno=true; textbar.classList.add("hide"); } }
+    if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>4){ if(!moved){ moved=true; draggingAnno=true; textbar.classList.add("hide"); fldProps.classList.add("hide"); } }
     const p=clientToLocal(rec,ev.clientX,ev.clientY);
     const s=computeSnap(rec,a, ox+(p.x-start.x), oy+(p.y-start.y));
     a.x=s.x; a.y=s.y; renderAnno(a);
@@ -1332,7 +1531,7 @@ function startMove(e,a){
     window.removeEventListener("pointercancel",up);
     clearGuides(rec);
     draggingAnno=false;
-    if(moved){ snapshot(); positionTextbar(); }
+    if(moved){ snapshot(); positionTextbar(); updateFieldProps(); }
     else if(a.type==="text" && wasSelected) enterEdit(a); // tap an already-selected text box → edit
   };
   window.addEventListener("pointermove",move);
@@ -1391,6 +1590,13 @@ function enterEdit(a){
   a._editing=true;
   a._edit.contentEditable="true";
   a._edit.focus(); placeCaretEnd(a._edit);
+}
+function enterFieldFill(a){
+  if(!a || !a._fill) return;
+  select(a);
+  a._fill.readOnly=false;
+  a._fill.focus();
+  try{ const v=a._fill.value.length; a._fill.setSelectionRange(v,v); }catch(_){}
 }
 function placeCaretEnd(node){
   const r=document.createRange(); r.selectNodeContents(node); r.collapse(false);
@@ -1787,6 +1993,7 @@ async function buildBytes(){
       return getFont(stdFontName(reg.fb||"helv",bold,italic));
     };
     const form = doc.getForm();
+    const radioGroups = {};
     const docPages = doc.getPages();
 
     // group annotations by page index
@@ -1839,14 +2046,38 @@ async function buildBytes(){
         }
         else if(a.type==="field"){
           const x=a.x/BASE, y=H-(a.y+a.h)/BASE, w=a.w/BASE, h=a.h/BASE;
-          if(a.fieldType==="check"){
-            const cb=form.createCheckBox("cb_"+a.id);
-            cb.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:rgb(.4,.45,.55)});
-          }else{
-            const tf=form.createTextField("tf_"+a.id);
-            if(a.multiline) tf.enableMultiline();
-            tf.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:rgb(.4,.45,.55),backgroundColor:rgb(1,1,1)});
-          }
+          const bc=rgb(.4,.45,.55);
+          try{
+            if(a.fieldType==="check"){
+              const cb=form.createCheckBox(a.name||("cb_"+a.id));
+              cb.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc});
+            }
+            else if(a.fieldType==="radio"){
+              const gname=a.group||("radio_"+a.id);
+              let rg=radioGroups[gname];
+              if(!rg){ rg=radioGroups[gname]=form.createRadioGroup("rg_"+gname); }
+              rg.addOptionToPage(a.optval||("opt_"+a.id), page, {x,y,width:w,height:h,borderWidth:1,borderColor:bc});
+            }
+            else if(a.fieldType==="dropdown"){
+              const dd=form.createDropdown(a.name||("dd_"+a.id));
+              const opts=(a.options&&a.options.length?a.options:["Option 1"]).map(String);
+              dd.addOptions(opts); dd.select(opts[0]);
+              dd.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:rgb(1,1,1)});
+            }
+            else if(a.fieldType==="sign"){
+              // signature line + caption, plus a fillable field so it can be signed/typed
+              page.drawLine({start:{x:x+4,y:y+h*0.34},end:{x:x+w-4,y:y+h*0.34},thickness:1,color:rgb(.25,.3,.4)});
+              page.drawText("Signature",{x:x+4,y:y+3,size:7,color:rgb(.45,.5,.6)});
+              const sf=form.createTextField(a.name||("sig_"+a.id));
+              sf.addToPage(page,{x,y:y+h*0.36,width:w,height:h*0.6,borderWidth:0,backgroundColor:undefined});
+            }
+            else{
+              const tf=form.createTextField(a.name||("tf_"+a.id));
+              if(a.multiline) tf.enableMultiline();
+              if(a.value) tf.setText(String(a.value));
+              tf.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:rgb(1,1,1)});
+            }
+          }catch(err){ console.warn("field export",a.fieldType,err); }
         }
         else if(a.type==="text"){
           const txt=(a.text||"").replace(/\r/g,"");
