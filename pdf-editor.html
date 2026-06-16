@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Editor — edit, sign, annotate in your browser</title>
+<title>Folio — PDF Editor</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
@@ -12,10 +12,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Caveat&family=Satisfy&family=Pacifico&family=Great+Vibes&family=Sacramento&family=Allura&family=Homemade+Apple&family=Cedarville+Cursive&family=Kalam&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0d1830; --navy-2:#16223f; --ink:#1d2740;
-    --gold:#c9963a; --gold-soft:#e7c987; --accent-d:#a9772a; --tint:#fffaf0;
-    --paper:#eef0f3; --line:#e4e7ec; --white:#ffffff;
-    --muted:#6b7484; --ok:#2f7d57; --danger:#c0492f;
+    --navy:#15203a; --navy-2:#1b2a4a; --ink:#16213b;
+    --gold:#2563eb; --gold-soft:#5b8af2; --accent-d:#1b4ed1; --tint:#eef4ff;
+    --paper:#eef1f6; --line:#e4e7ec; --white:#ffffff;
+    --muted:#64708a; --ok:#2f7d57; --danger:#dc4b3e;
     --shadow:0 1px 3px rgba(16,24,40,.08),0 12px 28px rgba(16,24,40,.06);
     --radius:10px;
   }
@@ -31,14 +31,13 @@
   /* ---------- Top bar ---------- */
   .topbar{
     height:56px; display:flex; align-items:center; gap:14px; padding:0 16px;
-    background:#33456b; color:#fff; border-bottom:1px solid #28365a;
+    background:var(--navy); color:#fff; border-bottom:1px solid rgba(255,255,255,.08);
   }
-  .brand{display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:.2px}
-  .brand .mark{
-    width:26px; height:26px; border-radius:7px; display:grid; place-items:center;
-    background:linear-gradient(135deg,var(--gold),#a9772a); color:#1a1305; font-weight:800; font-size:14px;
-  }
-  .brand small{display:block; font-weight:500; font-size:11px; color:#9fb0cf; letter-spacing:.3px; margin-top:-2px}
+  .brand{display:flex; align-items:center; gap:11px}
+  .brand .logo{width:34px; height:34px; flex:none; filter:drop-shadow(0 2px 5px rgba(37,99,235,.35))}
+  .brand-text{display:flex; flex-direction:column; line-height:1.05}
+  .brand-name{font-size:19px; font-weight:700; letter-spacing:.4px; color:#fff}
+  .brand small{font-weight:600; font-size:9.5px; color:#8fa3c9; letter-spacing:2px; text-transform:uppercase; margin-top:3px}
   .topbar .spacer{flex:1}
   .filename{font-size:13px; color:#b9c4d8; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .tbtn{
@@ -47,7 +46,7 @@
   }
   .tbtn:hover{background:rgba(255,255,255,.22)}
   .tbtn:disabled{opacity:.4; cursor:not-allowed}
-  .tbtn.primary{background:var(--gold); border-color:var(--accent-d); color:#1a1305}
+  .tbtn.primary{background:var(--gold); border-color:var(--accent-d); color:#fff}
   .tbtn.primary:hover{background:var(--gold-soft)}
   .zoom{display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:8px; padding:2px}
   .zoom button{background:none; border:0; color:#eef2f9; width:30px; height:30px; border-radius:6px; font-size:16px}
@@ -156,6 +155,8 @@
   .field-check{position:absolute; box-sizing:border-box; border:1px solid #8fb8ec; background:#e9f1fc;
     pointer-events:auto; cursor:pointer; border-radius:2px; display:grid; place-items:center; color:#0a1a3a; font-weight:800}
   .field-check.on::after{content:"✓"; font-size:90%}
+  /* while any tool is active (not Select), let taps pass through fields to the page */
+  #pages.tooling .field-input, #pages.tooling .field-check{pointer-events:none}
 
   /* annotations */
   .anno{position:absolute; box-sizing:border-box; touch-action:none; pointer-events:auto}
@@ -203,10 +204,11 @@
   /* ---------- Empty / dropzone ---------- */
   .empty{
     position:absolute; inset:110px 0 0 0; display:grid; place-items:center; padding:30px;
+    background:linear-gradient(180deg,#f4f6fb,#e7ebf3);
   }
   .drop{
-    width:min(560px,92vw); background:#fff; border:2px dashed var(--line); border-radius:18px;
-    padding:48px 36px; text-align:center; box-shadow:var(--shadow); transition:border-color .15s, background .15s;
+    width:min(560px,92vw); background:#fff; border:1px solid #e3e8f1; border-radius:20px;
+    padding:46px 36px; text-align:center; box-shadow:0 1px 2px rgba(13,24,48,.05),0 22px 55px rgba(13,24,48,.14); transition:border-color .15s, background .15s;
   }
   .drop.dragover{border-color:var(--gold); background:var(--tint)}
   .drop .ic{
@@ -214,14 +216,15 @@
     display:grid; place-items:center;
   }
   .drop .ic svg{width:30px; height:30px; stroke:var(--gold-soft); fill:none; stroke-width:1.6}
-  .drop h1{font-size:23px; margin:0 0 8px; color:var(--navy)}
-  .drop p{margin:0 0 22px; color:var(--muted); font-size:14px; line-height:1.5}
+  .drop-logo{width:76px; height:76px; margin:0 auto 20px; display:block; filter:drop-shadow(0 6px 16px rgba(37,99,235,.30))}
+  .drop h1{font-size:26px; margin:0 0 10px; color:#0c1730; letter-spacing:-.01em; font-weight:800}
+  .drop p{margin:0 0 24px; color:#51607a; font-size:14.5px; line-height:1.55}
   .drop .cta{
-    background:var(--gold); color:#1a1305; border:0; border-radius:10px; padding:13px 26px;
-    font-size:15px; font-weight:700;
+    background:linear-gradient(180deg,#3b7bf6,#1d4ed8); color:#fff; border:0; border-radius:12px; padding:14px 30px;
+    font-size:15px; font-weight:800; letter-spacing:.2px; box-shadow:0 8px 20px rgba(29,78,216,.38);
   }
-  .drop .cta:hover{background:var(--gold-soft)}
-  .privacy{margin-top:18px; font-size:12px; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:7px}
+  .drop .cta:hover{filter:brightness(1.05)}
+  .privacy{margin-top:20px; font-size:12px; color:#6b7484; display:flex; align-items:center; justify-content:center; gap:7px}
   .privacy svg{width:14px; height:14px; stroke:var(--ok); fill:none; stroke-width:2}
 
   /* ---------- Signature modal ---------- */
@@ -234,7 +237,7 @@
   .modal .row{display:flex; gap:10px; align-items:center}
   .lbtn{border:1px solid var(--line); background:#fff; border-radius:9px; padding:10px 16px; font-weight:600; font-size:13px; color:var(--ink)}
   .lbtn:hover{background:#f3efe6}
-  .lbtn.gold{background:var(--gold); border-color:var(--accent-d); color:#1a1305}
+  .lbtn.gold{background:var(--gold); border-color:var(--accent-d); color:#fff}
   .lbtn.gold:hover{background:var(--gold-soft)}
 
   /* signature modal */
@@ -313,6 +316,13 @@
   @keyframes s{to{transform:rotate(360deg)}}
 
   @media (max-width:720px){
+    .topbar{gap:6px; padding:0 10px}
+    .tbtn{padding:8px 10px; font-size:12.5px}
+    .tbtn .lbl{display:none}            /* Undo/Redo become icons, "Open PDF" -> "Open" */
+    .brand{gap:8px}
+    .brand small{display:none}
+    .brand-name{font-size:16px}
+    .brand .logo{width:30px; height:30px}
     .tool{min-width:46px; font-size:11px; padding:7px 9px}
     .tool span{display:none}
     .filename{display:none}
@@ -329,8 +339,23 @@
 
 <div class="topbar" id="topbar">
   <div class="brand">
-    <div class="mark">P</div>
-    <div>PDF&nbsp;Editor<small>edits stay in your browser</small></div>
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="folioTile" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4f7cf6"/>
+          <stop offset="1" stop-color="#1d4ed8"/>
+        </linearGradient>
+      </defs>
+      <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#folioTile)"/>
+      <path d="M10.5 8 H18.5 L22.5 12 V23.5 H10.5 Z" fill="#fff"/>
+      <path d="M18.5 8 L22.5 12 H18.5 Z" fill="#9db8ef"/>
+      <g stroke="#2563eb" stroke-width="1.15" stroke-linecap="round">
+        <line x1="13" y1="15.4" x2="20" y2="15.4"/>
+        <line x1="13" y1="18" x2="20" y2="18"/>
+        <line x1="13" y1="20.6" x2="17" y2="20.6"/>
+      </g>
+    </svg>
+    <div class="brand-text"><span class="brand-name">Folio</span><small>PDF Editor</small></div>
   </div>
   <div class="spacer"></div>
   <span class="filename" id="filename"></span>
@@ -339,9 +364,7 @@
     <span id="zoomLabel">100%</span>
     <button id="zoomIn" title="Zoom in">+</button>
   </div>
-  <button class="tbtn" id="undoBtn" disabled title="Undo">↶ Undo</button>
-  <button class="tbtn" id="redoBtn" disabled title="Redo">↷ Redo</button>
-  <button class="tbtn" id="openBtn">Open PDF</button>
+  <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
 </div>
 
@@ -421,9 +444,23 @@
 
 <div class="empty" id="empty">
   <div class="drop" id="drop">
-    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg></div>
-    <h1>Edit a PDF</h1>
-    <p>Drop a file here, or open one to add text, whiteout, highlights, images,<br>drawings and signatures — then download the result.</p>
+    <svg class="drop-logo" viewBox="0 0 32 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="folioTile2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4f7cf6"/><stop offset="1" stop-color="#1d4ed8"/>
+        </linearGradient>
+      </defs>
+      <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#folioTile2)"/>
+      <path d="M10.5 8 H18.5 L22.5 12 V23.5 H10.5 Z" fill="#fff"/>
+      <path d="M18.5 8 L22.5 12 H18.5 Z" fill="#9db8ef"/>
+      <g stroke="#2563eb" stroke-width="1.15" stroke-linecap="round">
+        <line x1="13" y1="15.4" x2="20" y2="15.4"/>
+        <line x1="13" y1="18" x2="20" y2="18"/>
+        <line x1="13" y1="20.6" x2="17" y2="20.6"/>
+      </g>
+    </svg>
+    <h1>Edit, sign &amp; fill any PDF</h1>
+    <p>Open a file to add text, fill forms, whiteout, highlight, images,<br>drawings and signatures — then download the finished PDF.</p>
     <button class="cta" id="openBtn2">Choose a PDF</button>
     <div class="privacy"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3 7-7 9-4-2-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg> Your file never leaves this device — everything runs locally.</div>
   </div>
@@ -727,6 +764,7 @@ function setTool(t){
     p.drawCanvas.style.cursor = (t==="draw") ? "crosshair" : "default";
   });
   if(t!=="select") select(null);
+  $("#pages").classList.toggle("tooling", t!=="select");
   if(t==="image") $("#imgInput").click();
   if(t==="edittext") toast("Tap a line of text to replace it — it gets covered and a typed copy drops on top.");
   refreshCtx();
@@ -1691,16 +1729,13 @@ function restore(state){
   pages.forEach((p,i)=> redrawPageStrokes(i));
   refreshCtx(); updateUI();
 }
-$("#undoBtn").onclick=()=>{ if(hIndex>0){ hIndex--; restore(history[hIndex]); } };
-$("#redoBtn").onclick=()=>{ if(hIndex<history.length-1){ hIndex++; restore(history[hIndex]); } };
-function updateUI(){
-  $("#undoBtn").disabled = hIndex<=0;
-  $("#redoBtn").disabled = hIndex>=history.length-1;
-}
+function doUndo(){ if(hIndex>0){ hIndex--; restore(history[hIndex]); } }
+function doRedo(){ if(hIndex<history.length-1){ hIndex++; restore(history[hIndex]); } }
+function updateUI(){}
 document.addEventListener("keydown",e=>{
   const ae=document.activeElement, tag=ae&&ae.tagName;
   const typing = tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(ae&&ae.isContentEditable);
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?$("#redoBtn").click():$("#undoBtn").click(); }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?doRedo():doUndo(); }
   if((e.key==="Delete"||e.key==="Backspace") && selected && !typing){ e.preventDefault(); removeAnno(selected); }
 });
 
