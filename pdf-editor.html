@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Majd — PDF Editor</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
@@ -402,20 +403,8 @@
 <div class="topbar" id="topbar">
   <div class="brand">
     <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
-      <defs>
-        <linearGradient id="folioTile" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#4f7cf6"/>
-          <stop offset="1" stop-color="#1d4ed8"/>
-        </linearGradient>
-      </defs>
-      <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#folioTile)"/>
-      <path d="M10.5 8 H18.5 L22.5 12 V23.5 H10.5 Z" fill="#fff"/>
-      <path d="M18.5 8 L22.5 12 H18.5 Z" fill="#9db8ef"/>
-      <g stroke="#2563eb" stroke-width="1.15" stroke-linecap="round">
-        <line x1="13" y1="15.4" x2="20" y2="15.4"/>
-        <line x1="13" y1="18" x2="20" y2="18"/>
-        <line x1="13" y1="20.6" x2="17" y2="20.6"/>
-      </g>
+      <circle cx="16" cy="16" r="15.5" fill="#0f2444"/>
+      <path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/>
     </svg>
     <div class="brand-text"><span class="brand-name">Majd</span><small>PDF Editor</small></div>
   </div>
@@ -427,6 +416,7 @@
     <button id="zoomIn" title="Zoom in">+</button>
   </div>
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
+  <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
 </div>
@@ -435,6 +425,7 @@
   <button class="enav active" id="navEdit"><svg viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg>Edit</button>
   <button class="enav" id="organizeBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Organize</button>
   <button class="enav" id="mergeBtn"><svg viewBox="0 0 24 24"><path d="M8 4h8l3 4v12H8z"/><path d="M3 9h7M6 6v6"/></svg>Merge</button>
+  <button class="enav" id="scanNav"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2"/><path d="M4 12h16"/></svg>Scanner</button>
 </nav>
 
 <div class="toolbar" id="toolbar" style="display:none">
@@ -675,6 +666,8 @@ window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitTo
 
 /* ---------------- file loading ---------------- */
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
+$("#scanBtn").onclick = ()=> window.open("scanner.html","_blank");
+$("#scanNav").onclick = ()=> window.open("scanner.html","_blank");
 $("#fileInput").onchange = e => { if(e.target.files[0]) loadFile(e.target.files[0]); e.target.value=""; };
 
 const drop=$("#drop");
@@ -2307,6 +2300,16 @@ $("#mergeInput").onchange=async e=>{
 };
 
 layout();
+
+/* pick up a scan handed off from the scanner (via IndexedDB) */
+function idbGet(key){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(null);} const tx=db.transaction("kv","readonly"); const g=tx.objectStore("kv").get(key); g.onsuccess=()=>{ db.close(); res(g.result); }; g.onerror=()=>{ db.close(); rej(g.error); }; }; r.onerror=()=>rej(r.error); }); }
+function idbDel(key){ return new Promise((res)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(); } const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").delete(key); tx.oncomplete=()=>{ db.close(); res(); }; tx.onerror=()=>{ db.close(); res(); }; }; r.onerror=()=>res(); }); }
+(async()=>{
+  try{
+    const buf = await idbGet("pendingScan");
+    if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); }
+  }catch(e){ /* no handoff */ }
+})();
 
 })();
 </script>
