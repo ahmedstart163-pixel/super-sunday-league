@@ -320,26 +320,49 @@
   .ss-del{width:30px; height:30px; flex:0 0 auto; border-radius:7px; border:1px solid var(--line); background:#fff; color:var(--danger); font-size:16px; line-height:1}
   .ss-del:hover{background:#fdecec; border-color:#f0b4ab}
 
-  /* organize modal */
-  .orgview{position:fixed; left:0; right:0; bottom:0; background:var(--paper); z-index:40; display:flex; flex-direction:column}
-  .orgview-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:12px 18px; background:var(--white); border-bottom:1px solid var(--line)}
-  .orgview-title{font-size:15px; font-weight:700; color:var(--navy)}
-  .orgview-hint{font-size:12px; color:var(--muted); flex:1; min-width:120px}
-  .orgview-top .row{display:flex; gap:10px}
+  /* organize view — iLovePDF-style two-pane */
+  .orgview{position:fixed; left:0; right:0; bottom:0; background:#f4f5f8; z-index:40; display:flex; flex-direction:row}
+  .org-main{flex:1; overflow:auto; padding:34px 30px}
+  .org-float{position:absolute; top:30px; right:344px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:5}
+  .org-fadd{width:48px; height:48px; border-radius:50%; border:0; background:#e5322d; color:#fff; font-size:26px; font-weight:600; cursor:pointer; box-shadow:0 6px 16px rgba(229,50,45,.35)}
+  .org-fadd:hover{background:#cf2b26}
+  .org-fsort{width:40px; height:40px; border-radius:50%; border:1px solid #e5d3d2; background:#fff; color:#444; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:.8; font-size:11px; font-weight:700}
+  .org-fsort:hover{border-color:#e5322d; color:#e5322d}
+  .org-side{width:344px; flex:none; background:#fff; border-left:1px solid #ececf1; padding:28px 26px; display:flex; flex-direction:column}
+  .org-side-title{font-size:26px; font-weight:700; color:#33373d; margin:0 0 22px}
+  .org-side-files{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-size:15px; color:#33373d}
+  .org-reset{background:none; border:0; color:#e5322d; font-size:14px; cursor:pointer; padding:0}
+  .org-reset:hover{text-decoration:underline}
+  .org-file-pill{background:#fdeceb; border-radius:8px; padding:14px 16px; color:#33373d; font-size:15px; display:flex; align-items:center; gap:8px}
+  .org-file-pill::before{content:"\2195"; color:#9aa0a6; font-size:14px}
+  .org-side-spacer{flex:1}
+  .org-back{background:none; border:0; color:#7a808a; font-size:14px; cursor:pointer; padding:8px; margin-bottom:8px}
+  .org-back:hover{color:#33373d}
+  .org-apply-big{background:#e5322d; color:#fff; border:0; border-radius:10px; padding:18px; font-size:19px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 8px 20px rgba(229,50,45,.32)}
+  .org-apply-big:hover{background:#cf2b26}
+  @media(max-width:680px){
+    .orgview{flex-direction:column}
+    .org-side{width:auto; border-left:0; border-top:1px solid #ececf1; padding:16px}
+    .org-side-title{font-size:20px; margin-bottom:12px}
+    .org-side-spacer{display:none}
+    .org-float{right:14px; top:14px}
+  }
   .modal.org{width:min(860px,96vw)}
   .org-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:14px; padding:18px; max-height:62vh; overflow:auto}
-  .orgview .org-grid{flex:1; max-height:none}
-  .org-card{border:1.5px solid #f59042; border-radius:10px; padding:8px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
+  .orgview .org-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:20px; padding:0; max-height:none}
+  .org-card{border:1.5px solid #f3b1a8; border-radius:12px; padding:10px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
   .org-card:active{cursor:grabbing}
   .org-card.dragging{opacity:.35}
   .org-card.drop-target{border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-soft); transform:translateY(-2px)}
   .org-thumb-wrap{height:140px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--paper); border-radius:6px}
   .org-thumb{box-shadow:0 1px 4px rgba(0,0,0,.18); background:#fff; transition:transform .15s}
   .org-no{font-size:11px; color:var(--muted); text-align:center; margin-top:7px; font-weight:600}
-  .org-ctl{display:flex; justify-content:center; gap:3px; margin-top:7px; flex-wrap:wrap}
-  .org-ctl button{width:26px; height:26px; border:1px solid var(--line); border-radius:6px; background:#fff; font-size:12px; line-height:1; display:grid; place-items:center; cursor:pointer; color:var(--ink)}
-  .org-ctl button:hover{background:#eef4fc; border-color:#bcdcf7}
-  .org-ctl .del:hover{background:#fdecec; border-color:#f0b4ab; color:var(--danger)}
+  .org-ctl{display:flex; justify-content:center; gap:8px; margin-top:9px; flex-wrap:wrap}
+  .org-ctl button{width:32px; height:32px; border:1.5px solid; border-radius:8px; font-size:15px; font-weight:700; line-height:1; display:grid; place-items:center; cursor:pointer}
+  .org-ctl button:not(.del){background:#e8f1ff; border-color:#7fb0f0; color:#1763b3}
+  .org-ctl button:not(.del):hover{background:#d6e7ff}
+  .org-ctl .del{background:#fde4e2; border-color:#f08a80; color:#d62b1f}
+  .org-ctl .del:hover{background:#fbd2cf}
 
   /* toast */
   .toast{
@@ -417,8 +440,8 @@
 <div class="toolbar" id="toolbar" style="display:none">
   <div class="toolgroup">
   <button class="tool active" data-tool="select"><svg viewBox="0 0 24 24"><path d="M4 4l7 16 2-7 7-2z"/></svg><span>Select</span></button>
-  <button class="tool" data-tool="text"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Text</span></button>
-  <button class="tool" data-tool="edittext"><svg viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg><span>Edit</span></button>
+  <button class="tool" data-tool="text"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Add Text</span></button>
+  <button class="tool" data-tool="edittext"><svg viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg><span>Edit Text</span></button>
   <button class="tool" id="formsBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>Forms</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Image</span></button>
   <button class="tool" id="signBtn"><svg viewBox="0 0 24 24"><path d="M3 18c4 0 4-9 8-9s4 6 8 1"/><path d="M3 21h18"/></svg><span>Sign</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -583,17 +606,23 @@
   </div>
 </div>
 
-<!-- Organize pages modal -->
+<!-- Organize pages — iLovePDF-style layout -->
 <div class="orgview hide" id="orgView">
-  <div class="orgview-top">
-    <span class="orgview-title">Organize pages</span>
-    <span class="orgview-hint">Drag pages to reorder · rotate, duplicate or remove with the buttons</span>
-    <div class="row">
-      <button class="lbtn" id="orgCancel">Back to editor</button>
-      <button class="lbtn gold" id="orgApply">Apply changes</button>
-    </div>
+  <div class="org-main">
+    <div class="org-grid" id="orgGrid"></div>
   </div>
-  <div class="org-grid" id="orgGrid"></div>
+  <div class="org-float">
+    <button class="org-fadd" id="orgAddFile" title="Add a PDF">+</button>
+    <button class="org-fsort" id="orgSort" title="Reset to original order"><span>1</span><span>9</span></button>
+  </div>
+  <aside class="org-side">
+    <h2 class="org-side-title">Organize pdf</h2>
+    <div class="org-side-files"><span>Files:</span><button class="org-reset" id="orgReset">Reset all</button></div>
+    <div class="org-file-pill" id="orgFilePill">A: document.pdf</div>
+    <div class="org-side-spacer"></div>
+    <button class="org-back" id="orgCancel">Back to editor</button>
+    <button class="org-apply-big" id="orgApply">Organize <span>&#10142;</span></button>
+  </aside>
 </div>
 
 <div class="busy hide" id="busy"><div class="spin"></div></div>
@@ -1735,12 +1764,27 @@ function renderSignMenu(){
     wrap.appendChild(item);
   });
 }
+function currentVisiblePage(){
+  const stage=$("#stage"); const sr=stage.getBoundingClientRect(); const cy=sr.top+sr.height/2;
+  let best=null,bd=Infinity;
+  for(const p of pages){ if(p.deleted||!p.pageEl) continue; const r=p.pageEl.getBoundingClientRect(); const mid=r.top+r.height/2; const d=Math.abs(mid-cy); if(d<bd){bd=d;best=p;} }
+  return best || pages.find(p=>!p.deleted) || pages[0];
+}
+function placeSignAuto(){
+  if(!pendingSign) return;
+  const rec=currentVisiblePage();
+  if(!rec){ setTool("sign"); toast("Click on the page to place your signature."); return; }
+  const wpx=rec.overlay.offsetWidth||rec.pageEl.offsetWidth||600;
+  const hpx=rec.overlay.offsetHeight||rec.pageEl.offsetHeight||800;
+  const start={ x:Math.max(10,(wpx-220)/2), y:Math.max(10, hpx*0.40) };
+  placePending(rec,start,"sign");
+  toast("Signature added — drag to position it.");
+}
 function useSignature(src){
   const mime = src.indexOf("data:image/png")===0 ? "image/png" : "image/jpeg";
   pendingSign={src,mime};
   signMenu.classList.add("hide");
-  setTool("sign");
-  toast("Click on the page to place your signature.");
+  placeSignAuto();
 }
 signBtn.onclick=e=>{ e.stopPropagation(); signMenu.classList.contains("hide")?openSignPicker():signMenu.classList.add("hide"); };
 $("#signNew").onclick=()=>{ signMenu.classList.add("hide"); openSig(); };
@@ -1853,8 +1897,7 @@ $("#sigPlace").onclick=async()=>{
   const r=await produceSig();
   if(!r){ toast("Add a signature first.",true); return; }
   if($("#sigSaveChk") && $("#sigSaveChk").checked){ addSavedSig(r.src); }
-  pendingSign=r; closeSig(); setTool("sign");
-  toast("Click on the page to place your signature.");
+  pendingSign=r; closeSig(); placeSignAuto();
 };
 
 function trimCanvas(c){
@@ -2152,6 +2195,7 @@ async function openOrganize(){
   busy(true);
   try{ await buildThumbCache(); } finally{ busy(false); }
   orgPlan = visible.map((p,i)=>({pi:i, rot:0}));
+  { const pill=$("#orgFilePill"); if(pill) pill.textContent = "A: " + (($("#filename").textContent||"document").trim()||"document.pdf"); }
   renderOrganize();
 }
 function orgThumb(visRec, rot){
@@ -2185,11 +2229,8 @@ function renderOrganize(){
       b.draggable=false;
       b.onpointerdown=ev=>ev.stopPropagation();
       b.onclick=ev=>{ ev.stopPropagation(); fn(); }; return b; };
-    ctl.appendChild(mk("&#9664;","Move left",()=>{ if(idx>0){ const t=orgPlan[idx-1]; orgPlan[idx-1]=orgPlan[idx]; orgPlan[idx]=t; renderOrganize(); } }));
-    ctl.appendChild(mk("&#8635;","Rotate",()=>{ item.rot=(item.rot+90)%360; renderOrganize(); }));
-    ctl.appendChild(mk("&#10697;","Duplicate",()=>{ orgPlan.splice(idx+1,0,{pi:item.pi,rot:item.rot}); renderOrganize(); }));
+    ctl.appendChild(mk("&#8635;","Flip / rotate",()=>{ item.rot=(item.rot+90)%360; renderOrganize(); }));
     ctl.appendChild(mk("&#10005;","Delete",()=>{ if(orgPlan.length>1){ orgPlan.splice(idx,1); renderOrganize(); } else toast("Keep at least one page.",true); },"del"));
-    ctl.appendChild(mk("&#9654;","Move right",()=>{ if(idx<orgPlan.length-1){ const t=orgPlan[idx+1]; orgPlan[idx+1]=orgPlan[idx]; orgPlan[idx]=t; renderOrganize(); } }));
     card.appendChild(wrap); card.appendChild(no); card.appendChild(ctl);
     grid.appendChild(card);
   });
@@ -2239,6 +2280,10 @@ $("#organizeBtn").onclick=showOrganizeView;
 $("#organizeTop").onclick=showOrganizeView;
 $("#orgCancel").onclick=showEditView;
 $("#orgApply").onclick=applyOrganize;
+function orgResetPlan(){ const visible=pages.filter(p=>!p.deleted); orgPlan=visible.map((p,i)=>({pi:i,rot:0})); renderOrganize(); }
+$("#orgReset").onclick=orgResetPlan;
+$("#orgSort").onclick=orgResetPlan;
+$("#orgAddFile").onclick=()=>{ $("#mergeInput").click(); };
 window.addEventListener("resize",()=>{ if(!$("#orgView").classList.contains("hide")) positionOrgView(); });
 
 $("#mergeBtn").onclick=()=>{ setNav($("#mergeBtn")); $("#mergeInput").click(); };
