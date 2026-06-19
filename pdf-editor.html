@@ -31,15 +31,15 @@
 
   /* ---------- Top bar ---------- */
   .topbar{
-    height:56px; display:flex; align-items:center; gap:14px; padding:0 16px;
-    background:var(--navy); color:#fff; border-bottom:1px solid rgba(255,255,255,.08);
+    height:56px; display:flex; align-items:center; justify-content:center; gap:14px; padding:0 16px;
+    background:var(--navy); color:#fff; border-bottom:1px solid rgba(255,255,255,.08); position:relative;
   }
-  .brand{display:flex; align-items:center; gap:11px}
+  .brand{display:flex; align-items:center; gap:11px; position:absolute; left:16px; top:50%; transform:translateY(-50%)}
   .brand .logo{width:34px; height:34px; flex:none; filter:drop-shadow(0 2px 5px rgba(37,99,235,.35))}
   .brand-text{display:flex; flex-direction:column; line-height:1.05}
   .brand-name{font-size:19px; font-weight:700; letter-spacing:.4px; color:#fff}
   .brand small{font-weight:600; font-size:9.5px; color:#8fa3c9; letter-spacing:2px; text-transform:uppercase; margin-top:3px}
-  .topbar .spacer{flex:1}
+  .topbar .spacer{display:none}
   .filename{font-size:13px; color:#b9c4d8; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .tbtn{
     background:rgba(255,255,255,.12); color:#eef2f9; border:1px solid rgba(255,255,255,.2); border-radius:8px;
@@ -373,12 +373,38 @@
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
   .toast.err{background:var(--danger)}
 
+  .restore-bar{
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+    background:#fff; border:1px solid var(--line); box-shadow:0 12px 36px rgba(16,24,40,.18);
+    border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:12px; z-index:210;
+    max-width:94vw; font-size:14px; color:var(--ink);
+  }
+  .restore-bar svg{width:22px; height:22px; stroke:var(--gold); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex:none}
+  .restore-bar b{font-weight:700}
+  .restore-bar .rb-btns{display:flex; gap:8px; flex:none}
+  .restore-bar button{border:0; border-radius:9px; padding:9px 15px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer}
+  .restore-bar .rb-no{background:#eef1f6; color:var(--muted)}
+  .restore-bar .rb-yes{background:var(--gold); color:#fff}
+
+  .fab-download{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(10px);
+    display:none; align-items:center; gap:9px; background:var(--gold); color:#fff; border:0;
+    border-radius:30px; padding:14px 26px; font-family:inherit; font-size:15px; font-weight:700;
+    cursor:pointer; box-shadow:0 10px 26px rgba(37,99,235,.42); z-index:120; opacity:0;
+    transition:opacity .2s, transform .2s;
+  }
+  .fab-download.show{display:flex; opacity:1; transform:translateX(-50%) translateY(0)}
+  .fab-download:hover{background:var(--accent-d)}
+  .fab-download svg{width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
   .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:150}
   .spin{width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--gold); border-radius:50%; animation:s 1s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
 
   @media (max-width:720px){
-    .topbar{gap:6px; padding:0 10px}
+    .topbar{gap:6px; padding:0 10px; justify-content:flex-start}
+    .topbar .spacer{display:block; flex:1}
+    .brand{position:static; transform:none; left:auto}
     .tbtn{padding:8px 10px; font-size:12.5px}
     .tbtn .lbl{display:none}            /* Undo/Redo become icons, "Open PDF" -> "Open" */
     .brand{gap:8px}
@@ -616,6 +642,9 @@
   </aside>
 </div>
 
+<button class="fab-download" id="fabDownload" title="Download your edited PDF">
+  <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Download
+</button>
 <div class="busy hide" id="busy"><div class="spin"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -668,6 +697,8 @@ window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitTo
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
 $("#scanBtn").onclick = ()=> window.open("scanner.html","_blank");
 $("#scanNav").onclick = ()=> window.open("scanner.html","_blank");
+function showFab(on){ const f=$("#fabDownload"); if(f) f.classList.toggle("show", !!on && !!pdfDoc); }
+$("#fabDownload").onclick = ()=> exportPdf();
 function goHome(){
   if(pdfDoc && !confirm("Go back to the start screen? Anything you haven't downloaded will be lost.")) return;
   try{ if(pageObserver){ pageObserver.disconnect(); pageObserver=null; } }catch(e){}
@@ -681,7 +712,9 @@ function goHome(){
   $("#organizeTop").disabled=true;
   $("#stage").style.display="none";
   $("#empty").style.display="";
+  if(typeof showFab==="function") showFab(false);
   $("#filename").textContent="";
+  if(typeof clearSession==="function") clearSession();
   if(typeof setNav==="function") setNav($("#navEdit"));
   layout();
 }
@@ -726,6 +759,8 @@ async function loadDoc(bytes, name){
     layout();
     snapshot();
     setTool("select");
+    showFab(true);
+    if(typeof writeSessionDoc==="function") writeSessionDoc();
   }catch(err){
     console.error(err); toast("Couldn't open this PDF.",true);
   }finally{ busy(false); }
@@ -1996,6 +2031,7 @@ function snapshot(){
   history=history.slice(0,hIndex+1);
   history.push({ annos:cloneAnnos(), deleted:pages.map(p=>p.deleted) });
   hIndex=history.length-1; updateUI();
+  if(typeof scheduleAutosave==="function") scheduleAutosave();
 }
 function restore(state){
   // clear DOM nodes
@@ -2303,6 +2339,7 @@ async function showOrganizeView(){
   setNav($("#organizeBtn"));
   $("#toolbar").style.display="none";
   $("#stage").style.display="none";
+  if(typeof showFab==="function") showFab(false);
   positionOrgView();
   $("#orgView").classList.remove("hide");
   await openOrganize();
@@ -2312,6 +2349,7 @@ function showEditView(){
   $("#orgView").classList.add("hide");
   $("#toolbar").style.display="flex";
   $("#stage").style.display="block";
+  if(typeof showFab==="function") showFab(true);
 }
 navEdit.onclick=showEditView;
 $("#organizeBtn").onclick=showOrganizeView;
@@ -2365,14 +2403,56 @@ $("#mergeInput").onchange=async e=>{
 
 layout();
 
-/* pick up a scan handed off from the scanner (via IndexedDB) */
+/* ---------------- on-device session recovery ---------------- */
+function idbSet(key,val){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").put(val,key); tx.oncomplete=()=>{db.close();res();}; tx.onerror=()=>{db.close();rej(tx.error);}; }; r.onerror=()=>rej(r.error); }); }
 function idbGet(key){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(null);} const tx=db.transaction("kv","readonly"); const g=tx.objectStore("kv").get(key); g.onsuccess=()=>{ db.close(); res(g.result); }; g.onerror=()=>{ db.close(); rej(g.error); }; }; r.onerror=()=>rej(r.error); }); }
 function idbDel(key){ return new Promise((res)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(); } const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").delete(key); tx.oncomplete=()=>{ db.close(); res(); }; tx.onerror=()=>{ db.close(); res(); }; }; r.onerror=()=>res(); }); }
+
+async function writeSessionDoc(){
+  if(!pdfDoc || !originalBytes) return;
+  try{ await idbSet("session_doc", { original: originalBytes.slice().buffer, name:$("#filename").textContent, fileGroups: pages.map(p=>p.fileGroup||0), groupNames: orgGroupNames, ts:Date.now() }); }catch(e){}
+}
+let autosaveTimer=null;
+function scheduleAutosave(){ clearTimeout(autosaveTimer); autosaveTimer=setTimeout(saveSession,1200); }
+async function saveSession(){
+  if(!pdfDoc) return;
+  try{
+    const base = history[hIndex] || { annos:cloneAnnos(), deleted:pages.map(p=>p.deleted) };
+    const cleanAnnos = base.annos.map(a=>{ const o={}; for(const k in a){ if(k[0]==="_") continue; o[k]=a[k]; } return o; });
+    await idbSet("session_state", { state:{ annos:cleanAnnos, deleted:base.deleted }, ts:Date.now() });
+  }catch(e){}
+}
+async function clearSession(){ try{ await idbDel("session_doc"); await idbDel("session_state"); }catch(e){} }
+async function restoreSession(){
+  try{
+    const doc=await idbGet("session_doc"); if(!doc || !doc.original) return;
+    const st=await idbGet("session_state");
+    fileGroups = doc.fileGroups || null; orgGroupNames = doc.groupNames || [];
+    await loadDoc(new Uint8Array(doc.original), doc.name||"document.pdf");
+    if(st && st.state){ try{ restore(st.state); snapshot(); }catch(e){ console.error(e); } }
+    toast("Restored your last document.");
+  }catch(e){ console.error(e); toast("Couldn't restore the last document.",true); }
+}
+function showRestoreBanner(name){
+  const bar=document.createElement("div"); bar.className="restore-bar";
+  const safe=(name||"your last document").replace(/[<>"]/g,"");
+  bar.innerHTML='<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"/></svg>'+
+    '<span>Restore <b>'+safe+'</b>?</span>'+
+    '<div class="rb-btns"><button class="rb-no">Start fresh</button><button class="rb-yes">Restore</button></div>';
+  document.body.appendChild(bar);
+  bar.querySelector(".rb-yes").onclick=async()=>{ bar.remove(); await restoreSession(); };
+  bar.querySelector(".rb-no").onclick=async()=>{ bar.remove(); await clearSession(); };
+}
+
 (async()=>{
   try{
     const buf = await idbGet("pendingScan");
-    if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); }
+    if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); return; }
   }catch(e){ /* no handoff */ }
+  try{
+    const doc = await idbGet("session_doc");
+    if(doc && doc.original && (Date.now()-(doc.ts||0) < 7*24*3600*1000)){ showRestoreBanner(doc.name); }
+  }catch(e){ /* no session */ }
 })();
 
 })();
