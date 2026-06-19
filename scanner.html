@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Majd Scan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#15203a; --navy-2:#1b2a4a; --ink:#16213b; --blue:#2563eb; --blue-d:#1b4ed1;
+    --blue-soft:#5b8af2; --tint:#eef4ff; --paper:#eef1f6; --line:#e4e9f2; --muted:#64708a;
+    --white:#fff; --danger:#dc4b3e;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0; height:100%}
+  body{
+    font-family:Inter,system-ui,sans-serif; background:var(--paper); color:var(--ink);
+    display:flex; flex-direction:column; height:100dvh; overflow:hidden;
+  }
+  /* ---------- top bar ---------- */
+  .top{
+    display:flex; align-items:center; gap:11px; padding:12px 16px;
+    background:var(--navy); color:#fff; flex:none;
+    padding-top:max(12px, env(safe-area-inset-top));
+  }
+  .logo{width:30px; height:30px; flex:none}
+  .brand{display:flex; flex-direction:column; line-height:1.1}
+  .brand b{font-size:17px; font-weight:800; letter-spacing:.2px}
+  .brand small{font-size:11px; color:#9fb0cf; font-weight:500}
+  .top .grow{flex:1}
+  .exportBtn{
+    background:var(--blue); color:#fff; border:0; border-radius:9px; font-family:inherit;
+    font-size:14px; font-weight:700; padding:9px 16px; cursor:pointer; display:flex; align-items:center; gap:7px;
+  }
+  .exportBtn:disabled{opacity:.4; cursor:default}
+  .exportBtn svg{width:16px; height:16px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+  /* ---------- home / pages ---------- */
+  .home{flex:1; overflow-y:auto; padding:18px 16px 130px}
+  .empty{
+    height:100%; min-height:55vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; color:var(--muted); gap:14px; padding:24px;
+  }
+  .empty .ring{
+    width:84px; height:84px; border-radius:50%; background:var(--tint);
+    display:grid; place-items:center;
+  }
+  .empty .ring svg{width:40px; height:40px; stroke:var(--blue); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+  .empty h2{margin:0; font-size:19px; color:var(--ink); font-weight:700}
+  .empty p{margin:0; font-size:14px; max-width:280px; line-height:1.5}
+
+  .pageGrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px}
+  .pageCard{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:10px;
+    box-shadow:0 1px 3px rgba(16,24,40,.06); position:relative;
+  }
+  .pageCard img{width:100%; display:block; border-radius:8px; background:#f4f5f8}
+  .pageCard .num{
+    position:absolute; top:16px; left:16px; background:rgba(21,32,58,.82); color:#fff;
+    font-size:12px; font-weight:700; padding:3px 9px; border-radius:20px;
+  }
+  .pageCard .row{display:flex; gap:8px; margin-top:9px}
+  .pageCard .row button{
+    flex:1; border:1.5px solid; border-radius:9px; padding:8px; font-family:inherit; font-size:13px;
+    font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;
+  }
+  .btn-edit{background:#e8f1ff; border-color:#7fb0f0; color:#1763b3}
+  .btn-del{background:#fde4e2; border-color:#f08a80; color:#d62b1f}
+  .pageCard .row svg{width:15px; height:15px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+
+  /* ---------- bottom capture bar ---------- */
+  .capbar{
+    position:fixed; left:0; right:0; bottom:0; padding:14px 16px;
+    padding-bottom:max(14px, env(safe-area-inset-bottom));
+    background:linear-gradient(180deg, rgba(238,241,246,0), var(--paper) 38%);
+    display:flex; gap:12px; justify-content:center;
+  }
+  .cap{
+    border:0; border-radius:13px; font-family:inherit; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:9px; padding:16px 22px; font-size:15px;
+    box-shadow:0 8px 22px rgba(37,99,235,.28);
+  }
+  .cap-camera{background:var(--blue); color:#fff; flex:1; max-width:330px}
+  .cap-gallery{background:#fff; color:var(--ink); border:1px solid var(--line); box-shadow:0 4px 12px rgba(16,24,40,.08)}
+  .cap svg{width:20px; height:20px; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
+  .cap-camera svg{stroke:#fff}
+  .cap-gallery svg{stroke:var(--ink)}
+
+  /* ---------- crop view ---------- */
+  .crop{
+    position:fixed; inset:0; background:#0c1322; z-index:50; display:none; flex-direction:column;
+  }
+  .crop.show{display:flex}
+  .crop-head{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 16px;
+    padding-top:max(14px, env(safe-area-inset-top)); color:#fff;
+  }
+  .crop-head .ttl{font-size:15px; font-weight:700}
+  .crop-head button{background:none; border:0; color:#cdd7ea; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; padding:6px}
+  .crop-stage{flex:1; position:relative; overflow:hidden; touch-action:none}
+  #cropCanvas{position:absolute; left:0; top:0}
+  #cropSvg{position:absolute; left:0; top:0; pointer-events:none}
+  .handle{
+    position:absolute; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%;
+    background:rgba(37,99,235,.25); border:2.5px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.3);
+    touch-action:none; cursor:grab;
+  }
+  .crop-tools{
+    padding:14px 12px; padding-bottom:max(14px, env(safe-area-inset-bottom)); background:#10182b;
+  }
+  .modes{display:flex; gap:8px; justify-content:center; margin-bottom:13px; flex-wrap:wrap}
+  .mode{
+    background:#1d2741; color:#aeb9d2; border:1px solid #2b3858; border-radius:20px;
+    font-family:inherit; font-size:13px; font-weight:600; padding:8px 15px; cursor:pointer;
+  }
+  .mode.on{background:var(--blue); color:#fff; border-color:var(--blue)}
+  .crop-actions{display:flex; gap:12px; max-width:520px; margin:0 auto}
+  .crop-actions button{
+    flex:1; border:0; border-radius:12px; font-family:inherit; font-size:15px; font-weight:700;
+    padding:15px; cursor:pointer;
+  }
+  .act-retake{background:#1d2741; color:#cdd7ea}
+  .act-done{background:var(--blue); color:#fff}
+
+  /* ---------- busy ---------- */
+  .busy{position:fixed; inset:0; background:rgba(12,19,34,.62); display:none; align-items:center; justify-content:center; z-index:90; flex-direction:column; gap:16px; color:#fff}
+  .busy.show{display:flex}
+  .spin{width:42px; height:42px; border:3.5px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:sp .8s linear infinite}
+  .busy span{font-size:14px; font-weight:600}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .toast{position:fixed; left:50%; bottom:96px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:#fff; padding:11px 18px; border-radius:11px; font-size:14px; font-weight:500; opacity:0; pointer-events:none; transition:.25s; z-index:95; max-width:90vw; text-align:center}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .toast.err{background:var(--danger)}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bf0"/><stop offset="1" stop-color="#1b4ed1"/></linearGradient></defs>
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#g)"/>
+    <path d="M9 11h14M9 11v12M9 23h14M23 11v12" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 16.5h14" stroke="#9db8ef" stroke-width="1.4" stroke-linecap="round"/>
+  </svg>
+  <div class="brand"><b>Majd Scan</b><small>Document scanner</small></div>
+  <div class="grow"></div>
+  <button class="exportBtn" id="exportBtn" disabled>
+    <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+    PDF
+  </button>
+</header>
+
+<main class="home" id="home">
+  <div class="empty" id="empty">
+    <div class="ring">
+      <svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2"/><path d="M4 12h16"/></svg>
+    </div>
+    <h2>Scan your first page</h2>
+    <p>Snap a photo of a document, line up the corners, and Majd flattens it into a clean PDF.</p>
+  </div>
+  <div class="pageGrid" id="pageGrid" style="display:none"></div>
+</main>
+
+<div class="capbar">
+  <button class="cap cap-gallery" id="galBtn" title="Choose from gallery">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>
+  </button>
+  <button class="cap cap-camera" id="camBtn">
+    <svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 012-2h2l1.5-2h5L16 6h2a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="12" cy="12.5" r="3.4"/></svg>
+    Scan page
+  </button>
+</div>
+
+<!-- crop view -->
+<section class="crop" id="cropView">
+  <div class="crop-head">
+    <button id="cropCancel">Cancel</button>
+    <span class="ttl">Adjust corners</span>
+    <button id="cropReset">Reset</button>
+  </div>
+  <div class="crop-stage" id="cropStage">
+    <canvas id="cropCanvas"></canvas>
+    <svg id="cropSvg"><polygon id="cropPoly" fill="rgba(37,99,235,0.14)" stroke="#5b8af2" stroke-width="2"/></svg>
+  </div>
+  <div class="crop-tools">
+    <div class="modes" id="modes">
+      <button class="mode on" data-mode="auto">Enhance</button>
+      <button class="mode" data-mode="gray">Grayscale</button>
+      <button class="mode" data-mode="bw">B&amp;W</button>
+      <button class="mode" data-mode="orig">Original</button>
+    </div>
+    <div class="crop-actions">
+      <button class="act-retake" id="cropRetake">Retake</button>
+      <button class="act-done" id="cropDone">Add page</button>
+    </div>
+  </div>
+</section>
+
+<input type="file" accept="image/*" capture="environment" id="camIn" hidden>
+<input type="file" accept="image/*" multiple id="galIn" hidden>
+
+<div class="busy" id="busy"><div class="spin"></div><span id="busyMsg">Working…</span></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const pages = [];           // { src(dataURL original), corners[4 src-px], mode, out(dataURL) }
+let editIndex = -1;         // page index being edited, or -1 for new
+let queue = [];             // pending gallery files
+
+const busy = (on,msg) => { $("#busyMsg").textContent = msg||"Working…"; $("#busy").classList.toggle("show", !!on); };
+let toastT;
+function toast(msg, err){ const t=$("#toast"); t.textContent=msg; t.classList.toggle("err",!!err); t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2400); }
+
+/* ---------------- capture ---------------- */
+$("#camBtn").onclick = () => $("#camIn").click();
+$("#galBtn").onclick = () => $("#galIn").click();
+$("#camIn").onchange = e => { const f=e.target.files[0]; e.target.value=""; if(f) openFromFile(f); };
+$("#galIn").onchange = e => {
+  const files=[...e.target.files]; e.target.value="";
+  if(!files.length) return;
+  queue = files.slice(1);
+  openFromFile(files[0]);
+};
+
+function fileToImage(file){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();
+    fr.onload=()=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=rej; img.src=fr.result; };
+    fr.onerror=rej; fr.readAsDataURL(file);
+  });
+}
+
+async function openFromFile(file){
+  busy(true,"Loading photo…");
+  try{
+    const img = await fileToImage(file);
+    // cap source size so big phone photos stay fast/light
+    const MAXS = 2200;
+    let sw=img.naturalWidth, sh=img.naturalHeight, sc=Math.min(1, MAXS/Math.max(sw,sh));
+    const c=document.createElement("canvas"); c.width=Math.round(sw*sc); c.height=Math.round(sh*sc);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const src = c.toDataURL("image/jpeg",0.92);
+    editIndex = -1;
+    const inset = 0.06;
+    const corners = [
+      {x:c.width*inset, y:c.height*inset},
+      {x:c.width*(1-inset), y:c.height*inset},
+      {x:c.width*(1-inset), y:c.height*(1-inset)},
+      {x:c.width*inset, y:c.height*(1-inset)},
+    ];
+    openCrop(src, corners, "auto");
+  }catch(err){ console.error(err); toast("Couldn't read that photo.",true); }
+  finally{ busy(false); }
+}
+
+/* ---------------- crop editor ---------------- */
+const cropImg = new Image();
+let dispScale=1, dispCorners=[], curMode="auto";
+const handleEls=[];
+
+function openCrop(src, srcCorners, mode){
+  curMode = mode||"auto";
+  $("#modes").querySelectorAll(".mode").forEach(b=>b.classList.toggle("on", b.dataset.mode===curMode));
+  $("#cropView").classList.add("show");           // show first so the stage has a real size
+  cropImg.onload = () => layoutCrop(srcCorners);
+  cropImg.src = src;
+  if(cropImg.complete && cropImg.naturalWidth) requestAnimationFrame(()=>layoutCrop(srcCorners));
+}
+
+function stageSize(){ const s=$("#cropStage").getBoundingClientRect(); return {w:s.width, h:s.height}; }
+
+function layoutCrop(srcCorners){
+  const {w:SW, h:SH} = stageSize();
+  const iw=cropImg.naturalWidth, ih=cropImg.naturalHeight;
+  dispScale = Math.min(SW/iw, SH/ih);
+  const dw=iw*dispScale, dh=ih*dispScale;
+  const offx=(SW-dw)/2, offy=(SH-dh)/2;
+  const cv=$("#cropCanvas");
+  cv.width=dw; cv.height=dh; cv.style.left=offx+"px"; cv.style.top=offy+"px";
+  applyPreview();
+  const svg=$("#cropSvg"); svg.setAttribute("width",SW); svg.setAttribute("height",SH);
+  // store display corners (relative to stage)
+  dispCorners = srcCorners.map(p=>({x:offx+p.x*dispScale, y:offy+p.y*dispScale}));
+  $("#cropStage")._off={x:offx,y:offy};
+  buildHandles();
+  drawPoly();
+}
+
+function buildHandles(){
+  const stage=$("#cropStage");
+  handleEls.forEach(h=>h.remove()); handleEls.length=0;
+  dispCorners.forEach((p,i)=>{
+    const h=document.createElement("div"); h.className="handle";
+    h.style.left=p.x+"px"; h.style.top=p.y+"px";
+    h.addEventListener("pointerdown", ev=>startDrag(ev,i,h));
+    stage.appendChild(h); handleEls.push(h);
+  });
+}
+
+function startDrag(ev,i,h){
+  ev.preventDefault(); h.setPointerCapture(ev.pointerId);
+  const {w:SW,h:SH}=stageSize();
+  const move=e=>{
+    const r=$("#cropStage").getBoundingClientRect();
+    let x=e.clientX-r.left, y=e.clientY-r.top;
+    x=Math.max(0,Math.min(SW,x)); y=Math.max(0,Math.min(SH,y));
+    dispCorners[i]={x,y}; h.style.left=x+"px"; h.style.top=y+"px"; drawPoly();
+  };
+  const up=e=>{ h.releasePointerCapture(ev.pointerId); h.removeEventListener("pointermove",move); h.removeEventListener("pointerup",up); };
+  h.addEventListener("pointermove",move); h.addEventListener("pointerup",up);
+}
+
+function drawPoly(){ $("#cropPoly").setAttribute("points", dispCorners.map(p=>p.x+","+p.y).join(" ")); }
+
+function applyPreview(){
+  const cv=$("#cropCanvas"); if(!cv.width) return;
+  const ctx=cv.getContext("2d");
+  ctx.drawImage(cropImg,0,0,cv.width,cv.height);
+  if(curMode==="orig") return;
+  const id=ctx.getImageData(0,0,cv.width,cv.height);
+  applyMode(id.data, cv.width, cv.height, curMode);
+  ctx.putImageData(id,0,0);
+}
+
+$("#cropReset").onclick = () => {
+  const iw=cropImg.naturalWidth, ih=cropImg.naturalHeight, inset=0.06;
+  layoutCrop([
+    {x:iw*inset,y:ih*inset},{x:iw*(1-inset),y:ih*inset},
+    {x:iw*(1-inset),y:ih*(1-inset)},{x:iw*inset,y:ih*(1-inset)}
+  ]);
+};
+$("#cropCancel").onclick = () => { $("#cropView").classList.remove("show"); queue=[]; };
+$("#cropRetake").onclick = () => { $("#cropView").classList.remove("show"); $("#camIn").click(); };
+
+$("#modes").addEventListener("click", e=>{
+  const b=e.target.closest(".mode"); if(!b) return;
+  curMode=b.dataset.mode;
+  $("#modes").querySelectorAll(".mode").forEach(x=>x.classList.toggle("on",x===b));
+  applyPreview();
+});
+
+window.addEventListener("resize", ()=>{ if($("#cropView").classList.contains("show")) layoutCrop(curSrcCorners()); });
+function curSrcCorners(){ const off=$("#cropStage")._off||{x:0,y:0}; return dispCorners.map(p=>({x:(p.x-off.x)/dispScale, y:(p.y-off.y)/dispScale})); }
+
+/* ---------------- perspective warp ---------------- */
+function adj(m){ return [
+  m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+  m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+  m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3] ]; }
+function multmm(a,b){ const r=[]; for(let i=0;i<3;i++)for(let j=0;j<3;j++){ let s=0; for(let k=0;k<3;k++) s+=a[3*i+k]*b[3*k+j]; r[3*i+j]=s; } return r; }
+function multmv(m,v){ return [ m[0]*v[0]+m[1]*v[1]+m[2]*v[2], m[3]*v[0]+m[4]*v[1]+m[5]*v[2], m[6]*v[0]+m[7]*v[1]+m[8]*v[2] ]; }
+function basisToPoints(p){
+  const m=[p[0].x,p[1].x,p[2].x, p[0].y,p[1].y,p[2].y, 1,1,1];
+  const v=multmv(adj(m),[p[3].x,p[3].y,1]);
+  return multmm(m,[v[0],0,0, 0,v[1],0, 0,0,v[2]]);
+}
+// homography mapping points 'from' -> 'to'
+function projection(from,to){ return multmm(basisToPoints(to), adj(basisToPoints(from))); }
+
+function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+
+function warpAndEnhance(srcCorners, mode){
+  const tmp=document.createElement("canvas"); tmp.width=cropImg.naturalWidth; tmp.height=cropImg.naturalHeight;
+  const tctx=tmp.getContext("2d"); tctx.drawImage(cropImg,0,0);
+  const sdata=tctx.getImageData(0,0,tmp.width,tmp.height); const S=sdata.data; const SW=tmp.width, SH=tmp.height;
+  const [TL,TR,BR,BL]=srcCorners;
+  let outW=Math.round(Math.max(dist(TL,TR),dist(BL,BR)));
+  let outH=Math.round(Math.max(dist(TL,BL),dist(TR,BR)));
+  const CAP=1600, long=Math.max(outW,outH);
+  if(long>CAP){ const k=CAP/long; outW=Math.round(outW*k); outH=Math.round(outH*k); }
+  outW=Math.max(8,outW); outH=Math.max(8,outH);
+  const dstRect=[{x:0,y:0},{x:outW,y:0},{x:outW,y:outH},{x:0,y:outH}];
+  const H=projection(dstRect, srcCorners); // out -> src
+  const out=document.createElement("canvas"); out.width=outW; out.height=outH;
+  const octx=out.getContext("2d"); const odata=octx.createImageData(outW,outH); const O=odata.data;
+  for(let y=0;y<outH;y++){
+    for(let x=0;x<outW;x++){
+      const d=H[6]*x+H[7]*y+H[8];
+      const sx=(H[0]*x+H[1]*y+H[2])/d, sy=(H[3]*x+H[4]*y+H[5])/d;
+      const oi=(y*outW+x)*4;
+      if(sx<0||sy<0||sx>=SW-1||sy>=SH-1){ O[oi]=O[oi+1]=O[oi+2]=255; O[oi+3]=255; continue; }
+      const x0=sx|0, y0=sy|0, fx=sx-x0, fy=sy-y0;
+      const i00=(y0*SW+x0)*4, i10=i00+4, i01=i00+SW*4, i11=i01+4;
+      for(let c=0;c<3;c++){
+        const top=S[i00+c]*(1-fx)+S[i10+c]*fx;
+        const bot=S[i01+c]*(1-fx)+S[i11+c]*fx;
+        O[oi+c]=top*(1-fy)+bot*fy;
+      }
+      O[oi+3]=255;
+    }
+  }
+  applyMode(O, outW, outH, mode);
+  octx.putImageData(odata,0,0);
+  return out.toDataURL("image/jpeg", mode==="bw"?0.85:0.9);
+}
+
+function applyMode(D, w, h, mode){
+  if(mode==="orig") return;
+  const n=w*h;
+  // grayscale luminance
+  const gray=new Float32Array(n);
+  for(let i=0;i<n;i++){ const o=i*4; gray[i]=0.299*D[o]+0.587*D[o+1]+0.114*D[o+2]; }
+
+  if(mode==="gray"){
+    for(let i=0;i<n;i++){ const o=i*4, v=gray[i]; D[o]=D[o+1]=D[o+2]=v; }
+    return;
+  }
+  if(mode==="auto"){
+    // contrast stretch on luminance, applied to colour channels; lift brightness a touch
+    let lo=255, hi=0;
+    for(let i=0;i<n;i++){ const v=gray[i]; if(v<lo)lo=v; if(v>hi)hi=v; }
+    // robust-ish: pull a little off extremes
+    lo=Math.min(lo+6,254); hi=Math.max(hi-6,lo+1);
+    const range=hi-lo;
+    for(let i=0;i<n;i++){
+      const o=i*4;
+      for(let c=0;c<3;c++){
+        let v=(D[o+c]-lo)/range*255; v=v*1.04+6;
+        D[o+c]=v<0?0:v>255?255:v;
+      }
+    }
+    return;
+  }
+  if(mode==="bw"){
+    // adaptive threshold via integral image (local mean), good under uneven light
+    const win=Math.max(15, Math.round(Math.min(w,h)/12))|1; const r=win>>1; const Cc=10;
+    const integ=new Float64Array((w+1)*(h+1));
+    for(let y=0;y<h;y++){ let rowsum=0; for(let x=0;x<w;x++){ rowsum+=gray[y*w+x]; integ[(y+1)*(w+1)+(x+1)]=integ[y*(w+1)+(x+1)]+rowsum; } }
+    const sumAt=(x0,y0,x1,y1)=>{ // inclusive rect
+      x0=Math.max(0,x0); y0=Math.max(0,y0); x1=Math.min(w-1,x1); y1=Math.min(h-1,y1);
+      const A=integ[y0*(w+1)+x0], B=integ[y0*(w+1)+(x1+1)], C=integ[(y1+1)*(w+1)+x0], Dd=integ[(y1+1)*(w+1)+(x1+1)];
+      return {s:Dd-B-C+A, cnt:(x1-x0+1)*(y1-y0+1)};
+    };
+    for(let y=0;y<h;y++){
+      for(let x=0;x<w;x++){
+        const {s,cnt}=sumAt(x-r,y-r,x+r,y+r);
+        const mean=s/cnt; const v=gray[y*w+x];
+        const px=(v < mean - Cc) ? 0 : 255;
+        const o=(y*w+x)*4; D[o]=D[o+1]=D[o+2]=px;
+      }
+    }
+    return;
+  }
+}
+
+/* ---------------- add / re-edit page ---------------- */
+$("#cropDone").onclick = async () => {
+  busy(true,"Flattening page…");
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const srcCorners = curSrcCorners();
+    const out = warpAndEnhance(srcCorners, curMode);
+    const rec = { src:cropImg.src, corners:srcCorners, mode:curMode, out };
+    if(editIndex>=0) pages[editIndex]=rec; else pages.push(rec);
+    $("#cropView").classList.remove("show");
+    renderPages();
+    // continue gallery queue
+    if(editIndex<0 && queue.length){ const f=queue.shift(); setTimeout(()=>openFromFile(f),120); }
+  }catch(err){ console.error(err); toast("Couldn't process that page.",true); }
+  finally{ busy(false); }
+};
+
+function editPage(i){
+  editIndex=i; const p=pages[i];
+  openCrop(p.src, p.corners.map(c=>({x:c.x,y:c.y})), p.mode);
+}
+function deletePage(i){ pages.splice(i,1); renderPages(); }
+
+function renderPages(){
+  const grid=$("#pageGrid");
+  grid.innerHTML="";
+  if(!pages.length){ $("#empty").style.display="flex"; grid.style.display="none"; $("#exportBtn").disabled=true; return; }
+  $("#empty").style.display="none"; grid.style.display="grid"; $("#exportBtn").disabled=false;
+  pages.forEach((p,i)=>{
+    const card=document.createElement("div"); card.className="pageCard";
+    card.innerHTML =
+      '<span class="num">'+(i+1)+'</span>'+
+      '<img src="'+p.out+'" alt="Page '+(i+1)+'">'+
+      '<div class="row">'+
+        '<button class="btn-edit"><svg viewBox="0 0 24 24" stroke="#1763b3"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg>Edit</button>'+
+        '<button class="btn-del"><svg viewBox="0 0 24 24" stroke="#d62b1f"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Delete</button>'+
+      '</div>';
+    card.querySelector(".btn-edit").onclick=()=>editPage(i);
+    card.querySelector(".btn-del").onclick=()=>deletePage(i);
+    grid.appendChild(card);
+  });
+}
+
+/* ---------------- export PDF ---------------- */
+function dataURLtoBytes(durl){
+  const b64=durl.split(",")[1]; const bin=atob(b64); const len=bin.length; const u=new Uint8Array(len);
+  for(let i=0;i<len;i++) u[i]=bin.charCodeAt(i); return u;
+}
+$("#exportBtn").onclick = async () => {
+  if(!pages.length) return;
+  busy(true,"Building PDF…");
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const { PDFDocument } = PDFLib;
+    const pdf = await PDFDocument.create();
+    for(const p of pages){
+      const jpg = await pdf.embedJpg(dataURLtoBytes(p.out));
+      const iw=jpg.width, ih=jpg.height;
+      const pw=595, ph=Math.round(pw*ih/iw);
+      const page=pdf.addPage([pw,ph]);
+      page.drawImage(jpg,{x:0,y:0,width:pw,height:ph});
+    }
+    const bytes=await pdf.save();
+    const blob=new Blob([bytes],{type:"application/pdf"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url; a.download="scan-"+new Date().toISOString().slice(0,10)+".pdf";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    toast(pages.length+" page"+(pages.length>1?"s":"")+" saved as PDF.");
+  }catch(err){ console.error(err); toast("Export failed — try again.",true); }
+  finally{ busy(false); }
+};
+
+renderPages();
+</script>
+</body>
+</html>
