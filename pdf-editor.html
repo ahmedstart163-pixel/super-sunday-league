@@ -414,6 +414,7 @@
     <span id="zoomLabel">100%</span>
     <button id="zoomIn" title="Zoom in">+</button>
   </div>
+  <button class="tbtn" id="homeBtn" title="Start over — back to the home screen"><span class="ic">⌂</span><span class="lbl">&nbsp;Home</span></button>
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
@@ -611,7 +612,7 @@
     <div class="org-file-pill" id="orgFilePill">A: document.pdf</div>
     <div class="org-side-spacer"></div>
     <button class="org-back" id="orgCancel">Back to editor</button>
-    <button class="org-apply-big" id="orgApply">Organize <span>&#10142;</span></button>
+    <button class="org-apply-big" id="orgApply">Download <span>&#10515;</span></button>
   </aside>
 </div>
 
@@ -667,6 +668,25 @@ window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitTo
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
 $("#scanBtn").onclick = ()=> window.open("scanner.html","_blank");
 $("#scanNav").onclick = ()=> window.open("scanner.html","_blank");
+function goHome(){
+  if(pdfDoc && !confirm("Go back to the start screen? Anything you haven't downloaded will be lost.")) return;
+  try{ if(pageObserver){ pageObserver.disconnect(); pageObserver=null; } }catch(e){}
+  pdfDoc=null; originalBytes=null; pages=[]; annos=[]; selected=null; fieldMeta={}; history=[]; hIndex=-1; nextId=1;
+  const ph=$("#pages"); if(ph) ph.innerHTML="";
+  { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
+  $("#editNav").style.display="none";
+  $("#toolbar").style.display="none";
+  $("#zoomBox").style.display="none";
+  $("#downloadBtn").disabled=true;
+  $("#organizeTop").disabled=true;
+  $("#stage").style.display="none";
+  $("#empty").style.display="";
+  $("#filename").textContent="";
+  if(typeof setNav==="function") setNav($("#navEdit"));
+  layout();
+}
+$("#homeBtn").onclick=goHome;
+{ const b=document.querySelector(".brand"); if(b){ b.style.cursor="pointer"; b.title="Home"; b.onclick=goHome; } }
 $("#fileInput").onchange = e => { if(e.target.files[0]) loadFile(e.target.files[0]); e.target.value=""; };
 
 const drop=$("#drop");
@@ -2228,7 +2248,6 @@ function renderOrganize(){
   });
 }
 async function applyOrganize(){
-  showEditView();
   busy(true);
   try{
     const baked = await buildBytes();
@@ -2240,9 +2259,14 @@ async function applyOrganize(){
       out.addPage(pg);
     }
     const bytes = await out.save();
-    await loadDoc(bytes, $("#filename").textContent);
-    toast("Pages organized.");
-  }catch(e){ console.error(e); toast("Couldn't apply changes.",true); }
+    const blob = new Blob([bytes],{type:"application/pdf"});
+    const url = URL.createObjectURL(blob);
+    const a=el("a"); a.href=url;
+    const base=($("#filename").textContent||"document.pdf").replace(/\.pdf$/i,"");
+    a.download=base+"-organized.pdf"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    toast("Organized PDF downloaded.");
+  }catch(e){ console.error(e); toast("Couldn't build the PDF.",true); }
   finally{ busy(false); }
 }
 const navEdit=$("#navEdit");
@@ -2272,16 +2296,23 @@ $("#organizeBtn").onclick=showOrganizeView;
 $("#organizeTop").onclick=showOrganizeView;
 $("#orgCancel").onclick=showEditView;
 $("#orgApply").onclick=applyOrganize;
-function orgResetPlan(){ const visible=pages.filter(p=>!p.deleted); orgPlan=visible.map((p,i)=>({pi:i,rot:0})); renderOrganize(); }
-$("#orgReset").onclick=orgResetPlan;
-$("#orgSort").onclick=orgResetPlan;
-$("#orgAddFile").onclick=()=>{ $("#mergeInput").click(); };
+async function orgResetPlan(){
+  const visible=pages.filter(p=>!p.deleted);
+  if(!visible.length) return;
+  orgPlan=visible.map((p,i)=>({pi:i,rot:0}));
+  renderOrganize();
+  toast("Reset to the original order.");
+}
+$("#orgReset").addEventListener("click", orgResetPlan);
+$("#orgSort").addEventListener("click", orgResetPlan);
+let addInOrganize=false;
+$("#orgAddFile").onclick=()=>{ addInOrganize=true; $("#mergeInput").click(); };
 window.addEventListener("resize",()=>{ if(!$("#orgView").classList.contains("hide")) positionOrgView(); });
 
 $("#mergeBtn").onclick=()=>{ setNav($("#mergeBtn")); $("#mergeInput").click(); };
 $("#mergeInput").onchange=async e=>{
   const files=[...e.target.files].filter(f=>f.type==="application/pdf"); e.target.value="";
-  if(!files.length){ setNav(navEdit); return; }
+  if(!files.length){ if(addInOrganize){ addInOrganize=false; } else setNav(navEdit); return; }
   busy(true);
   try{
     const out = await PDFDocument.load(await buildBytes());
@@ -2293,9 +2324,13 @@ $("#mergeInput").onchange=async e=>{
     }
     const bytes=await out.save();
     await loadDoc(bytes, $("#filename").textContent);
-    toast("Merged "+added+" page"+(added===1?"":"s")+" onto the end.");
-  }catch(e){ console.error(e); toast("Couldn't merge — make sure they're valid PDFs.",true); }
-  finally{ busy(false); setNav(navEdit); }
+    toast("Added "+added+" page"+(added===1?"":"s")+".");
+  }catch(e){ console.error(e); toast("Couldn't add — make sure it's a valid PDF.",true); }
+  finally{
+    busy(false);
+    if(addInOrganize){ addInOrganize=false; await showOrganizeView(); }
+    else setNav(navEdit);
+  }
 };
 
 layout();
