@@ -387,15 +387,15 @@
   .restore-bar .rb-yes{background:var(--gold); color:#fff}
 
   .fab-download{
-    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(10px);
-    display:none; align-items:center; gap:9px; background:var(--gold); color:#fff; border:0;
-    border-radius:30px; padding:14px 26px; font-family:inherit; font-size:15px; font-weight:700;
-    cursor:pointer; box-shadow:0 10px 26px rgba(37,99,235,.42); z-index:120; opacity:0;
-    transition:opacity .2s, transform .2s;
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(10px);
+    display:none; align-items:center; gap:7px; background:#fff; color:#2275c9; border:1px solid #e6ebf3;
+    border-radius:11px; padding:9px 18px; font-family:inherit; font-size:13.5px; font-weight:600;
+    cursor:pointer; box-shadow:0 3px 12px rgba(16,24,40,.14); z-index:120; opacity:0;
+    transition:opacity .2s, transform .2s, background .13s;
   }
   .fab-download.show{display:flex; opacity:1; transform:translateX(-50%) translateY(0)}
-  .fab-download:hover{background:var(--accent-d)}
-  .fab-download svg{width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+  .fab-download:hover{background:#f6f8fc}
+  .fab-download svg{width:16px; height:16px; stroke:#4a7fe0; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
 
   .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:150}
   .spin{width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--gold); border-radius:50%; animation:s 1s linear infinite}
@@ -760,7 +760,6 @@ async function loadDoc(bytes, name){
     snapshot();
     setTool("select");
     showFab(true);
-    if(typeof writeSessionDoc==="function") writeSessionDoc();
   }catch(err){
     console.error(err); toast("Couldn't open this PDF.",true);
   }finally{ busy(false); }
@@ -2031,7 +2030,6 @@ function snapshot(){
   history=history.slice(0,hIndex+1);
   history.push({ annos:cloneAnnos(), deleted:pages.map(p=>p.deleted) });
   hIndex=history.length-1; updateUI();
-  if(typeof scheduleAutosave==="function") scheduleAutosave();
 }
 function restore(state){
   // clear DOM nodes
@@ -2449,10 +2447,7 @@ function showRestoreBanner(name){
     const buf = await idbGet("pendingScan");
     if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); return; }
   }catch(e){ /* no handoff */ }
-  try{
-    const doc = await idbGet("session_doc");
-    if(doc && doc.original && (Date.now()-(doc.ts||0) < 7*24*3600*1000)){ showRestoreBanner(doc.name); }
-  }catch(e){ /* no session */ }
+  try{ await idbDel("session_doc"); await idbDel("session_state"); }catch(e){}
 })();
 
 })();
