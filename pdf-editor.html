@@ -333,8 +333,8 @@
   .org-side-files{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; font-size:15px; color:#33373d}
   .org-reset{background:none; border:0; color:#e5322d; font-size:14px; cursor:pointer; padding:0}
   .org-reset:hover{text-decoration:underline}
-  .org-file-pill{background:#fdeceb; border-radius:8px; padding:14px 16px; color:#33373d; font-size:15px; display:flex; align-items:center; gap:8px}
-  .org-file-pill::before{content:"\2195"; color:#9aa0a6; font-size:14px}
+  .org-file-pill{background:#f6f8fc; border-radius:8px; padding:13px 14px; color:#33373d; font-size:15px; display:flex; align-items:center; gap:9px; margin-bottom:8px}
+  .org-file-dot{width:11px; height:11px; border-radius:50%; flex:none; box-shadow:0 0 0 2px rgba(0,0,0,.04)}
   .org-side-spacer{flex:1}
   .org-back{background:none; border:0; color:#7a808a; font-size:14px; cursor:pointer; padding:8px; margin-bottom:8px}
   .org-back:hover{color:#33373d}
@@ -609,7 +609,7 @@
   <aside class="org-side">
     <h2 class="org-side-title">Organize pdf</h2>
     <div class="org-side-files"><span>Files:</span><button class="org-reset" id="orgReset">Reset all</button></div>
-    <div class="org-file-pill" id="orgFilePill">A: document.pdf</div>
+    <div id="orgFileList"></div>
     <div class="org-side-spacer"></div>
     <button class="org-back" id="orgCancel">Back to editor</button>
     <button class="org-apply-big" id="orgApply">Download <span>&#10515;</span></button>
@@ -699,6 +699,7 @@ drop.addEventListener("drop",e=>{
 
 async function loadFile(file){
   if(file.type!=="application/pdf"){ toast("That's not a PDF.",true); return; }
+  orgGroupNames=[file.name||"A"]; fileGroups=null;
   const buf = await file.arrayBuffer();
   await loadDoc(new Uint8Array(buf), file.name);
   if(pdfDoc) toast("Loaded " + pdfDoc.numPages + (pdfDoc.numPages===1?" page":" pages"));
@@ -730,6 +731,9 @@ async function loadDoc(bytes, name){
   }finally{ busy(false); }
 }
 
+let fileGroups=null;          // index -> source-file group, consumed by renderAll
+let orgGroupNames=[];         // group -> file name
+const ORG_COLORS=["#e0594f","#3b78f0","#1ea672","#d99a1e","#9b5fe0","#e0568f"];
 async function renderAll(){
   const host=$("#pages"); host.innerHTML=""; pages=[];
   if(pageObserver){ pageObserver.disconnect(); pageObserver=null; }
@@ -775,6 +779,8 @@ async function renderAll(){
     pages.push(rec);
     bindPage(rec);
   }
+  pages.forEach((p,i)=>{ p.fileGroup = (fileGroups && fileGroups[i]!=null) ? fileGroups[i] : 0; });
+  fileGroups=null;
   // paint pages only as they near the viewport — opens large PDFs instantly
   pageObserver=new IntersectionObserver(ents=>{
     ents.forEach(en=>{ if(en.isIntersecting && en.target._rec) renderPageCanvas(en.target._rec); });
@@ -2207,8 +2213,22 @@ async function openOrganize(){
   busy(true);
   try{ await buildThumbCache(); } finally{ busy(false); }
   orgPlan = visible.map((p,i)=>({pi:i, rot:0}));
-  { const pill=$("#orgFilePill"); if(pill) pill.textContent = "A: " + (($("#filename").textContent||"document").trim()||"document.pdf"); }
+  renderOrgFiles();
   renderOrganize();
+}
+function renderOrgFiles(){
+  const host=$("#orgFileList"); if(!host) return;
+  host.innerHTML="";
+  const visible=pages.filter(p=>!p.deleted);
+  const groups=[...new Set(visible.map(p=>p.fileGroup||0))].sort((a,b)=>a-b);
+  groups.forEach(g=>{
+    const name = orgGroupNames[g] || (g===0 ? (($("#filename").textContent||"document.pdf").trim()) : "File "+(g+1));
+    const pill=el("div","org-file-pill");
+    const dot=el("span","org-file-dot"); dot.style.background=ORG_COLORS[g % ORG_COLORS.length];
+    pill.appendChild(dot);
+    pill.appendChild(document.createTextNode(String.fromCharCode(65+g)+": "+name));
+    host.appendChild(pill);
+  });
 }
 function orgThumb(visRec, rot){
   const src = orgThumbCache[visRec.index];
@@ -2225,6 +2245,8 @@ function renderOrganize(){
   orgPlan.forEach((item,idx)=>{
     const card=el("div","org-card");
     card.draggable=true;
+    const grp=(visible[item.pi] && visible[item.pi].fileGroup)||0;
+    card.style.borderColor=ORG_COLORS[grp % ORG_COLORS.length];
     // ---- drag to reorder (desktop) ----
     card.addEventListener("dragstart",e=>{ orgDragFrom=idx; card.classList.add("dragging"); e.dataTransfer.effectAllowed="move"; });
     card.addEventListener("dragend",()=>{ orgDragFrom=null; card.classList.remove("dragging"); grid.querySelectorAll(".org-card").forEach(c=>c.classList.remove("drop-target")); });
@@ -2316,12 +2338,20 @@ $("#mergeInput").onchange=async e=>{
   busy(true);
   try{
     const out = await PDFDocument.load(await buildBytes());
+    const existingGroups = pages.filter(p=>!p.deleted).map(p=>p.fileGroup||0);
+    let g = (existingGroups.length ? Math.max(...existingGroups) : 0) + 1;
+    const groupsArr = existingGroups.slice();
+    const names = orgGroupNames.slice();
     let added=0;
     for(const f of files){
       const src=await PDFDocument.load(new Uint8Array(await f.arrayBuffer()));
-      const copied=await out.copyPages(src, src.getPageIndices());
-      copied.forEach(p=>{ out.addPage(p); added++; });
+      const idxs=src.getPageIndices();
+      const copied=await out.copyPages(src, idxs);
+      copied.forEach(p=>{ out.addPage(p); groupsArr.push(g); added++; });
+      names[g]=f.name||("File "+(g+1));
+      g++;
     }
+    fileGroups = groupsArr; orgGroupNames = names;
     const bytes=await out.save();
     await loadDoc(bytes, $("#filename").textContent);
     toast("Added "+added+" page"+(added===1?"":"s")+".");
