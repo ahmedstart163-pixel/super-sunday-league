@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Majd Scan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -69,6 +70,20 @@
   .btn-edit{background:#e8f1ff; border-color:#7fb0f0; color:#1763b3}
   .btn-del{background:#fde4e2; border-color:#f08a80; color:#d62b1f}
   .pageCard .row svg{width:15px; height:15px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+  .pageCard .ctl{display:flex; gap:6px; margin-top:9px}
+  .pageCard .ctl button{flex:1; border:1px solid var(--line); background:#fff; border-radius:8px; padding:9px 0; font-size:15px; line-height:1; cursor:pointer; color:#33415a; font-weight:700}
+  .pageCard .ctl button:active{background:#eef4ff}
+  .pageCard .ctl button.d{color:#d62b1f; border-color:#f0b4ab; background:#fdecea}
+  .iconbtn{background:#1d2741; color:#fff; border:0; border-radius:9px; width:40px; height:38px; font-size:20px; line-height:1; cursor:pointer; font-weight:700}
+  .iconbtn:disabled{opacity:.4}
+  /* action sheet */
+  .sheet-bg{position:fixed; inset:0; background:rgba(8,12,22,.5); z-index:80; display:none; align-items:flex-end}
+  .sheet-bg.show{display:flex}
+  .sheet{background:#fff; width:100%; border-radius:18px 18px 0 0; padding:10px; padding-bottom:max(14px,env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:8px}
+  .sheet button{text-align:left; border:0; background:#f4f6fb; border-radius:12px; padding:14px 16px; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; gap:3px}
+  .sheet button b{font-size:15px; color:var(--ink)}
+  .sheet button span{font-size:12.5px; color:var(--muted)}
+  .sheet button.cancel{background:none; text-align:center; color:var(--muted); font-weight:600; padding:12px}
 
   /* ---------- bottom capture bar ---------- */
   .capbar{
@@ -141,10 +156,8 @@
 
 <header class="top">
   <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bf0"/><stop offset="1" stop-color="#1b4ed1"/></linearGradient></defs>
-    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#g)"/>
-    <path d="M9 11h14M9 11v12M9 23h14M23 11v12" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M9 16.5h14" stroke="#9db8ef" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="16" cy="16" r="15.5" fill="#0f2444"/>
+    <path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/>
   </svg>
   <div class="brand"><b>Majd Scan</b><small>Document scanner</small></div>
   <div class="grow"></div>
@@ -152,6 +165,7 @@
     <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
     PDF
   </button>
+  <button class="iconbtn" id="moreBtn" disabled title="More options" style="margin-left:8px">&#8943;</button>
 </header>
 
 <main class="home" id="home">
@@ -205,6 +219,14 @@
 
 <div class="busy" id="busy"><div class="spin"></div><span id="busyMsg">Working…</span></div>
 <div class="toast" id="toast"></div>
+
+<div class="sheet-bg" id="sheetBg">
+  <div class="sheet" id="sheet">
+    <button id="actMajd"><b>Open in Majd</b><span>Send these pages to the editor to sign &amp; annotate</span></button>
+    <button id="actOcr"><b>Searchable PDF (OCR)</b><span>Recognise the text so the PDF is searchable · slower, needs connection</span></button>
+    <button id="actCancel" class="cancel">Cancel</button>
+  </div>
+</div>
 
 <script>
 const $ = s => document.querySelector(s);
@@ -524,53 +546,136 @@ function editPage(i){
 function deletePage(i){ pages.splice(i,1); renderPages(); }
 
 function renderPages(){
-  const grid=$("#pageGrid");
-  grid.innerHTML="";
-  if(!pages.length){ $("#empty").style.display="flex"; grid.style.display="none"; $("#exportBtn").disabled=true; return; }
-  $("#empty").style.display="none"; grid.style.display="grid"; $("#exportBtn").disabled=false;
+  const grid=$("#pageGrid"); grid.innerHTML="";
+  const has=pages.length>0;
+  $("#empty").style.display=has?"none":"flex";
+  grid.style.display=has?"grid":"none";
+  $("#exportBtn").disabled=!has; $("#moreBtn").disabled=!has;
   pages.forEach((p,i)=>{
     const card=document.createElement("div"); card.className="pageCard";
     card.innerHTML =
       '<span class="num">'+(i+1)+'</span>'+
-      '<img src="'+p.out+'" alt="Page '+(i+1)+'">'+
-      '<div class="row">'+
-        '<button class="btn-edit"><svg viewBox="0 0 24 24" stroke="#1763b3"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg>Edit</button>'+
-        '<button class="btn-del"><svg viewBox="0 0 24 24" stroke="#d62b1f"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Delete</button>'+
+      '<img src="'+p.out+'" alt="Page '+(i+1)+'" title="Tap to re-crop">'+
+      '<div class="ctl">'+
+        '<button data-a="rot" title="Rotate">&#8635;</button>'+
+        '<button data-a="left" title="Move left">&#9664;</button>'+
+        '<button data-a="right" title="Move right">&#9654;</button>'+
+        '<button data-a="del" class="d" title="Delete">&#10005;</button>'+
       '</div>';
-    card.querySelector(".btn-edit").onclick=()=>editPage(i);
-    card.querySelector(".btn-del").onclick=()=>deletePage(i);
+    card.querySelector("img").onclick=()=>editPage(i);
+    card.querySelectorAll(".ctl button").forEach(b=>b.onclick=()=>{
+      const a=b.dataset.a;
+      if(a==="rot") rotatePage(i);
+      else if(a==="left") movePage(i,-1);
+      else if(a==="right") movePage(i,1);
+      else deletePage(i);
+    });
     grid.appendChild(card);
   });
 }
+function movePage(i,dir){ const j=i+dir; if(j<0||j>=pages.length) return; const t=pages[i]; pages[i]=pages[j]; pages[j]=t; renderPages(); }
+async function rotatePage(i){
+  const p=pages[i];
+  try{
+    const img=await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=p.out; });
+    const c=document.createElement("canvas"); c.width=img.naturalHeight; c.height=img.naturalWidth;
+    const ctx=c.getContext("2d"); ctx.translate(c.width/2,c.height/2); ctx.rotate(Math.PI/2);
+    ctx.drawImage(img,-img.naturalWidth/2,-img.naturalHeight/2);
+    p.out=c.toDataURL("image/jpeg",0.9); p.words=null;  // text boxes no longer valid after rotate
+    renderPages();
+  }catch(e){ toast("Couldn't rotate.",true); }
+}
 
-/* ---------------- export PDF ---------------- */
+/* ---------------- export / build PDF ---------------- */
 function dataURLtoBytes(durl){
   const b64=durl.split(",")[1]; const bin=atob(b64); const len=bin.length; const u=new Uint8Array(len);
   for(let i=0;i<len;i++) u[i]=bin.charCodeAt(i); return u;
 }
+async function buildPdfBytes(ocr){
+  const { PDFDocument, StandardFonts } = PDFLib;
+  const pdf = await PDFDocument.create();
+  let font = ocr ? await pdf.embedFont(StandardFonts.Helvetica) : null;
+  for(const p of pages){
+    const jpg = await pdf.embedJpg(dataURLtoBytes(p.out));
+    const iw=jpg.width, ih=jpg.height;
+    const pw=595, ph=Math.round(pw*ih/iw);
+    const page=pdf.addPage([pw,ph]);
+    page.drawImage(jpg,{x:0,y:0,width:pw,height:ph});
+    if(ocr && p.words){
+      const sx=pw/iw, sy=ph/ih;
+      for(const w of p.words){
+        const t=(w.text||"").trim(); if(!t || !w.bbox) continue;
+        const bx=w.bbox; const fh=Math.max(4,(bx.y1-bx.y0)*sy*0.92);
+        try{ page.drawText(t,{x:bx.x0*sx, y:ph-bx.y1*sy, size:fh, font, opacity:0}); }catch(e){}
+      }
+    }
+  }
+  return await pdf.save();
+}
+function downloadPdf(bytes, prefix){
+  const blob=new Blob([bytes],{type:"application/pdf"}); const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=(prefix||"scan")+"-"+new Date().toISOString().slice(0,10)+".pdf";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
 $("#exportBtn").onclick = async () => {
   if(!pages.length) return;
-  busy(true,"Building PDF…");
-  await new Promise(r=>setTimeout(r,30));
+  busy(true,"Building PDF…"); await new Promise(r=>setTimeout(r,30));
+  try{ downloadPdf(await buildPdfBytes(false),"scan"); toast(pages.length+" page"+(pages.length>1?"s":"")+" saved as PDF."); }
+  catch(err){ console.error(err); toast("Export failed — try again.",true); }
+  finally{ busy(false); }
+};
+
+/* ---------------- action sheet ---------------- */
+function openSheet(){ $("#sheetBg").classList.add("show"); }
+function closeSheet(){ $("#sheetBg").classList.remove("show"); }
+$("#moreBtn").onclick = openSheet;
+$("#actCancel").onclick = closeSheet;
+$("#sheetBg").addEventListener("click", e=>{ if(e.target===$("#sheetBg")) closeSheet(); });
+
+/* ---------------- handoff to Majd (IndexedDB) ---------------- */
+function idbSet(key,val){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").put(val,key); tx.oncomplete=()=>{db.close();res();}; tx.onerror=()=>rej(tx.error); }; r.onerror=()=>rej(r.error); }); }
+$("#actMajd").onclick = async () => {
+  closeSheet(); if(!pages.length) return;
+  busy(true,"Sending to Majd…");
   try{
-    const { PDFDocument } = PDFLib;
-    const pdf = await PDFDocument.create();
-    for(const p of pages){
-      const jpg = await pdf.embedJpg(dataURLtoBytes(p.out));
-      const iw=jpg.width, ih=jpg.height;
-      const pw=595, ph=Math.round(pw*ih/iw);
-      const page=pdf.addPage([pw,ph]);
-      page.drawImage(jpg,{x:0,y:0,width:pw,height:ph});
+    const bytes = await buildPdfBytes(false);
+    await idbSet("pendingScan", bytes.buffer);
+    window.open("pdf-editor.html","_blank");
+    toast("Opened in Majd.");
+  }catch(err){ console.error(err); toast("Couldn't open Majd.",true); }
+  finally{ busy(false); }
+};
+
+/* ---------------- OCR (searchable PDF) ---------------- */
+function ensureTesseract(){
+  if(window.Tesseract) return Promise.resolve();
+  return new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+    s.onload=res; s.onerror=()=>rej(new Error("Failed to load OCR engine"));
+    document.head.appendChild(s);
+  });
+}
+async function runOcr(){
+  await ensureTesseract();
+  const worker = await Tesseract.createWorker("eng",1,{ logger:m=>{ if(m.status==="recognizing text" && m.progress!=null) busy(true,"Reading text… "+Math.round(m.progress*100)+"%"); } });
+  try{
+    for(let i=0;i<pages.length;i++){
+      busy(true,"Reading page "+(i+1)+"/"+pages.length+"…");
+      const { data } = await worker.recognize(pages[i].out);
+      pages[i].words = (data.words||[]).map(w=>({text:w.text, bbox:w.bbox}));
     }
-    const bytes=await pdf.save();
-    const blob=new Blob([bytes],{type:"application/pdf"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url; a.download="scan-"+new Date().toISOString().slice(0,10)+".pdf";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),4000);
-    toast(pages.length+" page"+(pages.length>1?"s":"")+" saved as PDF.");
-  }catch(err){ console.error(err); toast("Export failed — try again.",true); }
+  } finally { await worker.terminate(); }
+}
+$("#actOcr").onclick = async () => {
+  closeSheet(); if(!pages.length) return;
+  busy(true,"Loading text engine…");
+  try{
+    await runOcr();
+    busy(true,"Building searchable PDF…");
+    downloadPdf(await buildPdfBytes(true),"scan-searchable");
+    toast("Searchable PDF saved.");
+  }catch(err){ console.error(err); toast("OCR failed — check your connection.",true); }
   finally{ busy(false); }
 };
 
