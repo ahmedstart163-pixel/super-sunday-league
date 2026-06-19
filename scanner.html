@@ -246,16 +246,67 @@ async function openFromFile(file){
     c.getContext("2d").drawImage(img,0,0,c.width,c.height);
     const src = c.toDataURL("image/jpeg",0.92);
     editIndex = -1;
+    busy(true,"Finding edges…");
+    await new Promise(r=>setTimeout(r,20));
     const inset = 0.06;
-    const corners = [
+    const fallback = [
       {x:c.width*inset, y:c.height*inset},
       {x:c.width*(1-inset), y:c.height*inset},
       {x:c.width*(1-inset), y:c.height*(1-inset)},
       {x:c.width*inset, y:c.height*(1-inset)},
     ];
-    openCrop(src, corners, "auto");
+    autoCorners = detectDocCorners(c) || fallback;
+    openCrop(src, autoCorners.map(p=>({x:p.x,y:p.y})), "auto");
   }catch(err){ console.error(err); toast("Couldn't read that photo.",true); }
   finally{ busy(false); }
+}
+
+let autoCorners = null;
+/* find the document as the largest bright region; corners = extreme x±y points (robust to rotation) */
+function detectDocCorners(canvas){
+  try{
+    const W=canvas.width, H=canvas.height;
+    const dw=360, dh=Math.max(1,Math.round(H*dw/W));
+    const sm=document.createElement("canvas"); sm.width=dw; sm.height=dh;
+    sm.getContext("2d").drawImage(canvas,0,0,dw,dh);
+    const d=sm.getContext("2d").getImageData(0,0,dw,dh).data;
+    const n=dw*dh, gray=new Uint8Array(n), hist=new Array(256).fill(0);
+    for(let i=0;i<n;i++){ const o=i*4; const g=(0.299*d[o]+0.587*d[o+1]+0.114*d[o+2])|0; gray[i]=g; hist[g]++; }
+    // Otsu threshold
+    let sum=0; for(let t=0;t<256;t++) sum+=t*hist[t];
+    let sumB=0,wB=0,maxV=-1,thr=128;
+    for(let t=0;t<256;t++){ wB+=hist[t]; if(!wB) continue; const wF=n-wB; if(wF<=0) break; sumB+=t*hist[t];
+      const mB=sumB/wB, mF=(sum-sumB)/wF, v=wB*wF*(mB-mF)*(mB-mF); if(v>maxV){maxV=v; thr=t;} }
+    // largest connected bright blob
+    const mask=new Uint8Array(n); for(let i=0;i<n;i++) mask[i]=gray[i]>thr?1:0;
+    const lab=new Int32Array(n); let cur=0, best=0, bestSize=0; const st=[];
+    for(let i=0;i<n;i++){
+      if(mask[i] && !lab[i]){ cur++; let size=0; st.push(i); lab[i]=cur;
+        while(st.length){ const p=st.pop(); size++; const px=p%dw, py=(p/dw)|0;
+          if(px>0){const q=p-1; if(mask[q]&&!lab[q]){lab[q]=cur;st.push(q);}}
+          if(px<dw-1){const q=p+1; if(mask[q]&&!lab[q]){lab[q]=cur;st.push(q);}}
+          if(py>0){const q=p-dw; if(mask[q]&&!lab[q]){lab[q]=cur;st.push(q);}}
+          if(py<dh-1){const q=p+dw; if(mask[q]&&!lab[q]){lab[q]=cur;st.push(q);}}
+        }
+        if(size>bestSize){bestSize=size; best=cur;}
+      }
+    }
+    if(bestSize < n*0.12) return null;
+    let tlS=1e9,brS=-1e9,trD=-1e9,blD=1e9, TL,TR,BR,BL;
+    for(let y=0;y<dh;y++) for(let x=0;x<dw;x++){
+      if(lab[y*dw+x]===best){ const s=x+y, df=x-y;
+        if(s<tlS){tlS=s;TL=[x,y];} if(s>brS){brS=s;BR=[x,y];}
+        if(df>trD){trD=df;TR=[x,y];} if(df<blD){blD=df;BL=[x,y];}
+      }
+    }
+    if(!TL||!TR||!BR||!BL) return null;
+    const sx=W/dw, sy=H/dh, m=p=>({x:p[0]*sx, y:p[1]*sy});
+    const out=[m(TL),m(TR),m(BR),m(BL)];
+    // sanity: area must be a decent chunk of the frame
+    const area=Math.abs((out[2].x-out[0].x)*(out[2].y-out[0].y));
+    if(area < W*H*0.10) return null;
+    return out;
+  }catch(e){ return null; }
 }
 
 /* ---------------- crop editor ---------------- */
@@ -329,10 +380,11 @@ function applyPreview(){
 
 $("#cropReset").onclick = () => {
   const iw=cropImg.naturalWidth, ih=cropImg.naturalHeight, inset=0.06;
-  layoutCrop([
+  const def = autoCorners && editIndex<0 ? autoCorners.map(p=>({x:p.x,y:p.y})) : [
     {x:iw*inset,y:ih*inset},{x:iw*(1-inset),y:ih*inset},
     {x:iw*(1-inset),y:ih*(1-inset)},{x:iw*inset,y:ih*(1-inset)}
-  ]);
+  ];
+  layoutCrop(def);
 };
 $("#cropCancel").onclick = () => { $("#cropView").classList.remove("show"); queue=[]; };
 $("#cropRetake").onclick = () => { $("#cropView").classList.remove("show"); $("#camIn").click(); };
