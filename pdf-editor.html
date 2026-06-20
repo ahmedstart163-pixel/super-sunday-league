@@ -2367,7 +2367,7 @@ let addInOrganize=false;
 $("#orgAddFile").onclick=()=>{ addInOrganize=true; $("#mergeInput").click(); };
 window.addEventListener("resize",()=>{ if(!$("#orgView").classList.contains("hide")) positionOrgView(); });
 
-$("#mergeBtn").onclick=()=>{ setNav($("#mergeBtn")); $("#mergeInput").click(); };
+$("#mergeBtn").onclick=()=>{ if(!pdfDoc) return; setNav($("#mergeBtn")); addInOrganize=true; $("#mergeInput").click(); };
 $("#mergeInput").onchange=async e=>{
   const files=[...e.target.files].filter(f=>f.type==="application/pdf"); e.target.value="";
   if(!files.length){ if(addInOrganize){ addInOrganize=false; } else setNav(navEdit); return; }
