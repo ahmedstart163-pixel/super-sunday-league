@@ -443,6 +443,8 @@
   <button class="tbtn" id="homeBtn" title="Start over — back to the home screen"><span class="ic">⌂</span><span class="lbl">&nbsp;Home</span></button>
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
+  <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic">▤</span><span class="lbl">&nbsp;Reader</span></button>
+  <input type="file" id="readerPick" accept="application/pdf" style="display:none">
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
 </div>
@@ -697,6 +699,16 @@ window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitTo
 /* ---------------- file loading ---------------- */
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
 $("#scanBtn").onclick = ()=> window.open("scanner.html","_blank");
+$("#readerBtn").onclick = ()=> $("#readerPick").click();
+$("#readerPick").onchange = async (e)=>{
+  const f=e.target.files[0]; e.target.value="";
+  if(!f) return;
+  try{
+    const buf=await f.arrayBuffer();
+    await idbSet("pendingReader", buf);
+    window.open("reader.html","_blank");
+  }catch(err){ console.error(err); toast("Couldn't open in Reader.",true); }
+};
 $("#scanNav").onclick = ()=> window.open("scanner.html","_blank");
 $("#readerNav").onclick = ()=> window.open("reader.html","_blank");
 function showFab(on){ const f=$("#fabDownload"); if(f) f.classList.toggle("show", !!on && !!pdfDoc); }
