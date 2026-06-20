@@ -158,10 +158,17 @@ viewer.addEventListener("drop",e=>{ const f=[...e.dataTransfer.files].find(x=>x.
 
 async function openFile(file){
   if(file.type!=="application/pdf"){ return; }
+  const buf=await file.arrayBuffer();
+  return openBytes(buf, file.name);
+}
+async function openBytes(buf, name){
   busy(true);
   try{
-    const buf=await file.arrayBuffer();
-    pdfDoc=await pdfjsLib.getDocument({ data:buf, enableXfa:true }).promise;
+    pdfDoc=await pdfjsLib.getDocument({
+      data:buf,
+      enableXfa:true,
+      standardFontDataUrl:"https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/"
+    }).promise;
     isXfa=!!pdfDoc.isPureXfa;
     textIndex=null; matches=[]; matchAt=-1; $("#searchRes").textContent="";
     $("#empty").style.display="none";
@@ -172,6 +179,14 @@ async function openFile(file){
   }catch(e){ console.error(e); alert("Couldn't open that PDF."); }
   finally{ busy(false); }
 }
+
+/* ---------- IndexedDB handoff (file picked in Majd editor) ---------- */
+function idbGet(key){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(null);} const tx=db.transaction("kv","readonly"); const g=tx.objectStore("kv").get(key); g.onsuccess=()=>{ db.close(); res(g.result); }; g.onerror=()=>{ db.close(); rej(g.error); }; }; r.onerror=()=>rej(r.error); }); }
+function idbDel(key){ return new Promise((res)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; if(!db.objectStoreNames.contains("kv")){ db.close(); return res(); } const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").delete(key); tx.oncomplete=()=>{ db.close(); res(); }; tx.onerror=()=>{ db.close(); res(); }; }; r.onerror=()=>res(); }); }
+async function checkHandoff(){
+  try{ const buf=await idbGet("pendingReader"); if(buf){ await idbDel("pendingReader"); await openBytes(buf,"document.pdf"); } }catch(e){}
+}
+window.addEventListener("load", checkHandoff);
 
 /* ---------- layout & lazy render ---------- */
 async function layoutPages(){
