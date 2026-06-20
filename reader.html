@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Majd Reader</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#15203a">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#15203a; --navy-2:#1b2a4a; --ink:#16213b; --blue:#2563eb; --blue-d:#1b4ed1;
+    --paper:#f4f5f8; --line:#e4e9f2; --muted:#64708a; --white:#fff;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0; height:100%}
+  body{font-family:Inter,system-ui,sans-serif; background:var(--paper); color:var(--ink); display:flex; flex-direction:column; height:100dvh; overflow:hidden}
+
+  .top{display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--navy); color:#fff; flex:none; flex-wrap:nowrap; padding-top:max(8px,env(safe-area-inset-top))}
+  .logo{width:28px; height:28px; flex:none}
+  .brand{font-size:15px; font-weight:800; letter-spacing:.2px; white-space:nowrap}
+  .brand small{display:block; font-size:8.5px; letter-spacing:2px; color:#8fa3c9; font-weight:600; text-transform:uppercase}
+  .grow{flex:1}
+  .tb{display:flex; align-items:center; gap:6px}
+  .ibtn{background:rgba(255,255,255,.08); border:0; color:#dbe6f7; width:36px; height:34px; border-radius:8px; cursor:pointer; display:grid; place-items:center; font-size:15px}
+  .ibtn:hover{background:rgba(255,255,255,.16)}
+  .ibtn.on{background:var(--blue); color:#fff}
+  .ibtn svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
+  .pagebox{display:flex; align-items:center; gap:4px; background:rgba(255,255,255,.08); border-radius:8px; padding:3px 8px; font-size:13px; color:#dbe6f7}
+  .pagebox input{width:34px; background:rgba(0,0,0,.2); border:0; color:#fff; text-align:center; border-radius:5px; padding:4px; font-family:inherit; font-size:13px}
+  .openBtn{background:var(--blue); color:#fff; border:0; border-radius:8px; font-family:inherit; font-weight:700; font-size:13.5px; padding:9px 15px; cursor:pointer; white-space:nowrap}
+  .openBtn:hover{background:var(--blue-d)}
+  .install{background:#ffcb05; color:#0f2444; border:0; border-radius:8px; font-family:inherit; font-weight:700; font-size:13px; padding:9px 13px; cursor:pointer; display:none; white-space:nowrap}
+  .install.show{display:inline-block}
+
+  /* search bar */
+  .searchbar{display:none; align-items:center; gap:8px; padding:8px 12px; background:var(--navy-2); color:#fff; flex:none}
+  .searchbar.show{display:flex}
+  .searchbar input{flex:1; max-width:420px; background:rgba(0,0,0,.22); border:0; color:#fff; border-radius:8px; padding:9px 12px; font-family:inherit; font-size:14px}
+  .searchbar .res{font-size:13px; color:#aeb9d2; min-width:64px}
+  .searchbar button{background:rgba(255,255,255,.1); border:0; color:#dbe6f7; border-radius:7px; padding:8px 12px; cursor:pointer; font-family:inherit; font-weight:600}
+
+  .body{flex:1; display:flex; overflow:hidden; position:relative}
+  /* thumbnails */
+  .thumbs{width:0; background:#0f1830; overflow-y:auto; transition:width .18s; flex:none}
+  .thumbs.show{width:170px}
+  .thumb{padding:10px; cursor:pointer; text-align:center}
+  .thumb canvas{width:100%; border-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,.4); background:#fff; display:block}
+  .thumb span{display:block; color:#8fa3c9; font-size:11px; margin-top:4px}
+  .thumb.active canvas{outline:2.5px solid var(--blue)}
+
+  .viewer{flex:1; overflow:auto; padding:22px 14px 60px; display:flex; flex-direction:column; align-items:center; gap:18px; scroll-behavior:smooth}
+  .viewer.dark{background:#1d2026}
+  .pg{background:#fff; box-shadow:0 4px 16px rgba(16,24,40,.16); position:relative; max-width:100%}
+  .viewer.dark .pg canvas{filter:invert(1) hue-rotate(180deg)}
+  .pg canvas{display:block; width:100%; height:auto}
+
+  .empty{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; padding:24px; color:var(--muted)}
+  .empty .ring{width:88px; height:88px; border-radius:50%; background:#e7eefb; display:grid; place-items:center}
+  .empty .ring svg{width:42px; height:42px; stroke:var(--blue); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round}
+  .empty h2{margin:0; font-size:20px; color:var(--ink); font-weight:700}
+  .empty p{margin:0; font-size:14px; max-width:320px; line-height:1.5}
+  .empty .cta{background:var(--blue); color:#fff; border:0; border-radius:11px; font-family:inherit; font-weight:700; font-size:15px; padding:14px 26px; cursor:pointer}
+  .drag{position:absolute; inset:0; display:none; align-items:center; justify-content:center; background:rgba(37,99,235,.1); border:3px dashed var(--blue); z-index:5; color:var(--blue-d); font-weight:700; font-size:18px}
+  .drag.show{display:flex}
+
+  .busy{position:fixed; inset:0; background:rgba(244,245,248,.7); display:none; place-items:center; z-index:50}
+  .busy.show{display:grid}
+  .spin{width:40px; height:40px; border:3.5px solid #cdd6e6; border-top-color:var(--blue); border-radius:50%; animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  input[type=file]{display:none}
+
+  @media (max-width:640px){
+    .brand small{display:none}
+    .hide-sm{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg class="logo" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#0f2444"/><path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linejoin="miter"/></svg>
+  <div class="brand">Majd Reader<small>PDF viewer</small></div>
+  <div class="grow"></div>
+  <div class="tb">
+    <button class="ibtn hide-sm" id="thumbsBtn" title="Thumbnails"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="14" y="4" width="6" height="16" rx="1"/></svg></button>
+    <div class="pagebox" id="pagebox" style="display:none"><input id="pageInput" type="text" inputmode="numeric"> / <span id="pageTotal">0</span></div>
+    <button class="ibtn" id="zoomOut" title="Zoom out">&minus;</button>
+    <button class="ibtn" id="zoomIn" title="Zoom in">+</button>
+    <button class="ibtn hide-sm" id="fitBtn" title="Fit width"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/></svg></button>
+    <button class="ibtn" id="searchBtn" title="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+    <button class="ibtn" id="darkBtn" title="Dark mode"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg></button>
+    <button class="ibtn hide-sm" id="fsBtn" title="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M21 16v3a2 2 0 01-2 2h-3M3 16v3a2 2 0 002 2h3"/></svg></button>
+    <button class="install" id="installBtn">Install</button>
+    <button class="openBtn" id="openBtn">Open PDF</button>
+  </div>
+</header>
+
+<div class="searchbar" id="searchbar">
+  <input id="searchInput" type="text" placeholder="Search the document…">
+  <span class="res" id="searchRes"></span>
+  <button id="searchPrev">Prev</button>
+  <button id="searchNext">Next</button>
+  <button id="searchClose">Close</button>
+</div>
+
+<div class="body">
+  <aside class="thumbs" id="thumbs"></aside>
+  <div class="viewer" id="viewer">
+    <div class="empty" id="empty">
+      <div class="ring"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg></div>
+      <h2>Open a PDF to read</h2>
+      <p>Drop a PDF here or choose one. It stays on your device — nothing is uploaded.</p>
+      <button class="cta" id="openBtn2">Choose a PDF</button>
+    </div>
+    <div class="drag" id="drag">Drop the PDF to open</div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="application/pdf">
+<div class="busy" id="busy"><div class="spin"></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc=null, scale=1.25, pageEls=[], obs=null, thumbObs=null, current=1;
+let textIndex=null, matches=[], matchAt=-1;
+const busy=on=>$("#busy").classList.toggle("show",on);
+
+/* ---------- open ---------- */
+$("#openBtn").onclick=$("#openBtn2").onclick=()=>$("#fileInput").click();
+$("#fileInput").onchange=e=>{ const f=e.target.files[0]; e.target.value=""; if(f) openFile(f); };
+const viewer=$("#viewer");
+["dragenter","dragover"].forEach(ev=>viewer.addEventListener(ev,e=>{e.preventDefault(); $("#drag").classList.add("show");}));
+["dragleave","drop"].forEach(ev=>viewer.addEventListener(ev,e=>{e.preventDefault(); if(ev==="dragleave"&&e.relatedTarget) return; $("#drag").classList.remove("show");}));
+viewer.addEventListener("drop",e=>{ const f=[...e.dataTransfer.files].find(x=>x.type==="application/pdf"); if(f) openFile(f); });
+
+async function openFile(file){
+  if(file.type!=="application/pdf"){ return; }
+  busy(true);
+  try{
+    const buf=await file.arrayBuffer();
+    pdfDoc=await pdfjsLib.getDocument({ data:buf, enableXfa:true }).promise;
+    textIndex=null; matches=[]; matchAt=-1; $("#searchRes").textContent="";
+    $("#empty").style.display="none";
+    $("#pagebox").style.display="flex"; $("#pageTotal").textContent=pdfDoc.numPages;
+    await fitWidth(true);
+    buildThumbs();
+  }catch(e){ console.error(e); alert("Couldn't open that PDF."); }
+  finally{ busy(false); }
+}
+
+/* ---------- layout & lazy render ---------- */
+async function layoutPages(){
+  viewer.querySelectorAll(".pg").forEach(n=>n.remove());
+  pageEls=[];
+  if(obs) obs.disconnect();
+  for(let i=1;i<=pdfDoc.numPages;i++){
+    const page=await pdfDoc.getPage(i);
+    const vp=page.getViewport({scale});
+    const div=document.createElement("div"); div.className="pg"; div._n=i; div._page=page; div._done=false;
+    div.style.width=Math.floor(vp.width)+"px"; div.style.height=Math.floor(vp.height)+"px";
+    const cv=document.createElement("canvas"); div.appendChild(cv);
+    viewer.appendChild(div); pageEls.push(div);
+  }
+  obs=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{ if(en.isIntersecting) renderPage(en.target); });
+  },{root:viewer, rootMargin:"600px 0px"});
+  pageEls.forEach(d=>obs.observe(d));
+  // current page tracker
+  if(curObs) curObs.disconnect();
+  curObs=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{ if(en.isIntersecting){ current=en.target._n; $("#pageInput").value=current; markThumb(); } });
+  },{root:viewer, threshold:.5});
+  pageEls.forEach(d=>curObs.observe(d));
+}
+let curObs=null;
+async function renderPage(div){
+  if(div._done || div._rendering) return; div._rendering=true;
+  try{
+    const vp=div._page.getViewport({scale});
+    const cv=div.querySelector("canvas");
+    const ratio=window.devicePixelRatio||1;
+    cv.width=Math.floor(vp.width*ratio); cv.height=Math.floor(vp.height*ratio);
+    cv.style.width=Math.floor(vp.width)+"px"; cv.style.height=Math.floor(vp.height)+"px";
+    const ctx=cv.getContext("2d"); ctx.scale(ratio,ratio);
+    await div._page.render({canvasContext:ctx, viewport:vp}).promise;
+    div._done=true;
+  }catch(e){ console.error(e); }
+  finally{ div._rendering=false; }
+}
+
+/* ---------- zoom ---------- */
+async function setScale(s){
+  scale=Math.max(0.4, Math.min(4, s));
+  await layoutPages();
+}
+$("#zoomIn").onclick=()=>{ if(pdfDoc) setScale(scale*1.15); };
+$("#zoomOut").onclick=()=>{ if(pdfDoc) setScale(scale/1.15); };
+$("#fitBtn").onclick=()=>{ if(pdfDoc) fitWidth(); };
+async function fitWidth(initial){
+  const page=await pdfDoc.getPage(1);
+  const vp=page.getViewport({scale:1});
+  const avail=viewer.clientWidth-28;
+  scale=Math.max(0.4, Math.min(4, avail/vp.width));
+  await layoutPages();
+  if(initial) viewer.scrollTop=0;
+}
+
+/* ---------- page nav ---------- */
+$("#pageInput").addEventListener("change",()=>{
+  let n=parseInt($("#pageInput").value,10);
+  if(!n||n<1) n=1; if(n>pdfDoc.numPages) n=pdfDoc.numPages;
+  goTo(n);
+});
+function goTo(n){ const d=pageEls[n-1]; if(d) d.scrollIntoView({behavior:"smooth",block:"start"}); }
+
+/* ---------- thumbnails ---------- */
+$("#thumbsBtn").onclick=()=>{ $("#thumbs").classList.toggle("show"); $("#thumbsBtn").classList.toggle("on"); };
+async function buildThumbs(){
+  const host=$("#thumbs"); host.innerHTML="";
+  if(thumbObs) thumbObs.disconnect();
+  for(let i=1;i<=pdfDoc.numPages;i++){
+    const t=document.createElement("div"); t.className="thumb"; t._n=i;
+    t.innerHTML='<canvas></canvas><span>'+i+'</span>';
+    t.onclick=()=>goTo(i);
+    host.appendChild(t);
+  }
+  thumbObs=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{ if(en.isIntersecting) renderThumb(en.target); });
+  },{root:host, rootMargin:"300px 0px"});
+  host.querySelectorAll(".thumb").forEach(t=>thumbObs.observe(t));
+}
+async function renderThumb(t){
+  if(t._done) return; t._done=true;
+  try{
+    const page=await pdfDoc.getPage(t._n);
+    const vp=page.getViewport({scale:1});
+    const w=150, s=w/vp.width, v2=page.getViewport({scale:s});
+    const cv=t.querySelector("canvas"); cv.width=v2.width; cv.height=v2.height;
+    await page.render({canvasContext:cv.getContext("2d"), viewport:v2}).promise;
+  }catch(e){}
+}
+function markThumb(){
+  const host=$("#thumbs"); if(!host.classList.contains("show")) return;
+  host.querySelectorAll(".thumb").forEach(t=>t.classList.toggle("active",t._n===current));
+}
+
+/* ---------- dark / fullscreen ---------- */
+$("#darkBtn").onclick=()=>{ viewer.classList.toggle("dark"); $("#darkBtn").classList.toggle("on"); };
+$("#fsBtn").onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); else document.exitFullscreen&&document.exitFullscreen(); };
+
+/* ---------- search ---------- */
+$("#searchBtn").onclick=()=>{ if(!pdfDoc) return; $("#searchbar").classList.toggle("show"); if($("#searchbar").classList.contains("show")) $("#searchInput").focus(); };
+$("#searchClose").onclick=()=>$("#searchbar").classList.remove("show");
+$("#searchInput").addEventListener("keydown",e=>{ if(e.key==="Enter") runSearch(); });
+$("#searchNext").onclick=()=>step(1);
+$("#searchPrev").onclick=()=>step(-1);
+async function buildIndex(){
+  if(textIndex) return;
+  busy(true); textIndex=[];
+  try{
+    for(let i=1;i<=pdfDoc.numPages;i++){
+      const page=await pdfDoc.getPage(i);
+      const tc=await page.getTextContent();
+      textIndex.push(tc.items.map(it=>it.str).join(" ").toLowerCase());
+    }
+  } finally{ busy(false); }
+}
+async function runSearch(){
+  const q=$("#searchInput").value.trim().toLowerCase();
+  if(!q){ matches=[]; $("#searchRes").textContent=""; return; }
+  await buildIndex();
+  matches=[];
+  textIndex.forEach((txt,idx)=>{ if(txt.includes(q)) matches.push(idx+1); });
+  if(!matches.length){ $("#searchRes").textContent="No matches"; matchAt=-1; return; }
+  matchAt=0; goTo(matches[0]); updateRes();
+}
+function step(d){ if(!matches.length) return; matchAt=(matchAt+d+matches.length)%matches.length; goTo(matches[matchAt]); updateRes(); }
+function updateRes(){ $("#searchRes").textContent=(matchAt+1)+" / "+matches.length+" pages"; }
+
+window.addEventListener("resize",()=>{ if(pdfDoc) clearTimeout(window._rt), window._rt=setTimeout(()=>fitWidth(),250); });
+
+/* ---------- PWA: service worker + install ---------- */
+if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredPrompt=e; $("#installBtn").classList.add("show"); });
+$("#installBtn").onclick=async()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $("#installBtn").classList.remove("show"); };
+window.addEventListener("appinstalled",()=>$("#installBtn").classList.remove("show"));
+</script>
+</body>
+</html>
