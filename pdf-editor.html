@@ -350,7 +350,7 @@
   .modal.org{width:min(860px,96vw)}
   .org-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:14px; padding:18px; max-height:62vh; overflow:auto}
   .orgview .org-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:20px; padding:0; max-height:none}
-  .org-card{border:1.5px solid #f3b1a8; border-radius:12px; padding:10px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
+  .org-card{border:2.5px solid #f3b1a8; border-radius:12px; padding:10px; background:#fff; cursor:grab; transition:box-shadow .12s, transform .12s}
   .org-card:active{cursor:grabbing}
   .org-card.dragging{opacity:.35}
   .org-card.drop-target{border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-soft); transform:translateY(-2px)}
@@ -452,6 +452,7 @@
   <button class="enav" id="organizeBtn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Organize</button>
   <button class="enav" id="mergeBtn"><svg viewBox="0 0 24 24"><path d="M8 4h8l3 4v12H8z"/><path d="M3 9h7M6 6v6"/></svg>Merge</button>
   <button class="enav" id="scanNav"><svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2"/><path d="M4 12h16"/></svg>Scanner</button>
+  <button class="enav" id="readerNav"><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h6v16H5a2 2 0 01-2-2z"/><path d="M21 5a2 2 0 00-2-2h-6v16h6a2 2 0 002-2z"/></svg>Reader</button>
 </nav>
 
 <div class="toolbar" id="toolbar" style="display:none">
@@ -697,6 +698,7 @@ window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitTo
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
 $("#scanBtn").onclick = ()=> window.open("scanner.html","_blank");
 $("#scanNav").onclick = ()=> window.open("scanner.html","_blank");
+$("#readerNav").onclick = ()=> window.open("reader.html","_blank");
 function showFab(on){ const f=$("#fabDownload"); if(f) f.classList.toggle("show", !!on && !!pdfDoc); }
 $("#fabDownload").onclick = ()=> exportPdf();
 function goHome(){
@@ -2374,9 +2376,11 @@ $("#mergeInput").onchange=async e=>{
   busy(true);
   try{
     const out = await PDFDocument.load(await buildBytes());
-    const existingGroups = pages.filter(p=>!p.deleted).map(p=>p.fileGroup||0);
-    let g = (existingGroups.length ? Math.max(...existingGroups) : 0) + 1;
-    const groupsArr = existingGroups.slice();
+    const oldCount = out.getPageCount();
+    const existing = pages.filter(p=>!p.deleted).map(p=>p.fileGroup||0);
+    const groupsArr = [];
+    for(let i=0;i<oldCount;i++) groupsArr.push(existing[i]!=null?existing[i]:0);
+    let g = (groupsArr.length ? Math.max(...groupsArr) : 0) + 1;
     const names = orgGroupNames.slice();
     let added=0;
     for(const f of files){
