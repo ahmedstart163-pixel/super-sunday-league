@@ -4,15 +4,73 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Majd · XFA Forms</title>
-<!-- ... existing links ... -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@quorbe/xfa.js@0.4.1/styles/xfa.css">
-<!-- ... -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime"
+  }
+}
+</script>
+<style>
+  :root{ --navy:#15203a; --navy-d:#0f2444; --maize:#ffcb05; --ink:#16213b; --paper:#eef1f6; --line:#e4e9f2; --muted:#64708a; --blue:#2563eb; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--paper);color:var(--ink);height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--navy);color:#fff;flex:none}
+  .logo{width:30px;height:30px;flex:none}
+  .brand{font-weight:800;font-size:15px;line-height:1.05}
+  .brand small{display:block;font-size:8.5px;letter-spacing:2px;color:#8fa3c9;font-weight:600;text-transform:uppercase}
+  .beta{font-size:10px;font-weight:700;color:var(--navy-d);background:var(--maize);padding:2px 7px;border-radius:999px;letter-spacing:.5px}
+  .grow{flex:1}
+  .seg{display:flex;background:rgba(255,255,255,.08);border-radius:9px;padding:3px}
+  .seg button{background:transparent;border:0;color:#cdd9f0;font-family:inherit;font-weight:600;font-size:13px;padding:7px 13px;border-radius:7px;cursor:pointer}
+  .seg button.on{background:#fff;color:var(--navy)}
+  .btn{font-family:inherit;font-weight:700;font-size:13.5px;border:0;border-radius:9px;padding:10px 16px;cursor:pointer}
+  .btn.ghost{background:rgba(255,255,255,.1);color:#dbe6f7}
+  .btn.ghost:hover{background:rgba(255,255,255,.18)}
+  .btn.gold{background:var(--maize);color:var(--navy-d)}
+  .btn.gold:disabled{opacity:.45;cursor:default}
+  .stage{flex:1;overflow:auto;padding:26px 18px 60px;display:flex;justify-content:center}
+  .sheet{background:#fff;box-shadow:0 6px 26px rgba(16,24,40,.14);border-radius:6px;max-width:880px;width:100%;padding:30px 34px}
+  .empty{margin:auto;text-align:center;color:var(--muted);max-width:460px;display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px}
+  .empty .ring{width:84px;height:84px;border-radius:50%;background:#e7eefb;display:grid;place-items:center}
+  .empty .ring svg{width:40px;height:40px;stroke:var(--blue);fill:none;stroke-width:1.5}
+  .empty h2{margin:0;color:var(--ink);font-size:21px}
+  .empty p{margin:0;line-height:1.55;font-size:14px}
+  .empty button{margin-top:6px}
+  .msg{margin:auto;max-width:520px;text-align:center;color:var(--muted);line-height:1.6;font-size:14.5px;padding:30px}
+  .msg b{color:var(--ink)}
+  .spin{width:38px;height:38px;border:3.5px solid #cdd6e6;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 14px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  input[type=file]{display:none}
+  .filename{font-size:13px;color:#aeb9d2;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  @media(max-width:680px){ .brand small,.filename{display:none} .sheet{padding:18px} }
+</style>
 </head>
 <body>
 <div id="root"></div>
 <div id="boot" class="msg" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center">
   <div><div class="spin"></div>Loading the XFA engine…</div>
 </div>
+
+<script>
+  setTimeout(function(){
+    var b=document.getElementById("boot");
+    var r=document.getElementById("root");
+    if(b && r && r.childElementCount===0){
+      b.innerHTML='<div style="max-width:500px;text-align:center;line-height:1.6;color:#64708a;font-family:Inter,sans-serif">'
+        +'<b style="color:#16213b">The XFA engine didn\'t load.</b><br>'
+        +'This page loads code from a CDN. Open it directly at your site’s URL and hard-refresh. '
+        +'If it still fails, a network or extension may be blocking those CDNs.</div>';
+    }
+  },12000);
+</script>
 
 <script type="module">
 import React, { useState, useRef, useCallback } from "react";
@@ -23,144 +81,170 @@ import { XfaWriter } from "https://esm.sh/@quorbe/xfa.js@0.4.1/writer?external=r
 
 const h = React.createElement;
 
-function Logo() { /* unchanged */ }
+function Logo(){
+  return h("svg",{className:"logo",viewBox:"0 0 32 32"},
+    h("circle",{cx:16,cy:16,r:16,fill:"#0f2444"}),
+    h("path",{d:"M9 23 L9 9 L16 16.6 L23 9 L23 23",fill:"none",stroke:"#ffcb05",strokeWidth:4.4,strokeLinejoin:"miter"})
+  );
+}
 
-function App() {
-  const [stage, setStage] = useState("empty");
-  const [form, setForm] = useState(null);
-  const [mode, setMode] = useState("form"); // form | doc | pdfjs
-  const [fileName, setFileName] = useState("");
-  const [err, setErr] = useState("");
-  const [isHybrid, setIsHybrid] = useState(false); // new: try pdf.js first
+function App(){
+  const [stage,setStage]=useState("empty");
+  const [form,setForm]=useState(null);
+  const [mode,setMode]=useState("form"); // form | doc
+  const [fileName,setFileName]=useState("");
+  const [err,setErr]=useState("");
+  const [forceXfa, setForceXfa] = useState(false);
 
-  const valuesRef = useRef({});
-  const bytesRef = useRef(null);
-  const pdfInstanceRef = useRef(null); // for hybrid pdf.js fallback
-  const fileRef = useRef(null);
+  const valuesRef=useRef({});
+  const bytesRef=useRef(null);
+  const fileRef=useRef(null);
 
   const onPick = useCallback(async (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
+    const f = e.target.files[0]; 
+    if(!f) return;
 
-    setFileName(f.name);
-    setStage("loading");
-    setForm(null);
+    setFileName(f.name); 
+    setStage("loading"); 
+    setForm(null); 
     setErr("");
 
-    try {
+    try{
       const bytes = new Uint8Array(await f.arrayBuffer());
       bytesRef.current = bytes;
 
-      // === IMPROVED DETECTION ===
+      // ==================== STRONGER XFA DETECTION ====================
       let looksXfa = false;
+      
       try {
         looksXfa = await isXfaPdf(bytes);
       } catch (_) {}
 
-      if (!looksXfa) {
-        looksXfa = new TextDecoder("latin1").decode(bytes.slice(0, 100000)).includes("/XFA");
+      if (!looksXfa || forceXfa) {
+        const decoder = new TextDecoder("latin1");
+        const text = decoder.decode(bytes.slice(0, 600000));
+        looksXfa = 
+          text.includes("/XFA") || 
+          text.includes("xfa:") || 
+          text.includes("<xdp:") || 
+          text.includes("http://www.xfa.org") ||
+          text.includes("template xmlns") ||
+          text.includes("XFA") ||
+          text.includes("http://ns.adobe.com/xdp");
       }
+
+      if (!looksXfa) {
+        // Final binary fallback
+        const str = String.fromCharCode.apply(null, Array.from(bytes.slice(0, 200000)));
+        looksXfa = str.includes("/XFA") || str.includes("XFA");
+      }
+
+      console.log("XFA Detection result:", looksXfa, "Force mode:", forceXfa);
 
       if (!looksXfa) {
         setStage("notxfa");
         return;
       }
 
-      // === HYBRID: Try pdf.js first for better compatibility on some forms ===
-      if (!isHybrid) {
-        try {
-          // You can import pdfjs here and attempt loading with enableXfa
-          // For now, we default to xfa.js but keep the toggle
-        } catch (_) {}
-      }
-
       const parsed = await parseXfaPdf(bytes);
-      if (!parsed || !parsed.fields?.length) {
-        setErr("XFA detected but no fields found.");
+      
+      if (!parsed || !(parsed.fields && parsed.fields.length)) {
+        setErr("Detected as XFA, but parser found no fillable fields.");
         setStage("error");
         return;
       }
 
       const v = {};
-      parsed.fields.forEach(fl => { v[fl.somExpression] = fl.value || ""; });
+      parsed.fields.forEach(fl => {
+        v[fl.somExpression] = fl.value || "";
+      });
+      
       valuesRef.current = v;
-
-      setForm(parsed);
+      setForm(parsed); 
+      setMode("form"); 
       setStage("ready");
+
     } catch (ex) {
       console.error(ex);
-      setErr(ex?.message || String(ex));
+      setErr(String(ex && ex.message || ex));
       setStage("error");
     }
-  }, [isHybrid]);
+  }, [forceXfa]);
 
-  const fillDownload = async () => {
-    if (!bytesRef.current) return;
-    try {
+  async function fillDownload(){
+    if(!bytesRef.current) return;
+    try{
       const writer = new XfaWriter();
       const out = await writer.write(bytesRef.current, valuesRef.current);
-      
-      const blob = new Blob([out], { type: "application/pdf" });
+      const blob = new Blob([out], {type:"application/pdf"});
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = (fileName.replace(/\.pdf$/i, "") || "form") + "-filled.pdf";
+      a.href = url; 
+      a.download = (fileName.replace(/\.pdf$/i,"") || "form") + "-filled.pdf"; 
       a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 4000);
-    } catch (ex) {
-      alert("Save failed: " + (ex?.message || ex));
+      setTimeout(()=>URL.revokeObjectURL(url),4000);
+    }catch(ex){
+      console.error(ex);
+      alert("Couldn't write the filled PDF: " + (ex && ex.message || ex));
     }
-  };
+  }
 
-  const onChange = (key, value) => {
+  function onChange(key,value){
     valuesRef.current[key] = value;
-  };
+  }
 
-  const ready = stage === "ready" && form;
+  const ready = stage==="ready" && form;
 
-  // === HEADER with new controls ===
-  const header = h("header", { className: "top" },
+  const header = h("header",{className:"top"},
     h(Logo),
-    h("div", { className: "brand" }, "Majd", h("small", null, "XFA Forms")),
-    h("span", { className: "beta" }, "BETA"),
-    h("div", { className: "grow" }),
-    ready && h("span", { className: "filename" }, fileName),
-    ready && h("div", { className: "seg" },
-      h("button", { className: mode === "form" ? "on" : "", onClick: () => setMode("form") }, "Form"),
-      h("button", { className: mode === "doc" ? "on" : "", onClick: () => setMode("doc") }, "Document"),
-      // Optional: pdf.js view toggle
-    ),
-    ready && h("button", { className: "btn gold", onClick: fillDownload }, "Fill & Download"),
-    h("button", { className: "btn ghost", onClick: () => fileRef.current.click() }, ready ? "Open another" : "Open form"),
-    h("input", { ref: fileRef, type: "file", accept: "application/pdf", onChange: onPick })
+    h("div",{className:"brand"},"Majd",h("small",null,"XFA Forms")),
+    h("span",{className:"beta"},"BETA"),
+    h("div",{className:"grow"}),
+    ready ? h("span",{className:"filename"},fileName) : null,
+    ready ? h("div",{className:"seg"},
+      h("button",{className:mode==="form"?"on":"",onClick:()=>setMode("form")},"Form"),
+      h("button",{className:mode==="doc"?"on":"",onClick:()=>setMode("doc")},"Document")
+    ) : null,
+    ready ? h("button",{className:"btn gold",onClick:fillDownload},"Fill & Download") : null,
+    h("button",{className:"btn ghost",onClick:()=>fileRef.current.click()}, ready?"Open another":"Open form"),
+    h("input",{ref:fileRef,type:"file",accept:"application/pdf",onChange:onPick})
   );
 
   let body;
-  if (stage === "empty") {
-    // ... existing empty state with extra note about complex IRCC forms ...
-    body = /* your existing empty UI + note: "Best for dynamic IRCC/IMM forms" */;
-  } else if (stage === "loading") {
-    body = h("div", { className: "msg" }, h("div", { className: "spin" }), "Reading the form…");
-  } else if (stage === "notxfa") {
-    body = h("div", { className: "msg" }, 
-      h("b", null, "Standard PDF detected."), 
-      h("br"), "Open it in the main Majd Reader instead."
+  if(stage==="empty"){
+    body = h("div",{className:"empty"},
+      h("div",{className:"ring"},h("svg",{viewBox:"0 0 24 24"},h("path",{d:"M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"}),h("path",{d:"M14 3v5h5"}))),
+      h("h2",null,"Open a dynamic XFA form"),
+      h("p",null,"Now with improved detection for complex IRCC / IMM forms (like IMM 1344). Everything stays in your browser."),
+      h("button",{className:"btn gold",onClick:()=>fileRef.current.click()},"Open form")
     );
-  } else if (stage === "error") {
-    body = h("div", { className: "msg" }, 
-      h("b", null, "This form is very complex."), 
-      h("br"), "Try Adobe Acrobat Reader (free). ", 
-      h("br"), h("span", { style: { fontSize: "13px" } }, err)
+  } else if(stage==="loading"){
+    body = h("div",{className:"msg"},h("div",{className:"spin"}),"Reading the form…");
+  } else if(stage==="notxfa"){
+    body = h("div",{className:"msg"},
+      h("b",null,"Could not auto-detect as dynamic XFA."),
+      h("br"),"Some IRCC forms are heavily obfuscated.",
+      h("br"),h("br"),
+      h("button",{className:"btn gold",onClick:()=>{setForceXfa(true); fileRef.current.click();}},"Force XFA Mode"),
+      h("br"),h("br"),
+      "Or open in Adobe Acrobat Reader (recommended for submission)."
     );
-  } else if (ready) {
-    const inner = mode === "doc" 
-      ? h(XfaViewer, { form, width: 816, onChange })
-      : h(XfaForm, { form, onChange });
-    
-    body = h("div", { className: "sheet" }, inner);
+  } else if(stage==="error"){
+    body = h("div",{className:"msg"},
+      h("b",null,"Couldn’t fully process this form."),
+      h("br"),"It may use advanced XFA features not yet supported.",
+      h("br"),"Try Adobe Reader for now.", 
+      h("br"),h("br"),
+      h("span",{style:{fontSize:"12.5px",color:"#9aa5bd"}},err)
+    );
+  } else if(ready){
+    const inner = mode==="doc"
+      ? h(XfaViewer,{form,width:816,onChange})
+      : h(XfaForm,{form,onChange});
+    body = h("div",{className:"sheet"}, inner);
   }
 
-  return h(React.Fragment, null, header, h("div", { className: "stage" }, body));
+  return h(React.Fragment,null, header, h("div",{className:"stage"}, body));
 }
 
 createRoot(document.getElementById("root")).render(h(App));
