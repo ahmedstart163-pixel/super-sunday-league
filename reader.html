@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#15203a">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -129,7 +130,23 @@ pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/p
 
 let pdfDoc=null, scale=1.25, pageEls=[], obs=null, thumbObs=null, current=1;
 let textIndex=null, matches=[], matchAt=-1;
+let isXfa=false;
 const busy=on=>$("#busy").classList.toggle("show",on);
+
+/* minimal link service for the XFA layer */
+const linkStub={
+  externalLinkEnabled:true, externalLinkTarget:2, externalLinkRel:"noopener",
+  getDestinationHash:()=>"#", getAnchorUrl:()=>"",
+  addLinkAttributes:(el,url,newWindow)=>{ if(url){ el.href=url; if(newWindow){ el.target="_blank"; el.rel="noopener"; } } }
+};
+function note(msg){
+  let n=document.getElementById("note");
+  if(!n){ n=document.createElement("div"); n.id="note";
+    n.style.cssText="position:fixed;left:50%;top:64px;transform:translateX(-50%);background:#0f2444;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90vw;text-align:center";
+    document.body.appendChild(n); }
+  n.textContent=msg; n.style.display="block";
+  clearTimeout(window._nt); window._nt=setTimeout(()=>n.style.display="none",5000);
+}
 
 /* ---------- open ---------- */
 $("#openBtn").onclick=$("#openBtn2").onclick=()=>$("#fileInput").click();
@@ -145,11 +162,13 @@ async function openFile(file){
   try{
     const buf=await file.arrayBuffer();
     pdfDoc=await pdfjsLib.getDocument({ data:buf, enableXfa:true }).promise;
+    isXfa=!!pdfDoc.isPureXfa;
     textIndex=null; matches=[]; matchAt=-1; $("#searchRes").textContent="";
     $("#empty").style.display="none";
     $("#pagebox").style.display="flex"; $("#pageTotal").textContent=pdfDoc.numPages;
     await fitWidth(true);
     buildThumbs();
+    if(isXfa) note("Opened as a government form (XFA) — view only. To fill & save, use Adobe Reader.");
   }catch(e){ console.error(e); alert("Couldn't open that PDF."); }
   finally{ busy(false); }
 }
@@ -162,9 +181,10 @@ async function layoutPages(){
   for(let i=1;i<=pdfDoc.numPages;i++){
     const page=await pdfDoc.getPage(i);
     const vp=page.getViewport({scale});
-    const div=document.createElement("div"); div.className="pg"; div._n=i; div._page=page; div._done=false;
+    const div=document.createElement("div"); div.className="pg"; div._n=i; div._page=page; div._done=false; div._xfa=isXfa;
     div.style.width=Math.floor(vp.width)+"px"; div.style.height=Math.floor(vp.height)+"px";
-    const cv=document.createElement("canvas"); div.appendChild(cv);
+    if(!isXfa){ const cv=document.createElement("canvas"); div.appendChild(cv); }
+    else { div.style.position="relative"; div.style.background="#fff"; }
     viewer.appendChild(div); pageEls.push(div);
   }
   obs=new IntersectionObserver(ents=>{
@@ -181,6 +201,7 @@ async function layoutPages(){
 let curObs=null;
 async function renderPage(div){
   if(div._done || div._rendering) return; div._rendering=true;
+  if(div._xfa){ div._rendering=false; return renderXfaPage(div); }
   try{
     const vp=div._page.getViewport({scale});
     const cv=div.querySelector("canvas");
@@ -191,6 +212,31 @@ async function renderPage(div){
     await div._page.render({canvasContext:ctx, viewport:vp}).promise;
     div._done=true;
   }catch(e){ console.error(e); }
+  finally{ div._rendering=false; }
+}
+async function renderXfaPage(div){
+  if(div._done || div._rendering) return; div._rendering=true;
+  try{
+    if(!pdfjsLib.XfaLayer || !div._page.getXfa) throw new Error("no-xfa-support");
+    const vp=div._page.getViewport({scale});
+    div.style.width=Math.floor(vp.width)+"px"; div.style.height=Math.floor(vp.height)+"px";
+    const xfaHtml=await div._page.getXfa();
+    const host=document.createElement("div");
+    div.innerHTML=""; div.appendChild(host);
+    pdfjsLib.XfaLayer.render({
+      viewport: vp.clone({dontFlip:true}),
+      div: host,
+      xfaHtml,
+      annotationStorage: pdfDoc.annotationStorage,
+      linkService: linkStub,
+      intent: "display"
+    });
+    div._done=true;
+  }catch(e){
+    console.error(e);
+    div.innerHTML='<div style="padding:28px;color:#64708a;font-size:13.5px;line-height:1.5">This government form couldn\'t be rendered here. Open it in <b>Firefox</b> or free <b>Adobe Acrobat Reader</b> to view and fill it.</div>';
+    div._done=true;
+  }
   finally{ div._rendering=false; }
 }
 
@@ -226,10 +272,12 @@ async function buildThumbs(){
   if(thumbObs) thumbObs.disconnect();
   for(let i=1;i<=pdfDoc.numPages;i++){
     const t=document.createElement("div"); t.className="thumb"; t._n=i;
-    t.innerHTML='<canvas></canvas><span>'+i+'</span>';
+    if(isXfa) t.innerHTML='<div style="background:#fff;border-radius:4px;height:96px;display:grid;place-items:center;color:#64708a;font-weight:700;font-size:18px">'+i+'</div>';
+    else t.innerHTML='<canvas></canvas><span>'+i+'</span>';
     t.onclick=()=>goTo(i);
     host.appendChild(t);
   }
+  if(isXfa) return;
   thumbObs=new IntersectionObserver(ents=>{
     ents.forEach(en=>{ if(en.isIntersecting) renderThumb(en.target); });
   },{root:host, rootMargin:"300px 0px"});
