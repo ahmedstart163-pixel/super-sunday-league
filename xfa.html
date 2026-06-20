@@ -107,10 +107,18 @@ function App(){
     try{
       const bytes=new Uint8Array(await f.arrayBuffer());
       bytesRef.current=bytes;
-      const xfa=await isXfaPdf(bytes);
-      if(!xfa){ setStage("notxfa"); return; }
+      // Robust detection: trust the library, but fall back to a raw /XFA marker scan.
+      let looksXfa=false;
+      try{ looksXfa = await isXfaPdf(bytes); }catch(_){}
+      if(!looksXfa){
+        try{ looksXfa = new TextDecoder("latin1").decode(bytes).indexOf("/XFA")!==-1; }catch(_){}
+      }
+      if(!looksXfa){ setStage("notxfa"); return; }
       const parsed=await parseXfaPdf(bytes);
-      const v={}; (parsed.fields||[]).forEach(fl=>{ v[fl.somExpression]=fl.value; });
+      if(!parsed || !(parsed.fields && parsed.fields.length)){
+        setErr("Detected as XFA, but the parser found no fillable fields in it."); setStage("error"); return;
+      }
+      const v={}; parsed.fields.forEach(fl=>{ v[fl.somExpression]=fl.value; });
       valuesRef.current=v;
       setForm(parsed); setMode("form"); setStage("ready");
     }catch(ex){ console.error(ex); setErr(String(ex&&ex.message||ex)); setStage("error"); }
