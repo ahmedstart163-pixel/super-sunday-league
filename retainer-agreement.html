@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RCIC Retainer &amp; Consultation Agreement</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#16233b; --navy2:#1e3050; --gold:#c2922a; --gold-soft:#e8d8a8;
+    --ink:#1b2330; --muted:#5d6b7d; --line:#d9dee6; --bg:#eef1f5;
+    --paper:#ffffff; --soft:#f6f8fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+  input,select,textarea,button{font-family:inherit}
+
+  /* ── top bar ─────────────────────────────────────── */
+  .topbar{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brandmark{width:34px;height:34px;border-radius:8px;background:var(--gold);display:grid;place-items:center;color:var(--navy);flex:none}
+  .brandmark svg{width:20px;height:20px}
+  .topbar h1{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:0;letter-spacing:-.2px}
+  .topbar .sub{font-size:13px;color:#9fb0c6;margin-top:-1px}
+  .badge{margin-left:auto;font-size:13px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--navy);background:var(--gold-soft);padding:4px 10px;border-radius:99px}
+  .actions{display:flex;gap:8px;margin-left:auto;align-items:center}
+  .btn{border:1px solid transparent;border-radius:8px;padding:8px 14px;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,color .15s}
+  .btn-gold,.btn-primary{background:var(--gold);color:var(--navy)}
+  .btn-gold:hover,.btn-primary:hover{background:#b3842b}
+  .btn-light{background:#fff;color:var(--navy)}
+  .btn-light:hover{background:#e7ebf1}
+  .btn-outline{background:transparent;color:#dce4ef;border-color:rgba(255,255,255,.28)}
+  .btn-outline:hover{background:rgba(255,255,255,.10);color:#fff}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid #3a4c69}
+  .moneywrap{position:relative;display:block}
+  .moneywrap::before{content:"$";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+  .moneywrap input{padding-left:21px}
+
+  /* ── disclaimer ──────────────────────────────────── */
+  .note{background:#fbfaf6;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px;padding:7px 20px;line-height:1.5}
+  .note a{color:var(--gold);text-decoration:none}
+  .note a:hover{text-decoration:underline}
+
+  .tabs{display:flex;gap:2px;padding:0 20px;background:#fff;border-bottom:1px solid var(--line)}
+  .tab{border:none;background:none;color:var(--muted);
+    padding:14px 16px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit;
+    border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+  .tab:hover{color:var(--navy)}
+  .tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+  .tabpanel{display:none}
+  .tabpanel.active{display:block}
+
+  /* ── layout ──────────────────────────────────────── */
+  .wrap{display:grid;grid-template-columns:380px 1fr;gap:0;align-items:start}
+  @media(max-width:880px){ .wrap{grid-template-columns:1fr} }
+
+  .form{padding:18px 20px 60px;border-right:1px solid var(--line);background:#fff;min-height:100vh}
+  fieldset{border:none;padding:0;margin:0 0 20px}
+  legend{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--navy);padding:0 0 8px;
+    border-bottom:2px solid var(--gold);margin-bottom:12px;width:100%;display:flex;align-items:center;gap:7px}
+  legend .n{width:20px;height:20px;border-radius:5px;background:var(--navy);color:#fff;font-size:13px;
+    display:inline-grid;place-items:center;font-family:'Inter';font-weight:700;flex:none}
+  label{display:block;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:10px 0 4px}
+  input[type=text],input[type=email],input[type=number],input[type=date],select,textarea{
+    width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:13px;color:var(--ink);background:#fff}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,146,42,.15)}
+  textarea{resize:vertical;line-height:1.5}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .three{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
+  .disb-row{display:grid;grid-template-columns:1fr 96px;gap:8px;margin-bottom:6px}
+  .disb-row input{font-size:13px;padding:7px 9px}
+  .hint{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.4}
+
+  /* ── preview pane ────────────────────────────────── */
+  .pane{padding:24px;display:flex;justify-content:center}
+  .paper{background:var(--paper);width:100%;max-width:760px;padding:54px 60px;
+    box-shadow:0 4px 24px rgba(20,30,50,.12);border-radius:3px;
+    font-family:Georgia,'Times New Roman',serif;color:#222;font-size:14px;line-height:1.6}
+  @media(max-width:880px){ .paper{padding:32px 26px} .pane{padding:14px} }
+
+  .doc-head{text-align:center;border-bottom:2px solid var(--navy);padding-bottom:16px;margin-bottom:22px}
+  .doc-head .firm{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.3px}
+  .doc-head .ttl{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:8px;font-family:'Inter'}
+  .doc-head .meta{font-size:13px;color:#666;margin-top:10px;font-family:'Inter'}
+  .doclogo{max-height:68px;max-width:240px;object-fit:contain;display:block;margin:0 auto 12px}
+  .insignia{max-height:58px;max-width:120px;object-fit:contain;display:block;margin:0 0 6px auto}
+  .regbadge{font-family:'Inter';font-size:13px;letter-spacing:.3px;color:#6a7787;margin-top:7px;
+    display:inline-flex;align-items:center;gap:6px}
+  .regbadge svg{width:13px;height:13px;flex:none;color:var(--navy)}
+
+  .parties{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;font-size:13px}
+  .party h4{margin:0 0 6px;font-family:'Inter';font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .party .nm{font-weight:700;color:var(--navy)}
+  .party div{line-height:1.5}
+
+  .paper h2{font-family:'Inter';font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.5px;margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid #e3e3e3;display:flex;gap:8px}
+  .paper h2 .sn{color:var(--gold)}
+  .paper p{margin:0 0 10px}
+  .paper ol.svc{margin:0 0 10px;padding-left:22px}
+  .paper ol.svc li{margin-bottom:6px}
+  .paper ul.plain{margin:0 0 10px;padding-left:20px}
+  .paper ul.plain li{margin-bottom:5px}
+
+  table.fees{width:100%;border-collapse:collapse;font-family:'Inter';font-size:13px;margin:6px 0 12px}
+  table.fees th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-size:13px;letter-spacing:.4px;text-transform:uppercase}
+  table.fees td{padding:8px 10px;border-bottom:1px solid #e6e6e6}
+  table.fees td.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.fees tr.total td{font-weight:700;color:var(--navy);border-top:2px solid var(--navy);border-bottom:none}
+
+  .sigs{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:34px}
+  .sig .ln{border-bottom:1px solid #333;height:34px}
+  .sig .cap{font-family:'Inter';font-size:13px;color:#555;margin-top:4px}
+  .cicc{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:11px 13px;font-family:'Inter';font-size:13px;color:#444;margin:6px 0 10px}
+
+  .inlinedate{font-family:inherit;font-size:inherit;color:var(--navy);font-weight:600;
+    border:none;background:rgba(194,146,42,.10);border-bottom:1px dashed var(--gold);
+    border-radius:4px;padding:1px 5px;cursor:pointer;min-width:8.5em}
+  .inlinedate:hover{background:rgba(194,146,42,.20)}
+  .inlinedate:focus{outline:none;background:rgba(194,146,42,.25)}
+  .sig .inlinedate{font-weight:400;color:#333}
+
+  @media print{
+    body{background:#fff}
+    .topbar,.note,.form{display:none !important}
+    .tabs{display:none !important}
+    .wrap{display:block}
+    .pane{padding:0}
+    .paper{box-shadow:none;max-width:none;width:auto;padding:0;font-size:11.5pt}
+    .paper h2{break-after:avoid}
+    .sigs,table.fees{break-inside:avoid}
+    .inlinedate{background:none;border:none;color:#222;font-weight:inherit;padding:0;-webkit-appearance:none;appearance:none}
+    .inlinedate::-webkit-calendar-picker-indicator{display:none}
+  }
+</style>
+</head>
+<body><div style="background:#070d1a;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 20px;display:flex;align-items:center;">
+  <div style="display:flex;align-items:center;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+    <a href="index.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;">⚽ Super Sunday</a>
+    <a href="grade-transferer.html" style="color:rgba(255,255,255,0.4);padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;">📊 Grade Transferer</a>
+    <a href="pdf-editor.html" style="color:rgba(255,255,255,0.4);padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;">📄 PDF Editor</a>
+    <a href="retainer-agreement.html" style="color:#c9a84c;padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;border-bottom:2px solid #c9a84c;">📋 Retainer Agreement</a>
+  </div>
+</div>
+
+
+<div class="topbar">
+  <span class="brandmark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v6h6"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4"/></svg>
+  </span>
+  <div>
+    <h1>Retainer Agreement Generator</h1>
+    <div class="sub">RCIC · CICC-structured service agreement</div>
+  </div>
+  
+  <div class="actions">
+    <button class="btn btn-outline" onclick="resetForm()" title="Start a new file">Reset</button>
+    <button class="btn btn-outline" onclick="verifyDoc()" title="Check required fields">Check</button>
+    <button class="btn btn-light" onclick="exportDoc()" title="Download as Word">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+      Word
+    </button>
+    <button class="btn btn-primary" onclick="printDoc()" title="Print or save as PDF">Print / PDF</button>
+  </div>
+</div>
+
+<div class="note">
+  Drafting aid based on the standard sections of the CICC <b>Service Agreement / Retainer Agreement Regulation</b>. You remain the responsible author — verify wording and fees against the current regulation and
+  <a href="https://college-ic.ca/about-the-college/regulations-and-policies/Retainer-Agreement-Regulation" target="_blank" rel="noopener">CICC requirements</a>. Not legal advice.
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tabbtn-retainer" onclick="showTab('retainer')">Service Agreement</button>
+  <button class="tab" id="tabbtn-consult" onclick="showTab('consult')">Initial Consultation</button>
+  <button class="tab" id="tabbtn-invoice" onclick="showTab('invoice')">Invoice</button>
+</div>
+
+<div class="tabpanel active" id="tab-retainer">
+<div class="wrap">
+  <!-- ════════ FORM ════════ -->
+  <div class="form" id="form">
+
+    <div style="background:#f3f6fb;border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:16px">
+      <div style="font-weight:700;font-size:13px;color:var(--navy);display:flex;align-items:center;gap:7px;margin-bottom:7px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 14.34A6 6 0 1 1 12 18"/><path d="M12 2v4M2 12h4M12 22v-2"/><path d="m5 5 2 2"/></svg>
+        Auto-fill from your notes
+      </div>
+      <textarea id="notesIn" rows="5" placeholder="Paste client info from Notepad. Labels help, e.g.&#10;Name: John Doe&#10;DOB: 1990-05-12&#10;Email: john@email.com&#10;Phone: +1 780 555 1234&#10;Address: 123 Main St, Edmonton AB&#10;Program: Study permit&#10;Fee: 2000"></textarea>
+      <div style="display:flex;gap:9px;align-items:center;margin-top:7px">
+        <button type="button" class="btn btn-primary" onclick="autofillFromNotes()" style="padding:8px 14px">Auto-fill form</button>
+        <button type="button" class="btn btn-outline" onclick="$('notesIn').value='';$('fillStatus').textContent=''" style="color:var(--muted);border-color:var(--line)">Clear</button>
+        <span id="fillStatus" style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <div class="hint">Reads name, email, phone, date of birth, address and immigration program from the text. Always review the filled fields before generating.</div>
+    </div>
+
+    <fieldset>
+      <legend><span class="n">1</span> Consultant / Firm</legend>
+      <label>Firm logo (optional)</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="file" id="logoFile" accept="image/*" onchange="handleLogo(this)" style="font-size:13px;flex:1" />
+        <button type="button" class="btn" onclick="removeLogo()" style="background:var(--soft);color:var(--navy);border:1px solid var(--line);padding:7px 12px">Remove</button>
+      </div>
+      <div class="hint">Your own firm logo only. The official CICC logo is intentionally omitted — under s.46 of the Code, the College's logo may be used only as the College permits, so the document instead shows the permitted "Regulated by the College…" line with your RCIC number.</div>
+      <label>Official RCIC insignia (optional)</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="file" id="insigniaFile" accept="image/*" onchange="handleInsignia(this)" style="font-size:13px;flex:1" />
+        <button type="button" class="btn" onclick="removeInsignia()" style="background:var(--soft);color:var(--navy);border:1px solid var(--line);padding:7px 12px">Remove</button>
+      </div>
+      <div class="hint">Upload only the official insignia file the College issued to you, and only if you are in good standing and authorized to use it per the College's Insignia Guide. The insignia is the College's property — this just places your own authorized file; it does not generate one.</div>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">
+        <input type="checkbox" id="showLogo" checked style="width:auto" onchange="setBrand('logo',this.checked)" /> Show logo (on all three documents)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showBadge" checked style="width:auto" onchange="setBrand('badge',this.checked)" /> Show "Regulated by the College" badge
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showInsignia" checked style="width:auto" onchange="setBrand('insignia',this.checked)" /> Show insignia (if uploaded)
+      </label>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <button type="button" class="btn btn-gold" onclick="saveFirm()" style="padding:8px 14px">Save firm details</button>
+        <span id="saveStatus" style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <div class="hint">Saves your firm/RCIC details, logo and settings in this browser so you don't re-enter them. Persists when the page is hosted on your own site; it won't persist inside this in-chat preview.</div>
+      <label>Firm / business name</label>
+      <input type="text" id="firm" value="Alhijra Immigration Services" />
+      <div class="two">
+        <div><label>RCIC full name</label><input type="text" id="rcicName" placeholder="Jane Doe" /></div>
+        <div><label>RCIC no.</label><input type="text" id="rcicNo" placeholder="R000000" /></div>
+      </div>
+      <label>Address</label>
+      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="Edmonton, Alberta, Canada" />
+      <div class="two">
+        <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" /></div>
+        <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." /></div>
+      </div>
+      <label>People likely to assist (s.24(3)(e))</label>
+      <input type="text" id="assist" placeholder="e.g., authorized staff and agents of the firm" />
+      <div class="two">
+        <div><label>Governing province</label>
+          <select id="prov">
+            <option>Alberta</option><option>British Columbia</option><option>Manitoba</option>
+            <option>New Brunswick</option><option>Newfoundland and Labrador</option><option>Nova Scotia</option>
+            <option>Ontario</option><option>Prince Edward Island</option><option>Quebec</option><option>Saskatchewan</option>
+          </select>
+        </div>
+        <div><label>Service language</label>
+          <select id="lang"><option>English</option><option>French</option></select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">2</span> Client</legend>
+      <label>Full name</label>
+      <input type="text" id="cliName" placeholder="Client full legal name" />
+      <div class="two">
+        <div><label>Date of birth</label><input type="text" id="cliDob" placeholder="YYYY-MM-DD" inputmode="numeric" onchange="normDobField(this)" /></div>
+        <div><label>Phone</label><input type="text" id="cliPhone" placeholder="+000 ..." /></div>
+      </div>
+      <label>Address</label>
+      <input type="text" id="cliAddr" placeholder="Street, city, country" />
+      <label>Email</label>
+      <input type="email" id="cliEmail" placeholder="client@..." />
+      <label>Client's instructions &amp; authorized contact (s.24(3)(f))</label>
+      <textarea id="instructions" rows="2" placeholder="Any specific instructions; name anyone authorized to receive updates on the Client's behalf."></textarea>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:10px">
+        <input type="checkbox" id="joint" style="width:auto" onchange="onJoint()" /> Joint retainer — add a second client (e.g., sponsor + applicant)
+      </label>
+      <div id="jointFields" style="display:none">
+        <label>Second client — full name</label>
+        <input type="text" id="cli2Name" placeholder="Second client's full legal name" />
+        <div class="two">
+          <div><label>Date of birth</label><input type="text" id="cli2Dob" placeholder="YYYY-MM-DD" inputmode="numeric" onchange="normDobField(this)" /></div>
+          <div><label>Phone</label><input type="text" id="cli2Phone" placeholder="+000 ..." /></div>
+        </div>
+        <label>Email</label>
+        <input type="email" id="cli2Email" placeholder="client2@..." />
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">3</span> Matter & scope</legend>
+      <label>Immigration program</label>
+      <select id="program"></select>
+      <label>Scope of services (editable)</label>
+      <textarea id="scope" rows="8"></textarea>
+      <div class="hint">One service per line. These become the numbered RCIC responsibilities in Section 2.</div>
+      <label>Estimated time frame (s.24(3)(h))</label>
+      <input type="text" id="timeframe" placeholder="e.g., 8–12 months, subject to IRCC processing times" />
+      <label>Summary of preliminary advice given (s.24(3)(c))</label>
+      <textarea id="preadvice" rows="2" placeholder="Brief summary of any advice already given. Leave blank if none."></textarea>
+      <label>Conflict of interest disclosure (s.24(3)(o))</label>
+      <input type="text" id="conflict" placeholder="Leave blank if none" />
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">4</span> Fees</legend>
+      <label>Billing method (one method per service — s.24(3)(i))</label>
+      <select id="feeMethod" onchange="onFeeMethod()">
+        <option value="flat">Flat fee (payment by milestones)</option>
+        <option value="hourly">Hourly</option>
+      </select>
+      <div id="flatFields">
+        <label>Professional fee (CAD)</label>
+        <span class="moneywrap"><input type="number" id="fee" value="2000" min="0" step="50" /></span>
+      </div>
+      <div id="hourlyFields" style="display:none">
+        <div class="two">
+          <div><label>Hourly rate (CAD)</label><span class="moneywrap"><input type="number" id="rate" value="150" min="0" step="5" /></span></div>
+          <div><label>Estimated hours</label><input type="number" id="hours" value="12" min="0" step="0.5" /></div>
+        </div>
+      </div>
+      <label>GST/HST %</label>
+      <input type="number" id="tax" value="5" min="0" step="0.5" />
+      <label>Advance payment held in client account (CAD)</label>
+      <span class="moneywrap"><input type="number" id="advance" value="500" min="0" step="50" /></span>
+      <div class="two">
+        <div><label>Payment due (days)</label><input type="number" id="dueDays" value="15" min="0" step="1" /></div>
+        <div><label>Interest on overdue (%/yr)</label><input type="number" id="interest" value="0" min="0" step="0.5" /></div>
+      </div>
+      <div class="hint">Flat fee splits into milestones per the selected program. Hourly shows the rate and estimated hours. The Code does not allow switching methods for the same service.</div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">5</span> Disbursements</legend>
+      <div id="disbList"></div>
+      <div class="hint">Government fees change — confirm each against the current IRCC fee schedule before signing.</div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">6</span> Execution &amp; policies</legend>
+      <div class="two">
+        <div><label>Agreement date</label><input type="date" id="adate" /></div>
+        <div><label>File / ref no.</label><input type="text" id="fileNo" placeholder="ALH-0001" value="ALH-0001" /></div>
+      </div>
+      <label>File retention period (s.24(3)(q))</label>
+      <input type="text" id="retention" placeholder="e.g., 7 years" value="the period required by the CICC by-laws and applicable law" />
+      <label>Complaint-handling procedure (s.24(3)(r))</label>
+      <textarea id="complaintProc" rows="3">If the Client has a concern, they should present it in writing to the RCIC, who will acknowledge it promptly and respond within 30 days. If it remains unresolved, the Client may escalate to the College.</textarea>
+    </fieldset>
+  </div>
+
+  <!-- ════════ PREVIEW ════════ -->
+  <div class="pane">
+    <div id="paper" class="paper"></div>
+  </div>
+</div>
+</div><!-- /tab-retainer -->
+
+<div class="tabpanel" id="tab-consult">
+<div class="wrap">
+  <div class="form" id="cform">
+    <div class="hint" style="margin-bottom:14px">Firm, RCIC and logo details are shared from the <b>Service Agreement</b> tab.</div>
+    <fieldset>
+      <legend>Branding</legend>
+      <label>Firm logo (optional) — shared across all documents</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="file" id="logoFile2" accept="image/*" onchange="handleLogo(this)" style="font-size:13px;flex:1" />
+        <button type="button" class="btn" onclick="removeLogo()" style="background:var(--soft);color:var(--navy);border:1px solid var(--line);padding:7px 12px">Remove</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:8px">
+        <input type="checkbox" id="showLogo2" checked style="width:auto" onchange="setBrand('logo',this.checked)" /> Show logo
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showBadge2" checked style="width:auto" onchange="setBrand('badge',this.checked)" /> Show "Regulated by the College" badge
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showInsignia2" checked style="width:auto" onchange="setBrand('insignia',this.checked)" /> Show insignia (if uploaded)
+      </label>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">1</span> Potential client</legend>
+      <label>Full name</label>
+      <input type="text" id="ccliName" placeholder="Potential client's full name" />
+      <div class="two">
+        <div><label>Phone</label><input type="text" id="ccliPhone" placeholder="+000 ..." /></div>
+        <div><label>Email</label><input type="email" id="ccliEmail" placeholder="client@..." /></div>
+      </div>
+      <label>Address</label>
+      <input type="text" id="ccliAddr" placeholder="Street, city, country" />
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">2</span> Consultation</legend>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">
+        <input type="checkbox" id="cProBono" checked style="width:auto" /> This consultation is free (no fee)
+      </label>
+      <div class="two">
+        <div><label>Consultation fee (CAD)</label><span class="moneywrap"><input type="number" id="cfee" value="0" min="0" step="10" /></span></div>
+        <div><label>GST/HST %</label><input type="number" id="cgst" value="5" min="0" step="0.5" /></div>
+      </div>
+      <label>Purpose &amp; scope of consultation (s.23(2)(e))</label>
+      <textarea id="cpurpose" rows="3" placeholder="What this consultation will cover."></textarea>
+      <label>File / ref no.</label>
+      <input type="text" id="cfileNo" placeholder="ALH-C-0001" value="ALH-C-0001" />
+    </fieldset>
+  </div>
+  <div class="pane">
+    <div id="paper2" class="paper"></div>
+  </div>
+</div>
+</div><!-- /tab-consult -->
+
+<div class="tabpanel" id="tab-invoice">
+<div class="wrap">
+  <div class="form" id="iform">
+    <button type="button" onclick="pullFromRetainer(true)" style="width:100%;margin-bottom:12px;background:var(--navy);border:none;border-radius:9px;padding:10px;color:#fff;font-weight:600;font-size:13px;cursor:pointer">↻ Pull details from Service Agreement</button>
+    <div class="hint" style="margin-bottom:14px">Client, matter, fee and disbursements auto-fill from the <b>Service Agreement</b> tab. Edit anything here and it stops auto-syncing so your changes stick.</div>
+    <fieldset>
+      <legend>Branding</legend>
+      <label>Firm logo (optional) — shared across all documents</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="file" id="logoFile3" accept="image/*" onchange="handleLogo(this)" style="font-size:13px;flex:1" />
+        <button type="button" class="btn" onclick="removeLogo()" style="background:var(--soft);color:var(--navy);border:1px solid var(--line);padding:7px 12px">Remove</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:8px">
+        <input type="checkbox" id="showLogo3" checked style="width:auto" onchange="setBrand('logo',this.checked)" /> Show logo
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showBadge3" checked style="width:auto" onchange="setBrand('badge',this.checked)" /> Show "Regulated by the College" badge
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
+        <input type="checkbox" id="showInsignia3" checked style="width:auto" onchange="setBrand('insignia',this.checked)" /> Show insignia (if uploaded)
+      </label>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">1</span> Bill to</legend>
+      <label>Client name</label>
+      <input type="text" id="iName" placeholder="Client full name" />
+      <label>Address</label>
+      <input type="text" id="iAddr" placeholder="Street, city, country" />
+      <label>Email</label>
+      <input type="email" id="iEmail" placeholder="client@..." />
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">2</span> Invoice details</legend>
+      <div class="two">
+        <div><label>Invoice no.</label><input type="text" id="iNo" value="INV-0001" /></div>
+        <div><label>File / matter ref</label><input type="text" id="iFile" placeholder="ALH-0001" /></div>
+      </div>
+      <label>Matter</label>
+      <input type="text" id="iMatter" placeholder="e.g., Study Permit application" />
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">3</span> Professional services (s.33)</legend>
+      <div id="iSvcList"></div>
+      <button type="button" onclick="addISvc()" style="margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer">+ Add service line</button>
+      <div class="hint">Each line needs a full description of the service provided. Invoice only after work is done.</div>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">4</span> Disbursements</legend>
+      <div id="iDisbList"></div>
+      <button type="button" onclick="addIDisb()" style="margin-top:4px;background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer">+ Add disbursement</button>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">5</span> Totals &amp; payment</legend>
+      <div class="two">
+        <div><label>GST/HST % (on services)</label><input type="number" id="iTax" value="5" min="0" step="0.5" /></div>
+        <div><label>Advance / trust applied (CAD)</label><span class="moneywrap"><input type="number" id="iTrust" value="0" min="0" step="50" /></span></div>
+      </div>
+      <label>Payment due (days)</label>
+      <input type="number" id="iDue" value="15" min="0" step="1" />
+      <label>Payment instructions (optional)</label>
+      <textarea id="iPay" rows="2" placeholder="e.g., e-transfer to ..., or cheque payable to ..."></textarea>
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:8px">
+        <input type="checkbox" id="iPaid" style="width:auto" onchange="renderInvoice()" /> Mark as paid (adds a receipt — s.33(3))
+      </label>
+    </fieldset>
+  </div>
+  <div class="pane">
+    <div id="paper3" class="paper"></div>
+  </div>
+</div>
+</div><!-- /tab-invoice -->
+
+<script>
+/* ── program templates ───────────────────────────────── */
+const PROGRAMS = {
+  "Study Permit": {
+    scope: [
+      "Assess the Client's eligibility for a Canadian study permit",
+      "Advise on the documentary requirements and supporting documents needed",
+      "Review the Client's Letter of Acceptance and proof of financial support",
+      "Prepare and complete all IRCC forms required for the application",
+      "Prepare a representation/submission letter to IRCC",
+      "Review the completed application package with the Client prior to submission",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Respond to IRCC requests, including biometrics and medical instructions",
+      "Communicate IRCC's decision and next steps to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",30],["Upon submission of the application to IRCC",50],["Upon final decision by IRCC",20]],
+    disb: ["IRCC study permit processing fee","Biometrics fee","Medical examination (if required)","Document translation (if required)","Courier / postage"]
+  },
+  "Express Entry — Permanent Residence": {
+    scope: [
+      "Assess the Client's eligibility under the Express Entry programs (FSW / CEC / FST)",
+      "Calculate the Client's Comprehensive Ranking System (CRS) score and advise on improvements",
+      "Advise on Educational Credential Assessment and language testing requirements",
+      "Prepare and submit the Express Entry profile",
+      "Monitor draws and advise the Client upon an Invitation to Apply (ITA)",
+      "Prepare and complete the electronic Application for Permanent Residence (e-APR)",
+      "Prepare a representation/submission letter to IRCC",
+      "Submit the application and act as the Client's authorized representative",
+      "Respond to IRCC requests, including biometrics, medicals and document requests",
+      "Communicate IRCC's decision and landing instructions to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",30],["Upon submission of the e-APR following an ITA",50],["Upon final decision by IRCC",20]],
+    disb: ["IRCC processing fee (principal applicant)","Right of Permanent Residence Fee (RPRF)","Biometrics fee","Medical examination","Police certificates","Educational Credential Assessment (ECA)","Language test fees","Courier / postage"]
+  },
+  "Spousal / Common-law Sponsorship": {
+    scope: [
+      "Assess eligibility of the Sponsor and the Sponsored Person",
+      "Advise on relationship evidence and documentary requirements",
+      "Prepare and complete the Sponsorship and Permanent Residence application forms",
+      "Compile and review relationship and supporting evidence with the Client",
+      "Prepare a representation/submission letter to IRCC",
+      "Submit the application and act as the Client's authorized representative",
+      "Respond to IRCC requests, including biometrics, medicals and interviews",
+      "Communicate IRCC's decision and next steps to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",30],["Upon submission of the application to IRCC",50],["Upon final decision by IRCC",20]],
+    disb: ["IRCC sponsorship fee","IRCC processing fee","Right of Permanent Residence Fee (RPRF)","Biometrics fee","Medical examination","Police certificates","Document translation","Courier / postage"]
+  },
+  "Visitor Visa (TRV)": {
+    scope: [
+      "Assess the Client's eligibility for a Temporary Resident Visa",
+      "Advise on supporting documents, including proof of funds and ties to home country",
+      "Prepare and complete all IRCC forms required for the application",
+      "Prepare a representation/submission letter to IRCC",
+      "Review the completed application package with the Client prior to submission",
+      "Submit the application and act as the Client's authorized representative",
+      "Respond to IRCC requests, including biometrics",
+      "Communicate IRCC's decision to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",50],["Upon final decision by IRCC",50]],
+    disb: ["IRCC visitor visa processing fee","Biometrics fee","Document translation (if required)","Courier / postage"]
+  },
+  "Work Permit (LMIA-based)": {
+    scope: [
+      "Assess the Client's eligibility for an employer-specific work permit",
+      "Review the positive LMIA and job offer with the Client",
+      "Advise on the documentary requirements and supporting documents needed",
+      "Prepare and complete all IRCC forms required for the work permit application",
+      "Prepare a representation/submission letter to IRCC",
+      "Review the completed application package with the Client prior to submission",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Respond to IRCC requests, including biometrics and medical instructions",
+      "Communicate IRCC's decision and next steps to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",30],["Upon submission of the application to IRCC",50],["Upon final decision by IRCC",20]],
+    disb: ["IRCC work permit processing fee","Biometrics fee","Medical examination (if required)","Document translation (if required)","Courier / postage"]
+  },
+  "Provincial Nominee Program (PNP)": {
+    scope: [
+      "Assess the Client's eligibility under the relevant Provincial Nominee Program stream",
+      "Advise on the documentary and points requirements for the stream",
+      "Prepare and submit the provincial nomination application",
+      "Liaise with the province and respond to provincial requests",
+      "Upon nomination, prepare and submit the federal Application for Permanent Residence",
+      "Prepare a representation/submission letter to IRCC",
+      "Act as the Client's authorized representative with IRCC and the province",
+      "Respond to IRCC requests, including biometrics, medicals and document requests",
+      "Communicate decisions and landing instructions to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",30],["Upon submission of the provincial nomination",30],["Upon submission of the federal PR application",25],["Upon final decision",15]],
+    disb: ["Provincial nomination application fee","IRCC processing fee (principal applicant)","Right of Permanent Residence Fee (RPRF)","Biometrics fee","Medical examination","Police certificates","Educational Credential Assessment (ECA)","Language test fees","Courier / postage"]
+  },
+  "Citizenship Application": {
+    scope: [
+      "Assess the Client's eligibility for Canadian citizenship, including physical presence",
+      "Advise on the documentary requirements and supporting documents needed",
+      "Prepare and complete the Application for Canadian Citizenship",
+      "Review the completed application package with the Client prior to submission",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Advise the Client on the citizenship test and any interview",
+      "Respond to IRCC requests and communicate decisions to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",50],["Upon submission of the application to IRCC",30],["Upon final decision by IRCC",20]],
+    disb: ["IRCC citizenship processing fee","Right of Citizenship Fee","Document translation (if required)","Courier / postage"]
+  },
+  "PR Card Renewal": {
+    scope: [
+      "Assess the Client's eligibility for a Permanent Resident Card renewal, including residency obligation",
+      "Advise on the documentary requirements and supporting documents needed",
+      "Prepare and complete the Application to Renew a Permanent Resident Card",
+      "Review the completed application package with the Client prior to submission",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Respond to IRCC requests and communicate the decision to the Client"
+    ],
+    milestones: [["Upon signing of this Agreement",60],["Upon final decision by IRCC",40]],
+    disb: ["IRCC PR Card processing fee","Document translation (if required)","Courier / postage"]
+  },
+  "Custom matter": { scope: ["Provide immigration advice and representation as agreed with the Client"], milestones:[["Upon signing of this Agreement",50],["Upon final decision",50]], disb:["IRCC processing fee","Biometrics fee","Courier / postage"] }
+};
+
+/* ── state for disbursements ─────────────────────────── */
+let disb = [];
+let sigRcicDate = "";
+let sigCliDate = "";
+let sigCli2Date = "";
+function setSigCli2(v){ sigCli2Date=v; render(); }
+function onJoint(){ document.getElementById("jointFields").style.display = document.getElementById("joint").checked ? "block" : "none"; render(); }
+
+/* ── auto-fill from pasted notes ─────────────────────── */
+function pad2(n){ n=String(n); return n.length<2 ? "0"+n : n; }
+function normDobField(el){ const v=normNotesDate(el.value); if(v) el.value=v; render(); }
+function normNotesDate(str){
+  if(!str) return "";
+  str=str.trim();
+  let m=str.match(/\b((?:19|20)\d{2})[-/.](\d{1,2})[-/.](\d{1,2})\b/);
+  if(m) return `${m[1]}-${pad2(m[2])}-${pad2(m[3])}`;
+  m=str.match(/\b(\d{1,2})[-/.](\d{1,2})[-/.]((?:19|20)\d{2})\b/);
+  if(m){ let d=+m[1], mo=+m[2]; if(mo>12 && d<=12){ const tmp=d; d=mo; mo=tmp; } return `${m[3]}-${pad2(mo)}-${pad2(d)}`; }
+  const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+  m=str.match(/([A-Za-z]{3,9})\.?\s+(\d{1,2}),?\s+((?:19|20)\d{2})/);
+  if(m && months[m[1].slice(0,3).toLowerCase()]) return `${m[3]}-${pad2(months[m[1].slice(0,3).toLowerCase()])}-${pad2(m[2])}`;
+  m=str.match(/(\d{1,2})\s+([A-Za-z]{3,9})\.?\s+((?:19|20)\d{2})/);
+  if(m && months[m[2].slice(0,3).toLowerCase()]) return `${m[3]}-${pad2(months[m[2].slice(0,3).toLowerCase()])}-${pad2(m[1])}`;
+  return "";
+}
+function detectProgram(t){
+  const s=t.toLowerCase();
+  const map=[
+    [/study permit|student visa|study visa|college admission|university admission/, "Study Permit"],
+    [/express entry|federal skilled|comprehensive ranking|crs|ee profile/, "Express Entry — Permanent Residence"],
+    [/spous|common.?law|partner sponsor|family sponsor|conjugal/, "Spousal / Common-law Sponsorship"],
+    [/visitor|trv|temporary resident visa|tourist|super visa/, "Visitor Visa (TRV)"],
+    [/work permit|lmia|employer.specific|labour market/, "Work Permit (LMIA-based)"],
+    [/pnp|provincial nominee|nominee program/, "Provincial Nominee Program (PNP)"],
+    [/citizenship|naturali/, "Citizenship Application"],
+    [/pr card|permanent resident card|card renew/, "PR Card Renewal"]
+  ];
+  for(const [re,key] of map){ if(re.test(s)) return key; }
+  return "";
+}
+function autofillFromNotes(){
+  const t=$("notesIn").value||"";
+  const st=$("fillStatus");
+  if(!t.trim()){ st.textContent="Paste some notes first."; st.style.color="var(--muted)"; return; }
+  const lines=t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const labelVal=(labels)=>{
+    for(const l of lines){
+      for(const lab of labels){
+        const m=l.match(new RegExp('^\\s*'+lab+'\\s*[:\\-–=]\\s*(.+)$','i'));
+        if(m && m[1].trim()) return m[1].trim();
+      }
+    }
+    return "";
+  };
+  const email=(t.match(/[\w.+-]+@[\w-]+\.[\w.-]+/)||[])[0]||"";
+  let phone=labelVal(["phone","tel","telephone","mobile","cell","contact","number","ph"]);
+  if(!phone){ const cands=t.match(/\+?\d[\d\s().-]{7,}\d/g)||[]; phone=cands.find(c=>c.replace(/\D/g,"").length>=10)||""; }
+  phone=phone.trim();
+  let dob=normNotesDate(labelVal(["dob","d\\.o\\.b\\.?","date of birth","birth ?date","born"]));
+  if(!dob){ const any=(t.match(/\b(?:19|20)\d{2}[-/.]\d{1,2}[-/.]\d{1,2}\b|\b\d{1,2}[-/.]\d{1,2}[-/.](?:19|20)\d{2}\b/)||[])[0]; dob=normNotesDate(any||""); }
+  let name=labelVal(["name","client","client name","full name","applicant","applicant name"]);
+  if(!name){ for(const l of lines){ if(/[:@\/]/.test(l)) continue; if(detectProgram(l)) continue; if(/^[A-Za-z][A-Za-z .'\-]+\s+[A-Za-z]/.test(l) && l.split(/\s+/).length<=5){ name=l; break; } } }
+  const addr=labelVal(["address","addr","residential address","mailing address","home address"]);
+  const program=detectProgram(t);
+  const feeRaw=labelVal(["fee","professional fee","quote","price","cost","amount"]).replace(/[^\d.]/g,"");
+
+  const filled=[];
+  if(name){ $("cliName").value=name; filled.push("name"); }
+  if(dob){ $("cliDob").value=dob; filled.push("DOB"); }
+  if(addr){ $("cliAddr").value=addr; filled.push("address"); }
+  if(phone){ $("cliPhone").value=phone; filled.push("phone"); }
+  if(email){ $("cliEmail").value=email; filled.push("email"); }
+  if(program){ $("program").value=program; loadProgram(); filled.push("program"); }
+  if(feeRaw && +feeRaw>0){ $("feeMethod").value="flat"; onFeeMethod(); $("fee").value=feeRaw; filled.push("fee"); }
+  render();
+  if(filled.length){ st.textContent="✓ Filled: "+filled.join(", ")+" — review before generating."; st.style.color="#1f8a5e"; }
+  else { st.textContent="Couldn't detect fields — try labels like Name:, Email:, Program:"; st.style.color="#c2922a"; }
+}
+let logoData = "";
+let insigniaData = "";
+const brand = { logo:true, badge:true, insignia:true };
+function renderAll(){ render(); renderConsult(); renderInvoice(); }
+function setBrand(key, val){ brand[key]=val; syncBrandUI(); renderAll(); saveFirm(true); }
+function syncBrandUI(){
+  [["logo",["showLogo","showLogo2","showLogo3"]],["badge",["showBadge","showBadge2","showBadge3"]],["insignia",["showInsignia","showInsignia2","showInsignia3"]]]
+    .forEach(([k,ids])=>ids.forEach(id=>{ const e=document.getElementById(id); if(e) e.checked=brand[k]; }));
+}
+
+function handleLogo(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = e => { logoData = e.target.result; renderAll(); saveFirm(true); };
+  r.readAsDataURL(f);
+}
+function removeLogo(){ logoData=""; ["logoFile","logoFile2","logoFile3"].forEach(id=>{const el=document.getElementById(id); if(el) el.value="";}); renderAll(); saveFirm(true); }
+function handleInsignia(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = e => { insigniaData = e.target.result; renderAll(); saveFirm(true); };
+  r.readAsDataURL(f);
+}
+function removeInsignia(){ insigniaData=""; const el=document.getElementById("insigniaFile"); if(el) el.value=""; renderAll(); saveFirm(true); }
+
+/* tap-to-edit date setters (called from inside the document) */
+function setDate(v){ document.getElementById("adate").value = v; render(); }
+function setSigRcic(v){ sigRcicDate = v; render(); }
+function setSigCli(v){ sigCliDate = v; render(); }
+
+/* ── helpers ─────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const cad = n => "$" + Number(n||0).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2}) + " CAD";
+const today = () => { const d=new Date(); return d.toISOString().slice(0,10); };
+const longDate = iso => iso ? iso : "______________";
+
+/* ── init ────────────────────────────────────────────── */
+function initPrograms(){
+  const sel = $("program");
+  Object.keys(PROGRAMS).forEach(k=>{ const o=document.createElement("option"); o.textContent=k; sel.appendChild(o); });
+  sel.value = "Study Permit";
+}
+function loadProgram(){
+  const p = PROGRAMS[$("program").value];
+  $("scope").value = p.scope.join("\n");
+  disb = p.disb.map(name=>({name, amount:""}));
+  renderDisb();
+  render();
+}
+function renderDisb(){
+  $("disbList").innerHTML = disb.map((d,i)=>`
+    <div class="disb-row">
+      <input type="text" value="${esc(d.name)}" oninput="disb[${i}].name=this.value;render()" />
+      <input type="number" placeholder="CAD" value="${d.amount}" min="0" step="1" oninput="disb[${i}].amount=this.value;render()" />
+    </div>`).join("");
+}
+
+/* ── render the document ─────────────────────────────── */
+function render(){
+  const firm=$("firm").value, rcic=$("rcicName").value, rno=$("rcicNo").value;
+  const prov=$("prov").value, lang=$("lang").value;
+  const feeMethod=$("feeMethod").value, taxRate=+$("tax").value||0, adv=+$("advance").value||0;
+  const fee=+$("fee").value||0, rate=+$("rate").value||0, hours=+$("hours").value||0;
+  const base = feeMethod==="hourly" ? rate*hours : fee;
+  const program=$("program").value;
+  const scopeItems=$("scope").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  const ms=PROGRAMS[program].milestones;
+  const tax=base*taxRate/100, total=base+tax;
+  const assist=$("assist").value.trim(), instr=$("instructions").value.trim();
+  const timeframe=$("timeframe").value.trim(), preadv=$("preadvice").value.trim(), conflict=$("conflict").value.trim();
+  const dueDays=$("dueDays").value||"15", interest=+$("interest").value||0;
+  const joint=$("joint").checked;
+  const cli2=$("cli2Name").value.trim();
+  const retention=$("retention").value.trim()||"the period required by the CICC by-laws and applicable law";
+  const complaintProc=$("complaintProc").value.trim();
+
+  const firmName = firm||"[Firm name]";
+  const rcicLine = (rcic||"[RCIC name]") + (rno?` (RCIC No. ${esc(rno)})`:" (RCIC No. R______)");
+
+  const milestoneRows = ms.map(([label,pct])=>`<tr><td>${esc(label)}</td><td class="amt">${pct}%</td><td class="amt">${cad(fee*pct/100)}</td></tr>`).join("");
+  const disbRows = disb.filter(d=>d.name.trim()).map(d=>`<tr><td>${esc(d.name)}</td><td class="amt">${d.amount!==""?cad(d.amount):"To be confirmed"}</td></tr>`).join("");
+
+  $("paper").innerHTML = `
+    <div class="doc-head">
+      ${(logoData&&brand.logo)?`<img class="doclogo" src="${logoData}" alt="Firm logo" />`:""}
+      <div class="firm">${esc(firmName)}</div>
+      ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${rno?` · RCIC No. ${esc(rno)}`:""}</div>`:""}
+      <div class="ttl">Service Agreement</div>
+      <div class="meta">File No. ${esc($("fileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc($("adate").value)}" onchange="setDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change the agreement date" /> &nbsp;·&nbsp; Services provided in ${esc(lang)}</div>
+    </div>
+
+    <p>This Service Agreement is made under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between:</p>
+    <div class="parties">
+      <div class="party"><h4>The RCIC</h4>
+        <div class="nm">${esc(rcicLine)}</div>
+        <div>${esc(firmName)}</div>
+        <div>${esc($("firmAddr").value||"[Address]")}</div>
+        <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
+      </div>
+      <div class="party"><h4>${joint?"The Clients":"The Client"}</h4>
+        <div class="nm">${esc($("cliName").value||"[Client name]")}</div>
+        ${$("cliDob").value?`<div>Date of birth: ${longDate($("cliDob").value)}</div>`:""}
+        <div>${esc($("cliAddr").value||"[Address]")}</div>
+        <div>${esc($("cliPhone").value||"")} ${$("cliEmail").value?(" · "+esc($("cliEmail").value)):""}</div>
+        ${joint&&cli2?`<div class="nm" style="margin-top:8px">${esc(cli2)}</div>
+        ${$("cli2Dob").value?`<div>Date of birth: ${longDate($("cli2Dob").value)}</div>`:""}
+        <div>${esc($("cli2Phone").value||"")} ${$("cli2Email").value?(" · "+esc($("cli2Email").value)):""}</div>`:""}
+      </div>
+    </div>
+
+    <h2><span class="sn">1.</span> Definitions</h2>
+    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.</p>
+
+    <h2><span class="sn">2.</span> Preliminary advice</h2>
+    <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
+
+    <h2><span class="sn">3.</span> Services to be provided by the RCIC</h2>
+    <p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>
+    <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    <p><b>Estimated time frame:</b> ${timeframe?esc(timeframe):"to be confirmed with the Client"}. Time frames are estimates only; once an application is submitted, processing times are controlled by IRCC and may change.</p>
+    <p>The RCIC endeavours to provide quality immigration and citizenship consulting services and to adequately supervise any person who assists in providing them. The following persons are likely to assist the RCIC: ${assist?esc(assist):"the RCIC and authorized staff of the firm"}.</p>
+    <p>The RCIC will provide services in ${esc(lang)} and will give the Client a signed copy of this Agreement.</p>
+
+    <h2><span class="sn">4.</span> Client's instructions</h2>
+    <p>${instr?esc(instr):"The Client instructs the RCIC to act on the matter described in Section 3. No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing."}</p>
+
+    <h2><span class="sn">5.</span> Responsibilities of the Client</h2>
+    <ul class="plain">
+      <li>Provide complete, accurate and truthful information and documents in a timely manner.</li>
+      <li>Immediately advise the RCIC of any change in marital, family or civil status, address, or contact information for any person included in the application.</li>
+      <li>Cooperate with reasonable requests and meet deadlines set by the RCIC and by IRCC.</li>
+      <li>Pay the fees and disbursements as set out in this Agreement.</li>
+    </ul>
+    <p>The RCIC's obligations are null and void if the Client knowingly provides inaccurate, misleading or false material information; the Client's financial obligations remain.</p>
+
+    <h2><span class="sn">6.</span> Fees for services</h2>
+    ${feeMethod==="hourly" ? `
+    <p>The Client will be billed by the <b>hourly</b> method at <b>${cad(rate)} per hour</b>. The RCIC estimates approximately <b>${hours} hour${hours===1?"":"s"}</b> for this matter. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
+    <table class="fees">
+      <thead><tr><th>Description</th><th class="amt">Estimate</th></tr></thead>
+      <tbody>
+        <tr><td>Professional fees (${cad(rate)} × ${hours} h, estimated)</td><td class="amt">${cad(base)}</td></tr>
+        <tr><td>GST/HST (${taxRate}%)</td><td class="amt">${cad(tax)}</td></tr>
+        <tr class="total"><td>Estimated total</td><td class="amt">${cad(total)}</td></tr>
+      </tbody>
+    </table>
+    <p>This is an estimate, not a fixed quote; actual fees depend on the hours worked and will be itemized on each invoice. Invoices are payable within ${esc(dueDays)} days of receipt.${interest>0?` Accounts not paid within that period bear interest at ${interest}% per annum.`:""} The RCIC will not switch from an hourly arrangement to a flat fee for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
+    ` : `
+    <p>The Client will be billed by the <b>flat fee</b> method, with payment by milestones. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
+    <table class="fees">
+      <thead><tr><th>Milestone</th><th class="amt">Share</th><th class="amt">Professional fee</th></tr></thead>
+      <tbody>
+        ${milestoneRows}
+        <tr><td>GST/HST (${taxRate}%)</td><td class="amt"></td><td class="amt">${cad(tax)}</td></tr>
+        <tr class="total"><td>Total professional fees</td><td class="amt"></td><td class="amt">${cad(total)}</td></tr>
+      </tbody>
+    </table>
+    <p>Invoices are payable within ${esc(dueDays)} days of receipt.${interest>0?` Accounts not paid within that period bear interest at ${interest}% per annum.`:""} The RCIC will not switch from a flat-fee arrangement to an hourly structure for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
+    `}
+
+    <h2><span class="sn">7.</span> Disbursements</h2>
+    <p>The following disbursements are payable by the Client and are in addition to the professional fees above. Government fees are set by the relevant authority and are subject to change:</p>
+    <table class="fees">
+      <thead><tr><th>Disbursement</th><th class="amt">Estimated amount</th></tr></thead>
+      <tbody>${disbRows||`<tr><td>—</td><td class="amt">—</td></tr>`}</tbody>
+    </table>
+    <p>Disbursements charged to the Client will not exceed the actual amount incurred. Should any fees or disbursements exceed these estimates, or should a new disbursement arise, the RCIC will inform the Client and obtain the Client's written agreement before incurring it.</p>
+
+    <h2><span class="sn">8.</span> Additional costs</h2>
+    <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
+
+    <h2><span class="sn">9.</span> Taxes</h2>
+    <p>${taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not Applicable.`}</p>
+
+    <h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
+    <p>An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>
+
+    <h2><span class="sn">11.</span> Invoices &amp; receipts</h2>
+    <p>The RCIC will invoice the Client only after services have been provided or disbursements made. Each invoice will contain a full description of the services and disbursements to which it relates. The RCIC will provide the Client with a receipt for every payment received, identifying the invoice to which it relates.</p>
+
+    <h2><span class="sn">12.</span> Refunds</h2>
+    <p>On completion or termination, the RCIC will refund any advance payment held in trust that exceeds the amount invoiced for services rendered and disbursements made. Professional fees are refundable only to the extent they have not been earned to the date of termination; disbursements already incurred are non-refundable.</p>
+
+    <h2><span class="sn">13.</span> Conflict of interest</h2>
+    <p>${conflict?esc(conflict):"The RCIC is not aware of any actual or potential conflict of interest in relation to this matter. The RCIC will promptly disclose, in writing, any conflict that later arises and will only continue to act with the Client's free and informed written consent, as permitted by the Code of Professional Conduct."}</p>
+    <p>If the RCIC provides both immigration or citizenship consulting services and employment or student recruitment services to the Client, this Agreement will clearly differentiate the two, the Client will not be charged any fee or disbursement for the recruitment services, the RCIC will disclose any fee it receives from an employer or institution, and the Client's free and informed written consent will be obtained.</p>
+    ${joint?`<p>This is a <b>joint retainer</b>. The Clients acknowledge that no information received from one Client in connection with the matter can be treated as confidential as against the other Client. If a conflict develops between the Clients that cannot be resolved, the RCIC may be unable to continue acting for either Client and may have to withdraw. Each Client confirms their consent to the joint retainer on the terms set out in this Agreement.</p>`:""}
+
+    <h2><span class="sn">14.</span> Confidentiality &amp; privacy</h2>
+    <p>The RCIC has an obligation of confidentiality under the CICC Code of Professional Conduct and will keep all information relating to the Client confidential indefinitely. The RCIC collects the Client's personal information and documents solely to provide the services described in this Agreement, and handles them in accordance with the <i>Personal Information Protection and Electronic Documents Act</i> (PIPEDA), applicable provincial privacy law, and the Code. By signing, the Client consents to the RCIC collecting, using and disclosing their personal information to IRCC and other relevant authorities to the extent necessary to carry out the matter.</p>
+    <p>The RCIC will not take possession of the Client's original documents except to make copies, to meet a legal or government requirement, or with the Client's written consent, and will return them as soon as that purpose has been achieved. Personal information is stored securely with access limited to those working on the file, and is retained for ${esc(retention)}, after which it is securely destroyed. The Client may request access to, or correction of, their personal information. The CICC may require production of this Agreement and related records in accordance with the Act and its by-laws.</p>
+
+    <h2><span class="sn">15.</span> Communication &amp; updates</h2>
+    <p>The RCIC will communicate with the Client in writing, by telephone, or in person, and will provide timely information on the status of the matter, including when documents are submitted or received and when IRCC requests information or renders a decision. On request, the RCIC will provide copies of documents submitted or received. Where necessary, the RCIC will obtain assistance, including by retaining the services of a certified interpreter or translator.</p>
+
+    <h2><span class="sn">16.</span> Weak or futile applications</h2>
+    <p>If the RCIC is of the opinion that the Client's application, expression of interest or proceeding is futile, unfounded or has little or no hope of success, the RCIC will provide the Client with a written opinion setting out the reasoning. If the Client still wishes to proceed, the RCIC will obtain the Client's written acknowledgement of the risks before continuing.</p>
+
+    <h2><span class="sn">17.</span> Errors or omissions</h2>
+    <p>If the RCIC is responsible for an error or omission affecting the Client's case that may cause prejudice and cannot be readily corrected, the RCIC will promptly inform the Client, recommend that the Client obtain independent legal advice about any rights arising from it, and notify the RCIC's professional liability insurer and the College's Registrar as required by the Code.</p>
+
+    <h2><span class="sn">18.</span> Changes &amp; additional services</h2>
+    <p>Any amendment to this Agreement must be agreed to by the Client and the RCIC in writing, and will be initialled by both parties. If the RCIC is asked to act on matters beyond Section 3, or due to a material change in the Client's circumstances, undisclosed material facts, or a change in legislation, the Agreement may be modified accordingly by mutual written agreement.</p>
+
+    <h2><span class="sn">19.</span> Force majeure</h2>
+    <p>The RCIC's failure to perform any term as a result of conditions beyond reasonable control — including governmental restrictions, subsequent legislation, war, strikes, pandemics, or acts of God — shall not be deemed a breach of this Agreement.</p>
+
+    <h2><span class="sn">20.</span> Termination &amp; withdrawal</h2>
+    <p>The Client may terminate this Agreement in writing at any time. The RCIC may terminate before completion only for good reason — such as the Client deceiving the RCIC, failing to give adequate instructions, failing to follow the RCIC's advice on a significant point, or failing to pay agreed fees or disbursements — on reasonable notice and provided the termination will not cause serious prejudice to the Client. The RCIC must terminate if the Client no longer wishes to receive the services, asks the RCIC to act dishonestly or unlawfully, or if continuing would create an unconsented conflict of interest or exceed the RCIC's competence.</p>
+
+    <h2><span class="sn">21.</span> On completion or termination</h2>
+    <p>Within 30 days of completion or termination, the RCIC will return any of the Client's documents or property in the RCIC's possession, provide an accounting of all funds received, issue a final invoice for any amounts owing, and refund any trust funds held in excess of the invoiced amount. On termination, the RCIC will also provide the information needed in connection with the Client's file, cooperate with any successor representative, and notify IRCC that the RCIC no longer represents the Client. If the Client asks that the file be transferred to another representative, the RCIC will deliver all file documents within 10 business days of the request, even if amounts remain outstanding.</p>
+
+    <h2><span class="sn">22.</span> Continuity of the file</h2>
+    <p>If the RCIC becomes incapacitated or is otherwise unable to continue providing services under this Agreement, the Client's file will be handled in accordance with CICC requirements, including transfer to another authorized representative or return of the file to the Client. The Client may contact the CICC for assistance.</p>
+
+    <h2><span class="sn">23.</span> The College &amp; complaints</h2>
+    <p>The CICC is the regulator of immigration and citizenship consultants in Canada and oversees RCICs to protect the public. ${complaintProc?esc(complaintProc):"If the Client has a concern, they should present it in writing to the RCIC, who will respond within 30 days."} If it remains unresolved, the Client may file a complaint through the College's complaints process:</p>
+    <div class="cicc">College of Immigration and Citizenship Consultants (CICC)<br/>5500 North Service Rd., Suite 1002, Burlington, ON&nbsp; L7L 6W6<br/>Toll-free: 1-877-836-7543 &nbsp;·&nbsp; www.college-ic.ca</div>
+
+    <h2><span class="sn">24.</span> Copy of the Code &amp; governing law</h2>
+    <p>The RCIC has provided the Client with a copy of the CICC Code of Professional Conduct. This Agreement is governed by the laws of the Province of ${esc(prov)} and the federal laws of Canada, and its provisions are severable.</p>
+
+    ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
+    <div class="sigs">
+      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigRcicDate)}" onchange="setSigRcic(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCliDate)}" onchange="setSigCli(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCli2Date)}" onchange="setSigCli2(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>`:""}
+    </div>
+  `;
+}
+
+/* ── consultation agreement (s.23) ───────────────────── */
+let cAgreementDate = today();
+let csigR = "", csigC = "";
+function setCDate(v){ cAgreementDate=v; renderConsult(); }
+function setCSigR(v){ csigR=v; renderConsult(); }
+function setCSigC(v){ csigC=v; renderConsult(); }
+
+function renderConsult(){
+  const cfirm=$("firm").value||"[Firm name]";
+  const crno=$("rcicNo").value;
+  const crcicLine=($("rcicName").value||"[RCIC name]")+(crno?` (RCIC No. ${esc(crno)})`:" (RCIC No. R______)");
+  const clang=$("lang").value;
+  const cfee=+$("cfee").value||0, cgst=+$("cgst").value||0;
+  const probono=$("cProBono").checked;
+  const cTaxAmt=cfee*cgst/100, cTotal=cfee+cTaxAmt;
+  const cpurpose=$("cpurpose").value.trim();
+
+  $("paper2").innerHTML = `
+    <div class="doc-head">
+      ${(logoData&&brand.logo)?`<img class="doclogo" src="${logoData}" alt="Firm logo" />`:""}
+      <div class="firm">${esc(cfirm)}</div>
+      ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${crno?` · RCIC No. ${esc(crno)}`:""}</div>`:""}
+      <div class="ttl">Consultation Agreement</div>
+      <div class="meta">File No. ${esc($("cfileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
+    </div>
+
+    <p>This Consultation Agreement is made under section 23 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), before any immigration or citizenship consulting services are provided, between:</p>
+    <div class="parties">
+      <div class="party"><h4>The RCIC</h4>
+        <div class="nm">${esc(crcicLine)}</div>
+        <div>${esc(cfirm)}</div>
+        <div>${esc($("firmAddr").value||"[Address]")}</div>
+        <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
+      </div>
+      <div class="party"><h4>The Potential Client</h4>
+        <div class="nm">${esc($("ccliName").value||"[Client name]")}</div>
+        <div>${esc($("ccliAddr").value||"[Address]")}</div>
+        <div>${esc($("ccliPhone").value||"")} ${$("ccliEmail").value?(" · "+esc($("ccliEmail").value)):""}</div>
+      </div>
+    </div>
+
+    <h2><span class="sn">1.</span> Purpose &amp; scope of the consultation</h2>
+    <p>${cpurpose?esc(cpurpose):"To assess the potential Client's immigration or citizenship options, review their circumstances and eligibility, answer their questions, and outline possible pathways and next steps."}</p>
+    <p>This is an initial consultation only. It does not create a representation relationship and does not commit either party to proceed. Any ongoing immigration or citizenship consulting services would require a separate written service agreement.</p>
+
+    <h2><span class="sn">2.</span> Consultation fee</h2>
+    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cgst>0?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.`}</p>
+
+    <h2><span class="sn">3.</span> The College's role</h2>
+    <p>The RCIC is a Regulated Canadian Immigration Consultant licensed by, and subject to the Code of Professional Conduct of, the College of Immigration and Citizenship Consultants (CICC) — the national body that regulates immigration and citizenship consultants in Canada to protect the public. If the Client has a concern, they may contact the College:</p>
+    <div class="cicc">College of Immigration and Citizenship Consultants (CICC)<br/>5500 North Service Rd., Suite 1002, Burlington, ON&nbsp; L7L 6W6<br/>Toll-free: 1-877-836-7543 &nbsp;·&nbsp; www.college-ic.ca</div>
+
+    <h2><span class="sn">4.</span> Confidentiality</h2>
+    <p>Information shared by the Client during the consultation is kept confidential and used only in connection with the consultation, except as required or permitted by law or by the College.</p>
+
+    ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
+    <div class="sigs">
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigR)}" onchange="setCSigR(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigC)}" onchange="setCSigC(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+    </div>
+    <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
+  `;
+}
+
+/* ── invoice (s.33) ──────────────────────────────────── */
+let invSvc = [], invDisb = [], iDate = today(), invoiceTouched = false;
+function pullFromRetainer(manual){
+  $("iName").value = $("cliName").value;
+  $("iAddr").value = $("cliAddr").value;
+  $("iEmail").value = $("cliEmail").value;
+  $("iFile").value = $("fileNo").value;
+  $("iMatter").value = $("program").value;
+  $("iTax").value = $("tax").value;
+  $("iDue").value = $("dueDays").value;
+  $("iTrust").value = $("advance").value;
+  if($("feeMethod").value==="hourly"){
+    const rate=+$("rate").value||0, hours=+$("hours").value||0;
+    invSvc=[{name:`Professional fees (${hours} h @ ${cad(rate)}/h)`, amount: rate*hours}];
+  } else {
+    invSvc=[{name:`Professional fees — ${$("program").value}`, amount:+$("fee").value||0}];
+  }
+  invDisb = (disb||[]).filter(d=>d.name&&d.name.trim()).map(d=>({name:d.name, amount:(d.amount!==""&&d.amount!=null)?d.amount:""}));
+  if(invDisb.length===0) invDisb=[{name:"",amount:""}];
+  renderISvc(); renderIDisb(); renderInvoice();
+  if(manual) invoiceTouched = false; // re-synced on request; resume auto-sync
+}
+function setIDate(v){ iDate=v; renderInvoice(); }
+function lineRow(arr,i,s,ph){
+  const reFn = arr==="invSvc" ? "renderISvc" : "renderIDisb";
+  return `<div style="display:grid;grid-template-columns:1fr 88px 26px;gap:6px;margin-bottom:6px">
+    <input type="text" value="${esc(s.name)}" oninput="${arr}[${i}].name=this.value;renderInvoice()" placeholder="${ph}" style="font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px" />
+    <span class="moneywrap"><input type="number" value="${s.amount}" oninput="${arr}[${i}].amount=this.value;renderInvoice()" placeholder="CAD" style="font-size:13px;padding:7px 9px 7px 19px;border:1px solid var(--line);border-radius:7px;width:100%" /></span>
+    <button type="button" onclick="${arr}.splice(${i},1);${reFn}();renderInvoice()" style="border:1px solid var(--line);background:#fff;border-radius:7px;color:var(--muted);cursor:pointer">×</button>
+  </div>`;
+}
+function renderISvc(){ $("iSvcList").innerHTML = invSvc.map((s,i)=>lineRow("invSvc",i,s,"Description of service")).join(""); }
+function renderIDisb(){ $("iDisbList").innerHTML = invDisb.map((s,i)=>lineRow("invDisb",i,s,"Disbursement")).join(""); }
+function addISvc(){ invoiceTouched=true; invSvc.push({name:"",amount:""}); renderISvc(); renderInvoice(); }
+function addIDisb(){ invoiceTouched=true; invDisb.push({name:"",amount:""}); renderIDisb(); renderInvoice(); }
+
+function renderInvoice(){
+  const ifirm=$("firm").value||"[Firm name]";
+  const irno=$("rcicNo").value;
+  const ircicLine=($("rcicName").value||"[RCIC name]")+(irno?` (RCIC No. ${esc(irno)})`:"");
+  const itax=+$("iTax").value||0, itrust=+$("iTrust").value||0, idue=$("iDue").value||"15";
+  const svcSub=invSvc.reduce((a,s)=>a+(+s.amount||0),0);
+  const disbSub=invDisb.reduce((a,s)=>a+(+s.amount||0),0);
+  const taxAmt=svcSub*itax/100, total=svcSub+taxAmt+disbSub, due=Math.max(0,total-itrust);
+  const paid=$("iPaid").checked;
+  const svcRows=invSvc.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("")||`<tr><td>—</td><td class="amt">—</td></tr>`;
+  const disbRows=invDisb.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("");
+
+  $("paper3").innerHTML = `
+    <div class="doc-head">
+      ${(logoData&&brand.logo)?`<img class="doclogo" src="${logoData}" alt="Firm logo" />`:""}
+      <div class="firm">${esc(ifirm)}</div>
+      ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${irno?` · RCIC No. ${esc(irno)}`:""}</div>`:""}
+      <div class="ttl">Invoice</div>
+      <div class="meta">Invoice ${esc($("iNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc(iDate)}" onchange="setIDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change date" />${$("iMatter").value?` &nbsp;·&nbsp; ${esc($("iMatter").value)}`:""}</div>
+    </div>
+    <div class="parties">
+      <div class="party"><h4>From</h4>
+        <div class="nm">${esc(ircicLine)}</div><div>${esc(ifirm)}</div>
+        <div>${esc($("firmAddr").value||"")}</div>
+        <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
+      </div>
+      <div class="party"><h4>Bill to</h4>
+        <div class="nm">${esc($("iName").value||"[Client name]")}</div>
+        <div>${esc($("iAddr").value||"")}</div>
+        <div>${esc($("iEmail").value||"")}</div>
+        ${$("iFile").value?`<div>File: ${esc($("iFile").value)}</div>`:""}
+      </div>
+    </div>
+
+    <h2><span class="sn"></span> Professional services</h2>
+    <table class="fees"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>${svcRows}</tbody></table>
+    ${disbRows?`<h2><span class="sn"></span> Disbursements</h2>
+    <table class="fees"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>${disbRows}</tbody></table>`:""}
+
+    <table class="fees" style="margin-top:12px"><tbody>
+      <tr><td>Professional services</td><td class="amt">${cad(svcSub)}</td></tr>
+      <tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>
+      ${disbSub?`<tr><td>Disbursements</td><td class="amt">${cad(disbSub)}</td></tr>`:""}
+      <tr class="total"><td>Total</td><td class="amt">${cad(total)}</td></tr>
+      ${itrust?`<tr><td>Less advance / trust applied</td><td class="amt">−${cad(itrust)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
+    </tbody></table>
+
+    <p style="margin-top:12px">Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}</p>
+    <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
+    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received with thanks${iDate?` on ${longDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
+  `;
+}
+
+/* ── tab switching ───────────────────────────────────── */
+function showTab(name){
+  ["retainer","consult","invoice"].forEach(t=>{
+    document.getElementById("tab-"+t).classList.toggle("active", t===name);
+    document.getElementById("tabbtn-"+t).classList.toggle("active", t===name);
+  });
+  if(name==="retainer") render();
+  else if(name==="consult") renderConsult();
+  else { if(!invoiceTouched) pullFromRetainer(); else renderInvoice(); }
+}
+
+/* ── billing method toggle ───────────────────────────── */
+function onFeeMethod(){
+  const hourly = document.getElementById("feeMethod").value==="hourly";
+  document.getElementById("flatFields").style.display = hourly ? "none" : "block";
+  document.getElementById("hourlyFields").style.display = hourly ? "block" : "none";
+  render();
+}
+
+/* ── Word (.doc) export of the active document ───────── */
+function exportDoc(){
+  if(!guardRequired()) return;
+  let paperId, title, refId;
+  if(document.getElementById("tab-retainer").classList.contains("active")){ paperId="paper"; title="Service Agreement"; refId="fileNo"; }
+  else if(document.getElementById("tab-consult").classList.contains("active")){ paperId="paper2"; title="Consultation Agreement"; refId="cfileNo"; }
+  else { paperId="paper3"; title="Invoice"; refId="iNo"; }
+  const src = document.getElementById(paperId);
+  const clone = src.cloneNode(true);
+  // replace date inputs with their text value
+  clone.querySelectorAll('input[type="date"]').forEach(inp=>{
+    const span=document.createElement("span");
+    span.textContent = inp.value ? inp.value : "______________";
+    inp.replaceWith(span);
+  });
+  // drop decorative inline svgs (Word renders them poorly)
+  clone.querySelectorAll("svg").forEach(s=>s.remove());
+  const css = `
+    body{font-family:Georgia,'Times New Roman',serif;color:#222;font-size:11pt;line-height:1.5}
+    .doc-head{text-align:center;border-bottom:2px solid #16233b;padding-bottom:12px;margin-bottom:18px}
+    .doc-head .firm{font-size:20pt;font-weight:bold;color:#16233b}
+    .doc-head .ttl{font-size:10pt;letter-spacing:3px;text-transform:uppercase;color:#a8801e;margin-top:6px}
+    .doc-head .meta,.regbadge{font-size:9pt;color:#555;margin-top:6px}
+    .doclogo{max-height:70px} .insignia{max-height:56px;display:block;margin-left:auto}
+    .parties{width:100%} .party{display:inline-block;width:48%;vertical-align:top;font-size:10pt}
+    .party h4{font-size:9pt;color:#a8801e;text-transform:uppercase;margin:0 0 4px}
+    h2{font-size:11pt;color:#16233b;text-transform:uppercase;border-bottom:1px solid #ccc;padding-bottom:3px;margin:16px 0 6px}
+    .sn{color:#a8801e}
+    table{width:100%;border-collapse:collapse;font-size:10pt;margin:6px 0}
+    th{background:#16233b;color:#fff;text-align:left;padding:6px} td{padding:6px;border-bottom:1px solid #ddd}
+    .amt{text-align:right} .cicc{background:#f6f8fa;border:1px solid #ddd;padding:10px;font-size:9.5pt}
+    .sigs{margin-top:30px} .sig{display:inline-block;width:46%;margin-right:3%} .sig .ln{border-bottom:1px solid #333;height:30px} .sig .cap{font-size:9pt;color:#555}`;
+  const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
+  const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
+  const blob = new Blob(["\ufeff", html], {type:"application/msword"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${title.replace(/ /g,"_")}_${fileRef}.doc`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ── firm-detail persistence (guarded for sandbox) ───── */
+const FIRM_KEY="rcic_firm_v1";
+const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang"];
+function saveFirm(silent){
+  try{
+    const data={};
+    FIRM_FIELDS.forEach(id=>{ if($(id)) data[id]=$(id).value; });
+    data.showBadge=brand.badge;
+    data.showInsignia=brand.insignia;
+    data.showLogo=brand.logo;
+    data.logo=logoData; data.insignia=insigniaData;
+    localStorage.setItem(FIRM_KEY, JSON.stringify(data));
+    if(!silent) flashSaved("Saved on this device");
+  }catch(e){ if(!silent) flashSaved("Saved — won't persist in this in-chat preview"); }
+}
+function loadFirm(){
+  try{
+    const raw=localStorage.getItem(FIRM_KEY); if(!raw) return;
+    const d=JSON.parse(raw);
+    FIRM_FIELDS.forEach(id=>{ if(d[id]!=null && $(id)) $(id).value=d[id]; });
+    brand.badge = d.showBadge!==false;
+    brand.insignia = d.showInsignia!==false;
+    brand.logo = d.showLogo!==false;
+    syncBrandUI();
+    if(d.logo) logoData=d.logo;
+    if(d.insignia) insigniaData=d.insignia;
+  }catch(e){}
+}
+function flashSaved(msg){ const el=$("saveStatus"); if(el){ el.textContent="✓ "+msg; setTimeout(()=>el.textContent="",2800); } }
+
+/* ── validation (shared by Check, Download, Print) ───── */
+function activeTab(){
+  return document.getElementById("tab-retainer").classList.contains("active") ? "retainer"
+       : document.getElementById("tab-consult").classList.contains("active") ? "consult" : "invoice";
+}
+function docTitle(tab){ return tab==="retainer" ? "Service Agreement" : tab==="consult" ? "Consultation Agreement" : "Invoice"; }
+function getMissing(tab){
+  const miss=[];
+  const need=(cond,msg)=>{ if(!cond) miss.push(msg); };
+  if(tab==="retainer"){
+    need($("rcicName").value.trim(),"RCIC full name");
+    need($("rcicNo").value.trim(),"RCIC number");
+    need($("firm").value.trim(),"Firm name");
+    need($("cliName").value.trim(),"Client name");
+    need($("scope").value.trim(),"Scope of services");
+    if($("feeMethod").value==="hourly") need(+$("rate").value>0 && +$("hours").value>0,"Hourly rate and estimated hours");
+    else need(+$("fee").value>0,"Professional fee");
+    need($("adate").value,"Agreement date");
+    if($("joint").checked) need($("cli2Name").value.trim(),"Second client name (joint retainer)");
+  } else if(tab==="consult"){
+    need($("rcicName").value.trim(),"RCIC full name");
+    need($("firm").value.trim(),"Firm name");
+    need($("ccliName").value.trim(),"Potential client name");
+    need($("cProBono").checked || +$("cfee").value>0,"Consultation fee (or mark it free)");
+  } else {
+    need($("rcicName").value.trim(),"RCIC full name");
+    need($("firm").value.trim(),"Firm name");
+    need($("iName").value.trim(),"Client name (Bill to)");
+    need($("iNo").value.trim(),"Invoice number");
+    need(invSvc.some(s=>(+s.amount>0)) || invDisb.some(s=>(+s.amount>0)),"At least one service or disbursement amount");
+  }
+  return miss;
+}
+function verifyDoc(){ const t=activeTab(); showCheck(docTitle(t), getMissing(t)); }
+/* returns true if OK to proceed; otherwise shows the checklist and blocks */
+function guardRequired(){
+  const t=activeTab(); const miss=getMissing(t);
+  if(miss.length){ showCheck(docTitle(t), miss, true); return false; }
+  return true;
+}
+function printDoc(){ if(guardRequired()) window.print(); }
+function showCheck(docName, miss, blocked){
+  const old=document.getElementById("checkbox-ov"); if(old) old.remove();
+  const ok = miss.length===0;
+  const body = ok
+    ? `<div style="display:flex;align-items:center;gap:9px;color:#1f8a5e;font-weight:700;font-size:15px"><span style="font-size:20px">&#10003;</span> Ready to send</div>
+       <p style="font-size:13px;color:#5d6b7d;margin:8px 0 0">All required fields for the ${docName} are filled. Remember to review the wording and sign both copies.</p>`
+    : `<div style="display:flex;align-items:center;gap:9px;color:#c2922a;font-weight:700;font-size:15px"><span style="font-size:18px">!</span> ${blocked?`Can't download yet — fill ${miss.length} required field${miss.length>1?"s":""}`:`${miss.length} item${miss.length>1?"s":""} to complete`}</div>
+       <ul style="margin:9px 0 0;padding-left:18px;font-size:13px;color:#1b2330;line-height:1.7">${miss.map(m=>`<li>${m}</li>`).join("")}</ul>`;
+  const ov=document.createElement("div");
+  ov.id="checkbox-ov";
+  ov.style.cssText="position:fixed;inset:0;background:rgba(15,28,46,.4);display:grid;place-items:center;z-index:50";
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  ov.innerHTML=`<div style="background:#fff;border-radius:14px;max-width:380px;width:90%;padding:20px 22px;box-shadow:0 20px 60px rgba(15,28,46,.3)">
+    <div style="font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8696a6;margin-bottom:10px">Pre-send check · ${docName}</div>
+    ${body}
+    <button onclick="document.getElementById('checkbox-ov').remove()" style="margin-top:16px;width:100%;border:none;border-radius:9px;padding:10px;background:#16233b;color:#fff;font-weight:600;font-size:13px;cursor:pointer">Close</button>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+/* ── reset / new client ──────────────────────────────── */
+function resetForm(){
+  const ov=document.createElement("div");
+  ov.style.cssText="position:fixed;inset:0;background:rgba(15,28,46,.4);display:grid;place-items:center;z-index:50";
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  ov.innerHTML=`<div style="background:#fff;border-radius:14px;max-width:360px;width:90%;padding:22px;box-shadow:0 20px 60px rgba(15,28,46,.3)">
+    <div style="font-weight:700;font-size:15px;color:#16233b">Start a new client?</div>
+    <p style="font-size:13px;color:#5d6b7d;margin:8px 0 16px">This clears the client, matter, fees and invoice on all three tabs. Your firm details, logo and settings are kept.</p>
+    <div style="display:flex;gap:8px">
+      <button id="rstCancel" style="flex:1;border:1px solid #d8dee6;background:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Cancel</button>
+      <button id="rstGo" style="flex:1;border:none;background:#16233b;color:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Reset</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector("#rstCancel").onclick=()=>ov.remove();
+  ov.querySelector("#rstGo").onclick=()=>{ ov.remove(); doReset(); };
+}
+function doReset(){
+  const preserve = new Set([...FIRM_FIELDS, "showBadge", "showInsignia"]);
+  ["form","cform","iform"].forEach(fid=>{
+    document.getElementById(fid).querySelectorAll("input, textarea, select").forEach(el=>{
+      if(!el.id || preserve.has(el.id)) return;
+      if(el.type==="checkbox"){ el.checked = el.defaultChecked; }
+      else if(el.tagName==="SELECT"){ for(const o of el.options) o.selected = o.defaultSelected; }
+      else { el.value = el.defaultValue; }
+    });
+  });
+  sigRcicDate = sigCliDate = sigCli2Date = "";
+  csigR = csigC = "";
+  cAgreementDate = today();
+  iDate = today();
+  $("adate").value = today();
+  onJoint(); onFeeMethod();
+  invoiceTouched = false;
+  invSvc = [{name:"Professional fees",amount:""}];
+  invDisb = [{name:"IRCC processing fee",amount:""}];
+  renderISvc(); renderIDisb();
+  loadProgram(); renderConsult(); renderInvoice();
+  showTab("retainer");
+}
+
+/* ── wire up ─────────────────────────────────────────── */
+initPrograms();
+$("adate").value = today();
+loadFirm();
+syncBrandUI();
+$("program").addEventListener("change", loadProgram);
+$("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
+$("cform").addEventListener("input", renderConsult);
+["showBadge","showInsignia","showLogo"].forEach(id=>$(id).addEventListener("change", ()=>saveFirm(true)));
+invSvc=[{name:"Professional fees",amount:""}];
+invDisb=[{name:"IRCC processing fee",amount:""}];
+renderISvc(); renderIDisb();
+$("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile)/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
+renderInvoice();
+loadProgram();
+renderConsult();
+</script>
+</body>
+</html>
