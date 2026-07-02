@@ -422,6 +422,7 @@ td.td-club{text-align:left;padding-left:8px;}
     <a href="grade-transferer.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📊 Grade Transferer</a>
     <a href="pdf-editor.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📄 PDF Editor</a>
     <a href="retainer-agreement.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📋 Retainer Agreement</a>
+    <a href="background-remover.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">✂️ Background Remover</a>
   </div>
 </div>
 
@@ -768,7 +769,7 @@ function updateStats() {
 /* ── Tabs ── */
 function switchTab(tab, btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   btn.classList.add('active');
 }
@@ -1006,7 +1007,7 @@ function checkAdmin(btn){
 function checkPw(){
   if(document.getElementById('pwInput').value===ADMIN_PASS){
     isAdmin=true;closePwModal();
-    document.querySelectorAll('.tab-btn').forEach(b=>{if(b.textContent.includes('Add Score'))b.textContent='🔓 Add Score';});
+    document.querySelectorAll('.nav-btn').forEach(b=>{if(b.textContent.includes('Add Score'))b.textContent='🔓 Add Score';});
     renderLog();
     if(pendingReset){pendingReset=false;document.getElementById('modalOverlay').classList.add('open');}
     else if(pendingAdminBtn){pendingAdminBtn.textContent='🔓 Add Score';switchTab('entry',pendingAdminBtn);}
@@ -1035,9 +1036,9 @@ function closeModal(){document.getElementById('modalOverlay').classList.remove('
 function confirmReset(){
   matches=[];clearFirebase();closeModal();renderTable();renderLog();updateStats();
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-table').classList.add('active');
-  document.querySelectorAll('.tab-btn')[0].classList.add('active');
+  document.querySelectorAll('.nav-btn')[0].classList.add('active');
   showToast('🏁 Season reset — ready to go!');
 }
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
@@ -1143,7 +1144,7 @@ function playBuzzer(){
   document.getElementById('calDate').textContent = sunday.getDate();
   document.getElementById('calLabel').textContent = isGameDay ? 'MATCH DAY!' : 'NEXT MATCH';
   document.getElementById('calLabel').style.color = isGameDay ? '#10b981' : 'rgba(255,255,255,0.4)';
-  if (isGameDay) document.getElementById('calBadge').style.borderColor = '#10b981';
+  
 })();
 
 /* ── Schedule ── */
