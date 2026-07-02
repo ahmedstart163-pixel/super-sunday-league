@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClearCut — Remove image backgrounds, free &amp; private</title>
+<meta name="description" content="Remove the background from any photo in seconds. 100% free, runs entirely in your browser — your images never leave your device.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --mat:#254a3c;          /* cutting-mat green */
+    --mat-line:rgba(255,255,255,.10);
+    --mat-line-strong:rgba(255,255,255,.18);
+    --paper:#eef0ee;        /* studio neutral */
+    --panel:#ffffff;
+    --ink:#14201b;
+    --ink-soft:#4d5c55;
+    --accent:#f2a91e;       /* blade amber */
+    --accent-ink:#1d1607;
+    --danger:#c0442c;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(10,25,18,.25);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Archivo',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    display:flex;flex-direction:column;min-height:100vh;
+  }
+  /* ---------- header ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:16px clamp(16px,4vw,40px);
+    background:var(--panel);border-bottom:1px solid #dfe3df;
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand svg{width:30px;height:30px;flex:none}
+  .brand h1{
+    font-size:20px;font-weight:800;letter-spacing:-.02em;
+    font-stretch:110%;
+  }
+  .brand h1 span{color:var(--accent);-webkit-text-stroke:.5px var(--ink)}
+  .privacy{
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+    display:flex;align-items:center;gap:7px;text-align:right;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:#2f9e63;flex:none;box-shadow:0 0 0 3px rgba(47,158,99,.18)}
+  /* ---------- mat workspace ---------- */
+  main{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;padding:clamp(20px,4vw,48px);
+    background:
+      repeating-linear-gradient(0deg,var(--mat-line-strong) 0 1px,transparent 1px 120px),
+      repeating-linear-gradient(90deg,var(--mat-line-strong) 0 1px,transparent 1px 120px),
+      repeating-linear-gradient(0deg,var(--mat-line) 0 1px,transparent 1px 24px),
+      repeating-linear-gradient(90deg,var(--mat-line) 0 1px,transparent 1px 24px),
+      var(--mat);
+  }
+  .tagline{color:#dfe9e2;text-align:center;max-width:560px}
+  .tagline h2{font-size:clamp(22px,3.4vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+  .tagline p{margin-top:8px;font-size:14.5px;color:#b9cabf}
+  /* ---------- drop zone ---------- */
+  .stage{width:min(760px,100%);}
+  .dropzone{
+    position:relative;background:rgba(255,255,255,.06);
+    border-radius:var(--radius);
+    min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;cursor:pointer;padding:36px 24px;text-align:center;color:#e9f0ea;
+    transition:background .15s;
+  }
+  .dropzone:hover,.dropzone.drag{background:rgba(255,255,255,.12)}
+  .dropzone:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .ants{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:var(--radius)}
+  .ants rect{
+    fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:10 8;opacity:.85;
+    animation:march 1.4s linear infinite;
+  }
+  @keyframes march{to{stroke-dashoffset:-36}}
+  @media (prefers-reduced-motion:reduce){.ants rect{animation:none}}
+  .dz-icon{width:52px;height:52px;opacity:.95}
+  .dropzone strong{font-size:18px;font-weight:700}
+  .dropzone small{font-family:var(--mono);font-size:11.5px;color:#c3d3c8}
+  .btn{
+    font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;
+    border:none;border-radius:999px;padding:13px 26px;cursor:pointer;
+    background:var(--accent);color:var(--accent-ink);
+    box-shadow:0 3px 0 rgba(0,0,0,.25);
+    transition:transform .08s, box-shadow .08s;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btn.ghost{background:transparent;color:#e9f0ea;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+  /* ---------- progress ---------- */
+  .progress{display:none;width:min(760px,100%);background:var(--panel);border-radius:var(--radius);
+    padding:20px 22px;box-shadow:var(--shadow)}
+  .progress.show{display:block}
+  .p-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .p-label{font-weight:700;font-size:15px}
+  .p-pct{font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
+  .bar{height:10px;background:#e5e9e5;border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0%;background:var(--accent);border-radius:999px;transition:width .2s}
+  .p-note{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+  /* ---------- result ---------- */
+  .result{display:none;width:min(760px,100%);background:var(--panel);border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--shadow)}
+  .result.show{display:block}
+  .canvas-wrap{
+    position:relative;display:flex;align-items:center;justify-content:center;
+    min-height:240px;max-height:60vh;padding:18px;
+    background:
+      conic-gradient(#d8dcd8 0 25%,#f2f4f2 0 50%,#d8dcd8 0 75%,#f2f4f2 0) 0 0/22px 22px;
+  }
+  .canvas-wrap img{max-width:100%;max-height:56vh;display:block}
+  .hold-hint{
+    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:10.5px;background:rgba(20,32,27,.75);color:#fff;
+    padding:4px 10px;border-radius:999px;pointer-events:none;white-space:nowrap;
+  }
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 18px;border-top:1px solid #e5e9e5}
+  .controls .label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+  .swatches{display:flex;gap:8px;align-items:center}
+  .swatch{
+    width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid #cfd5cf;
+    display:inline-block;padding:0;
+  }
+  .swatch.sel{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
+  .swatch.transparent{background:conic-gradient(#cfd3cf 0 25%,#fff 0 50%,#cfd3cf 0 75%,#fff 0) 0 0/10px 10px}
+  input[type=color]{width:30px;height:30px;border-radius:50%;border:2px solid #cfd5cf;padding:0;cursor:pointer;background:none}
+  input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+  input[type=color]::-webkit-color-swatch{border-radius:50%;border:none}
+  .spacer{flex:1}
+  .btn.dark{background:var(--ink);color:#fff}
+  .btn.sm{padding:10px 18px;font-size:13.5px}
+  .meta{font-family:var(--mono);font-size:11px;color:var(--ink-soft);padding:0 18px 14px}
+  .error{display:none;width:min(760px,100%);background:#fdeeea;border:1px solid #efc4b8;color:var(--danger);
+    border-radius:var(--radius);padding:14px 18px;font-size:14px}
+  .error.show{display:block}
+  footer{
+    text-align:center;padding:14px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+    background:var(--panel);border-top:1px solid #dfe3df;
+  }
+  @media(max-width:560px){
+    .privacy span{display:none}
+    .hold-hint{font-size:9.5px}
+  }
+</style>
+</head>
+<body>
+
+<!-- UTILITY NAV -->
+<div style="background:#070d1a;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+  <div style="display:flex;align-items:center;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+    <a href="index.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">⚽ Super Sunday</a>
+    <a href="grade-transferer.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📊 Grade Transferer</a>
+    <a href="pdf-editor.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📄 PDF Editor</a>
+    <a href="retainer-agreement.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">📋 Retainer Agreement</a>
+    <a href="background-remover.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold,#c9a84c);text-decoration:none;white-space:nowrap;border-bottom:2px solid #c9a84c;">✂️ Background Remover</a>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <circle cx="8" cy="24" r="4" stroke="#14201b" stroke-width="2.4"/>
+      <circle cx="8" cy="8" r="4" stroke="#14201b" stroke-width="2.4"/>
+      <path d="M11 11 L27 27 M11 21 L27 5" stroke="#f2a91e" stroke-width="2.6" stroke-linecap="round"/>
+    </svg>
+    <h1>Clear<span>Cut</span></h1>
+  </div>
+  <div class="privacy"><span>Runs in your browser · images never leave your device</span><i class="dot"></i></div>
+</header>
+
+<main>
+  <div class="tagline" id="tagline">
+    <h2>Remove any background. Free, instant, private.</h2>
+    <p>Drop a photo below. The cutout happens on your own device — nothing is uploaded to a server.</p>
+  </div>
+
+  <div class="stage">
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+      <svg class="ants" preserveAspectRatio="none"><rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="12"/></svg>
+      <svg class="dz-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="6" y="10" width="36" height="28" rx="4" stroke="#e9f0ea" stroke-width="2.4"/>
+        <circle cx="17" cy="20" r="3.4" stroke="#f2a91e" stroke-width="2.4"/>
+        <path d="M8 34 L20 24 L28 31 L34 26 L40 31" stroke="#e9f0ea" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <strong>Drop an image here</strong>
+      <button class="btn" id="pickBtn" type="button">Choose a photo</button>
+      <small>or paste from clipboard · JPG / PNG / WebP · max ~20&nbsp;MB</small>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+    </div>
+  </div>
+
+  <div class="progress" id="progress" aria-live="polite">
+    <div class="p-row"><span class="p-label" id="pLabel">Preparing…</span><span class="p-pct" id="pPct">0%</span></div>
+    <div class="bar"><i id="pBar"></i></div>
+    <p class="p-note" id="pNote">First use downloads the AI model (~40 MB) once. After that it's cached and cutouts are fast.</p>
+  </div>
+
+  <div class="error" id="errorBox"></div>
+
+  <div class="result" id="result">
+    <div class="canvas-wrap" id="canvasWrap">
+      <img id="resultImg" alt="Cutout result">
+      <span class="hold-hint">press and hold the image to compare with the original</span>
+    </div>
+    <div class="controls">
+      <span class="label">Background</span>
+      <div class="swatches" id="swatches">
+        <button class="swatch transparent sel" data-bg="transparent" title="Transparent" aria-label="Transparent background"></button>
+        <button class="swatch" data-bg="#ffffff" style="background:#ffffff" title="White" aria-label="White background"></button>
+        <button class="swatch" data-bg="#14201b" style="background:#14201b" title="Dark" aria-label="Dark background"></button>
+        <button class="swatch" data-bg="#0a66c2" style="background:#0a66c2" title="Blue" aria-label="Blue background"></button>
+        <input type="color" id="customColor" value="#f2a91e" title="Custom color" aria-label="Custom background color">
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);cursor:pointer;user-select:none">
+        <input type="checkbox" id="crispToggle" checked style="accent-color:var(--accent);width:15px;height:15px;cursor:pointer">
+        crisp edges
+      </label>
+      <div class="spacer"></div>
+      <button class="btn ghost sm" id="newBtn" type="button" style="color:var(--ink);box-shadow:inset 0 0 0 2px #cfd5cf">New image</button>
+      <button class="btn dark sm" id="downloadBtn" type="button">Download PNG</button>
+    </div>
+    <p class="meta" id="metaLine"></p>
+  </div>
+</main>
+
+<footer>ClearCut · client-side background removal · no uploads, no account, no watermark</footer>
+
+<script type="module">
+import { removeBackground } from 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm';
+
+const $ = id => document.getElementById(id);
+const dropzone=$('dropzone'), fileInput=$('fileInput'), pickBtn=$('pickBtn');
+const progress=$('progress'), pLabel=$('pLabel'), pPct=$('pPct'), pBar=$('pBar');
+const result=$('result'), resultImg=$('resultImg'), errorBox=$('errorBox');
+const metaLine=$('metaLine'), tagline=$('tagline');
+
+let originalURL=null, rawCutout=null, cutoutBlob=null, cutoutURL=null, currentBG='transparent';
+let originalName='image', busy=false, startTime=0;
+
+/* ---------- input paths ---------- */
+pickBtn.addEventListener('click', e=>{e.stopPropagation();fileInput.click();});
+dropzone.addEventListener('click', ()=>fileInput.click());
+dropzone.addEventListener('keydown', e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click();}});
+fileInput.addEventListener('change', ()=>{ if(fileInput.files[0]) handleFile(fileInput.files[0]); fileInput.value=''; });
+
+['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('drag');}));
+dropzone.addEventListener('drop', e=>{
+  const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('image/'));
+  if(f) handleFile(f);
+});
+window.addEventListener('paste', e=>{
+  const item=[...(e.clipboardData?.items||[])].find(i=>i.type.startsWith('image/'));
+  if(item){ const f=item.getAsFile(); if(f) handleFile(f); }
+});
+
+/* ---------- processing ---------- */
+async function handleFile(file){
+  if(busy) return;
+  hideError();
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ return showError('That file type isn\u2019t supported. Use a JPG, PNG, or WebP image.'); }
+  if(file.size > 20*1024*1024){ return showError('That image is over 20 MB. Resize it and try again.'); }
+
+  busy=true; startTime=performance.now();
+  originalName=(file.name||'image').replace(/\.[^.]+$/,'');
+  if(originalURL) URL.revokeObjectURL(originalURL);
+  originalURL=URL.createObjectURL(file);
+
+  result.classList.remove('show');
+  progress.classList.add('show');
+  setProgress('Loading AI model…',0);
+
+  try{
+    rawCutout = await removeBackground(file,{
+      model:'isnet_fp16',
+      output:{format:'image/png'},
+      progress:(key,current,total)=>{
+        if(total>0){
+          const pct=Math.round(current/total*100);
+          if(key.startsWith('fetch')) setProgress('Loading AI model…',pct);
+          else setProgress('Cutting out the subject…',pct);
+        }
+      }
+    });
+    setProgress('Restoring original detail…',100);
+    cutoutBlob = crispEdges ? await refineAlpha(rawCutout) : rawCutout;
+    await renderResult();
+    const secs=((performance.now()-startTime)/1000).toFixed(1);
+    metaLine.textContent=`${originalName}.png · done in ${secs}s · processed locally on this device`;
+    progress.classList.remove('show');
+    result.classList.add('show');
+    tagline.style.display='none';
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(err){
+    console.error(err);
+    progress.classList.remove('show');
+    showError('Something went wrong while processing this image. Refresh the page and try again — if it keeps failing, try a smaller image or a different browser (Chrome works best).');
+  }finally{
+    busy=false;
+  }
+}
+
+function setProgress(label,pct){ pLabel.textContent=label; pPct.textContent=pct+'%'; pBar.style.width=pct+'%'; }
+function showError(msg){ errorBox.textContent=msg; errorBox.classList.add('show'); }
+function hideError(){ errorBox.classList.remove('show'); }
+
+/* ---------- alpha refinement ----------
+   The AI mask often leaves the whole subject semi-transparent (alpha ~180-240),
+   which lets the background bleed through and makes the photo look noisy and
+   faded. This remaps alpha: solid areas snap to fully opaque (exact original
+   pixels), stray haze drops to fully transparent, edges stay soft. */
+let crispEdges=true;
+async function refineAlpha(blob){
+  const bmp=await createImageBitmap(blob);
+  const c=document.createElement('canvas');
+  c.width=bmp.width; c.height=bmp.height;
+  const ctx=c.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(bmp,0,0); bmp.close();
+  const id=ctx.getImageData(0,0,c.width,c.height);
+  const d=id.data, lo=40, hi=200, range=hi-lo;
+  for(let i=3;i<d.length;i+=4){
+    let t=(d[i]-lo)/range;
+    t=t<0?0:t>1?1:t*t*(3-2*t);           // smoothstep
+    d[i]=(t*255+0.5)|0;
+  }
+  ctx.putImageData(id,0,0);
+  return new Promise(res=>c.toBlob(res,'image/png'));
+}
+
+/* ---------- background compositing ---------- */
+async function composite(bg){
+  const img=await createImageBitmap(cutoutBlob);
+  const c=document.createElement('canvas');
+  c.width=img.width; c.height=img.height;
+  const ctx=c.getContext('2d');
+  if(bg!=='transparent'){ ctx.fillStyle=bg; ctx.fillRect(0,0,c.width,c.height); }
+  ctx.drawImage(img,0,0);
+  img.close();
+  return new Promise(res=>c.toBlob(res,'image/png'));
+}
+
+async function renderResult(){
+  const blob = currentBG==='transparent' ? cutoutBlob : await composite(currentBG);
+  if(cutoutURL) URL.revokeObjectURL(cutoutURL);
+  cutoutURL=URL.createObjectURL(blob);
+  resultImg.src=cutoutURL;
+  resultImg.dataset.dl='1';
+  downloadBlob=blob;
+}
+let downloadBlob=null;
+
+/* ---------- swatches ---------- */
+document.getElementById('swatches').addEventListener('click', async e=>{
+  const b=e.target.closest('.swatch'); if(!b) return;
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));
+  b.classList.add('sel');
+  currentBG=b.dataset.bg;
+  await renderResult();
+});
+document.getElementById('crispToggle').addEventListener('change', async e=>{
+  crispEdges=e.target.checked;
+  if(!rawCutout) return;
+  cutoutBlob = crispEdges ? await refineAlpha(rawCutout) : rawCutout;
+  await renderResult();
+});
+document.getElementById('customColor').addEventListener('input', async e=>{
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));
+  currentBG=e.target.value;
+  await renderResult();
+});
+
+/* ---------- compare (press & hold) ---------- */
+const wrap=$('canvasWrap');
+function showOriginal(on){ if(originalURL&&cutoutURL) resultImg.src=on?originalURL:cutoutURL; }
+['pointerdown'].forEach(ev=>wrap.addEventListener(ev,e=>{e.preventDefault();showOriginal(true);}));
+['pointerup','pointerleave','pointercancel'].forEach(ev=>wrap.addEventListener(ev,()=>showOriginal(false)));
+
+/* ---------- download / reset ---------- */
+$('downloadBtn').addEventListener('click', ()=>{
+  if(!downloadBlob) return;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(downloadBlob);
+  a.download=`${originalName}-clearcut.png`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+});
+$('newBtn').addEventListener('click', ()=>{
+  result.classList.remove('show'); hideError();
+  tagline.style.display='';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
