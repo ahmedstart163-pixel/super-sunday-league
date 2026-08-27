@@ -114,6 +114,11 @@
   .anno.field.fld-radio .field-label{font-size:9px}
   .anno.field.fld-sign{background:rgba(47,111,237,.06); border-style:solid; align-items:flex-end; padding-bottom:3px}
   .anno.field.fld-dd{background:#e7f0ff}
+  .anno.field.fld-button{
+    border:1px solid #9a9a9a; background:linear-gradient(180deg,#fbfbfb,#e3e3e3);
+    justify-content:center; padding:0 8px;
+  }
+  .anno.field.fld-button .field-label{color:#1a1a1a; font-weight:600; font-size:12px; text-align:center; overflow:visible}
   .anno.field .field-fill{position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent;
     font:13px/1.35 Inter,system-ui,sans-serif; color:#16213b; padding:3px 7px; box-sizing:border-box; resize:none; outline:none}
   .anno.field .field-fill[readonly]{pointer-events:none; cursor:move}
@@ -540,6 +545,8 @@
     <button class="mitem" data-act="f-dropdown"><svg class="gi" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="1.5"/><path d="M15 11l2 2 2-2"/></svg> Drop-down list</button>
     <button class="mitem" data-act="f-sign"><svg class="gi" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M6 15c2 0 2-4 4-4s2 3 4 .5"/></svg> Signature box</button>
   </div>
+  <div class="menu-sec">Form action buttons</div>
+  <button class="mitem" data-act="form-buttons"><svg class="gi" viewBox="0 0 24 24"><rect x="2" y="9" width="6" height="6" rx="1"/><rect x="9.5" y="9" width="6" height="6" rx="1"/><rect x="17" y="9" width="6" height="6" rx="1"/></svg> Save / Reset Form / Print Form</button>
   <div class="menu-sec">Change existing form fields</div>
   <button class="mitem" data-act="form-edit"><svg class="gi" viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="6" rx="3"/><circle cx="8" cy="12" r="2" fill="#5a6472" stroke="none"/></svg> Form edit mode</button>
   <button class="mitem" data-act="tab-order"><svg class="gi" viewBox="0 0 24 24"><path d="M8 4v16M8 20l-3-3M8 4l3 3M16 20V4M16 4l-3 3M16 20l3-3"/></svg> Change tab order</button>
@@ -576,6 +583,7 @@
   <label class="fp-row" id="fpGroupRow"><span>Group</span><input type="text" id="fpGroup" placeholder="choice1"></label>
   <label class="fp-row" id="fpOptRow"><span>Value</span><input type="text" id="fpOpt" placeholder="option value"></label>
   <label class="fp-row fp-col" id="fpOptionsRow"><span>List options (one per line)</span><textarea id="fpOptions" rows="3" placeholder="Option 1&#10;Option 2"></textarea></label>
+  <label class="fp-row" id="fpLabelRow"><span>Label</span><input type="text" id="fpLabel" placeholder="Button label"></label>
   <label class="fp-check" id="fpReqRow"><input type="checkbox" id="fpReq"> Required</label>
   <button class="fp-del" id="fpDel">Delete field</button>
 </div>
@@ -702,7 +710,7 @@
 <script>
 (function(){
 "use strict";
-const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
+const { PDFDocument, rgb, degrees, StandardFonts, PDFName, PDFString } = PDFLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 const BASE = 1.5;            // render scale (px per pt)
@@ -1081,7 +1089,7 @@ function deletePage(i){
 /* ---------------- tools ---------------- */
 const tools=[...document.querySelectorAll(".tool[data-tool]")];
 tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
-const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign"];
+const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t){
@@ -1161,6 +1169,7 @@ function formsAction(act){
   if(act==="f-radio"){ setTool("field-radio"); toast("Drag to add a radio button. Place several with the same group to make them one choice."); return; }
   if(act==="f-dropdown"){ setTool("field-dropdown"); toast("Drag to draw a drop-down. Select it to set the list options."); return; }
   if(act==="f-sign"){ setTool("field-sign"); toast("Drag to draw a signature box the recipient can sign or type into."); return; }
+  if(act==="form-buttons"){ setTool("field-buttons"); toast("Click on the page to place Save, Reset Form and Print Form buttons."); return; }
   if(act==="form-edit"){ toggleFormEdit(); return; }
   if(act==="tab-order"){ openTabOrder(); return; }
   if(act==="publish"){ openPublish(); return; }
@@ -1411,6 +1420,20 @@ function bindPage(rec){
       if(!pendingSign){ openSig(); return; }
       placePending(rec,start,"sign"); return;
     }
+    if(tool==="field-buttons"){
+      e.stopPropagation();
+      const widths=[64,92,92], bh=24, gap=10, labels=["Save","Reset Form","Print Form"], acts=["save","reset","print"];
+      let bx=start.x, last=null;
+      labels.forEach((label,i)=>{
+        const a=makeAnno({type:"field",fieldType:"button",action:acts[i],label,page:rec.index,
+          x:bx,y:start.y,w:widths[i],h:bh});
+        annos.push(a); renderAnno(a); last=a;
+        bx += widths[i]+gap;
+      });
+      select(last); setTool("select"); snapshot();
+      toast("Buttons added — they trigger in full PDF readers like Adobe Acrobat, not browser-based viewers.");
+      return;
+    }
     // drag-to-create tools (highlight / whiteout / rect / form fields)
     rec.overlay.setPointerCapture(e.pointerId);
     let annoType=tool, extra={};
@@ -1606,6 +1629,7 @@ function renderAnno(a){
       n.classList.toggle("fld-radio", a.fieldType==="radio");
       n.classList.toggle("fld-sign", a.fieldType==="sign");
       n.classList.toggle("fld-dd", a.fieldType==="dropdown");
+      n.classList.toggle("fld-button", a.fieldType==="button");
       if(a._fill){
         if(document.activeElement!==a._fill) a._fill.value=a.value||"";
         n._lab.style.display="none";
@@ -1615,7 +1639,8 @@ function renderAnno(a){
           a.fieldType==="check" ? "☑" :
           a.fieldType==="radio" ? "◉" :
           a.fieldType==="dropdown" ? ((a.options&&a.options[0])||"Choose…")+" ▾" :
-          a.fieldType==="sign" ? "✗ Signature" : "Text field";
+          a.fieldType==="sign" ? "✗ Signature" :
+          a.fieldType==="button" ? (a.label||"Button") : "Text field";
         if(a.fieldType==="check"||a.fieldType==="radio"){
           n._lab.style.fontSize = Math.max(10, Math.min(a.w,a.h)*0.78) + "px";
           n._lab.style.lineHeight = "1";
@@ -1707,20 +1732,23 @@ function positionTextbar(){
 const fldProps=$("#fldProps");
 const FP={title:$("#fpTitle"),name:$("#fpName"),group:$("#fpGroup"),groupRow:$("#fpGroupRow"),
   opt:$("#fpOpt"),optRow:$("#fpOptRow"),options:$("#fpOptions"),optionsRow:$("#fpOptionsRow"),
+  label:$("#fpLabel"),labelRow:$("#fpLabelRow"),
   req:$("#fpReq"),reqRow:$("#fpReqRow"),del:$("#fpDel")};
 function updateFieldProps(){
   if(!selected || selected.type!=="field" || !selected._node){ fldProps.classList.add("hide"); return; }
   const a=selected;
-  const titles={text:"Text field",check:"Checkbox",radio:"Radio button",dropdown:"Drop-down list",sign:"Signature box"};
+  const titles={text:"Text field",check:"Checkbox",radio:"Radio button",dropdown:"Drop-down list",sign:"Signature box",button:"Push button"};
   FP.title.textContent=titles[a.fieldType]||"Field";
   FP.name.value=a.name||"";
   FP.groupRow.style.display = a.fieldType==="radio"?"flex":"none";
   FP.optRow.style.display   = a.fieldType==="radio"?"flex":"none";
   FP.optionsRow.style.display = a.fieldType==="dropdown"?"flex":"none";
-  FP.reqRow.style.display   = (a.fieldType==="dropdown"||a.fieldType==="check")?"none":"flex";
+  FP.labelRow.style.display = a.fieldType==="button"?"flex":"none";
+  FP.reqRow.style.display   = (a.fieldType==="dropdown"||a.fieldType==="check"||a.fieldType==="button")?"none":"flex";
   FP.name.parentElement.style.display = a.fieldType==="radio"?"none":"flex"; // radios are named by group
   if(a.fieldType==="radio"){ FP.group.value=a.group||""; FP.opt.value=a.optval||""; }
   if(a.fieldType==="dropdown"){ FP.options.value=(a.options||[]).join("\n"); }
+  if(a.fieldType==="button"){ FP.label.value=a.label||""; }
   FP.req.checked=!!a.required;
   fldProps.classList.remove("hide");
   positionFieldProps();
@@ -1737,7 +1765,8 @@ FP.name.oninput=()=>{ if(selected&&selected.type==="field"){ selected.name=FP.na
 FP.group.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.group=FP.group.value||"choice1"; curRadioGroup=selected.group; renderAnno(selected); } };
 FP.opt.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.optval=FP.opt.value||("opt"+selected.id); } };
 FP.options.oninput=()=>{ if(selected&&selected.fieldType==="dropdown"){ selected.options=FP.options.value.split("\n").map(s=>s.trim()).filter(Boolean); renderAnno(selected); } };
-[FP.name,FP.group,FP.opt,FP.options].forEach(inp=> inp.addEventListener("change",()=>{ if(selected) snapshot(); }));
+FP.label.oninput=()=>{ if(selected&&selected.fieldType==="button"){ selected.label=FP.label.value; renderAnno(selected); } };
+[FP.name,FP.group,FP.opt,FP.options,FP.label].forEach(inp=> inp.addEventListener("change",()=>{ if(selected) snapshot(); }));
 FP.req.onchange=()=>{ if(selected&&selected.type==="field"){ selected.required=FP.req.checked; snapshot(); } };
 FP.del.onclick=()=>{ if(selected) removeAnno(selected); fldProps.classList.add("hide"); };
 $("#tbBold").addEventListener("mousedown",e=>e.preventDefault());
@@ -2389,6 +2418,27 @@ async function buildBytes(){
               page.drawText("Signature",{x:x+4,y:y+3,size:7,color:rgb(.45,.5,.6)});
               const sf=form.createTextField(a.name||("sig_"+a.id));
               sf.addToPage(page,{x,y:y+h*0.36,width:w,height:h*0.6,borderWidth:0,backgroundColor:undefined});
+            }
+            else if(a.fieldType==="button"){
+              const btn=form.createButton(a.name||((a.action||"btn")+"_"+a.id));
+              const label=a.label||"Button";
+              btn.addToPage(label, page, {x,y,width:w,height:h,
+                borderWidth:1, borderColor:rgb(.6,.6,.6),
+                backgroundColor:rgb(.91,.91,.91), textColor:rgb(0,0,0)});
+              // real PDF actions — these run in full readers (Adobe Acrobat/Reader with
+              // JavaScript enabled); browser-embedded PDF viewers generally ignore them.
+              let actionDict=null;
+              if(a.action==="reset"){
+                actionDict = doc.context.obj({ Type: PDFName.of("Action"), S: PDFName.of("ResetForm") });
+              } else if(a.action==="print"){
+                actionDict = doc.context.obj({ Type: PDFName.of("Action"), S: PDFName.of("JavaScript"), JS: PDFString.of("this.print(true);") });
+              } else if(a.action==="save"){
+                actionDict = doc.context.obj({ Type: PDFName.of("Action"), S: PDFName.of("JavaScript"), JS: PDFString.of("app.execMenuItem('Save');") });
+              }
+              if(actionDict){
+                const actionRef = doc.context.register(actionDict);
+                btn.acroField.getWidgets().forEach(w=> w.dict.set(PDFName.of("A"), actionRef));
+              }
             }
             else{
               const tf=form.createTextField(a.name||("tf_"+a.id));
