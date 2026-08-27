@@ -13,52 +13,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Caveat&family=Satisfy&family=Pacifico&family=Great+Vibes&family=Sacramento&family=Allura&family=Homemade+Apple&family=Cedarville+Cursive&family=Kalam&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#15203a; --navy-2:#1b2a4a; --ink:#16213b;
-    --gold:#2563eb; --gold-soft:#5b8af2; --accent-d:#1b4ed1; --tint:#eef4ff;
-    --paper:#eef1f6; --line:#e4e7ec; --white:#ffffff;
-    --muted:#64708a; --ok:#2f7d57; --danger:#dc4b3e;
-    --shadow:0 1px 3px rgba(16,24,40,.08),0 12px 28px rgba(16,24,40,.06);
-    --radius:10px;
+    --navy:#0f1b33; --navy-2:#18274a; --ink:#16213b;
+    --gold:#2563eb; --gold-soft:#4a7ef2; --accent-d:#1b4ed1; --tint:#eef4ff;
+    --paper:#eef1f5; --line:#dfe3ea; --line-soft:#e8ebf0; --white:#ffffff;
+    --muted:#5c6a85; --ok:#2f7d57; --danger:#dc4b3e;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 12px rgba(15,23,42,.07);
+    --shadow-lg:0 4px 10px rgba(15,23,42,.08),0 16px 32px rgba(15,23,42,.10);
+    --r-sm:6px; --r-md:8px; --r-lg:12px; --radius:8px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0; font-family:-apple-system,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     color:var(--ink); background:var(--paper); overflow:hidden;
-    -webkit-font-smoothing:antialiased;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
   button{font-family:inherit; cursor:pointer}
 
   /* ---------- Top bar ---------- */
   .topbar{
-    height:56px; display:flex; align-items:center; justify-content:center; gap:14px; padding:0 16px;
-    background:var(--navy); color:#fff; border-bottom:1px solid rgba(255,255,255,.08); position:relative;
+    height:52px; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 14px;
+    background:var(--navy); color:#fff; border-bottom:1px solid rgba(255,255,255,.06); position:relative;
   }
-  .brand{display:flex; align-items:center; gap:11px; position:absolute; left:16px; top:50%; transform:translateY(-50%)}
-  .brand .logo{width:34px; height:34px; flex:none; filter:drop-shadow(0 2px 5px rgba(37,99,235,.35))}
-  .brand-text{display:flex; flex-direction:column; line-height:1.05}
-  .brand-name{font-size:19px; font-weight:700; letter-spacing:.4px; color:#fff}
-  .brand small{font-weight:600; font-size:9.5px; color:#8fa3c9; letter-spacing:2px; text-transform:uppercase; margin-top:3px}
+  .brand{display:flex; align-items:center; gap:9px; position:absolute; left:14px; top:50%; transform:translateY(-50%)}
+  .brand .logo{width:26px; height:26px; flex:none}
+  .brand-text{display:flex; flex-direction:column; line-height:1.02}
+  .brand-name{font-size:15px; font-weight:700; letter-spacing:-.1px; color:#fff}
+  .brand small{font-weight:600; font-size:8.5px; color:#7e8fb2; letter-spacing:1.6px; text-transform:uppercase; margin-top:2px}
   .topbar .spacer{display:none}
-  .filename{font-size:13px; color:#b9c4d8; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .filename{font-size:12.5px; color:#a9b4cc; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
   .tbtn{
-    background:rgba(255,255,255,.12); color:#eef2f9; border:1px solid rgba(255,255,255,.2); border-radius:8px;
-    padding:8px 12px; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:7px;
+    background:rgba(255,255,255,.08); color:#e8ecf5; border:1px solid rgba(255,255,255,.12); border-radius:var(--r-sm);
+    padding:7px 11px; font-size:12.5px; font-weight:600; display:inline-flex; align-items:center; gap:6px;
+    transition:background .1s, border-color .1s;
   }
-  .tbtn:hover{background:rgba(255,255,255,.22)}
-  .tbtn:disabled{opacity:.4; cursor:not-allowed}
-  .tbtn.primary{background:var(--gold); border-color:var(--accent-d); color:#fff}
-  .tbtn.primary:hover{background:var(--gold-soft)}
-  .zoom{display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:8px; padding:2px}
-  .zoom button{background:none; border:0; color:#eef2f9; width:30px; height:30px; border-radius:6px; font-size:16px}
-  .zoom button:hover{background:rgba(255,255,255,.22)}
-  .zoom span{font-size:12px; color:#cdd6e6; min-width:42px; text-align:center}
+  .tbtn:hover{background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.2)}
+  .tbtn:disabled{opacity:.35; cursor:not-allowed}
+  .tbtn.primary{background:var(--gold); border-color:var(--gold); color:#fff; font-weight:700}
+  .tbtn.primary:hover{background:var(--gold-soft); border-color:var(--gold-soft)}
+  .zoom{display:flex; align-items:center; gap:1px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:var(--r-sm); padding:2px}
+  .zoom button{background:none; border:0; color:#e8ecf5; width:26px; height:26px; border-radius:5px; font-size:14px}
+  .zoom button:hover{background:rgba(255,255,255,.15)}
+  .zoom span{font-size:11.5px; color:#a9b4cc; min-width:38px; text-align:center; font-variant-numeric:tabular-nums}
 
   /* mode nav (Edit / Organize / Merge) — modern segmented tabs */
-  .editnav{background:#fff; display:flex; align-items:center; gap:6px; padding:8px 14px; border-bottom:1px solid var(--line); overflow-x:auto}
-  .enav{background:none; border:0; color:var(--muted); font-family:inherit; font-size:13px; font-weight:600; white-space:nowrap;
-    padding:8px 15px; display:flex; align-items:center; gap:8px; border-radius:9px; cursor:pointer; transition:background .12s, color .12s}
-  .enav svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+  .editnav{background:#fff; display:flex; align-items:center; gap:4px; padding:6px 14px; border-bottom:1px solid var(--line); overflow-x:auto}
+  .enav{background:none; border:0; color:var(--muted); font-family:inherit; font-size:12.5px; font-weight:600; white-space:nowrap;
+    padding:7px 13px; display:flex; align-items:center; gap:7px; border-radius:var(--r-sm); cursor:pointer; transition:background .1s, color .1s}
+  .enav svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
   .enav:hover{background:var(--tint); color:var(--ink)}
   .enav.active{background:var(--gold); color:#fff}
   .enav.active svg{stroke:#fff}
@@ -66,29 +68,29 @@
 
   /* ---------- Toolbar ---------- */
   .toolbar{
-    background:var(--white); box-shadow:0 1px 0 var(--line), 0 4px 10px rgba(16,24,40,.04);
-    display:flex; align-items:center; justify-content:center; gap:12px; padding:11px 14px; flex-wrap:wrap; min-height:56px;
+    background:var(--white); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; gap:10px; padding:9px 14px; flex-wrap:wrap; min-height:50px;
   }
   .toolgroup{
-    display:flex; align-items:stretch; border:1px solid #e6ebf3; border-radius:13px;
-    overflow:hidden; background:#fff; box-shadow:0 1px 3px rgba(16,24,40,.07); padding:3px; gap:2px;
+    display:flex; align-items:stretch; border:1px solid var(--line); border-radius:var(--r-md);
+    overflow:hidden; background:#fbfcfe; padding:2px; gap:1px;
   }
   .tool{
-    border:0; background:transparent; padding:8px 14px; border-radius:10px;
-    font-size:13px; font-weight:600; color:#3a4a63; display:flex; flex-direction:row;
-    align-items:center; gap:7px; white-space:nowrap; transition:background .13s, color .13s;
+    border:0; background:transparent; padding:7px 12px; border-radius:6px;
+    font-size:12.5px; font-weight:600; color:#40506c; display:flex; flex-direction:row;
+    align-items:center; gap:6px; white-space:nowrap; transition:background .1s, color .1s;
   }
-  .tool svg{width:18px; height:18px; stroke:#4a7fe0; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke .13s}
-  .tool:hover{background:#f1f5fc}
-  .tool.active{background:var(--gold); color:#fff; box-shadow:0 2px 6px rgba(37,99,235,.32)}
+  .tool svg{width:16px; height:16px; stroke:#5c7dc7; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke .1s}
+  .tool:hover{background:#eef2f9}
+  .tool.active{background:var(--gold); color:#fff}
   .tool.active svg{stroke:#fff}
   .divider{display:none}
-  .caret{width:12px; height:12px; stroke:#90a4c4; stroke-width:2.2; fill:none; margin-left:-1px; transition:stroke .13s}
+  .caret{width:11px; height:11px; stroke:#8fa0bd; stroke-width:2.2; fill:none; margin-left:-1px; transition:stroke .1s}
   .tool.active .caret{stroke:#fff}
 
   /* dropdown menu */
-  .menu{position:fixed; z-index:120; background:#fff; border:1px solid var(--line); border-radius:12px;
-    box-shadow:0 16px 44px rgba(13,24,48,.18); padding:8px; min-width:332px}
+  .menu{position:fixed; z-index:120; background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-lg); padding:6px; min-width:320px}
   .menu-sec{font-size:10.5px; letter-spacing:.6px; text-transform:uppercase; color:#9aa3b2; padding:11px 10px 5px; font-weight:700}
   .mitem{display:flex; align-items:center; gap:11px; width:100%; text-align:left; background:none; border:0;
     padding:9px 10px; border-radius:8px; font-size:13.5px; color:var(--ink); font-weight:500}
@@ -120,7 +122,7 @@
 
   /* floating text formatting bar */
   .textbar{position:fixed; z-index:130; display:flex; align-items:center; gap:2px; background:#fff;
-    border:1px solid #cfe2f7; border-radius:10px; box-shadow:0 8px 26px rgba(13,24,48,.2); padding:4px}
+    border:1px solid var(--line); border-radius:var(--r-md); box-shadow:var(--shadow-lg); padding:4px}
   .tbBtn{width:30px; height:30px; border:0; background:none; border-radius:7px; color:#2275c9; font-size:15px;
     display:grid; place-items:center; font-family:Georgia,serif}
   .tbBtn:hover{background:#eef4fc}
@@ -130,8 +132,8 @@
   .tbSel{border:1px solid #dfe7f2; border-radius:7px; height:30px; font-size:13px; color:#16223f; padding:0 4px; background:#fff; cursor:pointer}
   .tbSel:hover{border-color:#bcdcf7}
   .tbColor{position:relative; width:30px; height:30px; border-radius:7px; border:1px solid #dfe7f2; overflow:hidden; cursor:pointer}
-  .fldprops{position:fixed; z-index:131; width:240px; background:#fff; border:1px solid #cfe2f7;
-    border-radius:12px; box-shadow:0 10px 30px rgba(13,24,48,.22); padding:12px; font-size:13px; color:#16213b}
+  .fldprops{position:fixed; z-index:131; width:240px; background:#fff; border:1px solid var(--line);
+    border-radius:var(--r-lg); box-shadow:var(--shadow-lg); padding:12px; font-size:13px; color:#16213b}
   .fldprops .fp-title{font-weight:700; margin-bottom:8px; color:#1b4ed1}
   .fldprops .fp-row{display:flex; align-items:center; gap:8px; margin-bottom:8px}
   .fldprops .fp-row span{flex:0 0 56px; color:#64708a; font-size:12px}
@@ -169,7 +171,7 @@
   }
   .page-tools button svg{width:15px; height:15px; stroke:var(--ink); fill:none; stroke-width:1.8}
   .page-tools button:hover{background:#fff; border-color:var(--gold)}
-  .page{position:relative; background:#fff; box-shadow:var(--shadow); border:1px solid #e6e9ee; border-radius:4px}
+  .page{position:relative; background:#fff; box-shadow:var(--shadow); border:1px solid #dee2e9; border-radius:2px}
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
   .overlay{position:absolute; inset:0; z-index:10}
@@ -234,41 +236,41 @@
   /* ---------- Empty / dropzone ---------- */
   .empty{
     position:absolute; inset:110px 0 0 0; display:grid; place-items:center; padding:30px;
-    background:linear-gradient(180deg,#f4f6fb,#e7ebf3);
+    background:var(--paper);
   }
   .drop{
-    width:min(560px,92vw); background:#fff; border:1px solid #e3e8f1; border-radius:20px;
-    padding:46px 36px; text-align:center; box-shadow:0 1px 2px rgba(13,24,48,.05),0 22px 55px rgba(13,24,48,.14); transition:border-color .15s, background .15s;
+    width:min(500px,92vw); background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
+    padding:40px 36px; text-align:center; box-shadow:var(--shadow-lg); transition:border-color .15s, background .15s;
   }
   .drop.dragover{border-color:var(--gold); background:var(--tint)}
   .drop .ic{
-    width:64px; height:64px; margin:0 auto 18px; border-radius:16px; background:var(--navy);
+    width:56px; height:56px; margin:0 auto 18px; border-radius:var(--r-md); background:var(--navy);
     display:grid; place-items:center;
   }
-  .drop .ic svg{width:30px; height:30px; stroke:var(--gold-soft); fill:none; stroke-width:1.6}
-  .drop-logo{width:76px; height:76px; margin:0 auto 20px; display:block; filter:drop-shadow(0 6px 16px rgba(37,99,235,.30))}
-  .drop h1{font-size:26px; margin:0 0 10px; color:#0c1730; letter-spacing:-.01em; font-weight:800}
-  .drop p{margin:0 0 24px; color:#51607a; font-size:14.5px; line-height:1.55}
+  .drop .ic svg{width:26px; height:26px; stroke:var(--gold-soft); fill:none; stroke-width:1.6}
+  .drop-logo{width:52px; height:52px; margin:0 auto 18px; display:block}
+  .drop h1{font-size:21px; margin:0 0 8px; color:#0c1730; letter-spacing:-.01em; font-weight:700}
+  .drop p{margin:0 0 22px; color:var(--muted); font-size:13.5px; line-height:1.55}
   .drop .cta{
-    background:linear-gradient(180deg,#3b7bf6,#1d4ed8); color:#fff; border:0; border-radius:12px; padding:14px 30px;
-    font-size:15px; font-weight:800; letter-spacing:.2px; box-shadow:0 8px 20px rgba(29,78,216,.38);
+    background:var(--gold); color:#fff; border:0; border-radius:var(--r-md); padding:11px 26px;
+    font-size:13.5px; font-weight:700; letter-spacing:.1px; transition:background .1s;
   }
-  .drop .cta:hover{filter:brightness(1.05)}
-  .privacy{margin-top:20px; font-size:12px; color:#6b7484; display:flex; align-items:center; justify-content:center; gap:7px}
-  .privacy svg{width:14px; height:14px; stroke:var(--ok); fill:none; stroke-width:2}
+  .drop .cta:hover{background:var(--gold-soft)}
+  .privacy{margin-top:18px; font-size:11.5px; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:6px}
+  .privacy svg{width:13px; height:13px; stroke:var(--ok); fill:none; stroke-width:2}
 
   /* ---------- Signature modal ---------- */
-  .modal-bg{position:fixed; inset:0; background:rgba(13,24,48,.55); z-index:100; display:grid; place-items:center; padding:20px}
-  .modal{background:#fff; border-radius:16px; width:min(560px,94vw); box-shadow:0 20px 60px rgba(0,0,0,.35); overflow:hidden}
-  .modal header{padding:16px 20px; border-bottom:1px solid var(--line); font-weight:700; font-size:16px; color:var(--navy)}
-  .modal .body{padding:20px}
-  .sigpad{border:1px solid var(--line); border-radius:10px; background:#fffef9; width:100%; height:200px; touch-action:none; cursor:crosshair}
-  .modal footer{padding:14px 20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:10px}
-  .modal .row{display:flex; gap:10px; align-items:center}
-  .lbtn{border:1px solid var(--line); background:#fff; border-radius:9px; padding:10px 16px; font-weight:600; font-size:13px; color:var(--ink)}
-  .lbtn:hover{background:#f3efe6}
-  .lbtn.gold{background:var(--gold); border-color:var(--accent-d); color:#fff}
-  .lbtn.gold:hover{background:var(--gold-soft)}
+  .modal-bg{position:fixed; inset:0; background:rgba(12,20,38,.5); z-index:100; display:grid; place-items:center; padding:20px}
+  .modal{background:#fff; border-radius:var(--r-lg); width:min(560px,94vw); border:1px solid var(--line); box-shadow:0 20px 50px rgba(10,18,36,.28); overflow:hidden}
+  .modal header{padding:14px 18px; border-bottom:1px solid var(--line); font-weight:700; font-size:14.5px; color:var(--navy)}
+  .modal .body{padding:18px}
+  .sigpad{border:1px solid var(--line); border-radius:var(--r-md); background:#fffef9; width:100%; height:200px; touch-action:none; cursor:crosshair}
+  .modal footer{padding:12px 18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:10px}
+  .modal .row{display:flex; gap:8px; align-items:center}
+  .lbtn{border:1px solid var(--line); background:#fff; border-radius:var(--r-sm); padding:9px 15px; font-weight:600; font-size:12.5px; color:var(--ink); transition:background .1s}
+  .lbtn:hover{background:#f4f6fa}
+  .lbtn.gold{background:var(--gold); border-color:var(--gold); color:#fff}
+  .lbtn.gold:hover{background:var(--gold-soft); border-color:var(--gold-soft)}
 
   /* signature modal */
   .modal.sig{width:min(780px,96vw)}
@@ -366,9 +368,9 @@
 
   /* toast */
   .toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
-    background:var(--navy); color:#fff; padding:12px 20px; border-radius:10px; font-size:13.5px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3); opacity:0; pointer-events:none; transition:.25s; z-index:200;
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:var(--navy); color:#fff; padding:10px 18px; border-radius:var(--r-md); font-size:13px; font-weight:500;
+    box-shadow:0 8px 24px rgba(10,18,36,.28); opacity:0; pointer-events:none; transition:.2s; z-index:200;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
   .toast.err{background:var(--danger)}
@@ -387,14 +389,14 @@
   .restore-bar .rb-yes{background:var(--gold); color:#fff}
 
   .fab-download{
-    position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(10px);
-    display:none; align-items:center; gap:7px; background:#fff; color:#2275c9; border:1px solid #e6ebf3;
-    border-radius:11px; padding:9px 18px; font-family:inherit; font-size:13.5px; font-weight:600;
-    cursor:pointer; box-shadow:0 3px 12px rgba(16,24,40,.14); z-index:120; opacity:0;
-    transition:opacity .2s, transform .2s, background .13s;
+    position:fixed; left:50%; bottom:16px; transform:translateX(-50%) translateY(8px);
+    display:none; align-items:center; gap:6px; background:#fff; color:var(--gold); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:8px 16px; font-family:inherit; font-size:12.5px; font-weight:600;
+    cursor:pointer; box-shadow:var(--shadow-lg); z-index:120; opacity:0;
+    transition:opacity .15s, transform .15s, background .1s;
   }
   .fab-download.show{display:flex; opacity:1; transform:translateX(-50%) translateY(0)}
-  .fab-download:hover{background:#f6f8fc}
+  .fab-download:hover{background:#f4f7fc}
   .fab-download svg{width:16px; height:16px; stroke:#4a7fe0; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
 
   .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:150}
@@ -460,15 +462,14 @@
 <div class="toolbar" id="toolbar" style="display:none">
   <div class="toolgroup">
   <button class="tool active" data-tool="select"><svg viewBox="0 0 24 24"><path d="M4 4l7 16 2-7 7-2z"/></svg><span>Select</span></button>
-  <button class="tool" data-tool="text"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Add Text</span></button>
-  <button class="tool" data-tool="edittext"><svg viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg><span>Edit Text</span></button>
+  <button class="tool" id="textBtn"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Text</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" id="formsBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>Forms</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-  <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Image</span></button>
+  <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Images</span></button>
   <button class="tool" id="signBtn"><svg viewBox="0 0 24 24"><path d="M3 18c4 0 4-9 8-9s4 6 8 1"/><path d="M3 21h18"/></svg><span>Sign</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" data-tool="whiteout"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/><path d="M4 12h16"/></svg><span>Whiteout</span></button>
-  <button class="tool" data-tool="highlight"><svg viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg><span>Highlight</span></button>
-  <button class="tool" data-tool="rect"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg><span>Box</span></button>
-  <button class="tool" data-tool="draw"><svg viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg><span>Draw</span></button>
+  <button class="tool" id="annotateBtn"><svg viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg><span>Annotate</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="tool" id="shapesBtn"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg><span>Shapes</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+  <button class="tool" id="undoBtn" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 015 5v0a5 5 0 01-5 5h-2"/></svg><span>Undo</span></button>
   </div>
 
   <div class="ctx" id="ctx">
@@ -476,6 +477,23 @@
     <div class="field" id="ctxFont"><span>Size</span><input type="range" id="fontRange" min="8" max="64" value="16"><span class="val" id="fontVal">16</span></div>
     <div class="field" id="ctxStroke"><span>Pen</span><input type="range" id="strokeRange" min="1" max="14" value="3"><span class="val" id="strokeVal">3</span></div>
   </div>
+</div>
+
+<!-- Text dropdown -->
+<div class="menu hide" id="textMenu">
+  <button class="mitem" data-act="add-text"><span class="mi">IA</span> Add text</button>
+  <button class="mitem" data-act="edit-text"><svg class="gi" viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg> Edit existing text</button>
+</div>
+
+<!-- Annotate dropdown -->
+<div class="menu hide" id="annotateMenu">
+  <button class="mitem" data-act="highlight"><svg class="gi" viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg> Highlight</button>
+  <button class="mitem" data-act="draw"><svg class="gi" viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg> Draw</button>
+</div>
+
+<!-- Shapes dropdown -->
+<div class="menu hide" id="shapesMenu">
+  <button class="mitem" data-act="rect"><svg class="gi" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg> Rectangle</button>
 </div>
 
 <!-- Forms dropdown -->
@@ -926,6 +944,9 @@ function setTool(t){
   tools.forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
   $("#formsBtn").classList.toggle("active", t==="stamp"||t.startsWith("field-"));
   if($("#signBtn")) $("#signBtn").classList.toggle("active", t==="sign");
+  if($("#textBtn")) $("#textBtn").classList.toggle("active", t==="text"||t==="edittext");
+  if($("#annotateBtn")) $("#annotateBtn").classList.toggle("active", t==="highlight"||t==="draw");
+  if($("#shapesBtn")) $("#shapesBtn").classList.toggle("active", t==="rect");
   pages.forEach(p=>{
     const creating = CREATING.includes(t);
     const interact = creating || t==="edittext";
@@ -953,6 +974,34 @@ formsBtn.onclick=e=>{ e.stopPropagation(); formsMenu.classList.contains("hide")?
 document.addEventListener("pointerdown",e=>{ if(!formsMenu.contains(e.target) && e.target!==formsBtn && !formsBtn.contains(e.target)) hideMenu(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") hideMenu(); });
 formsMenu.querySelectorAll("[data-act]").forEach(b=> b.onclick=()=>formsAction(b.dataset.act));
+
+/* Text / Annotate / Shapes dropdown menus (Forms-menu pattern) */
+function wireDropdown(btnId, menuId, onAct){
+  const btn=$("#"+btnId), menu=$("#"+menuId);
+  if(!btn || !menu) return;
+  function show(){
+    const r=btn.getBoundingClientRect();
+    menu.style.left=Math.max(8,r.left)+"px"; menu.style.top=(r.bottom+6)+"px";
+    menu.classList.remove("hide");
+  }
+  function hide(){ menu.classList.add("hide"); }
+  btn.onclick=e=>{ e.stopPropagation(); menu.classList.contains("hide")?show():hide(); };
+  document.addEventListener("pointerdown",e=>{ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) hide(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape") hide(); });
+  menu.querySelectorAll("[data-act]").forEach(b=> b.onclick=()=>{ hide(); onAct(b.dataset.act); });
+}
+wireDropdown("textBtn","textMenu", act=>{
+  if(act==="add-text") setTool("text");
+  else if(act==="edit-text") setTool("edittext");
+});
+wireDropdown("annotateBtn","annotateMenu", act=>{
+  if(act==="highlight") setTool("highlight");
+  else if(act==="draw") setTool("draw");
+});
+wireDropdown("shapesBtn","shapesMenu", act=>{
+  if(act==="rect") setTool("rect");
+});
+$("#undoBtn").onclick=()=> doUndo();
 function formsAction(act){
   hideMenu();
   if(act==="text"){ setTool("text"); return; }
@@ -1195,9 +1244,12 @@ function bindPage(rec){
     const start=clientToLocal(rec,e.clientX,e.clientY);
 
     if(tool==="text"){
+      e.stopPropagation();
       const a=makeAnno({type:"text",page:rec.index,x:start.x,y:start.y,w:180,h:0,
                         fontSize:+fontRange.value,color:colorPick.value,font:"helv",bold:false,italic:false,text:""});
-      annos.push(a); renderAnno(a); enterEdit(a);
+      annos.push(a); renderAnno(a);
+      setTool("select");
+      enterEdit(a);
       snapshot(); return;
     }
     if(tool==="stamp"){
@@ -1696,6 +1748,13 @@ function enterEdit(a){
   a._editing=true;
   a._edit.contentEditable="true";
   a._edit.focus(); placeCaretEnd(a._edit);
+  // Safety net: on some browsers, focusing a just-created contentEditable during
+  // a pointerdown handler doesn't stick until the next frame — retry once.
+  requestAnimationFrame(()=>{
+    if(a._editing && a._edit && document.activeElement!==a._edit){
+      a._edit.focus(); placeCaretEnd(a._edit);
+    }
+  });
 }
 function enterFieldFill(a){
   if(!a || !a._fill) return;
@@ -1838,13 +1897,8 @@ function currentVisiblePage(){
 }
 function placeSignAuto(){
   if(!pendingSign) return;
-  const rec=currentVisiblePage();
-  if(!rec){ setTool("sign"); toast("Click on the page to place your signature."); return; }
-  const wpx=rec.overlay.offsetWidth||rec.pageEl.offsetWidth||600;
-  const hpx=rec.overlay.offsetHeight||rec.pageEl.offsetHeight||800;
-  const start={ x:Math.max(10,(wpx-220)/2), y:Math.max(10, hpx*0.40) };
-  placePending(rec,start,"sign");
-  toast("Signature added — drag to position it.");
+  setTool("sign");
+  toast("Click where you want to place your signature.");
 }
 function useSignature(src){
   const mime = src.indexOf("data:image/png")===0 ? "image/png" : "image/jpeg";
