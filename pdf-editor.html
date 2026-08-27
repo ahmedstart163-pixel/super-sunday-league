@@ -109,23 +109,28 @@
 
   /* symbol stamps + form fields on the page */
   .anno.stamp{display:flex; align-items:center; justify-content:center; line-height:1; font-weight:700; cursor:move}
-  .anno.field{border:1.5px solid #2f6fed; background:rgba(47,111,237,.10); cursor:move; display:flex; align-items:center; padding:0 6px}
+  .anno.field{
+    border:1px solid #c7cced; background:#eef0fb; border-radius:var(--r-sm);
+    cursor:move; display:flex; align-items:center; padding:0 8px; transition:border-color .1s, background .1s;
+  }
+  .anno.field:hover{border-color:#a9b0e3; background:#e9ebf9}
+  .anno.field.selected{border-color:#7b83d8}
   .anno.field.fld-radio{border-radius:50%; padding:0; justify-content:center}
   .anno.field.fld-radio .field-label{font-size:9px}
-  .anno.field.fld-sign{background:rgba(47,111,237,.06); border-style:solid; align-items:flex-end; padding-bottom:3px}
-  .anno.field.fld-dd{background:#e7f0ff}
+  .anno.field.fld-sign{background:#f4f4fc; border-style:dashed; align-items:flex-end; padding-bottom:3px}
+  .anno.field.fld-dd{background:#e7e9f8}
   .anno.field.fld-button{
     border:1px solid #9a9a9a; background:linear-gradient(180deg,#fbfbfb,#e3e3e3);
     justify-content:center; padding:0 8px;
   }
   .anno.field.fld-button .field-label{color:#1a1a1a; font-weight:600; font-size:12px; text-align:center; overflow:visible}
   .anno.field .field-fill{position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent;
-    font:13px/1.35 Inter,system-ui,sans-serif; color:#16213b; padding:3px 7px; box-sizing:border-box; resize:none; outline:none}
+    font:13px/1.35 Inter,system-ui,sans-serif; color:#2b2f52; padding:3px 8px; box-sizing:border-box; resize:none; outline:none}
   .anno.field .field-fill[readonly]{pointer-events:none; cursor:move}
-  .anno.field .field-fill::placeholder{color:#7d93c0; font-style:italic}
-  #pages.form-edit .anno.field{outline:2px solid #2f6fed; outline-offset:1px}
-  #pages.form-edit .field-input, #pages.form-edit .field-check{outline:2px dashed #2f6fed; outline-offset:1px}
-  .anno.field .field-label{font-size:11px; color:#1b4ed1; font-weight:600; pointer-events:none; white-space:nowrap; overflow:hidden}
+  .anno.field .field-fill::placeholder{color:#8489b8; font-style:italic}
+  #pages.form-edit .anno.field{outline:2px solid #6f76d6; outline-offset:1px}
+  #pages.form-edit .field-input, #pages.form-edit .field-check{outline:2px dashed #6f76d6; outline-offset:1px}
+  .anno.field .field-label{font-size:11px; color:#5457a6; font-weight:600; pointer-events:none; white-space:nowrap; overflow:hidden}
 
   /* floating text formatting bar */
   .textbar{position:fixed; z-index:130; display:flex; align-items:center; gap:2px; background:#fff;
@@ -204,12 +209,12 @@
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
   .overlay{position:absolute; inset:0; z-index:10}
-  .field-input{position:absolute; box-sizing:border-box; border:1px solid #8fb8ec; background:#e9f1fc;
-    color:#0a1a3a; font-family:Helvetica,Arial,sans-serif; padding:1px 4px; border-radius:2px;
+  .field-input{position:absolute; box-sizing:border-box; border:1px solid #c7cced; background:#eef0fb;
+    color:#2b2f52; font-family:Helvetica,Arial,sans-serif; padding:1px 5px; border-radius:4px;
     pointer-events:auto; outline:none; resize:none; line-height:1.1}
-  .field-input:focus{background:#dcebfb; background:#dceafb; border-color:#2275c9; box-shadow:0 0 0 2px rgba(34,117,201,.25)}
-  .field-check{position:absolute; box-sizing:border-box; border:1px solid #8fb8ec; background:#e9f1fc;
-    pointer-events:auto; cursor:pointer; border-radius:2px; display:grid; place-items:center; color:#0a1a3a; font-weight:800}
+  .field-input:focus{background:#e7e9f8; border-color:#7b83d8; box-shadow:0 0 0 2px rgba(123,131,216,.22)}
+  .field-check{position:absolute; box-sizing:border-box; border:1px solid #c7cced; background:#eef0fb;
+    pointer-events:auto; cursor:pointer; border-radius:4px; display:grid; place-items:center; color:#2b2f52; font-weight:800}
   .field-check.on::after{content:"✓"; font-size:90%}
   /* while any tool is active (not Select), let taps pass through fields to the page */
   #pages.tooling .field-input, #pages.tooling .field-check{pointer-events:none}
@@ -1364,14 +1369,28 @@ async function computeLines(rec){
   rec._lines=lines;
   return lines;
 }
+function findLineAt(lines, pt){
+  // exact hit first
+  const exact = lines.find(L=> pt.y>=L.top-4 && pt.y<=L.top+L.height+4 && pt.x>=L.left-10 && pt.x<=L.right+10);
+  if(exact) return exact;
+  // otherwise snap to the closest line vertically, as long as the tap was reasonably near it —
+  // avoids forcing pixel-precise taps, especially on touch devices
+  let best=null, bestDist=Infinity;
+  lines.forEach(L=>{
+    const mid=L.top+L.height/2;
+    const d=Math.abs(pt.y-mid);
+    if(d<bestDist){ bestDist=d; best=L; }
+  });
+  return (best && bestDist<=Math.max(16, best.height*1.3)) ? best : null;
+}
 async function handleEditText(rec, pt){
   busy(true);
   let lines;
   try{ lines=await computeLines(rec); }
   catch(_){ busy(false); toast("Couldn't read text on this page.",true); return; }
   busy(false);
-  const hit = lines.find(L=> pt.y>=L.top-3 && pt.y<=L.top+L.height+3 && pt.x>=L.left-8 && pt.x<=L.right+8);
-  if(!hit){ toast("Tap right on a line of text to edit it."); return; }
+  const hit = findLineAt(lines, pt);
+  if(!hit){ toast("Tap closer to a line of text to edit it."); return; }
   const col = sampleLineColors(rec, hit) || {text:"#1a1a1a", bg:"#ffffff"};
   const f = hit.font || {key:"helv",bold:false,italic:false};
   // cover the original line with its own background colour
@@ -1393,7 +1412,15 @@ function makeAnno(o){ return Object.assign({id:nextId++, color:"#1a1a1a"}, o); }
 function bindPage(rec){
   // create-by-drag on overlay (text=click, others=drag)
   rec.overlay.addEventListener("pointerdown", e=>{
-    if(tool==="edittext"){ if(e.target.closest(".anno")) return; handleEditText(rec, clientToLocal(rec,e.clientX,e.clientY)); return; }
+    if(tool==="edittext"){
+      const annoEl=e.target.closest(".anno");
+      if(annoEl){
+        const hitAnno=annos.find(a=>a._node===annoEl);
+        if(hitAnno && hitAnno.type==="text"){ e.stopPropagation(); enterEdit(hitAnno); }
+        return;
+      }
+      handleEditText(rec, clientToLocal(rec,e.clientX,e.clientY)); return;
+    }
     if(!CREATING.includes(tool)) return;        // creating tools may place on top of existing objects (e.g. text over whiteout)
     const start=clientToLocal(rec,e.clientX,e.clientY);
 
