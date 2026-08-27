@@ -41,7 +41,10 @@
   .brand-name{font-size:15px; font-weight:700; letter-spacing:-.1px; color:#fff}
   .brand small{font-weight:600; font-size:8.5px; color:#7e8fb2; letter-spacing:1.6px; text-transform:uppercase; margin-top:2px}
   .topbar .spacer{display:none}
-  .filename{font-size:12.5px; color:#a9b4cc; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .filename{font-size:12.5px; color:#a9b4cc; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    cursor:text; padding:4px 7px; border-radius:5px; border:1px solid transparent}
+  .filename:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
+  .filename:focus{outline:none; background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.24); color:#fff; white-space:normal; overflow:visible; text-overflow:clip}
   .tbtn{
     background:rgba(255,255,255,.08); color:#e8ecf5; border:1px solid rgba(255,255,255,.12); border-radius:var(--r-sm);
     padding:7px 11px; font-size:12.5px; font-weight:600; display:inline-flex; align-items:center; gap:6px;
@@ -471,7 +474,7 @@
     <div class="brand-text"><span class="brand-name">Majd</span><small>PDF Editor</small></div>
   </div>
   <div class="spacer"></div>
-  <span class="filename" id="filename"></span>
+  <span class="filename" id="filename" contenteditable="true" spellcheck="false" title="Click to rename"></span>
   <div class="zoom" id="zoomBox" style="display:none">
     <button id="zoomOut" title="Zoom out">−</button>
     <span id="zoomLabel">100%</span>
@@ -800,6 +803,23 @@ function goHome(){
 $("#homeBtn").onclick=goHome;
 { const b=document.querySelector(".brand"); if(b){ b.style.cursor="pointer"; b.title="Home"; b.onclick=goHome; } }
 $("#fileInput").onchange = e => { if(e.target.files[0]) loadFile(e.target.files[0]); e.target.value=""; };
+
+/* editable filename in the top bar */
+{
+  const fnEl=$("#filename");
+  let fnBeforeEdit="";
+  fnEl.addEventListener("focus",()=>{ fnBeforeEdit=fnEl.textContent; });
+  fnEl.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){ e.preventDefault(); fnEl.blur(); }
+    else if(e.key==="Escape"){ e.preventDefault(); fnEl.textContent=fnBeforeEdit; fnEl.blur(); }
+  });
+  fnEl.addEventListener("blur",()=>{
+    let v=fnEl.textContent.replace(/[\r\n]+/g," ").trim();
+    if(!v){ v=fnBeforeEdit || "document.pdf"; }
+    if(!/\.pdf$/i.test(v)) v += ".pdf";
+    fnEl.textContent=v;
+  });
+}
 
 const empty=$("#empty"), drop=$("#drop");
 ["dragenter","dragover"].forEach(ev=>empty.addEventListener(ev,e=>{e.preventDefault(); e.stopPropagation(); drop.classList.add("dragover"); empty.classList.add("dragover");}));
