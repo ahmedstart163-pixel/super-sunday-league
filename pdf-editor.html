@@ -2453,23 +2453,24 @@ async function buildBytes(){
         }
         else if(a.type==="field"){
           const x=a.x/BASE, y=H-(a.y+a.h)/BASE, w=a.w/BASE, h=a.h/BASE;
-          const bc=rgb(.4,.45,.55);
+          const bc=rgb(0.78,0.80,0.93);        // matches the in-editor #c7cced border
+          const bg=rgb(0.933,0.941,0.984);     // matches the in-editor #eef0fb fill
           try{
             if(a.fieldType==="check"){
               const cb=form.createCheckBox(a.name||("cb_"+a.id));
-              cb.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc});
+              cb.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:bg});
             }
             else if(a.fieldType==="radio"){
               const gname=a.group||("radio_"+a.id);
               let rg=radioGroups[gname];
               if(!rg){ rg=radioGroups[gname]=form.createRadioGroup("rg_"+gname); }
-              rg.addOptionToPage(a.optval||("opt_"+a.id), page, {x,y,width:w,height:h,borderWidth:1,borderColor:bc});
+              rg.addOptionToPage(a.optval||("opt_"+a.id), page, {x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:bg});
             }
             else if(a.fieldType==="dropdown"){
               const dd=form.createDropdown(a.name||("dd_"+a.id));
               const opts=(a.options&&a.options.length?a.options:["Option 1"]).map(String);
               dd.addOptions(opts); dd.select(opts[0]);
-              dd.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:rgb(1,1,1)});
+              dd.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:bg});
             }
             else if(a.fieldType==="sign"){
               // signature line + caption, plus a fillable field so it can be signed/typed
@@ -2503,7 +2504,7 @@ async function buildBytes(){
               const tf=form.createTextField(a.name||("tf_"+a.id));
               if(a.multiline) tf.enableMultiline();
               if(a.value) tf.setText(String(a.value));
-              tf.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:rgb(1,1,1)});
+              tf.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:bg});
             }
           }catch(err){ console.warn("field export",a.fieldType,err); }
         }
