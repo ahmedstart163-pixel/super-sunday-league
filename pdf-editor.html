@@ -236,11 +236,12 @@
   /* ---------- Empty / dropzone ---------- */
   .empty{
     position:absolute; inset:110px 0 0 0; display:grid; place-items:center; padding:30px;
-    background:var(--paper);
+    background:var(--paper); transition:background .15s;
   }
+  .empty.dragover{background:var(--tint)}
   .drop{
-    width:min(500px,92vw); background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
-    padding:40px 36px; text-align:center; box-shadow:var(--shadow-lg); transition:border-color .15s, background .15s;
+    width:min(580px,92vw); background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
+    padding:52px 44px; text-align:center; box-shadow:var(--shadow-lg); transition:border-color .15s, background .15s;
   }
   .drop.dragover{border-color:var(--gold); background:var(--tint)}
   .drop .ic{
@@ -755,13 +756,15 @@ $("#homeBtn").onclick=goHome;
 { const b=document.querySelector(".brand"); if(b){ b.style.cursor="pointer"; b.title="Home"; b.onclick=goHome; } }
 $("#fileInput").onchange = e => { if(e.target.files[0]) loadFile(e.target.files[0]); e.target.value=""; };
 
-const drop=$("#drop");
-["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("dragover");}));
-["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("dragover");}));
-drop.addEventListener("drop",e=>{
+const empty=$("#empty"), drop=$("#drop");
+["dragenter","dragover"].forEach(ev=>empty.addEventListener(ev,e=>{e.preventDefault(); e.stopPropagation(); drop.classList.add("dragover"); empty.classList.add("dragover");}));
+["dragleave","drop"].forEach(ev=>empty.addEventListener(ev,e=>{e.preventDefault(); e.stopPropagation(); drop.classList.remove("dragover"); empty.classList.remove("dragover");}));
+empty.addEventListener("drop",e=>{
   const f=[...e.dataTransfer.files].find(f=>f.type==="application/pdf");
   if(f) loadFile(f); else toast("Please drop a PDF file.",true);
 });
+// also prevent the browser from navigating away if a file is dropped just outside the card
+["dragover","drop"].forEach(ev=>window.addEventListener(ev,e=>{ if($("#empty").style.display!=="none") e.preventDefault(); }));
 
 async function loadFile(file){
   if(file.type!=="application/pdf"){ toast("That's not a PDF.",true); return; }
