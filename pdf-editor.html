@@ -691,6 +691,7 @@ let userZoomed = false;      // true once the user manually zooms (stops auto-fi
 let selected = null;
 let history = []; let hIndex = -1;
 let pendingSign = null;      // dataURL waiting to be placed
+let docDefaultFont = "courier"; // detected from the open document; falls back to Courier
 
 const $ = s => document.querySelector(s);
 const el = (t,c)=>{const e=document.createElement(t); if(c)e.className=c; return e;};
@@ -734,7 +735,7 @@ $("#fabDownload").onclick = ()=> exportPdf();
 function goHome(){
   if(pdfDoc && !confirm("Go back to the start screen? Anything you haven't downloaded will be lost.")) return;
   try{ if(pageObserver){ pageObserver.disconnect(); pageObserver=null; } }catch(e){}
-  pdfDoc=null; originalBytes=null; pages=[]; annos=[]; selected=null; fieldMeta={}; history=[]; hIndex=-1; nextId=1;
+  pdfDoc=null; originalBytes=null; pages=[]; annos=[]; selected=null; fieldMeta={}; history=[]; hIndex=-1; nextId=1; docDefaultFont="courier";
   const ph=$("#pages"); if(ph) ph.innerHTML="";
   { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
   $("#editNav").style.display="none";
@@ -787,6 +788,7 @@ async function loadDoc(bytes, name){
     { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
     await renderAll();
     await detectFields();
+    await applyDocFontDefaults();
     fitToWidth();
     layout();
     snapshot();
@@ -795,6 +797,58 @@ async function loadDoc(bytes, name){
   }catch(err){
     console.error(err); toast("Couldn't open this PDF.",true);
   }finally{ busy(false); }
+}
+
+// Sample the document's own text to find its typical body-text size, and use
+// that as the starting font size AND font for the Add Text tool instead of fixed defaults.
+async function detectDocDefaults(){
+  const result = { size:null, font:null };
+  try{
+    const candidates = pages.slice(0, Math.min(3, pages.length));
+    const sizes=[];
+    const fontWeight={};     // mapped font key -> total glyph width seen (proxy for how much text uses it)
+    for(const rec of candidates){
+      const page = rec._page || (rec._page = await pdfDoc.getPage(rec.index+1));
+      const vp = page.getViewport({scale:BASE});
+      const tc = await page.getTextContent();
+      const fontNameCache={};
+      const resolveFont = fn=>{
+        if(fontNameCache[fn]) return fontNameCache[fn];
+        let name="";
+        try{ if(page.commonObjs.has(fn)){ const f=page.commonObjs.get(fn); name=(f&&(f.name||f.loadedName))||""; } }catch(_){}
+        if(!name){ const st=tc.styles&&tc.styles[fn]; name=(st&&st.fontFamily)||""; }
+        return (fontNameCache[fn]=mapPdfFont(name));
+      };
+      for(const it of tc.items){
+        if(!it.str || !it.str.trim()) continue;
+        const m = pdfjsLib.Util.transform(vp.transform, it.transform);
+        const fh = Math.hypot(m[2],m[3]) || Math.abs(m[3]) || 0;
+        if(fh>0) sizes.push(Math.round(fh));
+        const w = (it.width||0)*BASE;
+        const mapped = resolveFont(it.fontName);
+        fontWeight[mapped.key] = (fontWeight[mapped.key]||0) + Math.max(w,1);
+      }
+    }
+    if(sizes.length){
+      // mode (most frequent size) is a better proxy for body text than the mean,
+      // since headings/titles would otherwise skew an average upward.
+      const freq={};
+      let best=sizes[0], bestCount=0;
+      sizes.forEach(s=>{ freq[s]=(freq[s]||0)+1; if(freq[s]>bestCount){ bestCount=freq[s]; best=s; } });
+      result.size = Math.max(8, Math.min(64, best));
+    }
+    const fontKeys = Object.keys(fontWeight);
+    if(fontKeys.length){
+      // the font covering the most glyph-width is treated as the document's body font
+      result.font = fontKeys.sort((a,b)=>fontWeight[b]-fontWeight[a])[0];
+    }
+  }catch(_){ }
+  return result;
+}
+async function applyDocFontDefaults(){
+  const { size, font } = await detectDocDefaults();
+  if(size){ fontRange.value = size; fontVal.textContent = size; }
+  docDefaultFont = (font && FONT_REG[font]) ? font : "courier";
 }
 
 let fileGroups=null;          // index -> source-file group, consumed by renderAll
@@ -1246,7 +1300,7 @@ function bindPage(rec){
     if(tool==="text"){
       e.stopPropagation();
       const a=makeAnno({type:"text",page:rec.index,x:start.x,y:start.y,w:180,h:0,
-                        fontSize:+fontRange.value,color:colorPick.value,font:"helv",bold:false,italic:false,text:""});
+                        fontSize:+fontRange.value,color:colorPick.value,font:docDefaultFont,bold:false,italic:false,text:""});
       annos.push(a); renderAnno(a);
       setTool("select");
       enterEdit(a);
