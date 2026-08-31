@@ -651,17 +651,36 @@ async function buildPdfBytes(ocr){
   }
   return await pdf.save();
 }
-function downloadPdf(bytes, prefix){
+async function downloadPdf(bytes, prefix){
+  const filename=(prefix||"scan")+"-"+new Date().toISOString().slice(0,10)+".pdf";
+  if(window.showSaveFilePicker){
+    try{
+      const handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description:"PDF document", accept:{ "application/pdf":[".pdf"] } }]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(new Blob([bytes],{type:"application/pdf"}));
+      await writable.close();
+      return;
+    }catch(err){
+      if(err && err.name==="AbortError") throw err; // user cancelled the picker
+      // otherwise fall through to the silent download below
+    }
+  }
   const blob=new Blob([bytes],{type:"application/pdf"}); const url=URL.createObjectURL(blob);
-  const a=document.createElement("a"); a.href=url; a.download=(prefix||"scan")+"-"+new Date().toISOString().slice(0,10)+".pdf";
+  const a=document.createElement("a"); a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
 }
 async function savePdf(){
   if(!pages.length) return;
   busy(true,"Building PDF…"); await new Promise(r=>setTimeout(r,30));
-  try{ downloadPdf(await buildPdfBytes(false),"scan"); toast(pages.length+" page"+(pages.length>1?"s":"")+" saved as PDF."); }
-  catch(err){ console.error(err); toast("Export failed — try again.",true); }
-  finally{ busy(false); }
+  let bytes;
+  try{ bytes = await buildPdfBytes(false); }
+  catch(err){ console.error(err); busy(false); toast("Export failed — try again.",true); return; }
+  busy(false);
+  try{ await downloadPdf(bytes,"scan"); toast(pages.length+" page"+(pages.length>1?"s":"")+" saved as PDF."); }
+  catch(err){ if(err && err.name!=="AbortError"){ console.error(err); toast("Export failed — try again.",true); } }
 }
 function openPreview(){
   if(!pages.length){ toast("Scan a page first.",true); return; }
@@ -724,13 +743,15 @@ async function runOcr(){
 $("#actOcr").onclick = async () => {
   closeSheet(); if(!pages.length) return;
   busy(true,"Loading text engine…");
+  let bytes;
   try{
     await runOcr();
     busy(true,"Building searchable PDF…");
-    downloadPdf(await buildPdfBytes(true),"scan-searchable");
-    toast("Searchable PDF saved.");
-  }catch(err){ console.error(err); toast("OCR failed — check your connection.",true); }
-  finally{ busy(false); }
+    bytes = await buildPdfBytes(true);
+  }catch(err){ console.error(err); busy(false); toast("OCR failed — check your connection.",true); return; }
+  busy(false);
+  try{ await downloadPdf(bytes,"scan-searchable"); toast("Searchable PDF saved."); }
+  catch(err){ if(err && err.name!=="AbortError"){ console.error(err); toast("Export failed — try again.",true); } }
 };
 
 renderPages();
