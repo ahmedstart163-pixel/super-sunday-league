@@ -301,8 +301,6 @@ async function openFromFile(file){
     c.getContext("2d").drawImage(img,0,0,c.width,c.height);
     const src = c.toDataURL("image/jpeg",0.92);
     editIndex = -1;
-    busy(true,"Finding edges…");
-    await new Promise(r=>setTimeout(r,20));
     const inset = 0.06;
     const fallback = [
       {x:c.width*inset, y:c.height*inset},
@@ -310,10 +308,20 @@ async function openFromFile(file){
       {x:c.width*(1-inset), y:c.height*(1-inset)},
       {x:c.width*inset, y:c.height*(1-inset)},
     ];
-    autoCorners = detectDocCorners(c) || fallback;
-    openCrop(src, autoCorners.map(p=>({x:p.x,y:p.y})), "auto");
-  }catch(err){ console.error(err); toast("Couldn't read that photo.",true); }
-  finally{ busy(false); }
+    autoCorners = fallback;
+    busy(false);
+    // open the crop screen right away with the blue guide already showing
+    openCrop(src, fallback.map(p=>({x:p.x,y:p.y})), "auto");
+    // refine to the detected document edges in the background, without blocking the view
+    const myEdit = editIndex;
+    setTimeout(()=>{
+      const detected = detectDocCorners(c);
+      if(detected && editIndex===myEdit){
+        autoCorners = detected;
+        layoutCrop(detected.map(p=>({x:p.x,y:p.y})));
+      }
+    }, 20);
+  }catch(err){ console.error(err); toast("Couldn't read that photo.",true); busy(false); }
 }
 
 let autoCorners = null;
