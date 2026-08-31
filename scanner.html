@@ -129,6 +129,9 @@
   }
   .crop-head .ttl{font-size:15px; font-weight:700}
   .crop-head button{background:none; border:0; color:#cdd7ea; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; padding:6px}
+  .crop-head-right{display:flex; align-items:center; gap:6px}
+  .crop-head-right #cropReset{font-size:13px; padding:6px}
+  .head-add{background:var(--blue)!important; color:#fff!important; border-radius:9px!important; font-size:13px!important; font-weight:700!important; padding:8px 13px!important}
   .crop-stage{flex:1; position:relative; overflow:hidden; touch-action:none}
   #cropCanvas{position:absolute; left:0; top:0}
   #cropSvg{position:absolute; left:0; top:0; pointer-events:none}
@@ -209,7 +212,10 @@
   <div class="crop-head">
     <button id="cropCancel">Cancel</button>
     <span class="ttl">Adjust corners</span>
-    <button id="cropReset">Reset</button>
+    <div class="crop-head-right">
+      <button id="cropReset">Reset</button>
+      <button id="cropAddTop" class="head-add">Add page</button>
+    </div>
   </div>
   <div class="crop-stage" id="cropStage">
     <canvas id="cropCanvas"></canvas>
@@ -224,7 +230,7 @@
     </div>
     <div class="crop-actions">
       <button class="act-retake" id="cropRetake">Retake</button>
-      <button class="act-done" id="cropDone">Add page</button>
+      <button class="act-done" id="cropDownload">Download</button>
     </div>
   </div>
 </section>
@@ -550,7 +556,7 @@ function applyMode(D, w, h, mode){
 }
 
 /* ---------------- add / re-edit page ---------------- */
-$("#cropDone").onclick = async () => {
+async function commitCurrentPage(continueQueue){
   busy(true,"Flattening page…");
   await new Promise(r=>setTimeout(r,30));
   try{
@@ -561,9 +567,15 @@ $("#cropDone").onclick = async () => {
     $("#cropView").classList.remove("show");
     renderPages();
     // continue gallery queue
-    if(editIndex<0 && queue.length){ const f=queue.shift(); setTimeout(()=>openFromFile(f),120); }
-  }catch(err){ console.error(err); toast("Couldn't process that page.",true); }
+    if(continueQueue && editIndex<0 && queue.length){ const f=queue.shift(); setTimeout(()=>openFromFile(f),120); }
+    return true;
+  }catch(err){ console.error(err); toast("Couldn't process that page.",true); return false; }
   finally{ busy(false); }
+}
+$("#cropAddTop").onclick = () => commitCurrentPage(true);
+$("#cropDownload").onclick = async () => {
+  const ok = await commitCurrentPage(false);
+  if(ok) await savePdf();
 };
 
 function editPage(i){
@@ -663,7 +675,7 @@ function openPreview(){
   $("#previewView").classList.add("show");
 }
 function closePreview(){ $("#previewView").classList.remove("show"); }
-$("#exportBtn").onclick = openPreview;
+$("#exportBtn").onclick = savePdf;
 $("#previewClose").onclick = closePreview;
 $("#pvSave").onclick = savePdf;
 
