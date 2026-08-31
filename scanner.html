@@ -403,11 +403,17 @@ function detectDocCorners(canvas){
       }
     }
     if(!TL||!TR||!BR||!BL) return null;
+    // sanity: reject if the blob basically fills the whole frame edge-to-edge —
+    // a real document rarely touches all four sides; this is usually just uniform lighting/background
+    const minX=Math.min(TL[0],TR[0],BR[0],BL[0]), maxX=Math.max(TL[0],TR[0],BR[0],BL[0]);
+    const minY=Math.min(TL[1],TR[1],BR[1],BL[1]), maxY=Math.max(TL[1],TR[1],BR[1],BL[1]);
+    if((maxX-minX) > dw*0.97 && (maxY-minY) > dh*0.97) return null;
+    if(bestSize > n*0.90) return null;
     const sx=W/dw, sy=H/dh, m=p=>({x:p[0]*sx, y:p[1]*sy});
     const out=[m(TL),m(TR),m(BR),m(BL)];
-    // sanity: area must be a decent chunk of the frame
+    // sanity: area must be a decent chunk of the frame, but not almost all of it
     const area=Math.abs((out[2].x-out[0].x)*(out[2].y-out[0].y));
-    if(area < W*H*0.10) return null;
+    if(area < W*H*0.10 || area > W*H*0.92) return null;
     return out;
   }catch(e){ return null; }
 }
