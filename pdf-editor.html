@@ -437,6 +437,65 @@
   .fab-download:hover{background:#f4f7fc}
   .fab-download svg{width:16px; height:16px; stroke:#4a7fe0; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
 
+  /* ---------------- Snip tool ---------------- */
+  .snip-countdown{position:fixed; inset:0; background:rgba(10,16,30,.55); z-index:340; display:grid; place-items:center}
+  .snip-countdown span{font-size:120px; font-weight:800; color:#fff; text-shadow:0 4px 24px rgba(0,0,0,.4)}
+
+  .snip-select{position:fixed; inset:0; background:#0b1120; z-index:330; cursor:crosshair}
+  #snipSelCanvas{position:absolute; inset:0; width:100%; height:100%}
+  .snip-select-hint{
+    position:absolute; left:50%; top:22px; transform:translateX(-50%); color:#fff; font-size:13px; font-weight:600;
+    background:rgba(8,12,22,.6); padding:8px 16px; border-radius:20px; pointer-events:none;
+  }
+  .snip-x{
+    position:absolute; top:18px; right:18px; width:38px; height:38px; border-radius:50%; border:0;
+    background:rgba(255,255,255,.12); color:#fff; font-size:16px; cursor:pointer;
+  }
+  .snip-x:hover{background:rgba(255,255,255,.22)}
+
+  .snip-editor{position:fixed; inset:0; z-index:300; background:#eef1f5; display:none; flex-direction:column}
+  .snip-editor.show{display:flex}
+  .snip-ehead{height:52px; flex:none; background:var(--navy); color:#fff; display:flex; align-items:center; gap:10px; padding:0 14px}
+  .snip-ehead button{background:rgba(255,255,255,.08); color:#e8ecf5; border:1px solid rgba(255,255,255,.12); border-radius:var(--r-sm);
+    padding:7px 11px; font-size:12.5px; font-weight:600; cursor:pointer}
+  .snip-ehead button:hover{background:rgba(255,255,255,.15)}
+  .snip-ehead button:disabled{opacity:.35; cursor:not-allowed}
+  .snip-ehead #snipClose{width:34px; padding:7px; text-align:center}
+  .snip-etitle{font-size:14px; font-weight:700; margin-right:auto}
+  .snip-ehead-right{display:flex; align-items:center; gap:8px}
+  .snip-ehead-right .primary{background:var(--gold); border-color:var(--gold); color:#fff}
+  .snip-ehead-right .primary:hover{background:var(--gold-soft)}
+
+  .snip-stage{flex:1; position:relative; overflow:auto; display:flex; align-items:center; justify-content:center; padding:20px}
+  .snip-canvaswrap{position:relative; box-shadow:0 6px 24px rgba(15,23,42,.22); background:#fff}
+  #snipBaseCanvas, #snipDrawCanvas{position:absolute; left:0; top:0; display:block}
+  #snipDrawCanvas{touch-action:none}
+  #snipDrawCanvas.crop-mode{cursor:crosshair}
+
+  .snip-etools{
+    flex:none; background:#fff; border-top:1px solid var(--line); display:flex; align-items:center;
+    justify-content:center; gap:10px; padding:9px 14px; flex-wrap:wrap;
+  }
+  .snip-etools .toolgroup{align-items:center}
+  .snip-etools .tool{flex-direction:column; gap:3px; padding:7px 13px; font-size:11px}
+  .snip-etools .tool .gi{font-size:17px; line-height:1}
+  .snip-swatches{display:flex; align-items:center; gap:6px; padding:0 6px}
+  .snip-sw{width:22px; height:22px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1.5px var(--line); cursor:pointer; padding:0}
+  .snip-sw.on{box-shadow:0 0 0 2px var(--gold)}
+  .snip-size{display:flex; align-items:center; gap:8px; padding:0 8px}
+  .snip-size input[type=range]{width:90px}
+  .snip-size .dot{border-radius:50%; background:#222; flex:none}
+
+  .snip-textpanel{
+    position:fixed; right:16px; bottom:88px; width:320px; max-height:50vh; background:#fff; border:1px solid var(--line);
+    border-radius:var(--r-lg); box-shadow:var(--shadow-lg); z-index:310; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .snip-textpanel.hide{display:none}
+  .snip-textpanel-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--line); font-size:13.5px}
+  .snip-textpanel-head button{background:none; border:0; font-size:15px; cursor:pointer; color:var(--muted)}
+  .snip-textpanel-body{padding:12px 14px; font-size:13px; line-height:1.5; color:var(--ink); overflow-y:auto; flex:1; white-space:pre-wrap}
+  .snip-textpanel .tbtn{margin:10px 14px 14px; align-self:flex-start}
+
   .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:150}
   .spin{width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--gold); border-radius:50%; animation:s 1s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
@@ -485,6 +544,7 @@
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
   <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic">▤</span><span class="lbl">&nbsp;Reader</span></button>
+  <button class="tbtn" id="snipBtn" title="Snip — capture and mark up a screenshot"><span class="ic">✂</span><span class="lbl">&nbsp;Snip</span></button>
   <input type="file" id="readerPick" accept="application/pdf" style="display:none">
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
@@ -712,6 +772,75 @@
 <button class="fab-download" id="fabDownload" title="Apply changes and save your PDF">
   Apply changes <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
 </button>
+<!-- Snip: mode/delay menu -->
+<div class="menu hide" id="snipMenu" style="min-width:230px">
+  <div class="menu-sec">Capture mode</div>
+  <button class="mitem" data-act="mode-rect"><span class="mi">▭</span>Rectangular snip</button>
+  <button class="mitem" data-act="mode-window"><span class="mi">▤</span>Window snip</button>
+  <button class="mitem" data-act="mode-full"><span class="mi">⛶</span>Full-screen snip</button>
+  <button class="mitem" data-act="mode-free"><span class="mi">✎</span>Free-form snip</button>
+  <div class="menu-sec">Delay</div>
+  <button class="mitem" data-act="delay-0"><span class="mi">–</span>No delay</button>
+  <button class="mitem" data-act="delay-3"><span class="mi">3s</span>3 seconds</button>
+  <button class="mitem" data-act="delay-10"><span class="mi">10s</span>10 seconds</button>
+</div>
+
+<!-- hidden video used only to grab a single frame from the shared screen/window/tab -->
+<video id="snipVideo" autoplay playsinline muted style="position:fixed; left:-9999px; top:-9999px; width:2px; height:2px"></video>
+
+<!-- countdown before the frame is grabbed -->
+<div class="snip-countdown hide" id="snipCountdown"><span id="snipCountdownNum">3</span></div>
+
+<!-- rectangular / free-form selection over the captured frame -->
+<div class="snip-select hide" id="snipSelectView">
+  <canvas id="snipSelCanvas"></canvas>
+  <div class="snip-select-hint" id="snipSelectHint">Drag to select an area</div>
+  <button class="snip-x" id="snipSelectCancel" title="Cancel">✕</button>
+</div>
+
+<!-- annotation editor -->
+<section class="snip-editor" id="snipEditor">
+  <div class="snip-ehead">
+    <button id="snipClose" title="Close">✕</button>
+    <span class="snip-etitle">Snip</span>
+    <div class="snip-ehead-right">
+      <button id="snipUndo" title="Undo" disabled>↺ Undo</button>
+      <button id="snipRedo" title="Redo" disabled>↻ Redo</button>
+      <button id="snipCopy" title="Copy to clipboard">⎘ Copy</button>
+      <button id="snipInsertBtn" title="Insert this snip into the current PDF">➕ Insert into PDF</button>
+      <button id="snipSaveAs" class="primary" title="Save as PNG">⬇ Save as</button>
+    </div>
+  </div>
+  <div class="snip-stage" id="snipStage">
+    <div class="snip-canvaswrap" id="snipCanvasWrap">
+      <canvas id="snipBaseCanvas"></canvas>
+      <canvas id="snipDrawCanvas"></canvas>
+    </div>
+  </div>
+  <div class="snip-etools">
+    <div class="toolgroup">
+      <button class="tool active" data-stool="pen"><span class="gi">✎</span><span>Pen</span></button>
+      <button class="tool" data-stool="highlighter"><span class="gi">▮</span><span>Highlighter</span></button>
+      <button class="tool" data-stool="ruler"><span class="gi">📏</span><span>Ruler</span></button>
+      <button class="tool" data-stool="eraser"><span class="gi">⌫</span><span>Eraser</span></button>
+    </div>
+    <div class="snip-swatches" id="snipSwatches"></div>
+    <div class="snip-size">
+      <span class="dot" id="snipSizeDot" style="width:6px;height:6px"></span>
+      <input type="range" id="snipSizeRange" min="1" max="30" value="4">
+    </div>
+    <div class="toolgroup">
+      <button class="tool" id="snipCropBtn"><span class="gi">⛶</span><span>Crop</span></button>
+      <button class="tool" id="snipTextActionsBtn"><span class="gi">🔤</span><span>Text actions</span></button>
+    </div>
+  </div>
+  <div class="snip-textpanel hide" id="snipTextPanel">
+    <div class="snip-textpanel-head"><b>Text actions</b><button id="snipTextClose">✕</button></div>
+    <div class="snip-textpanel-body" id="snipTextBody">Reading text…</div>
+    <button class="tbtn primary" id="snipTextCopyAll">Copy all text</button>
+  </div>
+</section>
+
 <div class="busy hide" id="busy"><div class="spin"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1117,7 +1246,7 @@ tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
 const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
-function setTool(t){
+function setTool(t, opts){
   tool=t;
   tools.forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
   $("#formsBtn").classList.toggle("active", t==="stamp"||t.startsWith("field-"));
@@ -1135,7 +1264,7 @@ function setTool(t){
   });
   if(t!=="select") select(null);
   $("#pages").classList.toggle("tooling", t!=="select");
-  if(t==="image") $("#imgInput").click();
+  if(t==="image" && !(opts&&opts.skipPick)) $("#imgInput").click();
   if(t==="edittext") toast("Tap a line of text to replace it — it gets covered and a typed copy drops on top.");
   refreshCtx();
 }
@@ -2723,6 +2852,368 @@ $("#mergeInput").onchange=async e=>{
     else setNav(navEdit);
   }
 };
+
+/* ==================== Snip tool ==================== */
+let snipDelaySec=0;
+const SNIP_COLORS=["#e02f2f","#ff8a00","#ffd400","#2ecc71","#2563eb","#7b2ff7","#111111","#ffffff"];
+
+function snipMenuAct(act){
+  if(act.indexOf("delay-")===0){
+    snipDelaySec = parseInt(act.slice(6),10)||0;
+    toast(snipDelaySec ? ("Delay set to "+snipDelaySec+" seconds.") : "Delay turned off.");
+    return;
+  }
+  startSnip(act.slice(5)); // rect | window | full | free
+}
+wireDropdown("snipBtn","snipMenu", snipMenuAct);
+
+function runSnipCountdown(sec){
+  return new Promise(resolve=>{
+    const el=$("#snipCountdown"), num=$("#snipCountdownNum");
+    let n=sec; num.textContent=n; el.classList.remove("hide");
+    const iv=setInterval(()=>{
+      n--;
+      if(n<=0){ clearInterval(iv); el.classList.add("hide"); resolve(); }
+      else num.textContent=n;
+    },1000);
+  });
+}
+
+async function startSnip(mode){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia){
+    toast("Screen capture isn't supported in this browser.",true); return;
+  }
+  let stream;
+  try{ stream = await navigator.mediaDevices.getDisplayMedia({ video:true, audio:false }); }
+  catch(err){ return; } // user cancelled the share picker
+  const v=$("#snipVideo"); v.srcObject=stream;
+  await new Promise(res=>{ if(v.readyState>=2) res(); else v.onloadedmetadata=res; });
+  if(snipDelaySec>0) await runSnipCountdown(snipDelaySec);
+  const vw=v.videoWidth, vh=v.videoHeight;
+  const raw=document.createElement("canvas"); raw.width=vw; raw.height=vh;
+  raw.getContext("2d").drawImage(v,0,0,vw,vh);
+  stream.getTracks().forEach(t=>t.stop());
+  v.srcObject=null;
+  if(mode==="rect" || mode==="free") openSelectView(raw, mode);
+  else openSnipEditor(raw);
+}
+
+/* ---- rectangular / free-form selection over the captured frame ---- */
+let selRaw=null, selMode="rect", selDrag=null, selPath=null;
+function openSelectView(rawCanvas, mode){
+  selRaw=rawCanvas; selMode=mode; selDrag=null; selPath=null;
+  $("#snipSelectHint").textContent = mode==="free" ? "Draw around an area" : "Drag to select an area";
+  $("#snipSelectView").classList.remove("hide");
+  layoutSelCanvas();
+}
+function closeSelectView(){ $("#snipSelectView").classList.add("hide"); selDrag=null; selPath=null; }
+$("#snipSelectCancel").onclick = closeSelectView;
+
+function layoutSelCanvas(){
+  const cv=$("#snipSelCanvas");
+  cv.width=window.innerWidth; cv.height=window.innerHeight;
+  drawSelCanvas();
+}
+window.addEventListener("resize", ()=>{ if(!$("#snipSelectView").classList.contains("hide")) layoutSelCanvas(); });
+
+function selTransform(){
+  const cv=$("#snipSelCanvas");
+  const scale=Math.min(cv.width/selRaw.width, cv.height/selRaw.height);
+  const dw=selRaw.width*scale, dh=selRaw.height*scale;
+  return { scale, offx:(cv.width-dw)/2, offy:(cv.height-dh)/2, dw, dh };
+}
+function normRect(d){ const x=Math.min(d.x0,d.x1), y=Math.min(d.y0,d.y1); return {x,y,w:Math.abs(d.x1-d.x0), h:Math.abs(d.y1-d.y0)}; }
+
+function drawSelCanvas(){
+  const cv=$("#snipSelCanvas"), ctx=cv.getContext("2d");
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const t=selTransform();
+  ctx.drawImage(selRaw, t.offx, t.offy, t.dw, t.dh);
+  ctx.save();
+  ctx.fillStyle="rgba(0,0,0,.45)";
+  if(selMode==="rect" && selDrag){
+    const r=normRect(selDrag);
+    ctx.beginPath(); ctx.rect(0,0,cv.width,cv.height); ctx.rect(r.x,r.y,r.w,r.h);
+    ctx.fill("evenodd"); ctx.restore();
+    ctx.strokeStyle="#5b8af2"; ctx.lineWidth=2; ctx.strokeRect(r.x,r.y,r.w,r.h);
+  }else if(selMode==="free" && selPath && selPath.length>1){
+    ctx.beginPath(); ctx.rect(0,0,cv.width,cv.height);
+    ctx.moveTo(selPath[0].x, selPath[0].y);
+    for(let i=1;i<selPath.length;i++) ctx.lineTo(selPath[i].x, selPath[i].y);
+    ctx.closePath(); ctx.fill("evenodd"); ctx.restore();
+    ctx.strokeStyle="#5b8af2"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(selPath[0].x, selPath[0].y);
+    for(let i=1;i<selPath.length;i++) ctx.lineTo(selPath[i].x, selPath[i].y);
+    ctx.stroke();
+  }else{
+    ctx.fillRect(0,0,cv.width,cv.height); ctx.restore();
+  }
+}
+
+const snipSelCv=$("#snipSelCanvas");
+snipSelCv.addEventListener("pointerdown", e=>{
+  const r=snipSelCv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+  if(selMode==="rect") selDrag={x0:x,y0:y,x1:x,y1:y}; else selPath=[{x,y}];
+  snipSelCv.setPointerCapture(e.pointerId);
+});
+snipSelCv.addEventListener("pointermove", e=>{
+  if(!selDrag && !selPath) return;
+  const r=snipSelCv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+  if(selMode==="rect" && selDrag){ selDrag.x1=x; selDrag.y1=y; }
+  else if(selMode==="free" && selPath){ selPath.push({x,y}); }
+  drawSelCanvas();
+});
+snipSelCv.addEventListener("pointerup", ()=>{
+  if(selMode==="rect" && selDrag) finishRectSelect();
+  else if(selMode==="free" && selPath && selPath.length>2) finishFreeSelect();
+  else { selDrag=null; selPath=null; drawSelCanvas(); }
+});
+
+function finishRectSelect(){
+  const r=normRect(selDrag); selDrag=null;
+  if(r.w<6 || r.h<6){ drawSelCanvas(); return; }
+  const t=selTransform();
+  const sx=Math.max(0,(r.x-t.offx)/t.scale), sy=Math.max(0,(r.y-t.offy)/t.scale);
+  const sw=Math.min(selRaw.width-sx, r.w/t.scale), sh=Math.min(selRaw.height-sy, r.h/t.scale);
+  if(sw<4||sh<4){ drawSelCanvas(); return; }
+  const out=document.createElement("canvas"); out.width=Math.round(sw); out.height=Math.round(sh);
+  out.getContext("2d").drawImage(selRaw, sx,sy,sw,sh, 0,0,out.width,out.height);
+  closeSelectView(); openSnipEditor(out);
+}
+function finishFreeSelect(){
+  const path=selPath.slice(); selPath=null;
+  const t=selTransform();
+  const srcPath = path.map(p=>({x:(p.x-t.offx)/t.scale, y:(p.y-t.offy)/t.scale}));
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  srcPath.forEach(p=>{ minX=Math.min(minX,p.x); minY=Math.min(minY,p.y); maxX=Math.max(maxX,p.x); maxY=Math.max(maxY,p.y); });
+  minX=Math.max(0,minX); minY=Math.max(0,minY); maxX=Math.min(selRaw.width,maxX); maxY=Math.min(selRaw.height,maxY);
+  const w=maxX-minX, h=maxY-minY;
+  if(w<4||h<4){ drawSelCanvas(); return; }
+  const out=document.createElement("canvas"); out.width=Math.round(w); out.height=Math.round(h);
+  const octx=out.getContext("2d");
+  octx.save();
+  octx.beginPath(); octx.moveTo(srcPath[0].x-minX, srcPath[0].y-minY);
+  for(let i=1;i<srcPath.length;i++) octx.lineTo(srcPath[i].x-minX, srcPath[i].y-minY);
+  octx.closePath(); octx.clip();
+  octx.drawImage(selRaw, minX,minY,w,h, 0,0,w,h);
+  octx.restore();
+  closeSelectView(); openSnipEditor(out);
+}
+
+/* ---- annotation editor ---- */
+let snipBase=null, snipStrokes=[], snipRedoStack=[];
+let snipTool="pen", snipColor=SNIP_COLORS[0], snipSize=4;
+let snipDrawing=false, snipCurStroke=null;
+let snipCropping=false, snipCropRect=null;
+let snipLastText="";
+
+function buildSnipSwatches(){
+  const wrap=$("#snipSwatches"); if(wrap.childElementCount) return;
+  SNIP_COLORS.forEach(c=>{
+    const b=document.createElement("button"); b.className="snip-sw"+(c===snipColor?" on":""); b.style.background=c;
+    b.onclick=()=>{ snipColor=c; wrap.querySelectorAll(".snip-sw").forEach(x=>x.classList.remove("on")); b.classList.add("on"); };
+    wrap.appendChild(b);
+  });
+}
+function sizeDotUpdate(){ const d=$("#snipSizeDot"); const s=Math.max(4,Math.min(22,snipSize)); d.style.width=s+"px"; d.style.height=s+"px"; }
+
+function openSnipEditor(baseCanvas){
+  snipBase=baseCanvas; snipStrokes=[]; snipRedoStack=[];
+  buildSnipSwatches(); sizeDotUpdate();
+  $("#snipEditor").classList.add("show");
+  layoutSnipEditor();
+  updateSnipUndoRedo();
+}
+function closeSnipEditor(){
+  $("#snipEditor").classList.remove("show");
+  $("#snipTextPanel").classList.add("hide");
+  snipBase=null; snipStrokes=[]; snipRedoStack=[]; setSnipCropMode(false);
+}
+$("#snipClose").onclick = closeSnipEditor;
+
+function layoutSnipEditor(){
+  if(!snipBase) return;
+  const wrap=$("#snipCanvasWrap");
+  const stage=$("#snipStage").getBoundingClientRect();
+  const maxW=Math.max(60,stage.width-40), maxH=Math.max(60,stage.height-40);
+  const scale=Math.min(1, maxW/snipBase.width, maxH/snipBase.height);
+  const w=Math.round(snipBase.width*scale), h=Math.round(snipBase.height*scale);
+  wrap.style.width=w+"px"; wrap.style.height=h+"px";
+  const bc=$("#snipBaseCanvas"), dc=$("#snipDrawCanvas");
+  bc.style.width=w+"px"; bc.style.height=h+"px"; dc.style.width=w+"px"; dc.style.height=h+"px";
+  bc.width=snipBase.width; bc.height=snipBase.height;
+  dc.width=snipBase.width; dc.height=snipBase.height;
+  bc.getContext("2d").drawImage(snipBase,0,0);
+  redrawStrokes();
+}
+window.addEventListener("resize", ()=>{ if($("#snipEditor").classList.contains("show")) layoutSnipEditor(); });
+
+function paintStroke(ctx,s){
+  ctx.save();
+  ctx.lineCap="round"; ctx.lineJoin="round";
+  if(s.tool==="eraser"){ ctx.globalCompositeOperation="destination-out"; ctx.strokeStyle="rgba(0,0,0,1)"; ctx.lineWidth=s.size; }
+  else if(s.tool==="highlighter"){ ctx.globalCompositeOperation="multiply"; ctx.globalAlpha=.4; ctx.strokeStyle=s.color; ctx.lineWidth=s.size*3; }
+  else{ ctx.strokeStyle=s.color; ctx.lineWidth=s.size; }
+  ctx.beginPath();
+  s.points.forEach((p,i)=>{ if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+  ctx.stroke(); ctx.restore();
+}
+function redrawStrokes(){
+  const dc=$("#snipDrawCanvas"), ctx=dc.getContext("2d");
+  ctx.clearRect(0,0,dc.width,dc.height);
+  snipStrokes.forEach(s=>paintStroke(ctx,s));
+}
+function snipPointerPos(e){
+  const dc=$("#snipDrawCanvas"); const r=dc.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*(dc.width/r.width), y:(e.clientY-r.top)*(dc.height/r.height) };
+}
+
+const snipDc=$("#snipDrawCanvas");
+snipDc.addEventListener("pointerdown", e=>{
+  if(snipCropping){ startSnipCrop(e); return; }
+  const p=snipPointerPos(e);
+  snipCurStroke = (snipTool==="ruler")
+    ? { tool:"pen", color:snipColor, size:snipSize, points:[p,p], ruler:true }
+    : { tool:snipTool, color:snipColor, size:snipSize, points:[p] };
+  snipDrawing=true; snipDc.setPointerCapture(e.pointerId);
+});
+snipDc.addEventListener("pointermove", e=>{
+  if(snipCropping){ moveSnipCrop(e); return; }
+  if(!snipDrawing) return;
+  const p=snipPointerPos(e);
+  if(snipCurStroke.ruler) snipCurStroke.points[1]=p; else snipCurStroke.points.push(p);
+  redrawStrokes(); paintStroke(snipDc.getContext("2d"), snipCurStroke);
+});
+snipDc.addEventListener("pointerup", ()=>{
+  if(snipCropping){ finishSnipCrop(); return; }
+  if(!snipDrawing) return;
+  snipDrawing=false;
+  if(snipCurStroke.points.length>1){ snipStrokes.push(snipCurStroke); snipRedoStack=[]; updateSnipUndoRedo(); }
+  snipCurStroke=null; redrawStrokes();
+});
+
+$("#snipEditor").querySelectorAll("[data-stool]").forEach(b=>{
+  b.onclick=()=>{
+    snipTool=b.dataset.stool;
+    $("#snipEditor").querySelectorAll("[data-stool]").forEach(x=>x.classList.toggle("active", x===b));
+    setSnipCropMode(false);
+  };
+});
+$("#snipSizeRange").oninput=e=>{ snipSize=+e.target.value; sizeDotUpdate(); };
+
+function updateSnipUndoRedo(){
+  $("#snipUndo").disabled = snipStrokes.length===0;
+  $("#snipRedo").disabled = snipRedoStack.length===0;
+}
+$("#snipUndo").onclick=()=>{ if(!snipStrokes.length) return; snipRedoStack.push(snipStrokes.pop()); redrawStrokes(); updateSnipUndoRedo(); };
+$("#snipRedo").onclick=()=>{ if(!snipRedoStack.length) return; snipStrokes.push(snipRedoStack.pop()); redrawStrokes(); updateSnipUndoRedo(); };
+
+function setSnipCropMode(on){
+  snipCropping=on;
+  $("#snipCropBtn").classList.toggle("active",on);
+  snipDc.classList.toggle("crop-mode",on);
+  if(on) $("#snipEditor").querySelectorAll("[data-stool]").forEach(x=>x.classList.remove("active"));
+}
+$("#snipCropBtn").onclick=()=> setSnipCropMode(!snipCropping);
+function startSnipCrop(e){ const p=snipPointerPos(e); snipCropRect={x0:p.x,y0:p.y,x1:p.x,y1:p.y}; snipDc.setPointerCapture(e.pointerId); }
+function moveSnipCrop(e){
+  if(!snipCropRect) return;
+  const p=snipPointerPos(e); snipCropRect.x1=p.x; snipCropRect.y1=p.y;
+  redrawStrokes();
+  const ctx=snipDc.getContext("2d"), r=normRect(snipCropRect);
+  ctx.save(); ctx.strokeStyle="#5b8af2"; ctx.lineWidth=2; ctx.setLineDash([7,5]); ctx.strokeRect(r.x,r.y,r.w,r.h); ctx.restore();
+}
+function finishSnipCrop(){
+  if(!snipCropRect) return;
+  const r=normRect(snipCropRect); snipCropRect=null; setSnipCropMode(false);
+  if(r.w<8||r.h<8){ redrawStrokes(); return; }
+  const flat=flattenSnip();
+  const out=document.createElement("canvas"); out.width=Math.round(r.w); out.height=Math.round(r.h);
+  out.getContext("2d").drawImage(flat, r.x,r.y,r.w,r.h, 0,0,out.width,out.height);
+  snipBase=out; snipStrokes=[]; snipRedoStack=[];
+  layoutSnipEditor(); updateSnipUndoRedo();
+}
+
+function flattenSnip(){
+  const out=document.createElement("canvas"); out.width=snipBase.width; out.height=snipBase.height;
+  const ctx=out.getContext("2d");
+  ctx.drawImage(snipBase,0,0);
+  ctx.drawImage($("#snipDrawCanvas"),0,0);
+  return out;
+}
+
+$("#snipCopy").onclick = async ()=>{
+  try{
+    const blob = await new Promise(res=>flattenSnip().toBlob(res,"image/png"));
+    if(!blob) throw new Error("no blob");
+    await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+    toast("Copied to clipboard.");
+  }catch(err){ console.error(err); toast("Couldn't copy — your browser may not allow it.",true); }
+};
+
+async function saveSnipAs(){
+  const blob = await new Promise(res=>flattenSnip().toBlob(res,"image/png"));
+  if(!blob){ toast("Couldn't prepare the image.",true); return; }
+  const filename="snip-"+new Date().toISOString().slice(0,10)+".png";
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({ suggestedName:filename, types:[{description:"PNG image", accept:{"image/png":[".png"]}}] });
+      const w=await handle.createWritable(); await w.write(blob); await w.close();
+      toast("Saved."); return;
+    }catch(err){ if(err && err.name==="AbortError") return; }
+  }
+  if(navigator.canShare){
+    try{
+      const file=new File([blob], filename, {type:"image/png"});
+      if(navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:filename}); return; }
+    }catch(err){ if(err && err.name==="AbortError") return; }
+  }
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast("Saved.");
+}
+$("#snipSaveAs").onclick = saveSnipAs;
+
+$("#snipInsertBtn").onclick = ()=>{
+  if(!pdfDoc){ toast("Open a PDF first.",true); return; }
+  const dataURL = flattenSnip().toDataURL("image/png");
+  pendingImg = { src:dataURL, type:"image/png" };
+  closeSnipEditor();
+  showEditView();
+  setTool("image", {skipPick:true});
+  toast("Click on a page to place the snip.");
+};
+
+/* ---- text actions (OCR) ---- */
+function ensureSnipTesseract(){
+  if(window.Tesseract) return Promise.resolve();
+  return new Promise((res,rej)=>{
+    const s=document.createElement("script");
+    s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+    s.onload=res; s.onerror=()=>rej(new Error("Failed to load text engine"));
+    document.head.appendChild(s);
+  });
+}
+$("#snipTextActionsBtn").onclick = async ()=>{
+  $("#snipTextPanel").classList.remove("hide");
+  $("#snipTextBody").textContent="Reading text…";
+  try{
+    await ensureSnipTesseract();
+    const worker=await Tesseract.createWorker("eng");
+    const { data } = await worker.recognize(flattenSnip().toDataURL("image/png"));
+    await worker.terminate();
+    snipLastText=(data.text||"").trim();
+    $("#snipTextBody").textContent = snipLastText || "No text found.";
+  }catch(err){ console.error(err); $("#snipTextBody").textContent="Couldn't read text — check your connection."; }
+};
+$("#snipTextClose").onclick = ()=> $("#snipTextPanel").classList.add("hide");
+$("#snipTextCopyAll").onclick = async ()=>{
+  if(!snipLastText){ toast("No text to copy.",true); return; }
+  try{ await navigator.clipboard.writeText(snipLastText); toast("Text copied."); }
+  catch(err){ console.error(err); toast("Couldn't copy text.",true); }
+};
+/* ==================== end Snip tool ==================== */
 
 layout();
 
