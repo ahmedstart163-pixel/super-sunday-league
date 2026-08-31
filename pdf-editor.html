@@ -544,7 +544,10 @@
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
   <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic">▤</span><span class="lbl">&nbsp;Reader</span></button>
-  <button class="tbtn" id="snipBtn" title="Snip — capture and mark up a screenshot"><span class="ic">✂</span><span class="lbl">&nbsp;Snip</span></button>
+  <div class="toolgroup" style="border-color:rgba(255,255,255,.12); background:transparent; padding:0">
+  <button class="tbtn" id="snipBtn" title="Snip — drag to capture a screenshot" style="border-radius:6px 0 0 6px; border-right:0"><span class="ic">✂</span><span class="lbl">&nbsp;Snip</span></button>
+  <button class="tbtn" id="snipCaretBtn" title="Snip mode and delay" style="border-radius:0 6px 6px 0; padding:7px 9px">▾</button>
+  </div>
   <input type="file" id="readerPick" accept="application/pdf" style="display:none">
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
   <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
@@ -2863,9 +2866,12 @@ function snipMenuAct(act){
     toast(snipDelaySec ? ("Delay set to "+snipDelaySec+" seconds.") : "Delay turned off.");
     return;
   }
-  startSnip(act.slice(5)); // rect | window | full | free
+  snipDefaultMode = act.slice(5); // rect | window | full | free
+  startSnip(snipDefaultMode);
 }
-wireDropdown("snipBtn","snipMenu", snipMenuAct);
+let snipDefaultMode="rect";
+$("#snipBtn").onclick = ()=> startSnip(snipDefaultMode);
+wireDropdown("snipCaretBtn","snipMenu", snipMenuAct);
 
 function runSnipCountdown(sec){
   return new Promise(resolve=>{
