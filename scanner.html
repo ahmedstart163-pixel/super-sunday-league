@@ -653,6 +653,9 @@ async function buildPdfBytes(ocr){
 }
 async function downloadPdf(bytes, prefix){
   const filename=(prefix||"scan")+"-"+new Date().toISOString().slice(0,10)+".pdf";
+  const blob=new Blob([bytes],{type:"application/pdf"});
+
+  // Desktop / Android Chrome & Edge: native "Save As" dialog
   if(window.showSaveFilePicker){
     try{
       const handle = await window.showSaveFilePicker({
@@ -660,15 +663,31 @@ async function downloadPdf(bytes, prefix){
         types: [{ description:"PDF document", accept:{ "application/pdf":[".pdf"] } }]
       });
       const writable = await handle.createWritable();
-      await writable.write(new Blob([bytes],{type:"application/pdf"}));
+      await writable.write(blob);
       await writable.close();
       return;
     }catch(err){
       if(err && err.name==="AbortError") throw err; // user cancelled the picker
-      // otherwise fall through to the silent download below
+      // otherwise fall through
     }
   }
-  const blob=new Blob([bytes],{type:"application/pdf"}); const url=URL.createObjectURL(blob);
+
+  // iPhone/iPad (and Android as a fallback): share sheet with "Save to Files"
+  if(navigator.canShare){
+    try{
+      const file = new File([blob], filename, { type:"application/pdf" });
+      if(navigator.canShare({ files:[file] })){
+        await navigator.share({ files:[file], title:filename });
+        return;
+      }
+    }catch(err){
+      if(err && err.name==="AbortError") throw err; // user cancelled the share sheet
+      // otherwise fall through
+    }
+  }
+
+  // Last resort: silent download straight to the default downloads location
+  const url=URL.createObjectURL(blob);
   const a=document.createElement("a"); a.href=url; a.download=filename;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
 }
