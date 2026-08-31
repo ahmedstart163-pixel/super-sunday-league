@@ -155,6 +155,29 @@
     padding:15px; cursor:pointer;
   }
   .act-retake{background:#1d2741; color:#cdd7ea}
+
+  /* ---------- live camera view ---------- */
+  .livecam{position:fixed; inset:0; background:#000; z-index:55; display:none; flex-direction:column}
+  .livecam.show{display:flex}
+  .cam-stage{flex:1; position:relative; overflow:hidden; background:#000}
+  #camVideo{width:100%; height:100%; object-fit:cover; display:block}
+  #camSvg{position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none}
+  #camPoly{transition:points .12s linear}
+  .cam-hint{
+    position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+    color:#fff; font-size:13px; font-weight:600; background:rgba(8,12,22,.55);
+    padding:7px 14px; border-radius:20px; pointer-events:none; opacity:0; transition:opacity .2s;
+  }
+  .cam-hint.show{opacity:1}
+  .cam-tools{
+    padding:20px; padding-bottom:max(20px, env(safe-area-inset-bottom)); background:#10182b;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .shutter{
+    width:70px; height:70px; border-radius:50%; background:#fff; cursor:pointer;
+    border:5px solid rgba(255,255,255,.32); box-shadow:0 2px 10px rgba(0,0,0,.4);
+  }
+  .shutter:active{transform:scale(.93)}
   .act-done{background:var(--blue); color:#fff}
 
   /* ---------- busy ---------- */
@@ -235,6 +258,23 @@
   </div>
 </section>
 
+<!-- live camera view -->
+<section class="livecam" id="liveCamView">
+  <div class="crop-head">
+    <button id="camCancel">Cancel</button>
+    <span class="ttl">Scan page</span>
+    <span style="width:52px"></span>
+  </div>
+  <div class="cam-stage" id="camStage">
+    <video id="camVideo" autoplay playsinline muted></video>
+    <svg id="camSvg"><polygon id="camPoly" fill="rgba(37,99,235,0.16)" stroke="#5b8af2" stroke-width="2.5"/></svg>
+    <div class="cam-hint" id="camHint">Line up the document</div>
+  </div>
+  <div class="cam-tools">
+    <button class="shutter" id="camShutter" title="Capture"></button>
+  </div>
+</section>
+
 <input type="file" accept="image/*" capture="environment" id="camIn" hidden>
 <input type="file" accept="image/*" multiple id="galIn" hidden>
 
@@ -272,7 +312,7 @@ let toastT;
 function toast(msg, err){ const t=$("#toast"); t.textContent=msg; t.classList.toggle("err",!!err); t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2400); }
 
 /* ---------------- capture ---------------- */
-$("#camBtn").onclick = () => $("#camIn").click();
+$("#camBtn").onclick = () => openCamera();
 $("#galBtn").onclick = () => $("#galIn").click();
 $("#camIn").onchange = e => { const f=e.target.files[0]; e.target.value=""; if(f) openFromFile(f); };
 $("#galIn").onchange = e => {
@@ -372,6 +412,91 @@ function detectDocCorners(canvas){
   }catch(e){ return null; }
 }
 
+/* ---------------- live camera (auto-identify) ---------------- */
+let camStream=null, camDetectTimer=null, camLastCorners=null, camLastVW=0, camLastVH=0;
+
+function openCamera(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ $("#camIn").click(); return; }
+  navigator.mediaDevices.getUserMedia({
+    video:{ facingMode:{ideal:"environment"}, width:{ideal:1920}, height:{ideal:1080} }, audio:false
+  }).then(stream=>{
+    camStream = stream;
+    const v=$("#camVideo"); v.srcObject=stream;
+    $("#liveCamView").classList.add("show");
+    const start=()=>{ startCamDetectLoop(); };
+    if(v.readyState>=2) start(); else v.onloadedmetadata=start;
+  }).catch(err=>{ console.error(err); $("#camIn").click(); });
+}
+
+function stopLiveCam(){
+  if(camDetectTimer){ clearInterval(camDetectTimer); camDetectTimer=null; }
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  $("#liveCamView").classList.remove("show");
+  $("#camPoly").setAttribute("points","");
+  $("#camHint").classList.remove("show");
+}
+
+function startCamDetectLoop(){
+  const v=$("#camVideo");
+  const detCanvas=document.createElement("canvas");
+  let misses=0;
+  camDetectTimer=setInterval(()=>{
+    if(!v.videoWidth) return;
+    camLastVW=v.videoWidth; camLastVH=v.videoHeight;
+    const dw=360, dh=Math.max(1,Math.round(camLastVH*dw/camLastVW));
+    detCanvas.width=dw; detCanvas.height=dh;
+    detCanvas.getContext("2d").drawImage(v,0,0,dw,dh);
+    const corners = detectDocCorners(detCanvas);
+    if(corners){ camLastCorners=corners; misses=0; } else { misses++; if(misses>2) camLastCorners=null; }
+    drawCamOverlay(camLastCorners);
+  }, 220);
+}
+
+function drawCamOverlay(corners){
+  const poly=$("#camPoly"), hint=$("#camHint"), svg=$("#camSvg");
+  const stage=$("#camStage").getBoundingClientRect();
+  svg.setAttribute("width", stage.width); svg.setAttribute("height", stage.height);
+  if(!corners || !camLastVW){ poly.setAttribute("points",""); hint.classList.add("show"); return; }
+  hint.classList.remove("show");
+  const scale=Math.max(stage.width/camLastVW, stage.height/camLastVH);
+  const dispW=camLastVW*scale, dispH=camLastVH*scale;
+  const offx=(stage.width-dispW)/2, offy=(stage.height-dispH)/2;
+  const dw=360, dh=Math.max(1,Math.round(camLastVH*dw/camLastVW));
+  const sx=camLastVW/dw, sy=camLastVH/dh;
+  const pts=corners.map(p=>(offx+p.x*sx*scale)+","+(offy+p.y*sy*scale)).join(" ");
+  poly.setAttribute("points", pts);
+}
+
+$("#camCancel").onclick = stopLiveCam;
+$("#camShutter").onclick = () => {
+  const v=$("#camVideo");
+  if(!v.videoWidth) return;
+  const MAXS=2200;
+  let sw=v.videoWidth, sh=v.videoHeight, sc=Math.min(1, MAXS/Math.max(sw,sh));
+  const c=document.createElement("canvas"); c.width=Math.round(sw*sc); c.height=Math.round(sh*sc);
+  c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+  const src=c.toDataURL("image/jpeg",0.92);
+  const inset=0.06;
+  const fallback=[
+    {x:c.width*inset,y:c.height*inset},{x:c.width*(1-inset),y:c.height*inset},
+    {x:c.width*(1-inset),y:c.height*(1-inset)},{x:c.width*inset,y:c.height*(1-inset)}
+  ];
+  let corners=fallback;
+  if(camLastCorners && camLastVW){
+    const dw=360, dh=Math.max(1,Math.round(camLastVH*dw/camLastVW));
+    const sx=c.width/dw, sy=c.height/dh;
+    corners = camLastCorners.map(p=>({x:p.x*sx, y:p.y*sy}));
+  }
+  autoCorners=corners; editIndex=-1;
+  stopLiveCam();
+  openCrop(src, corners.map(p=>({x:p.x,y:p.y})), "auto");
+  // refine against the full-resolution capture in the background
+  setTimeout(()=>{
+    const detected=detectDocCorners(c);
+    if(detected && editIndex===-1){ autoCorners=detected; layoutCrop(detected.map(p=>({x:p.x,y:p.y}))); }
+  },20);
+};
+
 /* ---------------- crop editor ---------------- */
 const cropImg = new Image();
 let dispScale=1, dispCorners=[], curMode="auto";
@@ -450,7 +575,7 @@ $("#cropReset").onclick = () => {
   layoutCrop(def);
 };
 $("#cropCancel").onclick = () => { $("#cropView").classList.remove("show"); queue=[]; };
-$("#cropRetake").onclick = () => { $("#cropView").classList.remove("show"); $("#camIn").click(); };
+$("#cropRetake").onclick = () => { $("#cropView").classList.remove("show"); openCamera(); };
 
 $("#modes").addEventListener("click", e=>{
   const b=e.target.closest(".mode"); if(!b) return;
