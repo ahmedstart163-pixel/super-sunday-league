@@ -2087,19 +2087,23 @@ function startResize(e,a,corner){
     if(mN) nh_=(oy+oh)-p.y; else if(mS) nh_=p.y-oy;
     nw_=Math.max(MINW,nw_); nh_=Math.max(MINH,nh_);
 
-    if(keepRatio && isCorner){            // corners keep the signature's proportions
-      const s=Math.max(nw_/ow, nh_/oh);
+    if(keepRatio){                        // every handle keeps the signature's proportions — not just corners
+      const horiz=mW||mE, vert=mN||mS;
+      const s = (horiz&&vert) ? Math.max(nw_/ow, nh_/oh) : horiz ? nw_/ow : nh_/oh;
       nw_=ow*s; nh_=oh*s;
     }
     a.w=nw_; a.h=nh_;
-    a.x = mW ? (ox+ow)-nw_ : ox;          // anchor the opposite edge
-    a.y = mN ? (oy+oh)-nh_ : oy;
+    // anchor the opposite edge when that axis was dragged directly; when a side handle
+    // scales the *other* axis as a side-effect of keeping ratio, keep it centered instead
+    a.x = mW ? (ox+ow)-nw_ : (keepRatio && !mW && !mE ? ox+(ow-nw_)/2 : ox);
+    a.y = mN ? (oy+oh)-nh_ : (keepRatio && !mN && !mS ? oy+(oh-nh_)/2 : oy);
     renderAnno(a);
   };
   const up=()=>{
     window.removeEventListener("pointermove",move);
     window.removeEventListener("pointerup",up);
     window.removeEventListener("pointercancel",up);
+    if(a.type==="sign") saveLastSignW(a.w);
     snapshot();
   };
   window.addEventListener("pointermove",move);
@@ -2178,14 +2182,22 @@ $("#imgInput").onchange=e=>{
   r.onload=()=>{ pendingImg={src:r.result,type:f.type}; toast("Click on a page to place the image."); };
   r.readAsDataURL(f);
 };
+/* remember the width the user last resized a signature to, so the next placement matches it */
+const SIGN_SIZE_KEY="pdfedit_last_sign_w";
+function loadLastSignW(){ try{ const v=parseFloat(localStorage.getItem(SIGN_SIZE_KEY)); return (v>0)?v:null; }catch(_){ return null; } }
+function saveLastSignW(w){ try{ localStorage.setItem(SIGN_SIZE_KEY, String(Math.round(w))); }catch(_){} }
+
 function placePending(rec,start,kind){
   const obj = kind==="image"? pendingImg : pendingSign;
   const src = obj.src;
   const mime = kind==="image"? obj.type : obj.mime;
   const im=new Image();
   im.onload=()=>{
-    const maxW=260; let w=im.width, h=im.height;
-    if(w>maxW){ h=h*maxW/w; w=maxW; }
+    let maxW=260;
+    const lastW = kind==="sign" ? loadLastSignW() : null;
+    if(lastW) maxW=lastW;
+    let w=im.width, h=im.height;
+    if(w>maxW || (kind==="sign" && lastW)){ h=h*maxW/w; w=maxW; }
     const a=makeAnno({type:kind,page:rec.index,x:start.x,y:start.y,w,h, src, mime});
     annos.push(a); renderAnno(a); select(a); snapshot();
     if(kind==="image") pendingImg=null;
