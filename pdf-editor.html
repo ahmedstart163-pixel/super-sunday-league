@@ -255,6 +255,12 @@
   .anno.rect{border:2px solid #c0492f; background:transparent; cursor:move}
   .anno.highlight{background:rgba(255,221,0,.4); cursor:move; mix-blend-mode:multiply}
   .anno.whiteout{background:#fff; cursor:move}
+  .anno.strike{background:transparent; cursor:move}
+  .anno.strike::after{content:""; position:absolute; left:0; right:0; top:50%; height:2px; background:var(--anno-color,#1a1a1a); transform:translateY(-50%); pointer-events:none}
+  .anno.underline{background:transparent; cursor:move}
+  .anno.underline::after{content:""; position:absolute; left:0; right:0; bottom:2px; height:2px; background:var(--anno-color,#1a1a1a); pointer-events:none}
+  .anno.note{background:var(--anno-color,#ffd400); border-radius:4px 4px 4px 0; cursor:move; box-shadow:0 1px 3px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center}
+  .anno.note svg{width:60%; height:60%; stroke:#3a2f00; fill:none; stroke-width:2; pointer-events:none}
   /* live drag preview — always visible so you can size whiteout/box/highlight precisely */
   .anno.ghost{outline:2px dashed #2f6fed !important; outline-offset:0 !important;
     background:rgba(47,111,237,.14) !important; mix-blend-mode:normal !important; pointer-events:none; z-index:50}
@@ -544,13 +550,17 @@
   <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
   <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
   <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic">▤</span><span class="lbl">&nbsp;Reader</span></button>
+  <button class="tbtn" id="infoBtn" disabled title="Document info — title, author, subject, keywords"><span class="ic">ⓘ</span><span class="lbl">&nbsp;Info</span></button>
   <div class="toolgroup" style="border-color:rgba(255,255,255,.12); background:transparent; padding:0">
   <button class="tbtn" id="snipBtn" title="Snip — drag to capture a screenshot" style="border-radius:6px 0 0 6px; border-right:0"><span class="ic">✂</span><span class="lbl">&nbsp;Snip</span></button>
   <button class="tbtn" id="snipCaretBtn" title="Snip mode and delay" style="border-radius:0 6px 6px 0; padding:7px 9px">▾</button>
   </div>
   <input type="file" id="readerPick" accept="application/pdf" style="display:none">
   <button class="tbtn" id="openBtn">Open<span class="lbl">&nbsp;PDF</span></button>
-  <button class="tbtn primary" id="downloadBtn" disabled>Download</button>
+  <div class="toolgroup" style="border-color:rgba(255,255,255,.12); background:transparent; padding:0">
+  <button class="tbtn primary" id="downloadBtn" disabled style="border-radius:6px 0 0 6px">Download</button>
+  <button class="tbtn primary" id="downloadCaret" disabled title="Download options" style="border-radius:0 6px 6px 0; padding:7px 9px; border-left:1px solid rgba(255,255,255,.25)">▾</button>
+  </div>
 </div>
 
 <nav class="editnav" id="editNav" style="display:none">
@@ -585,12 +595,16 @@
 <div class="menu hide" id="textMenu">
   <button class="mitem" data-act="add-text"><span class="mi">IA</span> Add text</button>
   <button class="mitem" data-act="edit-text"><svg class="gi" viewBox="0 0 24 24"><path d="M4 7h8M4 12h6"/><path d="M14 15l5-5 3 3-5 5-3.4.7z"/></svg> Edit existing text</button>
+  <button class="mitem" data-act="find-replace"><svg class="gi" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="M15 15l5 5"/></svg> Find &amp; replace</button>
 </div>
 
 <!-- Annotate dropdown -->
 <div class="menu hide" id="annotateMenu">
   <button class="mitem" data-act="highlight"><svg class="gi" viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg> Highlight</button>
+  <button class="mitem" data-act="strike"><svg class="gi" viewBox="0 0 24 24"><path d="M5 12h14M8 7c0-1.7 1.8-3 4-3s4 1.3 4 3M8 17c0 1.7 1.8 3 4 3s4-1.3 4-3"/></svg> Strikethrough</button>
+  <button class="mitem" data-act="underline"><svg class="gi" viewBox="0 0 24 24"><path d="M6 4v7a6 6 0 0012 0V4M4 20h16"/></svg> Underline</button>
   <button class="mitem" data-act="draw"><svg class="gi" viewBox="0 0 24 24"><path d="M3 21l4-1 11-11-3-3L4 17z"/><path d="M14 6l3 3"/></svg> Draw</button>
+  <button class="mitem" data-act="note"><svg class="gi" viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4z"/></svg> Sticky note</button>
 </div>
 
 <!-- Shapes dropdown -->
@@ -753,6 +767,48 @@
   </div>
 </div>
 
+<!-- Document Info modal -->
+<div class="modal-bg hide" id="metaModal">
+  <div class="modal" style="width:min(440px,94vw)">
+    <header class="head"><span>Document info</span><button class="x" id="metaClose">×</button></header>
+    <div class="body">
+      <label class="fp-row fp-col"><span>Title</span><input type="text" id="metaTitle" placeholder="Document title"></label>
+      <label class="fp-row fp-col"><span>Author</span><input type="text" id="metaAuthor" placeholder="Author name"></label>
+      <label class="fp-row fp-col"><span>Subject</span><input type="text" id="metaSubject" placeholder="Subject"></label>
+      <label class="fp-row fp-col"><span>Keywords</span><input type="text" id="metaKeywords" placeholder="Comma-separated keywords"></label>
+    </div>
+    <footer><button class="lbtn" id="metaClose2">Cancel</button><div class="row"><button class="lbtn gold" id="metaSave">Save</button></div></footer>
+  </div>
+</div>
+
+<!-- Find & Replace modal -->
+<div class="modal-bg hide" id="frModal">
+  <div class="modal" style="width:min(420px,94vw)">
+    <header class="head"><span>Find &amp; replace</span><button class="x" id="frClose">×</button></header>
+    <div class="body">
+      <label class="fp-row fp-col"><span>Find</span><input type="text" id="frFind" placeholder="Text to find"></label>
+      <label class="fp-row fp-col"><span>Replace with</span><input type="text" id="frReplace" placeholder="Replacement text"></label>
+      <p id="frStatus" style="margin:10px 0 0;color:var(--muted);font-size:12.5px;min-height:16px"></p>
+    </div>
+    <footer><button class="lbtn" id="frClose2">Cancel</button><div class="row"><button class="lbtn gold" id="frRun">Replace all</button></div></footer>
+  </div>
+</div>
+
+<!-- Download options -->
+<div class="menu hide" id="downloadMenu" style="min-width:260px">
+  <label class="mitem" style="gap:9px;cursor:pointer">
+    <input type="checkbox" id="grayscaleChk" style="width:16px;height:16px;accent-color:var(--gold)">
+    <span>Grayscale (flattens pages to images)</span>
+  </label>
+</div>
+
+<!-- Sticky note editor popover -->
+<div class="fldprops hide" id="notePop">
+  <div class="fp-title">Comment</div>
+  <textarea id="noteText" rows="4" style="width:100%;border:1px solid #dfe7f2;border-radius:7px;padding:6px 8px;font:inherit;color:#16213b;box-sizing:border-box;resize:vertical" placeholder="Type a comment…"></textarea>
+  <button class="fp-del" id="noteDel" style="margin-top:10px">Delete comment</button>
+</div>
+
 <!-- Organize pages — iLovePDF-style layout -->
 <div class="orgview hide" id="orgView">
   <div class="org-main">
@@ -850,7 +906,7 @@
 <script>
 (function(){
 "use strict";
-const { PDFDocument, rgb, degrees, StandardFonts, PDFName, PDFString } = PDFLib;
+const { PDFDocument, rgb, degrees, StandardFonts, PDFName, PDFString, PDFArray } = PDFLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 const BASE = 1.5;            // render scale (px per pt)
@@ -870,6 +926,8 @@ let selected = null;
 let history = []; let hIndex = -1;
 let pendingSign = null;      // dataURL waiting to be placed
 let docDefaultFont = "courier"; // detected from the open document; falls back to Courier
+let docMeta = {title:"",author:"",subject:"",keywords:""}; // Title/Author/Subject/Keywords, applied on export
+let exportGrayscale = false;    // if true, Download flattens each page to a grayscale image
 
 const $ = s => document.querySelector(s);
 const el = (t,c)=>{const e=document.createElement(t); if(c)e.className=c; return e;};
@@ -915,6 +973,7 @@ function goHome(){
   if(pdfDoc && !confirm("Go back to the start screen? Anything you haven't downloaded will be lost.")) return;
   try{ if(pageObserver){ pageObserver.disconnect(); pageObserver=null; } }catch(e){}
   pdfDoc=null; originalBytes=null; pages=[]; annos=[]; selected=null; fieldMeta={}; history=[]; hIndex=-1; nextId=1; docDefaultFont="courier";
+  docMeta={title:"",author:"",subject:"",keywords:""}; exportGrayscale=false; if($("#grayscaleChk")) $("#grayscaleChk").checked=false;
   const ph=$("#pages"); if(ph) ph.innerHTML="";
   { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
   $("#editNav").style.display="none";
@@ -923,6 +982,8 @@ function goHome(){
   $("#pagesBtn").classList.add("hide");
   setSidebarOpen(false);
   $("#downloadBtn").disabled=true;
+  $("#downloadCaret").disabled=true;
+  $("#infoBtn").disabled=true;
   $("#organizeTop").disabled=true;
   $("#stage").style.display="none";
   $("#empty").style.display="";
@@ -985,8 +1046,11 @@ async function loadDoc(bytes, name){
     $("#zoomBox").style.display="flex";
     $("#pagesBtn").classList.remove("hide");
     $("#downloadBtn").disabled=false;
+    $("#downloadCaret").disabled=false;
+    $("#infoBtn").disabled=false;
     $("#organizeTop").disabled=false;
     { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
+    await loadDocMeta();
     await renderAll();
     await detectFields();
     await applyDocFontDefaults();
@@ -1246,7 +1310,7 @@ function deletePage(i){
 /* ---------------- tools ---------------- */
 const tools=[...document.querySelectorAll(".tool[data-tool]")];
 tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
-const CREATING=["text","highlight","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
+const CREATING=["text","highlight","strike","underline","note","whiteout","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t, opts){
@@ -1255,7 +1319,7 @@ function setTool(t, opts){
   $("#formsBtn").classList.toggle("active", t==="stamp"||t.startsWith("field-"));
   if($("#signBtn")) $("#signBtn").classList.toggle("active", t==="sign");
   if($("#textBtn")) $("#textBtn").classList.toggle("active", t==="text"||t==="edittext");
-  if($("#annotateBtn")) $("#annotateBtn").classList.toggle("active", t==="highlight"||t==="draw");
+  if($("#annotateBtn")) $("#annotateBtn").classList.toggle("active", t==="highlight"||t==="draw"||t==="strike"||t==="underline"||t==="note");
   if($("#shapesBtn")) $("#shapesBtn").classList.toggle("active", t==="rect");
   pages.forEach(p=>{
     const creating = CREATING.includes(t);
@@ -1303,10 +1367,14 @@ function wireDropdown(btnId, menuId, onAct){
 wireDropdown("textBtn","textMenu", act=>{
   if(act==="add-text") setTool("text");
   else if(act==="edit-text") setTool("edittext");
+  else if(act==="find-replace") openFindReplace();
 });
 wireDropdown("annotateBtn","annotateMenu", act=>{
   if(act==="highlight") setTool("highlight");
   else if(act==="draw") setTool("draw");
+  else if(act==="strike"){ setTool("strike"); toast("Drag over text to strike it through."); }
+  else if(act==="underline"){ setTool("underline"); toast("Drag under text to underline it."); }
+  else if(act==="note"){ setTool("note"); toast("Click on the page to drop a comment."); }
 });
 wireDropdown("shapesBtn","shapesMenu", act=>{
   if(act==="rect") setTool("rect");
@@ -1383,19 +1451,100 @@ function openPublish(){
 $("#pubClose").onclick=$("#pubCancel").onclick=()=>$("#pubModal").classList.add("hide");
 $("#pubDownload").onclick=()=>{ $("#pubModal").classList.add("hide"); exportPdf(); };
 
+/* ---- Document info: read the source PDF's metadata, let the user edit it ---- */
+async function loadDocMeta(){
+  docMeta={title:"",author:"",subject:"",keywords:""};
+  try{
+    const m=await pdfDoc.getMetadata();
+    const info=(m&&m.info)||{};
+    docMeta.title=info.Title||""; docMeta.author=info.Author||"";
+    docMeta.subject=info.Subject||""; docMeta.keywords=info.Keywords||"";
+  }catch(_){ }
+}
+$("#infoBtn").onclick=()=>{
+  if(!originalBytes) return;
+  $("#metaTitle").value=docMeta.title; $("#metaAuthor").value=docMeta.author;
+  $("#metaSubject").value=docMeta.subject; $("#metaKeywords").value=docMeta.keywords;
+  $("#metaModal").classList.remove("hide");
+};
+$("#metaClose").onclick=$("#metaClose2").onclick=()=>$("#metaModal").classList.add("hide");
+$("#metaSave").onclick=()=>{
+  docMeta.title=$("#metaTitle").value.trim(); docMeta.author=$("#metaAuthor").value.trim();
+  docMeta.subject=$("#metaSubject").value.trim(); docMeta.keywords=$("#metaKeywords").value.trim();
+  $("#metaModal").classList.add("hide");
+  toast("Document info saved — applied when you download.");
+};
+
+/* ---- Download options: grayscale toggle ---- */
+const downloadMenu=$("#downloadMenu"), downloadCaret=$("#downloadCaret");
+function showDownloadMenu(){
+  const r=downloadCaret.getBoundingClientRect();
+  downloadMenu.style.left=Math.max(8,Math.min(r.left,innerWidth-270))+"px";
+  downloadMenu.style.top=(r.bottom+6)+"px";
+  downloadMenu.classList.remove("hide");
+}
+downloadCaret.onclick=e=>{ e.stopPropagation(); downloadMenu.classList.contains("hide")?showDownloadMenu():downloadMenu.classList.add("hide"); };
+document.addEventListener("pointerdown",e=>{ if(!downloadMenu.contains(e.target) && e.target!==downloadCaret) downloadMenu.classList.add("hide"); });
+$("#grayscaleChk").onchange=()=>{ exportGrayscale=$("#grayscaleChk").checked; };
+
+/* ---- Find & replace: reuses the same line-detection used by "Edit existing text" ---- */
+function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function openFindReplace(){
+  if(!originalBytes){ toast("Open a PDF first.",true); return; }
+  $("#frFind").value=""; $("#frReplace").value=""; $("#frStatus").textContent="";
+  $("#frModal").classList.remove("hide");
+  setTimeout(()=>$("#frFind").focus(),20);
+}
+$("#frClose").onclick=$("#frClose2").onclick=()=>$("#frModal").classList.add("hide");
+$("#frRun").onclick=async()=>{
+  const find=$("#frFind").value, repl=$("#frReplace").value;
+  if(!find){ $("#frStatus").textContent="Enter text to find."; return; }
+  $("#frStatus").textContent="Searching…";
+  busy(true);
+  let count=0;
+  try{
+    const re=new RegExp(escapeRegExp(find),"gi");
+    for(const rec of pages){
+      if(rec.deleted) continue;
+      let lines;
+      try{ lines=await computeLines(rec); }catch(_){ continue; }
+      for(const hit of lines){
+        if(!hit.text || !re.test(hit.text)) { re.lastIndex=0; continue; }
+        re.lastIndex=0;
+        const newText=hit.text.replace(re, repl);
+        if(newText===hit.text) continue;
+        const col=sampleLineColors(rec, hit) || {text:"#1a1a1a", bg:"#ffffff"};
+        const f=hit.font || {key:"helv",bold:false,italic:false};
+        const px=2, py=2;
+        const wo=makeAnno({type:"whiteout",page:rec.index,
+          x:hit.left-px, y:hit.top-py, w:(hit.right-hit.left)+px*2, h:hit.height+py*2, color:col.bg});
+        annos.push(wo); renderAnno(wo);
+        const tx=makeAnno({type:"text",page:rec.index, x:hit.left, y:hit.top-1,
+          w:Math.max(40,(hit.right-hit.left)+10), h:0, fontSize:Math.max(8,Math.round(hit.height)),
+          color:col.text, font:f.key, bold:!!f.bold, italic:!!f.italic, text:newText});
+        annos.push(tx); renderAnno(tx);
+        count++;
+      }
+    }
+  }catch(err){ console.error(err); }
+  busy(false);
+  if(count) snapshot();
+  $("#frStatus").textContent = count ? `Replaced ${count} match${count===1?"":"es"}.` : "No matches found.";
+};
+
 /* contextual controls */
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
-  const colorable = ["text","rect","stamp","draw"];
-  const showColor = ["text","highlight","rect","draw","stamp"].includes(tool) || (selected && colorable.includes(selected.type));
+  const colorable = ["text","rect","stamp","draw","strike","underline"];
+  const showColor = ["text","highlight","rect","draw","stamp","strike","underline"].includes(tool) || (selected && colorable.includes(selected.type));
   const showFont  = tool==="text" || (selected && selected.type==="text");
   const showStroke= tool==="draw" || (selected && selected.type==="draw");
   $("#ctxColor").classList.toggle("hide", !showColor);
   $("#ctxFont").classList.toggle("hide", !showFont);
   $("#ctxStroke").classList.toggle("hide", !showStroke);
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
-  if(selected && ["rect","stamp","draw"].includes(selected.type)){ colorPick.value=selected.color; }
+  if(selected && ["rect","stamp","draw","strike","underline"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
   if(typeof markSwatch==="function") markSwatch();
   layout();
@@ -1415,7 +1564,7 @@ function markSwatch(){
   $("#swatches") && [...$("#swatches").children].forEach(b=> b.classList.toggle("on", b.dataset.c.toLowerCase()===cur));
 }
 function applyColor(c){
-  if(selected && ["text","rect","stamp","draw"].includes(selected.type)){ selected.color=c; renderAnno(selected); snapshot(); }
+  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=c; renderAnno(selected); snapshot(); }
 }
 fontRange.oninput=()=>{ fontVal.textContent=fontRange.value;
   if(selected && selected.type==="text"){ selected.fontSize=+fontRange.value; renderAnno(selected); } };
@@ -1423,7 +1572,7 @@ fontRange.onchange=()=>{ if(selected&&selected.type==="text") snapshot(); };
 strokeRange.oninput=()=>{ strokeVal.textContent=strokeRange.value;
   if(selected && selected.type==="draw"){ selected.width=+strokeRange.value; renderAnno(selected); } };
 strokeRange.onchange=()=>{ if(selected&&selected.type==="draw") snapshot(); };
-colorPick.oninput=()=>{ if(selected && ["text","rect","stamp","draw"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);} };
+colorPick.oninput=()=>{ if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);} };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
 /* ---------------- coordinate mapping (no rotation) ---------------- */
@@ -1613,6 +1762,14 @@ function bindPage(rec){
       toast("Buttons added — they trigger in full PDF readers like Adobe Acrobat, not browser-based viewers.");
       return;
     }
+    if(tool==="note"){
+      e.stopPropagation();
+      const s=26;
+      const a=makeAnno({type:"note",page:rec.index,x:start.x-s/2,y:start.y-s/2,w:s,h:s,color:"#ffd400",text:""});
+      annos.push(a); renderAnno(a); select(a); setTool("select"); snapshot();
+      openNoteEditor(a);
+      return;
+    }
     // drag-to-create tools (highlight / whiteout / rect / form fields)
     rec.overlay.setPointerCapture(e.pointerId);
     let annoType=tool, extra={};
@@ -1650,7 +1807,7 @@ function bindPage(rec){
       }
       const a=makeAnno(Object.assign({type:annoType,page:rec.index,
         x:Math.min(p.x,start.x), y:Math.min(p.y,start.y), w, h,
-        color: annoType==="rect"?colorPick.value : (annoType==="whiteout"?"#ffffff":"#1f5fbf")}, extra));
+        color: (annoType==="rect"||annoType==="strike"||annoType==="underline")?colorPick.value : (annoType==="whiteout"?"#ffffff":"#1f5fbf")}, extra));
       annos.push(a); renderAnno(a); select(a); snapshot();
       if(a.type==="field" && a.fieldType==="text"){ enterFieldFill(a); toast("Type a default value, or leave it blank for others to fill. Drag the edge to move it."); }
       // Radio buttons are placed several at a time to build a group, so keep that tool active.
@@ -1782,6 +1939,10 @@ function renderAnno(a){
     }
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
+    if(a.type==="note"){
+      n.insertAdjacentHTML("afterbegin", '<svg viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4z"/></svg>');
+      n.addEventListener("dblclick",ev=>{ ev.preventDefault(); openNoteEditor(a); });
+    }
     if(a.type==="field"){
       if(a.fieldType==="text"){
         const inp=el(a.multiline?"textarea":"input","field-fill");
@@ -1812,6 +1973,8 @@ function renderAnno(a){
     n.style.width=a.w+"px"; n.style.height=a.h+"px";
     if(a.type==="rect") n.style.borderColor=a.color;
     if(a.type==="whiteout") n.style.background=a.color||"#fff";
+    if(a.type==="strike"||a.type==="underline") n.style.setProperty("--anno-color", a.color||"#1a1a1a");
+    if(a.type==="note"){ n.style.setProperty("--anno-color", a.color||"#ffd400"); n.title=a.text||"Double-click to add a comment"; }
     if(a.type==="stamp"){
       n._g.textContent = a.stamp==="dot"?"●":a.stamp==="check"?"✓":"✗";
       n.style.fontSize=(Math.min(a.w,a.h)*0.95)+"px"; n.style.color=a.color;
@@ -1952,6 +2115,30 @@ function positionFieldProps(){
   let top=Math.max(64, Math.min(r.top, innerHeight-ph-8));
   fldProps.style.left=left+"px"; fldProps.style.top=top+"px";
 }
+
+/* ---- sticky-note comment popover ---- */
+const notePop=$("#notePop"), noteText=$("#noteText");
+let editingNote=null;
+function openNoteEditor(a){
+  editingNote=a;
+  noteText.value=a.text||"";
+  positionNotePop();
+  notePop.classList.remove("hide");
+  setTimeout(()=>noteText.focus(),20);
+}
+function positionNotePop(){
+  if(!editingNote || !editingNote._node) return;
+  const r=editingNote._node.getBoundingClientRect();
+  const pw=260, ph=notePop.offsetHeight||160;
+  let left=r.right+10; if(left+pw>innerWidth-8) left=Math.max(8,r.left-pw-10);
+  let top=Math.max(64, Math.min(r.top, innerHeight-ph-8));
+  notePop.style.left=left+"px"; notePop.style.top=top+"px";
+}
+function closeNoteEditor(){ notePop.classList.add("hide"); editingNote=null; }
+noteText.addEventListener("input",()=>{ if(editingNote){ editingNote.text=noteText.value; if(editingNote._node) editingNote._node.title=editingNote.text||"Double-click to add a comment"; } });
+noteText.addEventListener("blur",()=>{ if(editingNote){ snapshot(); } closeNoteEditor(); });
+$("#noteDel").onclick=()=>{ if(editingNote){ removeAnno(editingNote); } closeNoteEditor(); };
+window.addEventListener("resize",()=>{ if(!notePop.classList.contains("hide")) positionNotePop(); });
 FP.name.oninput=()=>{ if(selected&&selected.type==="field"){ selected.name=FP.name.value; } };
 FP.group.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.group=FP.group.value||"choice1"; curRadioGroup=selected.group; renderAnno(selected); } };
 FP.opt.oninput=()=>{ if(selected&&selected.fieldType==="radio"){ selected.optval=FP.opt.value||("opt"+selected.id); } };
@@ -2509,6 +2696,14 @@ async function buildBytes(){
   if(selected && selected.type==="text" && selected._edit) selected._edit.blur();
   const doc = await PDFDocument.load(originalBytes);
     if(window.fontkit){ try{ doc.registerFontkit(window.fontkit); }catch(_){} }
+    // apply document info (title/author/subject/keywords) if the user set any
+    try{
+      if(docMeta.title) doc.setTitle(docMeta.title);
+      if(docMeta.author) doc.setAuthor(docMeta.author);
+      if(docMeta.subject) doc.setSubject(docMeta.subject);
+      if(docMeta.keywords) doc.setKeywords(docMeta.keywords.split(",").map(s=>s.trim()).filter(Boolean));
+      doc.setModificationDate(new Date());
+    }catch(_){}
     // write values into the PDF's own fillable fields (stays an interactive form)
     if(Object.keys(fieldMeta).length){
       try{
@@ -2554,7 +2749,7 @@ async function buildBytes(){
       const H = page.getHeight();
       const pageAnnos = annos.filter(a=>a.page===i);
       // draw order: backgrounds first, marks/text on top
-      const order = {whiteout:0,highlight:1,rect:2,field:3,image:3,sign:3,draw:4,stamp:5,text:5};
+      const order = {whiteout:0,highlight:1,strike:1,underline:1,rect:2,field:3,image:3,sign:3,draw:4,stamp:5,note:5,text:5};
       pageAnnos.sort((a,b)=>(order[a.type]||3)-(order[b.type]||3));
 
       for(const a of pageAnnos){
@@ -2563,6 +2758,35 @@ async function buildBytes(){
         }
         else if(a.type==="highlight"){
           page.drawRectangle({x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE,color:rgb(1,.87,0),opacity:.4});
+        }
+        else if(a.type==="strike"){
+          const col=hexToRgb(a.color||"#1a1a1a");
+          const midY = H-(a.y+a.h/2)/BASE;
+          page.drawLine({start:{x:a.x/BASE,y:midY},end:{x:(a.x+a.w)/BASE,y:midY},thickness:1.4,color:col});
+        }
+        else if(a.type==="underline"){
+          const col=hexToRgb(a.color||"#1a1a1a");
+          const botY = H-(a.y+a.h-2)/BASE;
+          page.drawLine({start:{x:a.x/BASE,y:botY},end:{x:(a.x+a.w)/BASE,y:botY},thickness:1.4,color:col});
+        }
+        else if(a.type==="note"){
+          try{
+            const nx=a.x/BASE, ny=H-(a.y+a.h)/BASE, nw=a.w/BASE, nh=a.h/BASE;
+            const c=hexToRgb(a.color||"#ffd400");
+            const noteDict=doc.context.obj({
+              Type: PDFName.of("Annot"), Subtype: PDFName.of("Text"),
+              Rect: [nx, ny, nx+nw, ny+nh],
+              Contents: PDFString.of(a.text||""),
+              Name: PDFName.of("Comment"),
+              C: [c.red, c.green, c.blue],
+              Open: false,
+            });
+            const noteRef=doc.context.register(noteDict);
+            const annotsKey=PDFName.of("Annots");
+            let arr=page.node.lookupMaybe(annotsKey, PDFArray);
+            if(!arr){ arr=doc.context.obj([]); page.node.set(annotsKey, arr); }
+            arr.push(noteRef);
+          }catch(err){ console.warn("note export", err); }
         }
         else if(a.type==="rect"){
           page.drawRectangle({x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE,
@@ -2672,18 +2896,58 @@ async function buildBytes(){
     return await doc.save();
 }
 
+/* Grayscale export: bakes all edits normally, then rasterizes each page to a
+   desaturated image. Note this flattens interactive form fields into pixels —
+   there's no practical way to rewrite arbitrary PDF content-stream colours to
+   grayscale without a full PDF interpreter, so this is the same trade-off most
+   in-browser tools make for a "grayscale" export. */
+async function buildGrayscaleBytes(){
+  const baked = await buildBytes();
+  const src = await PDFDocument.load(baked);
+  const out = await PDFDocument.create();
+  const srcPdfjs = await pdfjsLib.getDocument({ data: baked.slice() }).promise;
+  const n = src.getPageCount();
+  for(let i=0;i<n;i++){
+    const page = await srcPdfjs.getPage(i+1);
+    const vp = page.getViewport({scale:2});
+    const canvas = document.createElement("canvas");
+    canvas.width=Math.round(vp.width); canvas.height=Math.round(vp.height);
+    const ctx=canvas.getContext("2d");
+    await page.render({canvasContext:ctx, viewport:vp}).promise;
+    const id=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const d=id.data;
+    for(let p=0;p<d.length;p+=4){
+      const g=0.299*d[p]+0.587*d[p+1]+0.114*d[p+2];
+      d[p]=d[p+1]=d[p+2]=g;
+    }
+    ctx.putImageData(id,0,0);
+    const jpegBytes = await new Promise(res=>canvas.toBlob(b=>b.arrayBuffer().then(res),"image/jpeg",0.85));
+    const img = await out.embedJpg(jpegBytes);
+    const size = src.getPage(i).getSize();
+    const outPage = out.addPage([size.width, size.height]);
+    outPage.drawImage(img,{x:0,y:0,width:size.width,height:size.height});
+  }
+  try{
+    if(docMeta.title) out.setTitle(docMeta.title);
+    if(docMeta.author) out.setAuthor(docMeta.author);
+    if(docMeta.subject) out.setSubject(docMeta.subject);
+    if(docMeta.keywords) out.setKeywords(docMeta.keywords.split(",").map(s=>s.trim()).filter(Boolean));
+  }catch(_){}
+  return await out.save();
+}
+
 async function exportPdf(){
   if(!originalBytes) return;
   busy(true);
   try{
-    const out = await buildBytes();
+    const out = exportGrayscale ? await buildGrayscaleBytes() : await buildBytes();
     const blob = new Blob([out],{type:"application/pdf"});
     const url = URL.createObjectURL(blob);
     const a=el("a"); a.href=url;
     const base=($("#filename").textContent||"document.pdf").replace(/\.pdf$/i,"");
     a.download=base+"-edited.pdf"; a.click();
     setTimeout(()=>URL.revokeObjectURL(url),4000);
-    toast("Downloaded your edited PDF.");
+    toast(exportGrayscale ? "Downloaded your grayscale PDF." : "Downloaded your edited PDF.");
   }catch(err){ console.error(err); toast("Export failed — see console for details.",true); }
   finally{ busy(false); }
 }
