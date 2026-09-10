@@ -2399,6 +2399,7 @@ const sigModal=$("#sigModal"), sigpad=$("#sigpad");
 const SIG_FONTS=["Dancing Script","Caveat","Satisfy","Pacifico","Great Vibes","Sacramento","Allura","Homemade Apple","Cedarville Cursive","Kalam"];
 const SIG_COLORS=["#1f4fd1","#2b6fd6","#1414e6","#5a6472","#3a3f47","#111111"];
 let sigMode="type", sigColor=SIG_COLORS[0], sigFont=SIG_FONTS[0], sigBuilt=false;
+let sigUploadTriggered=false;   // makes sure the OS file picker only auto-opens once per modal session
 let sctx, sigDrawing=false, sigHas=false;
 let sigUploadData=null;
 
@@ -2481,6 +2482,7 @@ function openSig(){
   ub.classList.remove("chosen");
   ub.textContent="Click to choose an image — a PNG with a transparent background works best.";
   sigUploadData=null;
+  sigUploadTriggered=false;
   sigModal.classList.remove("hide"); switchSigTab("type"); setTimeout(()=>$("#sigName").focus(),30);
 }
 
@@ -2491,6 +2493,9 @@ function switchSigTab(mode){
   Object.entries(ids).forEach(([m,id])=> $("#"+id).classList.toggle("hide", m!==mode));
   $("#sigClear").style.visibility = (mode==="draw") ? "visible" : "hidden";
   if(mode==="draw") initPad();
+  // jump straight to the OS file picker the first time this tab is opened —
+  // no need to also click the upload box
+  if(mode==="upload" && !sigUploadTriggered){ sigUploadTriggered=true; $("#sigImgInput").click(); }
 }
 document.querySelectorAll(".sigtab").forEach(t=> t.onclick=()=>switchSigTab(t.dataset.tab));
 $("#sigName").addEventListener("input",updateSigPreviews);
@@ -2509,28 +2514,32 @@ sigpad.addEventListener("pointermove",e=>{ if(!sigDrawing)return; const[x,y]=sig
 window.addEventListener("pointerup",()=>sigDrawing=false);
 $("#sigClear").onclick=()=>{ if(sctx) sctx.clearRect(0,0,sigpad.width,sigpad.height); sigHas=false; };
 
-/* upload — Original / Transparent A / Transparent B */
+/* upload — picking a file opens the version chooser; picking a version places it immediately */
 $("#sigUploadBox").onclick=()=>{ if(!$("#sigUploadBox").classList.contains("chosen")) $("#sigImgInput").click(); };
 $("#sigImgInput").onchange=e=>{ const f=e.target.files[0]; e.target.value=""; if(!f)return;
   const r=new FileReader();
-  r.onload=()=>{ const img=new Image(); img.onload=()=>buildSigVersions(img); img.onerror=()=>toast("Couldn't read that image.",true); img.src=r.result; };
+  r.onload=()=>{ const img=new Image(); img.onload=()=>showSigVersions(img); img.onerror=()=>toast("Couldn't read that image.",true); img.src=r.result; };
   r.readAsDataURL(f);
 };
-function buildSigVersions(img){
+function showSigVersions(img){
   const v=sigVariants(img);
   const box=$("#sigUploadBox"); box.classList.add("chosen");
   box.innerHTML='<div class="sig-ver-title">Choose an image version:</div><div class="sig-ver-grid"></div><button class="sig-reupload">Choose a different image</button>';
   const grid=box.querySelector(".sig-ver-grid");
-  [["Original",v.original],["Transparent A",v.a],["Transparent B",v.b]].forEach(([lbl,src],i)=>{
-    const card=el("div","sig-ver"+(i===1?" active":""));
+  [["Original",v.original],["Transparent A",v.a],["Transparent B",v.b]].forEach(([lbl,src])=>{
+    const card=el("div","sig-ver");
     const im=el("div","sig-ver-img"); const g=el("img"); g.src=src; im.appendChild(g);
     const cap=el("div","sig-ver-lbl"); cap.textContent=lbl;
     card.appendChild(im); card.appendChild(cap);
-    card.onclick=()=>{ grid.querySelectorAll(".sig-ver").forEach(x=>x.classList.remove("active")); card.classList.add("active"); sigUploadData={src,mime:"image/png"}; };
+    card.onclick=()=>placeUploadedSignature({src,mime:"image/png"});
     grid.appendChild(card);
   });
-  sigUploadData={src:v.a,mime:"image/png"}; // default to Transparent A
-  box.querySelector(".sig-reupload").onclick=()=>$("#sigImgInput").click();
+  box.querySelector(".sig-reupload").onclick=()=>{ sigUploadTriggered=true; $("#sigImgInput").click(); };
+}
+function placeUploadedSignature(r){
+  sigUploadData=r;
+  if($("#sigSaveChk") && $("#sigSaveChk").checked){ addSavedSig(r.src); }
+  pendingSign=r; closeSig(); placeSignAuto();
 }
 function sigVariants(img){
   const w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
