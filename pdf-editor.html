@@ -2426,8 +2426,13 @@ function updateSigPreviews(){
 /* saved signatures (persist on the deployed site via localStorage) */
 const SIG_STORE_KEY="pdfedit_saved_signatures";
 function loadSavedSigs(){ try{ return JSON.parse(localStorage.getItem(SIG_STORE_KEY)||"[]"); }catch(_){ return []; } }
-function saveSavedSigs(arr){ try{ localStorage.setItem(SIG_STORE_KEY, JSON.stringify(arr)); }catch(_){} }
-function addSavedSig(src){ const arr=loadSavedSigs(); arr.unshift({id:Date.now()+"_"+Math.random().toString(36).slice(2,7), src}); saveSavedSigs(arr.slice(0,12)); }
+function saveSavedSigs(arr){ try{ localStorage.setItem(SIG_STORE_KEY, JSON.stringify(arr)); return true; }catch(_){ return false; } }
+function addSavedSig(src){
+  const arr=loadSavedSigs(); arr.unshift({id:Date.now()+"_"+Math.random().toString(36).slice(2,7), src});
+  let ok=saveSavedSigs(arr.slice(0,12));
+  if(!ok && arr.length>1){ ok=saveSavedSigs(arr.slice(0,1)); } // storage may be full of old signatures — keep at least the newest
+  if(!ok) toast("Couldn't save this signature for reuse (it may be too large) — it'll still be placed on the page.",true);
+}
 function removeSavedSig(id){ saveSavedSigs(loadSavedSigs().filter(s=>s.id!==id)); }
 
 const signMenu=$("#signMenu"), signBtn=$("#signBtn");
@@ -2542,9 +2547,14 @@ function placeUploadedSignature(r){
   pendingSign=r; closeSig(); placeSignAuto();
 }
 function sigVariants(img){
-  const w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+  // cap resolution — a phone photo can be 3000-4000px, which produces multi-MB PNGs.
+  // 1000px on the long side is far more than a signature ever needs at the sizes it's placed.
+  const MAX_DIM=1000;
+  const nw=img.naturalWidth||img.width, nh=img.naturalHeight||img.height;
+  const scale=Math.min(1, MAX_DIM/Math.max(nw,nh));
+  const w=Math.max(1,Math.round(nw*scale)), h=Math.max(1,Math.round(nh*scale));
   const base=el("canvas"); base.width=w; base.height=h;
-  const bc=base.getContext("2d"); bc.drawImage(img,0,0);
+  const bc=base.getContext("2d"); bc.drawImage(img,0,0,w,h);
   const original=base.toDataURL("image/png");
   let d; try{ d=bc.getImageData(0,0,w,h).data; }catch(_){ return {original,a:original,b:original}; }
   const A=el("canvas"); A.width=w; A.height=h; const Ax=A.getContext("2d"); const ia=Ax.createImageData(w,h); const da=ia.data;
@@ -2728,6 +2738,7 @@ async function buildBytes(){
       }catch(_){}
     }
     const fontCache={};
+    const imageEmbedCache={};   // reuse the same embedded image data when a signature/image is placed more than once
     const getFont = async name => fontCache[name] || (fontCache[name] = await doc.embedFont(StandardFonts[name]));
     const embedTextFont = async (key,bold,italic)=>{
       const reg=FONT_REG[key]||FONT_REG.helv;
@@ -2802,9 +2813,13 @@ async function buildBytes(){
             borderColor:hexToRgb(a.color),borderWidth:1.4,opacity:0,borderOpacity:1});
         }
         else if(a.type==="image"||a.type==="sign"){
-          const bytes = await fetch(a.src).then(r=>r.arrayBuffer());
-          const isPng = (a.mime||"").includes("png");
-          const img = isPng ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
+          let img=imageEmbedCache[a.src];
+          if(!img){
+            const bytes = await fetch(a.src).then(r=>r.arrayBuffer());
+            const isPng = (a.mime||"").includes("png");
+            img = isPng ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
+            imageEmbedCache[a.src]=img;
+          }
           page.drawImage(img,{x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE});
         }
         else if(a.type==="draw"){
