@@ -1555,6 +1555,7 @@ const SWATCHES=["#1a1a1a","#e02424","#1f9d4d","#f5c211","#1f6fe0"]; // black, re
   const host=$("#swatches"); if(!host) return;
   SWATCHES.forEach(c=>{
     const b=el("button","sw"); b.style.background=c; b.title=c; b.dataset.c=c;
+    b.addEventListener("mousedown", e=>e.preventDefault()); // keep any active text selection intact
     b.onclick=()=>{ colorPick.value=c; applyColor(c); markSwatch(); };
     host.appendChild(b);
   });
@@ -1564,7 +1565,11 @@ function markSwatch(){
   $("#swatches") && [...$("#swatches").children].forEach(b=> b.classList.toggle("on", b.dataset.c.toLowerCase()===cur));
 }
 function applyColor(c){
-  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=c; renderAnno(selected); snapshot(); }
+  if(selected && selected.type==="text" && selected._editing && applyPartialColorLive(selected, c)){ snapshot(); return; }
+  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){
+    selected.color=c; if(selected.type==="text") selected.colorRuns=null;
+    renderAnno(selected); snapshot();
+  }
 }
 fontRange.oninput=()=>{ fontVal.textContent=fontRange.value;
   if(selected && selected.type==="text"){ selected.fontSize=+fontRange.value; renderAnno(selected); } };
@@ -1572,7 +1577,14 @@ fontRange.onchange=()=>{ if(selected&&selected.type==="text") snapshot(); };
 strokeRange.oninput=()=>{ strokeVal.textContent=strokeRange.value;
   if(selected && selected.type==="draw"){ selected.width=+strokeRange.value; renderAnno(selected); } };
 strokeRange.onchange=()=>{ if(selected&&selected.type==="draw") snapshot(); };
-colorPick.oninput=()=>{ if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);} };
+colorPick.addEventListener("mousedown", captureEditSelectionForColorPicker);
+colorPick.oninput=()=>{
+  if(selected && selected.type==="text" && selected._editing && savedTextSelection){
+    restoreEditSelectionForColorPicker();
+    if(applyPartialColorLive(selected, colorPick.value)) return;
+  }
+  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
+};
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
 /* ---------------- coordinate mapping (no rotation) ---------------- */
@@ -1584,6 +1596,94 @@ function clientToLocal(rec, cx, cy){
 /* ---------------- tap-to-edit existing text ---------------- */
 // build a cache of text lines (real positions from the PDF) for a page
 function rgbToHex(c){ const h=v=>('0'+Math.max(0,Math.min(255,Math.round(v))).toString(16)).slice(-2); return '#'+h(c[0])+h(c[1])+h(c[2]); }
+// parse either "#rrggbb" or the "rgb(r, g, b)" strings execCommand("foreColor") produces
+function cssColorToHex(c){
+  if(!c) return "#1a1a1a";
+  c=String(c).trim();
+  if(c[0]==="#"){ return c.length===4 ? ("#"+[...c.slice(1)].map(x=>x+x).join("")).toLowerCase() : c.toLowerCase(); }
+  const m=c.match(/rgba?\(([^)]+)\)/i);
+  if(m){ const p=m[1].split(",").map(s=>parseFloat(s)); return rgbToHex(p); }
+  return "#1a1a1a";
+}
+function escapeHtmlText(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+// turn a per-line array of {text,color} runs back into editable HTML
+function runsToHTML(colorRuns){
+  return colorRuns.map(line=> line.map(r=>`<span style="color:${cssColorToHex(r.color)}">${escapeHtmlText(r.text)}</span>`).join("")).join("<br>");
+}
+// walk a text annotation's live contentEditable DOM and rebuild a.text / a.colorRuns from it.
+// Called after every edit (typing or a partial colour change) so the two stay in sync.
+function captureRichText(a){
+  const ed=a._edit; if(!ed) return;
+  const lines=[[]];
+  function colorOf(textNode){
+    let el=textNode.parentElement;
+    while(el && el!==ed){
+      if(el.style && el.style.color) return el.style.color;
+      el=el.parentElement;
+    }
+    return a.color;
+  }
+  function walk(node){
+    node.childNodes.forEach(ch=>{
+      if(ch.nodeType===3){
+        if(ch.textContent.length){
+          const line=lines[lines.length-1];
+          const col=colorOf(ch);
+          const last=line[line.length-1];
+          if(last && last.color===col) last.text+=ch.textContent;
+          else line.push({text:ch.textContent, color:col});
+        }
+      } else if(ch.nodeName==="BR"){
+        lines.push([]);
+      } else if(ch.nodeName==="DIV" || ch.nodeName==="P"){
+        if(lines[lines.length-1].length>0 || lines.length>1) lines.push([]);
+        walk(ch);
+      } else {
+        walk(ch);
+      }
+    });
+  }
+  walk(ed);
+  a.text = lines.map(line=> line.map(r=>r.text).join("")).join("\n");
+  const colorsUsed=new Set();
+  lines.forEach(line=> line.forEach(r=> colorsUsed.add(cssColorToHex(r.color))));
+  if(colorsUsed.size<=1){
+    a.colorRuns=null;
+    if(colorsUsed.size===1) a.color=[...colorsUsed][0];
+  } else {
+    a.colorRuns=lines;
+  }
+}
+// applies a colour to just the selected text inside an actively-edited text box, via the
+// browser's native selection-formatting command. Returns false (does nothing) if nothing
+// inside that box is currently selected, so the caller can fall back to whole-box colouring.
+function applyPartialColorLive(a, color){
+  const sel=window.getSelection();
+  if(!(sel && sel.rangeCount && !sel.isCollapsed && a._edit && a._edit.contains(sel.anchorNode) && a._edit.contains(sel.focusNode))) return false;
+  document.execCommand("styleWithCSS", false, true);
+  document.execCommand("foreColor", false, color);
+  captureRichText(a);
+  renderAnno(a);
+  return true;
+}
+// the native <input type=color> steals focus/selection the instant it's clicked, so we save
+// the text selection just before that happens and restore it before applying the colour.
+let savedTextSelection=null;
+function captureEditSelectionForColorPicker(){
+  savedTextSelection=null;
+  if(selected && selected.type==="text" && selected._editing && selected._edit){
+    const sel=window.getSelection();
+    if(sel && sel.rangeCount && !sel.isCollapsed && selected._edit.contains(sel.anchorNode)){
+      savedTextSelection=sel.getRangeAt(0).cloneRange();
+    }
+  }
+}
+function restoreEditSelectionForColorPicker(){
+  if(!savedTextSelection) return false;
+  const sel=window.getSelection();
+  sel.removeAllRanges(); sel.addRange(savedTextSelection);
+  return true;
+}
 // guess the closest embeddable typeface + weight/slant from a PDF font name
 function mapPdfFont(raw){
   const n=(raw||"").toLowerCase();
@@ -1927,13 +2027,13 @@ function renderAnno(a){
       n.insertBefore(ed, del);
       let posRAF=null;
       ed.addEventListener("input",()=>{
-        a.text=ed.innerText;
+        captureRichText(a);
         // batch the floating-toolbar reposition to at most once per frame — calling it on
         // every keystroke forces a synchronous layout recalc and can stall the caret while typing
         if(posRAF) return;
         posRAF=requestAnimationFrame(()=>{ posRAF=null; positionTextbar(); });
       });
-      ed.addEventListener("blur",()=>{ ed.contentEditable="false"; a._editing=false; a.text=ed.innerText; snapshot(); });
+      ed.addEventListener("blur",()=>{ ed.contentEditable="false"; a._editing=false; captureRichText(a); snapshot(); });
       ed.addEventListener("focus",()=>select(a));
       ed.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
     }
@@ -1967,7 +2067,14 @@ function renderAnno(a){
     ed.style.fontWeight=a.bold?"700":"400";
     ed.style.fontStyle=a.italic?"italic":"normal";
     ed.style.fontFamily=cssFont(a.font||"helv");
-    if(document.activeElement!==ed && ed.innerText!==a.text) ed.innerText=a.text;
+    if(document.activeElement!==ed){
+      if(a.colorRuns && a.colorRuns.length){
+        const html=runsToHTML(a.colorRuns);
+        if(ed.innerHTML!==html) ed.innerHTML=html;
+      } else if(ed.innerText!==a.text){
+        ed.innerText=a.text;
+      }
+    }
     if(a===selected) positionTextbar();
   }else{
     n.style.width=a.w+"px"; n.style.height=a.h+"px";
@@ -2903,14 +3010,27 @@ async function buildBytes(){
         else if(a.type==="text"){
           const txt=(a.text||"").replace(/\r/g,"");
           if(!txt.trim()) continue;
-          const fs=a.fontSize/BASE, col=hexToRgb(a.color);
+          const fs=a.fontSize/BASE;
           const font=await embedTextFont(a.font||"helv", a.bold, a.italic);
-          const lines=txt.split("\n");
           const lineH=a.fontSize*1.18/BASE;
-          lines.forEach((ln,li)=>{
-            const baseY = H - (a.y/BASE) - fs*0.82 - li*lineH;
-            page.drawText(ln,{x:a.x/BASE,y:baseY,size:fs,font,color:col});
-          });
+          if(a.colorRuns && a.colorRuns.length){
+            a.colorRuns.forEach((runsInLine,li)=>{
+              const baseY = H - (a.y/BASE) - fs*0.82 - li*lineH;
+              let cx = a.x/BASE;
+              runsInLine.forEach(run=>{
+                if(!run.text) return;
+                page.drawText(run.text,{x:cx,y:baseY,size:fs,font,color:hexToRgb(cssColorToHex(run.color))});
+                cx += font.widthOfTextAtSize(run.text, fs);
+              });
+            });
+          } else {
+            const col=hexToRgb(a.color);
+            const lines=txt.split("\n");
+            lines.forEach((ln,li)=>{
+              const baseY = H - (a.y/BASE) - fs*0.82 - li*lineH;
+              page.drawText(ln,{x:a.x/BASE,y:baseY,size:fs,font,color:col});
+            });
+          }
         }
       }
     }
