@@ -1145,6 +1145,240 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .notes-save-btn,.pom-start{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important}
 .ai-pol.permitted{background:var(--ok-light)!important;color:var(--ok)!important;border-color:var(--ok-border)!important}
 .ai-pol.prohibited{background:var(--bad-light)!important;color:var(--bad)!important;border-color:var(--bad-border)!important}
+
+.lec-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 16px;padding:6px;background:var(--card2);border:1px solid var(--border);border-radius:12px}
+.lec-tab{border:1px solid transparent;background:transparent;color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 14px;border-radius:9px;cursor:pointer;transition:all .15s}
+.lec-tab:hover{background:#fff;color:var(--text);border-color:var(--border)}
+.lec-tab.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 6px rgba(59,110,165,.3)}
+
+/* ══════════════════ BENTO COMPANION SHELL ══════════════════ */
+:root{
+  --primary:#8E1428;--primary-glow:#B71C1C;--primary-tint:#FDF2F4;--primary-border:#FCE7EB;
+  --bg:#F4F6F9;--surface:#FFFFFF;--card:#FFFFFF;--card-subtle:#F8FAFC;--card2:#F8FAFC;--hover:#EEF2F7;
+  --border:#E2E8F0;--border-light:#EDF2F7;--border2:#CBD5E1;
+  --text:#0F172A;--text-secondary:#475569;--text2:#475569;--muted:#64748B;--muted-light:#94A3B8;--muted2:#94A3B8;
+  --c-easc:#10B981;--c-easc-light:#ECFDF5;--c-easc-border:#A7F3D0;
+  --c-engl:#E11D48;--c-engl-light:#FFF1F2;--c-engl-border:#FECDD3;
+  --c-cmpt:#4F46E5;--c-cmpt-light:#EEF2FF;--c-cmpt-border:#C7D2FE;
+  --c-math:#F59E0B;--c-math-light:#FFFBEB;--c-math-border:#FDE68A;
+  --c-anth:#8B5CF6;--c-anth-light:#F5F3FF;--c-anth-border:#DDD6FE;
+  --c-earth:var(--c-easc);--c-english:var(--c-engl);--c-comp:var(--c-cmpt);
+  --accent:var(--primary);--accent-glow:var(--primary-glow);--accent-tint:var(--primary-tint);--accent-border:var(--primary-border);
+  --maroon:var(--primary);--maroon-dark:#6E0F1F;--maroon-tint:var(--primary-tint);--maroon-border:var(--primary-border);
+  --blue:var(--primary);--blue-light:var(--primary-tint);--blue-border:var(--primary-border);--navy:var(--text);--page:var(--bg);--sidebar:var(--surface);
+  --green:#10B981;--green-light:#ECFDF5;--red:#E11D48;--red-light:#FFF1F2;--yellow:#F59E0B;--yellow-light:#FFFBEB;
+  --ok:#10B981;--ok-light:#ECFDF5;--ok-border:#A7F3D0;--bad:#DC2626;--bad-light:#FEE2E2;--bad-border:#FCA5A5;
+  --radius-sm:10px;--radius-md:14px;--radius-bento:18px;--radius-pill:999px;--radius:18px;
+  --shadow-bento:0 4px 20px -2px rgba(15,23,42,0.06),0 2px 6px -1px rgba(15,23,42,0.03);--shadow:var(--shadow-bento);--shadow-md:0 12px 28px -6px rgba(15,23,42,.12);
+  --shadow-float:0 12px 28px -4px rgba(142,20,40,0.22);--shadow-nav:0 10px 30px rgba(15,23,42,0.12);
+  --font-sans:'Plus Jakarta Sans',-apple-system,sans-serif;--font-mono:'Space Grotesk',monospace;--sans:var(--font-sans);--mono:var(--font-mono);
+}
+[data-theme="dark"]{
+  --primary:#F87171;--primary-glow:#EF4444;--primary-tint:rgba(239,68,68,0.12);--primary-border:rgba(239,68,68,0.25);
+  --bg:#0B0F19;--surface:#131C2E;--card:#172238;--card-subtle:#0F172A;--card2:#0F172A;--hover:#1E293B;
+  --border:rgba(255,255,255,0.08);--border-light:rgba(255,255,255,0.04);--border2:rgba(255,255,255,0.14);
+  --text:#F8FAFC;--text-secondary:#CBD5E1;--text2:#CBD5E1;--muted:#94A3B8;--muted-light:#64748B;--muted2:#64748B;
+  --c-easc:#34D399;--c-easc-light:rgba(16,185,129,0.15);--c-easc-border:rgba(16,185,129,0.3);
+  --c-engl:#FB7185;--c-engl-light:rgba(225,29,72,0.15);--c-engl-border:rgba(225,29,72,0.3);
+  --c-cmpt:#818CF8;--c-cmpt-light:rgba(79,70,229,0.15);--c-cmpt-border:rgba(79,70,229,0.3);
+  --c-math:#FBBF24;--c-math-light:rgba(245,158,11,0.15);--c-math-border:rgba(245,158,11,0.3);
+  --c-anth:#A78BFA;--c-anth-light:rgba(139,92,246,0.15);--c-anth-border:rgba(139,92,246,0.3);
+  --maroon-dark:#B91C1C;--ok:#34D399;--ok-light:rgba(52,211,153,.14);--ok-border:rgba(52,211,153,.35);--bad:#F87171;--bad-light:rgba(248,113,113,.14);--bad-border:rgba(248,113,113,.35);
+  --shadow-bento:0 6px 20px -2px rgba(0,0,0,0.45);--shadow:var(--shadow-bento);--shadow-nav:0 12px 35px rgba(0,0,0,0.7);
+}
+html,body{height:100%;width:100%;overflow:hidden;background:#090D16;font-family:var(--font-sans);font-size:14px;line-height:1.5;display:block}
+body{color:var(--text)}
+/* hide legacy shell */
+.topbar,.sidebar,.chips,.course-hdr,#today-strip,.dock-wrap,#api-key-banner,.layout>.sidebar{display:none!important}
+.layout{display:block!important;height:auto!important;overflow:visible!important}
+.main{padding:0!important;max-width:none!important;overflow:visible!important;height:auto!important}
+.app-container{display:flex;flex-direction:column;height:100%;max-width:440px;margin:0 auto;background:var(--bg);position:relative;box-shadow:0 0 50px rgba(0,0,0,0.35);overflow:hidden}
+
+/* header */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(255,255,255,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40;flex-shrink:0}
+[data-theme="dark"] .app-header{background:rgba(19,28,46,0.85)}
+.header-left{display:flex;align-items:center;gap:12px}
+.avatar-badge{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#8E1428,#C62828);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(142,20,40,0.3);position:relative;flex-shrink:0;cursor:pointer}
+.online-dot{position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;background:#10B981;border:2px solid var(--surface);border-radius:50%}
+.greeting-col{display:flex;flex-direction:column}
+.greeting-title{font-size:15px;font-weight:800;letter-spacing:-0.3px;color:var(--text);line-height:1.2}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px}
+.status-pulsing-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.4}}
+.header-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:all 0.15s;position:relative}
+.icon-btn:hover{color:var(--text);border-color:var(--muted-light)}
+.icon-btn:active{transform:scale(0.94)}
+.icon-btn.on{color:#10B981;border-color:#A7F3D0}
+.notif-badge{position:absolute;top:6px;right:6px;width:7px;height:7px;background:#E11D48;border-radius:50%}
+/* viewport */
+.scroll-viewport{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 16px 96px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll-viewport::-webkit-scrollbar{display:none}
+.course-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none}
+.course-scroll::-webkit-scrollbar{display:none}
+.course-chip{flex-shrink:0;padding:7px 14px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.03);font-family:var(--font-sans)}
+.course-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 3px 12px rgba(142,20,40,0.28)}
+.chip-dot{width:8px;height:8px;border-radius:50%}
+/* bento */
+.bento-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.bento-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);padding:14px 16px;box-shadow:var(--shadow-bento);position:relative;overflow:hidden;transition:transform 0.15s ease,box-shadow 0.15s ease;cursor:pointer}
+.bento-card:active{transform:scale(0.985)}
+.bento-wide{grid-column:1 / -1}
+.tile-deck{background:linear-gradient(135deg,var(--surface) 60%,var(--tc-light));border-left:4px solid var(--tc)}
+.deck-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.deck-course-tag{font-family:var(--font-mono);font-size:10.5px;font-weight:800;color:var(--tc);background:var(--tc-light);border:1px solid var(--tc-border);padding:2px 8px;border-radius:6px}
+.deck-count{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;color:var(--text);background:var(--surface);padding:3px 8px;border-radius:var(--radius-pill);border:1px solid var(--border)}
+.deck-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.2px;line-height:1.25}
+.deck-sub{font-size:11.5px;color:var(--muted);margin-top:3px;margin-bottom:12px}
+.deck-action-row{display:flex;align-items:center;justify-content:space-between}
+.review-pill-btn{background:var(--tc);color:#fff;font-size:11.5px;font-weight:800;border:none;border-radius:var(--radius-pill);padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 3px 10px color-mix(in srgb,var(--tc) 30%,transparent);transition:all 0.15s;font-family:var(--font-sans)}
+.review-pill-btn:active{transform:scale(0.95)}
+.deck-progress-bar{height:6px;width:110px;background:rgba(0,0,0,0.06);border-radius:99px;overflow:hidden}
+[data-theme="dark"] .deck-progress-bar{background:rgba(255,255,255,0.1)}
+.deck-progress-fill{height:100%;background:var(--tc);border-radius:99px}
+.tile-streak{display:flex;flex-direction:column;justify-content:space-between}
+.tile-badge-icon{width:32px;height:32px;border-radius:10px;background:var(--c-math-light);border:1px solid var(--c-math-border);color:var(--c-math);display:grid;place-items:center;font-size:18px;margin-bottom:8px}
+.streak-metric{display:flex;align-items:baseline;gap:4px}
+.streak-num{font-size:24px;font-weight:800;font-family:var(--font-mono);color:var(--text);line-height:1}
+.streak-lbl{font-size:11px;font-weight:700;color:var(--muted)}
+.streak-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.week-bars{display:flex;align-items:flex-end;gap:4px;margin-top:12px;height:36px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-stick{width:100%;background:var(--card-subtle);border-radius:4px;transition:all 0.2s}
+.bar-col.active .bar-stick{background:linear-gradient(to top,#F59E0B,#FBBF24)}
+.bar-day{font-size:8.5px;font-weight:700;color:var(--muted-light);text-transform:uppercase}
+.bar-col.today .bar-day{color:var(--text);font-weight:800}
+.tile-timer{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:space-between}
+.timer-dial{position:relative;width:76px;height:76px;margin:4px 0}
+.timer-dial svg{transform:rotate(-90deg);width:76px;height:76px}
+.timer-dial circle{fill:none;stroke-width:6.5;stroke-linecap:round}
+.timer-track{stroke:var(--border-light)}
+.timer-progress{stroke:var(--primary);stroke-dasharray:198;stroke-dashoffset:0;transition:stroke-dashoffset 0.4s}
+.dial-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dial-time{font-family:var(--font-mono);font-size:13px;font-weight:800;color:var(--text)}
+.timer-action-btn{width:100%;background:var(--card-subtle);border:1px solid var(--border);border-radius:var(--radius-pill);padding:5px 0;font-size:11px;font-weight:800;color:var(--primary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;transition:all 0.15s;font-family:var(--font-sans)}
+.timer-action-btn:active{background:var(--primary-tint)}
+/* section headers + ribbon */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
+.section-title{font-size:12px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.section-title .msi{font-size:16px;color:var(--primary)}
+.section-counter{font-size:11px;font-weight:700;color:var(--muted)}
+.ribbon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
+.ribbon-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:var(--shadow-bento);transition:transform 0.15s,box-shadow 0.15s;text-align:center}
+.ribbon-btn:active{transform:scale(0.95)}
+.ribbon-icon-box{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;position:relative}
+.ribbon-icon-box .msi{font-size:22px}
+.rb-tutor{background:linear-gradient(135deg,rgba(142,20,40,0.12),rgba(198,40,40,0.2));color:var(--primary)}
+.rb-bank{background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(251,191,36,0.22));color:var(--c-math)}
+.rb-syllabus{background:linear-gradient(135deg,rgba(79,70,229,0.12),rgba(99,102,241,0.22));color:var(--c-cmpt)}
+.rb-exam{background:linear-gradient(135deg,rgba(225,29,72,0.12),rgba(244,63,94,0.22));color:var(--c-engl)}
+.ribbon-lbl{font-size:10.5px;font-weight:700;color:var(--text-secondary);letter-spacing:-0.1px}
+/* task horizon (their today list restyled) */
+.task-horizon-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);padding:8px 14px;box-shadow:var(--shadow-bento);margin-bottom:16px}
+.task-horizon-card .tl-row,.task-horizon-card .hu-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light);background:none!important;border-left:none!important;border-radius:0!important;margin:0!important}
+.task-horizon-card .tl-row:last-child,.task-horizon-card .hu-row:last-child{border-bottom:none}
+.task-horizon-card .tl-check{width:22px;height:22px;border-radius:8px;border:2px solid var(--border);display:grid;place-items:center;cursor:pointer;flex-shrink:0;background:var(--card-subtle)}
+.task-horizon-card .tl-row.done .tl-check{background:var(--c-easc);border-color:var(--c-easc);color:#fff}
+.task-horizon-card .tl-title{font-size:12.8px;font-weight:700;color:var(--text);line-height:1.35}
+.task-horizon-card .tl-row.done .tl-title{text-decoration:line-through;color:var(--muted)}
+.task-horizon-card .tl-sub{font-size:10.5px;font-weight:700;color:var(--muted)}
+.task-horizon-card .tl-tag{font-size:9.5px;font-weight:800;letter-spacing:0.3px;padding:1px 6px;border-radius:5px;text-transform:uppercase}
+.task-horizon-card .tl-tag.hot{background:#FEE2E2!important;color:#DC2626!important;border:1px solid #FCA5A5}
+.task-horizon-card .tl-tag.warm{background:#FEF3C7!important;color:#D97706!important;border:1px solid #FDE68A}
+/* course horizon */
+.course-horizon-list{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.horizon-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-bento);cursor:pointer;position:relative;overflow:hidden;transition:all 0.15s}
+.horizon-card:active{transform:scale(0.99)}
+.horizon-stripe{position:absolute;left:0;top:0;bottom:0;width:4px}
+.horizon-badge{font-family:var(--font-mono);font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;border:1px solid transparent;flex-shrink:0}
+.horizon-info{flex:1;min-width:0}
+.horizon-title{font-size:13.5px;font-weight:800;color:var(--text);letter-spacing:-0.2px}
+.horizon-topic{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-gauge{position:relative;width:34px;height:34px;flex-shrink:0}
+.mini-gauge svg{transform:rotate(-90deg);width:34px;height:34px}
+.mini-gauge circle{fill:none;stroke-width:3.5;stroke-linecap:round}
+.gauge-pct{position:absolute;inset:0;display:grid;place-items:center;font-size:8.5px;font-weight:800;font-family:var(--font-mono);color:var(--text)}
+/* course view */
+.course-hero-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);padding:16px;box-shadow:var(--shadow-bento);margin-bottom:14px}
+.subtabs-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
+.subtabs-scroll::-webkit-scrollbar{display:none}
+.st-btn{padding:7px 14px;border-radius:10px;background:var(--card-subtle);border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;font-family:var(--font-sans);flex-shrink:0}
+.st-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+/* dock */
+.floating-nav-wrap{position:fixed;bottom:14px;left:0;right:0;max-width:440px;margin:0 auto;padding:0 16px;z-index:50;pointer-events:none}
+.floating-dock{pointer-events:auto;background:rgba(255,255,255,0.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.6);border-radius:30px;height:62px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:0 8px;box-shadow:var(--shadow-nav)}
+[data-theme="dark"] .floating-dock{background:rgba(19,28,46,0.88);border-color:rgba(255,255,255,0.1);box-shadow:0 12px 40px rgba(0,0,0,0.8)}
+.f-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;border:none;color:var(--muted);font-size:10px;font-weight:700;gap:2px;cursor:pointer;transition:all 0.15s;height:100%;font-family:var(--font-sans)}
+.f-tab .msi{font-size:22px}
+.f-tab.active{color:var(--primary)}
+.f-tab-center{position:relative;display:flex;align-items:center;justify-content:center}
+.glowing-ai-btn{width:48px;height:48px;border-radius:20px;background:linear-gradient(135deg,#8E1428 0%,#B71C1C 50%,#E11D48 100%);color:#fff;border:3px solid var(--surface);display:grid;place-items:center;box-shadow:0 6px 20px rgba(142,20,40,0.45);cursor:pointer;margin-top:-20px;transition:all 0.2s}
+.glowing-ai-btn:hover{transform:scale(1.05)}
+.glowing-ai-btn:active{transform:scale(0.95)}
+/* modals */
+.modal-mask{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-mask.active{display:flex}
+.modal-body{background:var(--surface);border-radius:var(--radius-bento);padding:20px;width:100%;max-width:360px;box-shadow:var(--shadow-nav);border:1px solid var(--border);max-height:80vh;overflow-y:auto}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.more-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border-radius:12px;background:var(--card-subtle);border:1px solid var(--border);cursor:pointer;font-size:10.5px;font-weight:700;color:var(--text-secondary);text-align:center}
+.more-item .msi{font-size:20px;color:var(--primary)}
+.more-item:active{transform:scale(.96)}
+/* tool content inside the frame */
+.tool-head{padding:2px 0 12px;margin-bottom:12px}
+.th-ico{background:var(--primary-tint);border-color:var(--primary-border)}
+.th-ico .msi{color:var(--primary)}
+.th-title{font-size:18px;font-weight:800}
+.icard,.qcard,.rsec,.dr-card,.sp-item,.assign-item,.stat,.chat-wrap,.pom-display,.assign-add,.know-intro,.fc-empty,.assign-empty{border-radius:var(--radius-bento)!important;box-shadow:var(--shadow-bento)!important;border:1px solid var(--border)!important;background:var(--surface)!important}
+.icard-label{color:var(--primary)!important}.icard-label::before{background:var(--primary)!important}
+.icard>.icard-label+.icard-title{border-bottom-color:var(--primary-border)!important}
+.ai-btn,.assign-add-btn,.pom-start,.fc-gen-btn,.chat-send,.banner-save,.chips .chip.active,.chip.active,.lec-tab.on{background:var(--primary)!important;color:#fff!important;border-color:var(--primary)!important;border-radius:12px!important;box-shadow:0 4px 12px rgba(142,20,40,.25)!important}
+.lec-tab.on{border-radius:9px!important}
+.retry-btn,.qa,.pom-mode-btn,.work-type-btn,.chat-sug,.fc-nav-btn,.chip{background:var(--card-subtle)!important;border:1px solid var(--border)!important;color:var(--text-secondary)!important;border-radius:10px!important;box-shadow:none!important}
+.badge-b{background:var(--primary-tint)!important;color:var(--primary)!important;border-color:var(--primary-border)!important}
+.opt{background:var(--card-subtle)!important;border:1px solid var(--border)!important;border-radius:12px!important}
+.two-col{grid-template-columns:1fr!important}.stat-strip{grid-template-columns:1fr 1fr!important}
+.msg.user{background:var(--primary)!important}
+.ex-timer{background:var(--primary)!important}
+.ai-pol.prohibited{background:#FEE2E2!important;color:#DC2626!important;border-color:#FCA5A5!important}
+.ai-pol.permitted{background:var(--c-easc-light)!important;color:var(--c-easc)!important;border-color:var(--c-easc-border)!important}
+.msi{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;vertical-align:middle}
+.bento-hidden{display:none!important}
+/* ══ DESKTOP LAYOUT (≥ 900px) ══ */
+@media(min-width:720px){
+  html,body{background:var(--bg)}
+  .app-container{max-width:none;width:100%;box-shadow:none}
+  .app-header{padding:12px 32px}
+  .scroll-viewport{padding:18px 32px 40px;max-width:1240px;margin:0 auto;width:100%}
+  .course-scroll{margin-bottom:14px}
+  .bento-grid{grid-template-columns:repeat(4,1fr);gap:14px}
+  .bento-wide{grid-column:span 2}
+  .tile-deck .deck-title{font-size:18px}
+  .ribbon-grid{grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px}
+  .ribbon-btn{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px}
+  .ribbon-lbl{font-size:12.5px}
+  .home-cols{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start}
+  .horizon-title{font-size:14.5px}
+  #view-course{display:grid!important;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+  #view-course[style*="display: none"]{display:none!important}
+  #detail-hero{grid-column:1/-1}
+  .subtabs-scroll{flex-direction:column;overflow:visible;position:sticky;top:0;gap:4px;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);box-shadow:var(--shadow-bento)}
+  .st-btn{text-align:left;background:transparent;border-color:transparent;padding:9px 12px;font-size:13px}
+  .st-btn:hover{background:var(--card-subtle)}
+  .st-btn.active{background:var(--primary);border-color:var(--primary)}
+  #tool-content{min-width:0}
+  .two-col{grid-template-columns:1fr 1fr!important}
+  .floating-nav-wrap{max-width:none;padding:0;left:auto;right:28px;bottom:28px;width:auto}
+  .floating-dock{display:flex;height:auto;background:transparent;border:none;box-shadow:none;padding:0;backdrop-filter:none}
+  .floating-dock .f-tab{display:none}
+  .glowing-ai-btn{width:60px;height:60px;border-radius:22px;margin-top:0;box-shadow:0 10px 28px rgba(142,20,40,.45)}
+  .glowing-ai-btn .msi{font-size:28px}
+}
+@media(min-width:720px) and (max-width:1023px){.scroll-viewport{padding:16px 22px 40px}.bento-grid{grid-template-columns:repeat(2,1fr)}.bento-wide{grid-column:1/-1}.home-cols{grid-template-columns:1fr}.ribbon-grid{max-width:none}#view-course{grid-template-columns:190px 1fr;gap:14px}.st-btn{font-size:12.5px;padding:8px 10px}}
+@media(min-width:1280px){.bento-grid{grid-template-columns:repeat(6,1fr)}.bento-wide{grid-column:span 3}.tile-streak{grid-column:span 2}}
+.task-horizon-card .tl,.task-horizon-card .hu{border:none!important;background:transparent!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+.task-horizon-card .tl-row .tl-body{flex:1;min-width:0}
+.hu-row .hu-when{font-family:var(--font-mono);font-size:10.5px;font-weight:800}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
@@ -1186,22 +1420,30 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 </div>
 
 <!-- TOPBAR -->
-<header class="topbar">
-  <div class="tb-brand">
-    <div class="tb-logo-wrap"><div class="tb-logo">M</div><span class="tb-online"></span></div>
-    <div>
-      <div class="tb-name">Mac<span>Ewan</span> <em>Pro</em></div>
-      <div class="tb-sub"><i class="pulse"></i><span id="hdr-date">Session active</span></div>
+<div class="app-container">
+<header class="app-header">
+  <div class="header-left">
+    <div class="avatar-badge" onclick="goHome()">S<div class="online-dot"></div></div>
+    <div class="greeting-col">
+      <div class="greeting-title" id="bento-greet">Good day!</div>
+      <div class="status-pill"><span class="status-pulsing-dot"></span><span id="hdr-date">Fall Term · Active</span></div>
     </div>
   </div>
-  <div class="tb-right">
-    <button class="tb-ic" id="theme-btn" title="Light / dark" onclick="toggleTheme()"><span class="msi">light_mode</span></button>
-    <button class="tb-ic" id="sync-btn" title="Sync" onclick="openSync()"><span class="msi">cloud</span></button>
-    <button class="tb-ic" title="API key" onclick="showKeySetup()"><span class="msi">key</span></button>
-    <div class="tb-avatar" title="Grades" onclick="if(!currentCourse)openCourse('earth');switchTool('grades',document.getElementById('sb-grades'))"><div>ME</div></div>
+  <div class="header-actions">
+    <button class="icon-btn" id="theme-btn" title="Toggle dark mode" onclick="toggleTheme()"><span class="msi">dark_mode</span></button>
+    <button class="icon-btn" id="sync-btn" title="Sync" onclick="openSync()"><span class="msi">cloud</span></button>
+    <button class="icon-btn" title="API key" onclick="showKeySetup()"><span class="msi">key</span></button>
   </div>
 </header>
-
+<main class="scroll-viewport" id="main-panel">
+  <nav class="course-scroll" id="course-chips">
+    <button class="course-chip active" id="chip-home" onclick="goHome()"><span class="msi" style="font-size:16px">dashboard</span> All</button>
+    <button class="course-chip" id="chip-earth" onclick="openCourse('earth')"><span class="chip-dot" style="background:var(--c-easc)"></span> EASC 101</button>
+    <button class="course-chip" id="chip-english" onclick="openCourse('english')"><span class="chip-dot" style="background:var(--c-engl)"></span> ENGL 102</button>
+    <button class="course-chip" id="chip-comp" onclick="openCourse('comp')"><span class="chip-dot" style="background:var(--c-cmpt)"></span> CMPT 101</button>
+    <button class="course-chip" id="chip-math" onclick="openCourse('math')"><span class="chip-dot" style="background:var(--c-math)"></span> MATH 099</button>
+    <button class="course-chip" id="chip-anth" onclick="openCourse('anth')"><span class="chip-dot" style="background:var(--c-anth)"></span> ANTH 101</button>
+  </nav>
 <!-- LAYOUT -->
 <div class="layout">
 
@@ -1246,7 +1488,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   </div>
 
   <!-- MAIN -->
-  <div class="main" id="main-panel">
+  <div class="main" id="main-legacy">
     <div class="chips" id="course-chips">
       <button class="chip" id="sb-home" onclick="goHome()">All (5)</button>
       <button class="chip" id="sb-earth" style="--c:var(--c-earth)" onclick="openCourse('earth')">EASC 101</button>
@@ -1258,81 +1500,70 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 
     <!-- HOME -->
     <div id="view-home">
-      <div class="home-head" id="home-head"></div>
-      <section class="sec">
-        <div class="sec-head"><h2>Today</h2><span class="tl-count" id="home-today-count"></span></div>
-        <div class="tl" id="home-today"></div>
+      <section class="bento-grid">
+        <article class="bento-card bento-wide tile-deck" id="tile-deck" style="--tc:var(--c-easc);--tc-light:var(--c-easc-light);--tc-border:var(--c-easc-border)">
+          <div class="deck-top"><span class="deck-course-tag" id="deck-tag">EASC 101</span><span class="deck-count"><span class="msi" style="font-size:14px;color:var(--tc)">style</span> <span id="deck-due">0 due</span></span></div>
+          <div class="deck-title" id="deck-title">—</div>
+          <div class="deck-sub" id="deck-sub"></div>
+          <div class="deck-action-row"><button class="review-pill-btn" id="deck-btn"><span class="msi" style="font-size:15px">play_arrow</span> Review Now</button><div class="deck-progress-bar"><div class="deck-progress-fill" id="deck-fill" style="width:0%"></div></div></div>
+        </article>
+        <article class="bento-card tile-streak" onclick="mobTool('timer')">
+          <div><div class="tile-badge-icon"><span class="msi">local_fire_department</span></div>
+            <div class="streak-metric"><span class="streak-num" id="streak-count">0d</span><span class="streak-lbl">Streak</span></div>
+            <div class="streak-sub" id="streak-sub">Keep momentum alive!</div></div>
+          <div class="week-bars" id="week-bars"></div>
+        </article>
+        <article class="bento-card tile-timer">
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%"><span style="font-size:10.5px;font-weight:800;color:var(--muted);text-transform:uppercase">Focus</span><span class="msi" style="font-size:15px;color:var(--primary)">timer</span></div>
+          <div class="timer-dial" onclick="bentoPom()"><svg viewBox="0 0 76 76"><circle class="timer-track" cx="38" cy="38" r="31.5"></circle><circle class="timer-progress" id="timer-svg-circle" cx="38" cy="38" r="31.5"></circle></svg><div class="dial-inner"><span class="dial-time" id="bento-timer-display">25m</span></div></div>
+          <button class="timer-action-btn" id="bento-timer-btn" onclick="bentoPom()"><span class="msi" id="bento-timer-icon" style="font-size:14px">play_arrow</span><span id="bento-timer-lbl">Start</span></button>
+        </article>
       </section>
-      <section class="sec">
-        <div class="sec-head"><h2>Your courses</h2></div>
-        <div class="ccards" id="ccards"></div>
+      <section class="ribbon-grid">
+        <div class="ribbon-btn" onclick="mobTool('tutor')"><div class="ribbon-icon-box rb-tutor"><span class="msi">psychology</span></div><span class="ribbon-lbl">AI Tutor</span></div>
+        <div class="ribbon-btn" onclick="openCourse('math');switchTool('bank',null)"><div class="ribbon-icon-box rb-bank"><span class="msi">functions</span></div><span class="ribbon-lbl">Problem Bank</span></div>
+        <div class="ribbon-btn" onclick="mobTool('lectures')"><div class="ribbon-icon-box rb-syllabus"><span class="msi">slideshow</span></div><span class="ribbon-lbl">Lectures</span></div>
+        <div class="ribbon-btn" onclick="mobTool('exam')"><div class="ribbon-icon-box rb-exam"><span class="msi">assignment</span></div><span class="ribbon-lbl">Exam Mode</span></div>
       </section>
-      <div class="home-two">
-        <section class="sec">
-          <div class="sec-head"><h2>Coming up</h2><span class="link" onclick="document.getElementById('home-cal').scrollIntoView({behavior:'smooth'})">All deadlines</span></div>
-          <div class="hu" id="home-upcoming"></div>
-        </section>
-        <section class="sec">
-          <div class="sec-head"><h2>Jump in</h2></div>
-          <div class="turbo">
-            <button class="tb-btn tb-prime" onclick="mobTool('tutor')"><span class="msi">chat</span>AI Tutor</button>
-            <button class="tb-btn" onclick="mobTool('weeks')"><span class="msi">view_week</span>Week by week</button>
-            <button class="tb-btn" onclick="mobTool('flash')"><span class="msi">style</span>Flashcards<span class="mini-badge" id="turbo-due">0 due</span></button>
-            <button class="tb-btn" onclick="mobTool('timer')"><span class="msi">timer</span>Focus timer</button>
-            <button class="tb-btn" onclick="mobTool('quiz')"><span class="msi">help</span>Quiz</button>
-            <button class="tb-btn" onclick="mobTool('files')"><span class="msi">folder_open</span>Course files</button>
-          </div>
-          <div class="hidden-hero"><span id="hero-tag"></span><span id="hero-streak"></span><span id="hero-msg"></span><span id="hero-status"></span><span id="hero-next"></span><span id="hero-today"></span><span id="hero-today-sub"></span><span id="spark"></span><span id="hero-deadline"></span><svg style="display:none"><path id="gauge-fg"/></svg><span id="gauge-txt"></span></div>
-        </section>
-      </div>
-      <section class="sec">
-        <div class="sec-head"><h2>This week</h2></div>
-        <div class="icard">
-          <div class="bm-head" style="margin-bottom:12px"><span>Study time</span><span style="font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--sans)"><strong id="st-home-total" style="color:var(--text)">0m</strong> today · <strong id="st-home-week" style="color:var(--text)">0m</strong> this week</span></div>
-          <div id="st-home-bars"></div>
-          <div class="st-week" id="st-home-week-grid"></div>
-        </div>
-        <div class="two-col">
-          <div class="icard" style="margin:0"><div class="icard-label">Upcoming · next 14 days</div><div id="home-cal"></div></div>
-          <div class="icard" style="margin:0"><div class="icard-label">Current standing</div><div id="home-grades"></div><div style="font-size:11px;color:var(--muted2);margin-top:8px" id="home-due-fc"></div></div>
-        </div>
-      </section>
-      <div style="display:none"><span id="pom-total-home"></span><span id="assign-done-home"></span></div>
-    </div>
+      <div class="home-cols"><div class="home-main">
+      <section class="section-header"><span class="section-title"><span class="msi">checklist</span> Task Horizon</span><span class="section-counter" id="home-today-count"></span></section>
+      <section class="task-horizon-card"><div class="tl" id="home-today"></div></section>
+      <section class="section-header"><span class="section-title"><span class="msi">event_upcoming</span> Coming up</span><span class="section-counter" onclick="mobTool('assign')" style="color:var(--primary);cursor:pointer">All deadlines</span></section>
+      <section class="task-horizon-card"><div class="hu" id="home-upcoming"></div></section>
+      </div><div class="home-side">
+      <section class="section-header"><span class="section-title"><span class="msi">school</span> Course Horizon</span><span class="section-counter">5 Enrolled</span></section>
+      <section class="course-horizon-list" id="ccards"></section>
+      </div></div>
 
+      <div class="bento-hidden"><span id="sb-home"></span><span id="bn-home"></span><span id="bn-cards"></span><span id="sb-earth"></span><span id="sb-english"></span><span id="sb-comp"></span><span id="sb-math"></span><span id="sb-anth"></span><span id="tbn-home"></span><div id="home-head"></div><span id="hero-tag"></span><span id="hero-streak"></span><span id="hero-msg"></span><span id="hero-status"></span><span id="hero-next"></span><span id="hero-today"></span><span id="hero-today-sub"></span><span id="hero-deadline"></span><span id="hero-pct"></span><span id="gauge-fg"></span><span id="spark"></span><span id="turbo-due"></span><span id="st-home-total"></span><span id="st-home-week"></span><div id="st-home-bars"></div><div id="st-home-week-grid"></div><div id="home-cal"></div><div id="home-grades"></div><span id="home-due-fc"></span><span id="hs-today"></span><span id="hs-week"></span><span id="hs-streak"></span><span id="hs-due"></span><span id="hs-due-sub"></span><div id="wk-strip"></div><span id="pom-total-home"></span><span id="assign-done-home"></span></div>
+    </div>
     <!-- COURSE -->
     <div id="view-course" style="display:none">
-      <div class="course-hdr">
-        <div class="ch-left">
-          <div class="ch-code" id="cv-code"></div>
-          <h1 class="ch-title" id="cv-title"></h1>
-        </div>
-        <div class="ch-right">
-          <div class="ch-time" id="st-live"><span class="msi">schedule</span><span id="st-live-txt">0:00</span><span class="ch-time-sub" id="st-week-txt">0m this week</span></div>
-          <div class="ch-actions">
-            <button class="qa" title="Tutor" onclick="switchTool('tutor',document.getElementById('sb-tutor'))"><span class="msi">chat</span><span class="qa-lbl">Tutor</span></button>
-            <button class="qa" title="Flashcards" onclick="switchTool('flash',document.getElementById('sb-flash'))"><span class="msi">style</span><span class="qa-lbl">Cards</span></button>
-            <button class="qa" title="Exam mode" onclick="switchTool('exam',document.getElementById('sb-exam'))"><span class="msi">assignment</span><span class="qa-lbl">Exam</span></button>
-            <button class="qa" title="Review my work" onclick="switchTool('work',document.getElementById('sb-work'))"><span class="msi">task</span><span class="qa-lbl">Review</span></button>
-            <button class="qa" title="Upload" onclick="switchTool('upload',document.getElementById('sb-upload'))"><span class="msi">attach_file</span><span class="qa-lbl">Upload</span></button>
-          </div>
-        </div>
+      <div class="course-hero-box" id="detail-hero">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="horizon-badge" id="cd-badge">—</span><span style="font-size:11px;font-weight:700;color:var(--muted)">MacEwan University</span></div>
+        <div id="cv-title" style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px"></div>
+        <div id="cd-topic" style="font-size:12px;color:var(--muted)"></div>
+        <div id="cv-meta" style="font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"></div>
       </div>
-      <div id="today-strip"></div>
+      <nav class="subtabs-scroll" id="course-subtabs-bar"></nav>
+      <div class="bento-hidden"><span id="cv-code"></span><span id="st-live"><span id="st-live-txt"></span><span id="st-week-txt"></span></span><div id="today-strip"></div></div>
       <div id="tool-content"></div>
     </div>
 
   </div>
 </div>
 
-<div class="dock-wrap"><nav class="dock" id="bnav">
-  <a class="dk" id="bn-home" onclick="goHome()"><span class="msi">dashboard</span><span>Home</span><i></i></a>
-  <a class="dk" id="bn-courses" onclick="goHome();setTimeout(()=>document.getElementById('ccards').scrollIntoView({behavior:'smooth'}),50)"><span class="msi">menu_book</span><span>Courses</span><i></i></a>
-  <div class="dk-center"><button onclick="mobTool('tutor')" aria-label="AI Tutor"><div><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2zm7 11l.9 2.6L22.5 16.5l-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM5 14l.7 2 2 .7-2 .7L5 19.5l-.7-2.1-2-.7 2-.7L5 14z"/></svg></div></button><span>AI Tutor</span></div>
-  <a class="dk" id="bn-cards" onclick="mobTool('flash')"><span class="msi">style</span><span>Cards</span><i></i></a>
-  <a class="dk" onclick="openSheet()"><span class="msi">grid_view</span><span>More</span><i></i></a>
+</main>
+<div class="floating-nav-wrap"><nav class="floating-dock" id="bnav">
+  <button class="f-tab active" id="tab-home" onclick="goHome()"><span class="msi">dashboard</span><span>Home</span></button>
+  <button class="f-tab" id="tab-courses" onclick="openCourse(currentCourse||'earth')"><span class="msi">menu_book</span><span>Course</span></button>
+  <div class="f-tab-center"><button class="glowing-ai-btn" aria-label="Open AI Tutor" onclick="mobTool('tutor')"><span class="msi">psychology</span></button></div>
+  <button class="f-tab" id="tab-cards" onclick="mobTool('flash')"><span class="msi">style</span><span>Cards</span></button>
+  <button class="f-tab" id="tab-more" onclick="openSheet()"><span class="msi">grid_view</span><span>More</span></button>
 </nav></div>
-<div class="sheet-bg" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sheet"><div class="sheet-handle"></div><div id="sheet-body"></div></div></div>
+<div class="modal-mask" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="modal-body"><h3 style="font-size:16px;font-weight:800;margin-bottom:10px">All tools</h3><div class="more-grid" id="sheet-body"></div></div></div>
+</div><!-- /app-container -->
+</div>
 
 <script>
 function mobTool(t){if(!currentCourse)openCourse('earth');switchTool(t,document.getElementById('sb-'+t));closeSheet();}
@@ -3913,7 +4144,7 @@ function renderLectures(c){const list=LECTURES[currentCourse]||[];
   const sel=lecSel[currentCourse]??list[list.length-1].n;const L=list.find(x=>x.n===sel)||list[0];const tab=lecTab[currentCourse]||'summary';
   const tabs=[['summary','Summary'],['notes','Notes'],['terms','Key terms'],['questions','Study questions'],['quiz','Self-check'],['tips','Exam tips']];
   const nav=`<div class="chips" style="margin-bottom:12px">${list.map(x=>`<button class="chip ${x.n===L.n?'active':''}" onclick="lecSel['${currentCourse}']=${x.n};renderTool('lectures',courses['${currentCourse}'])">${x.n}. ${x.title}</button>`).join('')}</div>`;
-  const tabbar=`<div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto">${tabs.map(([k,l])=>`<button class="retry-btn" style="margin:0;border:none;border-bottom:2px solid ${k===tab?'var(--accent)':'transparent'};border-radius:0;padding:8px 12px;font-size:13px;color:${k===tab?'var(--text)':'var(--muted)'};font-weight:${k===tab?600:500}" onclick="lecTab['${currentCourse}']='${k}';renderTool('lectures',courses['${currentCourse}'])">${l}</button>`).join('')}</div>`;
+  const tabbar=`<div class="lec-tabs">${tabs.map(([k,l])=>`<button class="lec-tab${k===tab?' on':''}" onclick="lecTab['${currentCourse}']='${k}';renderTool('lectures',courses['${currentCourse}'])">${l}</button>`).join('')}</div>`;
   const head=`<div class="icard" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="icard-label">Lecture ${L.n} · ${L.date}${L.slides?' · '+L.slides:''}</div><div class="icard-title" style="margin:0">${L.title}</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="retry-btn" style="margin:0" onclick="lecToCards(${L.n},this)"><span class="msi ic">style</span>Add ${L.terms.length+L.questions.length} flashcards</button><button class="retry-btn" style="margin:0" onclick="switchTool('tutor',document.getElementById('sb-tutor'));setTimeout(()=>sendChatMsg('Quiz me on Lecture ${L.n} (${esc(L.title)}) for ${courses[currentCourse].code}. Ask one question at a time and grade my answers.'),200)"><span class="msi ic">chat</span>Tutor: quiz me</button></div></div>`;
   let body='';
   if(tab==='summary')body=`<div class="icard"><p style="font-size:14px;line-height:1.8">${L.summary}</p></div>`;
@@ -4109,10 +4340,11 @@ function renderTool(name,c){
   if(name==='timer')updatePomDisplay();
   // consistent page header for every tool
   const meta=TOOL_META[name];const strip=document.getElementById('today-strip');if(strip)strip.style.display=name==='today'?'':'none';
-  if(meta&&name!=='today'){el.insertAdjacentHTML('afterbegin',`<div class="tool-head"><div class="th-ico"><span class="msi">${meta[0]}</span></div><div><h2 class="th-title">${meta[1]}</h2><p class="th-sub">${meta[2]}</p></div>${meta[3]?`<div class="th-right">${meta[3]}</div>`:''}</div>`);}
+  if(meta){el.insertAdjacentHTML('afterbegin',`<div class="tool-head"><div class="th-ico"><span class="msi">${meta[0]}</span></div><div><h2 class="th-title">${meta[1]}</h2><p class="th-sub">${meta[2]}</p></div>${meta[3]?`<div class="th-right">${meta[3]}</div>`:''}</div>`);}
   el.scrollIntoView&&document.getElementById('main-panel')&&document.getElementById('main-panel').scrollTo({top:0});
 }
 const TOOL_META={
+ today:['menu_book','Lesson','This week per the syllabus, the latest lecture package, and today\'s sample lesson.'],
  lectures:['slideshow','Lectures','Study packages built from your lecture slides — notes, key terms, questions and a self-check for each.'],
  review:['history','Review','What was covered last time. Recall it from memory before reading.'],
  tomorrow:['arrow_forward','Tomorrow','What is coming next and how to prepare tonight.'],
@@ -4950,6 +5182,43 @@ function lessonContextFor(key){const S=SYLLABI[key];if(!S)return '';return S.wee
 
 /* init */
 goHome();
+
+/* ══ Bento shell glue ══ */
+const SUBTABS=[['today','Lesson'],['lectures','Lectures'],['flash','Flashcards'],['tutor','AI Tutor'],['quiz','Quiz'],['exam','Exam'],['drills','Drills'],['bank','Problems'],['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['plan','Study plan'],['iknow','What I know'],['work','Review work'],['upload','Upload'],['review','Review'],['tomorrow','Tomorrow'],['timer','Timer'],['format','Exam format'],['agrade','Get an A']];
+const CCLR={earth:'easc',english:'engl',comp:'cmpt',math:'math',anth:'anth'};
+function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;bar.innerHTML=SUBTABS.map(([k,l])=>`<button class="st-btn${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)">${l}</button>`).join('');const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
+const _switchTool=switchTool;switchTool=function(name,btn){_switchTool(name,btn);document.querySelectorAll('.st-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===name));const on=document.querySelector('.st-btn.active');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById(name==='flash'?'tab-cards':'tab-courses').classList.add('active');};
+const _openCourse=openCourse;openCourse=function(key){_openCourse(key);document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-'+key));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-courses').classList.add('active');const c=courses[key],cc=CCLR[key];const b=document.getElementById('cd-badge');b.textContent=c.code;b.style.cssText=`background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)`;document.getElementById('cd-topic').textContent='Active module: '+c.today.topic;document.getElementById('detail-hero').style.borderLeft=`4px solid var(--c-${cc})`;renderSubtabs();document.getElementById('main-panel').scrollTo({top:0});};
+const _goHome=goHome;goHome=function(){_goHome();document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-home'));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-home').classList.add('active');renderBento();document.getElementById('main-panel').scrollTo({top:0});};
+function renderBento(){const hr=new Date().getHours();document.getElementById('bento-greet').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+'!';
+  /* deck tile: course with most due cards, else latest lecture package */
+  let best=null;Object.keys(courses).forEach(k=>{const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,total=(flashcards[k]||[]).length;if(!best||due>best.due)best={k,due,total};});
+  const k=best&&best.due?best.k:(Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth');const c=courses[k],cc=CCLR[k];const lec=(LECTURES[k]||[]).slice(-1)[0];const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,total=(flashcards[k]||[]).length;
+  const t=document.getElementById('tile-deck');t.style.cssText=`--tc:var(--c-${cc});--tc-light:var(--c-${cc}-light);--tc-border:var(--c-${cc}-border)`;t.onclick=()=>{openCourse(k);switchTool(due?'flash':'lectures',null);};
+  document.getElementById('deck-tag').textContent=c.code;document.getElementById('deck-due').textContent=due?due+' due':(lec?'Lecture '+lec.n:'0 due');
+  document.getElementById('deck-title').textContent=lec?lec.title:c.today.topic;document.getElementById('deck-sub').textContent=lec?lec.summary.slice(0,90)+'…':c.today.vocab.slice(0,3).join(', ');
+  document.getElementById('deck-btn').innerHTML=`<span class="msi" style="font-size:15px">play_arrow</span> ${due?'Review Now':'Study Now'}`;document.getElementById('deck-fill').style.width=(total?Math.round((total-due)/total*100):0)+'%';
+  /* streak + week bars */
+  const sk=streakDays();document.getElementById('streak-count').textContent=sk+'d';document.getElementById('streak-sub').textContent=sk?'Keep momentum alive!':'Study today to start a streak';
+  const days=weekDates();const vals=days.map(d=>Object.values(studyLog[todayKey(d)]||{}).reduce((a,b)=>a+b,0));const mx=Math.max(600,...vals);const tk=todayKey();
+  document.getElementById('week-bars').innerHTML=days.map((d,i)=>`<div class="bar-col${vals[i]>=60?' active':''}${todayKey(d)===tk?' today':''}"><div class="bar-stick" style="height:${Math.max(8,Math.round(vals[i]/mx*32))}px"></div><span class="bar-day">${d.toLocaleDateString('en-CA',{weekday:'narrow'})}</span></div>`).join('');
+  bentoPomDisplay();}
+function bentoPomDisplay(){const d=document.getElementById('bento-timer-display');if(!d)return;const m=Math.ceil(pomSecondsLeft/60);d.textContent=pomRunning?`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`:m+'m';document.getElementById('bento-timer-lbl').textContent=pomRunning?'Pause':'Start';document.getElementById('bento-timer-icon').textContent=pomRunning?'pause':'play_arrow';document.getElementById('timer-svg-circle').style.strokeDashoffset=198*(1-pomSecondsLeft/pomTotalSeconds);}
+function bentoPom(){if(!currentCourse){/* focus without a course still logs to none — open the last course */}togglePom();bentoPomDisplay();}
+const _updatePomDisplay=updatePomDisplay;updatePomDisplay=function(){_updatePomDisplay();bentoPomDisplay();};
+setInterval(()=>{if(pomRunning)bentoPomDisplay();},1000);
+/* course-horizon cards replace the old course cards */
+renderHomeCards=function(){const el=document.getElementById('ccards');if(!el)return;el.innerHTML=Object.keys(courses).map(k=>{const c=courses[k],cc=CCLR[k];const g=gradeCalc(k);const pct=g.current!=null?Math.round(g.current):null;const dash=2*Math.PI*14.5;return`<article class="horizon-card" onclick="openCourse('${k}')"><div class="horizon-stripe" style="background:var(--c-${cc})"></div><div class="horizon-badge" style="background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)">${c.code}</div><div class="horizon-info"><div class="horizon-title">${c.title.split(' — ')[1]}</div><div class="horizon-topic">${c.today.topic}</div></div><div class="mini-gauge"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="14.5" style="stroke:var(--border-light)"></circle><circle cx="17" cy="17" r="14.5" style="stroke:var(--c-${cc});stroke-dasharray:${dash};stroke-dashoffset:${dash*(1-(pct||0)/100)}"></circle></svg><span class="gauge-pct">${pct!=null?pct+'%':'—'}</span></div></article>`;}).join('');};
+/* More sheet: grid of all tools */
+openSheet=function(){const b=document.getElementById('sheet-body');b.innerHTML=SUBTABS.map(([k,l])=>`<div class="more-item" onclick="closeSheet();mobTool('${k}')"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span>${l}</div>`).join('');document.getElementById('sheet').classList.add('active');};
+closeSheet=function(){document.getElementById('sheet').classList.remove('active');};
+mobTool=function(t){if(!currentCourse)openCourse('earth');switchTool(t,null);};
+function tick(){const n=new Date();let wk=null;try{const r=termWeek(n);wk=r&&r[0];}catch(e){}const e=document.getElementById('hdr-date');if(e)e.textContent=(wk?'Week '+wk+' · ':'')+'Fall Term · Active';}
+toggleTheme=function(){const cur=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=cur;localStorage.setItem('theme',cur);document.querySelector('#theme-btn .msi').textContent=cur==='light'?'dark_mode':'light_mode';};
+syncUI=function(){const b=document.getElementById('sync-btn'),s=document.getElementById('sync-status'),off=document.getElementById('sync-off-btn');if(syncId){b.classList.add('on');b.innerHTML='<span class="msi">cloud_done</span>';if(s){s.className='sync-status on';s.textContent='● Syncing live across your devices';}if(off)off.style.display='inline-block';}else{b.innerHTML='<span class="msi">cloud</span>';b.classList.remove('on');if(s){s.className='sync-status off';s.textContent='○ Not syncing — data is only on this device';}if(off)off.style.display='none';}};
+window.addEventListener('DOMContentLoaded',()=>{tick();if(document.documentElement.dataset.theme==='dark')document.querySelector('#theme-btn .msi').textContent='light_mode';});
+if(!currentCourse){try{renderHomeCards();renderBento();}catch(e){}}
+
 </script>
 </body>
 </html>
