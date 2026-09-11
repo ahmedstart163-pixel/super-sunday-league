@@ -1,4 +1,4 @@
-The user responded: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -1183,6 +1183,90 @@ const MATH_NOTES=[
   ['7.3 Double angle and half angle formulas (part 1)','2173387'],['7.4 & 7.5 Trig equations','2173388']
 ];
 const MOODLE='https://meskanas.macewan.ca/mod/resource/view.php?id=';
+
+/* ───────── ANTH 101 GS08 ───────── */
+const ANTH_SYLLABUS={
+  course:'ANTH 101-GS08 — Introduction to Anthropology, Fall 2026 (Hybrid)',
+  instructor:'Dr. H M Ashraf Ali, MPH, PhD',
+  office:'7-368L · 780-497-5800',
+  email:'alih28@macewan.ca',
+  hours:'Tuesdays 10:30 a.m.–12:00 p.m., or by email appointment',
+  modality:'Hybrid. Pre-recorded lectures and materials are posted on Moodle at the start of each week; in-person class Tuesdays 2:00–3:20 p.m. in room 9-202. First in-person class Sept 8.',
+  text:'Lavenda, Schultz & Zutter (2024), <em>Anthropology: What Does It Mean to Be Human?</em>, 3rd Canadian ed., Oxford University Press. All other readings, films and quizzes are on Moodle.',
+  prereq:'None',
+  grading:[
+    {n:'Online discussions (best 5 of 6, 4% each)',w:20,d:'Post + reply to at least one classmate by the weekly deadline. Late posts are not accepted.'},
+    {n:'Module quizzes (best 5 of 6, 4% each)',w:20,d:'10 multiple-choice, 30 minutes, open book, on Moodle; due Sundays 11:59 p.m.'},
+    {n:'Film review assignments (5 × 3%)',w:15,d:'50 marks each; submit as Word/PDF on Moodle; 10% per day late penalty.'},
+    {n:'Midterm exam (in person)',w:20,d:'Oct 13 (Tue), 2:00–3:20 p.m., room 9-202 — Weeks 2–4; multiple-choice + short answer'},
+    {n:'Final exam (in person)',w:25,d:'Date TBA via myStudentSystem — Weeks 8–12; multiple-choice + short answer'}
+  ],
+  rules:[
+    'Six discussions and six quizzes are offered; only your best five of each count.',
+    'Generative AI (ChatGPT, DALL·E 2, Grammarly AI, Copilot…) is permitted, but any assessment that uses it must include a statement of what you used it for and the prompts you used. You are responsible for checking its accuracy.',
+    'Recording lectures is prohibited unless you have an approved accommodation.',
+    'Communicate with the instructor from your MyMacEwan email account.',
+    'Grade scale: A+ 95–100 · A 90–94 · A− 85–89 · B+ 80–84 · B 77–79 · B− 74–76 · C+ 70–73 · C 67–69 · C− 60–66 · D+ 57–59 · D 50–56 · F 0–49'
+  ],
+  weeks:[
+    ['1','Sep 2–6','Welcome module — syllabus review','Intro forum post (not graded), due Sep 6'],
+    ['2','Sep 7–13','Module 1: Anthropology & Culture — Ch 1 (pp 1–24), Ch 2 (pp 25–42); film <em>Essence of Anthropology</em>','<strong>Discussion #1 · Quiz #1 · Film Review #1</strong> — Sun Sep 13'],
+    ['3','Sep 14–20','Module 2: Culture & Language — Ch 15 (pp 363–387); film <em>A Conversation with Koko</em>','<strong>Quiz #2 · Film Review #2</strong> — Sun Sep 20'],
+    ['4','Sep 21–27','Module 3: Evolution & Anthropology — Ch 3 (pp 45–68), Ch 4 (pp 71–88)','<strong>Discussion #2</strong> — Sun Sep 27'],
+    ['5','Sep 28–Oct 4','Module 4: Evidence of Human Evolution — Ch 5 (pp 92–111), Ch 6 (pp 115–133)','<strong>Quiz #3</strong> — Sun Oct 4'],
+    ['6','Oct 5–11','Module 5: Evolution & Human Variation — Ch 7 (pp 138–155); film <em>Race: The Difference Between Us</em>','<strong>Discussion #3 · Film Review #3</strong> — syllabus says Oct 13 (Sun 11:59 pm)'],
+    ['7','Oct 12–18','Review for the midterm','<strong>MIDTERM — Tue Oct 13, 2:00–3:20 pm, room 9-202</strong>'],
+    ['8','Oct 19–25','Module 6: Archaeology & Origin of Civilization — Ch 8 (pp 160–186), Ch 9 (pp 190–216); film <em>The Ascent of Woman</em>','<strong>Quiz #4 · Film Review #4</strong> — Sun Oct 25 (syllabus misprints "June 7")'],
+    ['9','Oct 26–Nov 1','Module 7: Gender & Sexuality — Ch 13 (pp 333–357); film <em>Gender Revolution</em>','<strong>Quiz #5 · Film Review #5</strong> — Sun Nov 1'],
+    ['10','Nov 2–8','Module 8: Kinship Systems — Ch 12 (pp 274–307)','<strong>Discussion #4 · Quiz #6</strong> — Sun Nov 15'],
+    ['11','Nov 9–15','Reading Week — no classes',''],
+    ['12','Nov 16–22','Module 10: Economic & Political Anthropology — Ch 10 (pp 222–240), Ch 11 (pp 245–267)','<strong>Discussion #5</strong> — Sun Nov 22'],
+    ['13','Nov 23–29','Module 11: Social Inequality — Ch 14 (pp 338–360)',''],
+    ['14','Nov 30–Dec 6','Module 12: Social Construction of Meaning — Ch 16 (pp 417–434); final review','<strong>Discussion #6</strong> — Sun Dec 6'],
+    ['—','TBA','Final exam (in person, Weeks 8–12)','Check myStudentSystem']
+  ]
+};
+
+const ANTH_FILES={
+  outline:[
+    {n:'Course Syllabus — ANTH 101 GS08 Fall 2026',id:'2226481',note:'Grading, deadlines, policies, week-by-week schedule (PDF)'},
+    {n:'Online Discussion Grading Rubric',id:'2258393',note:'How discussion posts are marked'},
+    {n:'Week 1 — Syllabus review slides',id:'2252846',note:'PDF of the intro session slides'}
+  ],
+  weeks:[
+    {n:'Week 2 · Module 1: Anthropology & Culture',items:[
+      {t:'Lecture Part 1 — What is Anthropology? (slides)',id:'2226378',k:'resource'},
+      {t:'Lecture Part 2 — Why is the Concept of Culture Important? (slides)',id:'2226379',k:'resource'},
+      {t:'Recorded lecture Part 1 — What is Anthropology?',id:'2226380',k:'kalvidres'},
+      {t:'Recorded lecture Part 2 — The Concept of Culture',id:'2226381',k:'kalvidres'},
+      {t:'Review Questions (not graded)',id:'2226382',k:'resource'},
+      {t:'Film Review Assignment One — questions + video link',id:'2226376',k:'resource'},
+      {t:'Sample Film Review Assignment (Fall 2024)',id:'2226377',k:'resource'},
+      {t:'Film Review Assignment One — submit here',id:'2226375',k:'assign'},
+      {t:'Module 1 Online Discussion — forum',id:'2226383',k:'forum'},
+      {t:'Module 1 Online Quiz #1',id:'2226384',k:'quiz'}
+    ]}
+  ]
+};
+
+const ANTH_ASSIGNMENTS_SEED=[
+  {title:'ANTH — Film Review #1 (Essence of Anthropology)',due:'2026-09-13',priority:'high'},
+  {title:'ANTH — Online Discussion #1',due:'2026-09-13',priority:'high'},
+  {title:'ANTH — Module Quiz #1',due:'2026-09-13',priority:'high'},
+  {title:'ANTH — Film Review #2 (Koko)',due:'2026-09-20',priority:'medium'},
+  {title:'ANTH — Module Quiz #2',due:'2026-09-20',priority:'medium'},
+  {title:'ANTH — Online Discussion #2',due:'2026-09-27',priority:'medium'},
+  {title:'ANTH — Module Quiz #3',due:'2026-10-04',priority:'medium'},
+  {title:'ANTH — Discussion #3 + Film Review #3 (Race)',due:'2026-10-11',priority:'medium'},
+  {title:'ANTH — MIDTERM (in person, rm 9-202, 2:00 pm)',due:'2026-10-13',priority:'high'},
+  {title:'ANTH — Quiz #4 + Film Review #4 (Ascent of Woman)',due:'2026-10-25',priority:'medium'},
+  {title:'ANTH — Quiz #5 + Film Review #5 (Gender Revolution)',due:'2026-11-01',priority:'medium'},
+  {title:'ANTH — Discussion #4 + Quiz #6',due:'2026-11-15',priority:'medium'},
+  {title:'ANTH — Online Discussion #5',due:'2026-11-22',priority:'medium'},
+  {title:'ANTH — Online Discussion #6',due:'2026-12-06',priority:'medium'}
+];
+
+const SYLLABI={math:MATH_SYLLABUS,anth:ANTH_SYLLABUS};
 const MATH_ASSIGNMENTS=[
   {n:'Assignment 1',topic:'Real numbers, exponents & radicals, algebraic expressions',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173263',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173273'},
   {n:'Assignment 2',topic:'Rational expressions, equations, modeling with equations',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173269',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173274'},
@@ -1198,15 +1282,15 @@ const MATH_ASSIGNMENTS=[
 /* ── course files (MATH 099 assignment bank) ── */
 
 function renderSyllabus(c){
-  if(currentCourse!=='math') return icard('Syllabus','<p>No syllabus loaded for this course yet.</p>');
-  const S=MATH_SYLLABUS;
+  const S=SYLLABI[currentCourse];
+  if(!S) return icard('Syllabus','<p>No syllabus loaded for this course yet. Open the course page in Moodle and ask me to pull it in.</p>');
   const grade=S.grading.map(g=>`<div class="sy-grade">
       <div class="sy-w">${g.w}%</div>
       <div><div class="sy-gn">${g.n}</div><div class="sy-gd">${g.d}</div></div>
     </div>`).join('');
   const weeks=S.weeks.map(w=>`<tr${/Exam|Quiz/.test(w[3])?' class="sy-hot"':''}><td>${w[0]}</td><td>${w[1]}</td><td>${w[2]}</td><td>${w[3]||'—'}</td></tr>`).join('');
   const rules=S.rules.map(r=>`<li>${r}</li>`).join('');
-  return icard('MATH 099 AS95 — Fall 2026',
+  return icard(S.course,
       `<div class="sy-kv"><span>Instructor</span><b>${S.instructor}</b></div>
        <div class="sy-kv"><span>Office</span><b>${S.office}</b></div>
        <div class="sy-kv"><span>Email</span><b><a href="mailto:${S.email}" style="color:var(--accent)">${S.email}</a></b></div>
@@ -1219,13 +1303,30 @@ function renderSyllabus(c){
     + icard('Exam rules to remember', `<ul>${rules}</ul>`);
 }
 function applySyllabusWeights(){
-  grades['math']=MATH_SYLLABUS.grading.map(g=>({name:g.n,weight:g.w,mark:''}));
+  const S=SYLLABI[currentCourse]; if(!S) return;
+  grades[currentCourse]=S.grading.map(g=>({name:g.n,weight:g.w,mark:''}));
   persist();
   switchTool('grades',document.getElementById('sb-grades'));
 }
 
+const MOD='https://meskanas.macewan.ca/mod/';
+function renderFilesAnth(){
+  const F=ANTH_FILES;
+  const ico={resource:'description',kalvidres:'play_circle',assign:'upload_file',forum:'forum',quiz:'quiz'};
+  const outline=F.outline.map(o=>`<div class="cf-row">
+      <div class="cf-num"><span class="msi" style="font-size:16px">description</span></div>
+      <div class="cf-body"><div class="cf-title">${o.n}</div><div class="cf-topic">${o.note}</div></div>
+      <div class="cf-links"><a class="cf-btn" href="${MOODLE}${o.id}" target="_blank" rel="noopener"><span class="msi ic">open_in_new</span>Open</a></div>
+    </div>`).join('');
+  const weeks=F.weeks.map(w=>icard(w.n, `<div class="cf-notes">${w.items.map(i=>`<a class="cf-note" href="${MOD}${i.k}/view.php?id=${i.id}" target="_blank" rel="noopener"><span class="msi ic">${ico[i.k]||'link'}</span>${i.t}</a>`).join('')}</div>`)).join('');
+  return icard('Course outline & rubrics', outline)
+    + weeks
+    + icard('Coming up on Moodle','<p style="color:var(--muted)">Weeks 3–14 unlock on Moodle as the term goes. Open the course page and ask me to pull each new module in when it appears — I\'ll add the slides, films, quiz and discussion links here and teach the tutor the content.</p>')
+    + icard('How to use these','<ul><li>Watch the recorded lecture, then do the <strong>Review Questions</strong> before the quiz — Quiz #1 and Discussion #1 are built from them.</li><li>Use the <strong>Sample Film Review</strong> as your template for Film Review #1.</li><li>If you use AI (including this tutor) on a graded submission, add a statement of what you used it for and your prompts — it\'s in the syllabus.</li></ul>');
+}
 function renderFiles(c){
-  if(currentCourse!=='math') return icard('Course files','<p>No files linked for this course yet.</p>');
+  if(currentCourse==='anth') return renderFilesAnth();
+  if(currentCourse!=='math') return icard('Course files','<p>No files linked for this course yet. Open the course page in Moodle and ask me to pull it in.</p>');
 
   const outline = MATH_OUTLINE.map(o=>`<div class="cf-row">
       <div class="cf-num"><span class="msi" style="font-size:16px">description</span></div>
@@ -1286,6 +1387,31 @@ When the student asks about dates, weights, what is on an exam, or what to study
   c.suggestions = ["What's on the Term Exam?","How much is the final worth?","What sections are we on this week?","Can I use a calculator on the quiz?","Walk me through Assignment 5 Q13"];
 })();
 
+
+/* ANTH 101 — give the tutor the student's real section + Week 2 content */
+(function(){
+  const c=courses['anth']; if(!c) return;
+  c.knowContext += `
+
+=== THIS STUDENT'S ACTUAL SECTION: ANTH 101-GS08, Fall 2026 (Hybrid), MacEwan University ===
+Instructor: Dr. H M Ashraf Ali (MPH, PhD), office 7-368L, 780-497-5800, alih28@macewan.ca. Office hours Tuesdays 10:30 am-noon or by email appointment. Email from your MyMacEwan account.
+Format: hybrid. Pre-recorded lectures + slides posted on Moodle (mêskanâs) at the start of each week; in-person class Tuesdays 2:00-3:20 pm, room 9-202.
+Textbook: Lavenda, Schultz & Zutter (2024), Anthropology: What Does It Mean to Be Human?, 3rd Canadian edition, Oxford University Press.
+GRADE BREAKDOWN: Online discussions 20% (six offered, best 5 count, 4% each; post AND reply to a classmate; late posts not accepted). Module quizzes 20% (six offered, best 5 count, 4% each; 10 multiple choice, 30 min, open book, due Sundays 11:59 pm). Film review assignments 15% (5 x 3%, 50 marks each, Word/PDF on Moodle, 10%/day late penalty). Midterm 20% (in person, Tue Oct 13, 2:00-3:20 pm, room 9-202, Weeks 2-4, multiple choice + short answer). Final 25% (in person, date TBA on myStudentSystem, Weeks 8-12, multiple choice + short answer).
+GRADE SCALE: A+ 95-100, A 90-94, A- 85-89, B+ 80-84, B 77-79, B- 74-76, C+ 70-73, C 67-69, C- 60-66, D+ 57-59, D 50-56, F 0-49.
+AI POLICY: generative AI is permitted, but any assessment that used it must include a statement saying what the tool was used for and what prompts were used. The student is responsible for accuracy. ALWAYS remind the student of this when helping with a graded submission.
+WEEKLY SCHEDULE: Wk2 Sep 7-13 Module 1 Anthropology & Culture (Ch 1 pp 1-24, Ch 2 pp 25-42; film Essence of Anthropology) — Discussion #1, Quiz #1, Film Review #1 due Sun Sep 13. Wk3 Sep 14-20 Module 2 Culture & Language (Ch 15 pp 363-387; film A Conversation with Koko) — Quiz #2, Film Review #2 due Sep 20. Wk4 Sep 21-27 Module 3 Evolution & Anthropology (Ch 3, Ch 4) — Discussion #2 due Sep 27. Wk5 Sep 28-Oct 4 Module 4 Evidence of Human Evolution (Ch 5, Ch 6) — Quiz #3 due Oct 4. Wk6 Oct 5-11 Module 5 Evolution & Human Variation (Ch 7; film Race: The Difference Between Us) — Discussion #3, Film Review #3. Wk7 Oct 12-18 midterm review; MIDTERM Oct 13. Wk8 Oct 19-25 Module 6 Archaeology & Origin of Civilization (Ch 8, Ch 9; film The Ascent of Woman) — Quiz #4, Film Review #4 due Oct 25. Wk9 Oct 26-Nov 1 Module 7 Gender & Sexuality (Ch 13; film Gender Revolution) — Quiz #5, Film Review #5 due Nov 1. Wk10 Nov 2-8 Module 8 Kinship (Ch 12) — Discussion #4, Quiz #6 due Nov 15. Wk11 Nov 9-15 Reading Week. Wk12 Nov 16-22 Module 10 Economic & Political Anthropology (Ch 10, Ch 11) — Discussion #5 due Nov 22. Wk13 Nov 23-29 Module 11 Social Inequality (Ch 14). Wk14 Nov 30-Dec 6 Module 12 Social Construction of Meaning (Ch 16), final review — Discussion #6 due Dec 6.
+
+=== WEEK 2 LECTURE CONTENT (Dr. Ali's slides, citing Lavenda, Schultz & Zutter 2024) ===
+PART 1 — WHAT IS ANTHROPOLOGY: the scientific study of human beings as biocultural organisms; explores human societies, culture and physical diversity across time and space. Core questions: how did we originate, when/where did we appear, how have we changed physically and culturally, how are we similar/diverse, what makes humans different from other animals. Anthropology is HOLISTIC (integrates biology, culture, history, language), COMPARATIVE (across societies and time), FIELD-BASED (direct contact with people, sites, animals) and EVOLUTIONARY (biological and cultural change over time). Culture = beliefs, traditions, customs, ideas humans learn as members of society; learned by observing and copying, not inherited; all humans share the biological capacity for culture; human biological survival depends on culture. Anthropology is cross-disciplinary (social science + natural science + humanities). FOUR SUBFIELDS (North America): (1) Biological/physical anthropology — biological variation and adaptation in humans and non-human primates and their extinct ancestors; specialties include primatology (biology, behaviour, social life of non-human primates) and paleoanthropology (human and primate evolution via fossils); also human adaptation, growth and development, evolutionary history and disease susceptibility. (2) Cultural anthropology — cultural diversity among all living societies; how humans organize collective tasks; gender, sexuality, urbanization, globalization, migration, human rights; how culture shapes beliefs and behaviour; responses to colonialism and capitalism. Method = ethnography via FIELDWORK and PARTICIPANT OBSERVATION (observe and participate alongside local people), working with INFORMANTS (local people knowledgeable about their culture); can reveal how actual behaviour differs from reported behaviour. (3) Linguistic anthropology — human language in cultural and historical context; language is a system of arbitrary symbols enabling communication and transmission of cultural knowledge; early linguistic anthropologists transcribed non-Western languages to preserve them; today: language and social difference, pidgins, language learning, language and national identity, causes of indigenous-language loss and preservation. (4) Archaeology — human culture through material remains; material culture = artifacts (portable objects made/modified by people), plant and animal remains, non-portable features (buildings, pits, landscape); reconstructs prehistory (before writing) via surveys, excavation, even garbage analysis; ethical guidelines for excavation and curation. APPLIED anthropology draws on all four fields to solve practical cross-cultural problems: public health, education, economic development, climate change, Indigenous land claims, resource management. MEDICAL anthropology — health in cultural context; biocultural perspective linking health, disease, illness, environment, culture; critical perspective linking illness to social, economic and political processes and questioning biomedical practices; how gender, ethnicity, race, class affect health. USES: satisfies curiosity about fossils, artifacts, customs; teaches interconnectedness; helps you become a global citizen.
+PART 2 — WHY IS CULTURE IMPORTANT: Culture = sets of learned behaviour and ideas humans acquire as members of society, plus the artifacts and structures they create and use. Learned, not genetically inherited. SOCIALIZATION = learning to live as a member of a group (interaction skills, coping with behavioural rules). ENCULTURATION = learning culturally appropriate ways of thinking and feeling. Culture is SHARED (collective: religion, ritual, kinship, gender roles), INTEGRATED/PATTERNED (related beliefs and practices — child-rearing, economics, religion — fit together), SYMBOLIC (a symbol stands for something else: language, flags, religious signs, gestures, body marks, significant events), TRANSFORMATIVE and ADAPTIVE (reconstructed each generation; lets humans adapt to and transform surroundings). Three parts of culture (Muckle & González 2016): cognitive (what we think), behavioural (what we do), artifacts (what we have). Culture is HISTORICAL — shaped by events and reconstructed every generation; people act within historical and cultural contexts. HUMAN AGENCY = exercising at least some control over one's life; culture provides resources to pursue goals and resolve everyday ambiguity. COEVOLUTION = biological and symbolic/cultural processes continually adapting to one another; humans use agency to invent technologies and adapt to environments. Why cultural differences matter: the same object/action/event means different things in different cultures; experience is ambiguous and must be interpreted (e.g., private vs social life among Americans vs people in Botswana). Does culture explain everything? "Culture" is a species attribute; some critique "cultures" (plural) as a colonial-era way of labelling "primitive" groups; can slide into oppressive cultural determinism, yet can also defend vulnerable groups. ETHNOCENTRISM = the view that one's own way of life is natural, right and the only fully human way; fuels "us vs them" dualisms and the urge to convert others. CULTURAL RELATIVISM = understanding a culture on its own terms as a coherent and meaningful design for living; no culture is better than another; used to STUDY, not to judge. Controversial practice case: female genital cutting (clitoridectomy; infibulation) — condemned as oppression and a human-rights violation by many Western critics and the UN, yet anthropologist Janice Boddy found it is symbolically central to what Sudanese women value; relativism makes the practice comprehensible, allows analogies with dangerous Western practices like cosmetic surgery, and makes moral reasoning more complex rather than excusing harm. The anthropological perspective forces us to question commonsense assumptions and opens constructive approaches to real problems.
+
+=== FILM REVIEW ASSIGNMENT ONE (due Sun Sep 13, 11:59 pm, 3%) — video: Hughes (2008) Essence of Anthropology (MacEwan streaming). Questions to answer: (1) According to the video, what is anthropology? Define it. (2) What is meant by the "four-field approach"? (3) How is anthropology different from other scientific disciplines? How does it apply a holistic perspective? (4) Central focus of physical anthropology; two subfields. (5) The biocultural approach; how food is an example. (6) Define archaeology and linguistic anthropology; what do they do? (7) Define cultural anthropology and its focus. (8) What is ethnography? fieldwork? examples. (9) How does participant observation play into fieldwork? (10) Define applied anthropology. Submit as Word/PDF with name, student #, course/section, date.
+=== WEEK 2 REVIEW QUESTIONS (not graded; quiz #1 and discussion #1 draw on these) === Define anthropology and the holistic perspective; four-field approach; what makes anthropology unique among social sciences; focus and two subfields of physical anthropology; what paleoanthropologists study; biocultural approach and food; cultural anthropology and its focus; who studies gender, kinship, religion, sexuality, migration and political/economic systems (cultural anthropologists); archaeology and examples; linguistic anthropology; textbook definition of culture and why it matters; how the textbook defines race and racism; ethnography, fieldwork, participant observation; applied anthropology with an example; the fastest-growing specialty (medical anthropology); basic features of culture; enculturation vs socialization; habitus; why cultural differences matter; culture and human agency; ethnocentrism vs cultural relativism with examples; human agency and coevolution.
+When asked about dates, weights, what to study, or this week's content, answer from THIS section — it is the student's real course.`;
+  c.suggestions=["What's due this Sunday for ANTH?","Explain the four-field approach for my film review","Ethnocentrism vs cultural relativism — quiz me","What's on the ANTH midterm?","How do I cite AI use in my film review?"];
+})();
+
 /* seed the tracker with the 9 self-study sets, once */
 function seedMathAssignments(){
   if(localStorage.getItem('math_seed_v1')) return;
@@ -1298,6 +1424,17 @@ function seedMathAssignments(){
   localStorage.setItem('math_seed_v1','1');
   persist();
 }
+function seedAnthAssignments(){
+  if(localStorage.getItem('anth_seed_v1')) return;
+  if(!assignments['anth']) assignments['anth']=[];
+  ANTH_ASSIGNMENTS_SEED.forEach(a=>{
+    if(!assignments['anth'].some(x=>x.title===a.title))
+      assignments['anth'].push({id:Date.now()+Math.random(),title:a.title,due:a.due,priority:a.priority,done:false});
+  });
+  localStorage.setItem('anth_seed_v1','1');
+  persist();
+}
+seedAnthAssignments();
 seedMathAssignments();
 
 
