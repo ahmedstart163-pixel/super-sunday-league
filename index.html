@@ -1347,8 +1347,8 @@ body{color:var(--text)}
 @media(min-width:720px){
   html,body{background:var(--bg)}
   .app-container{max-width:none;width:100%;box-shadow:none}
-  .app-header{padding:12px 32px}
-  .scroll-viewport{padding:18px 32px 40px;max-width:1240px;margin:0 auto;width:100%}
+  .app-header{padding:12px max(32px,calc((100% - 1560px)/2 + 32px))}
+  .scroll-viewport{padding:18px 32px 40px;max-width:1624px;margin:0 auto;width:100%}
   .course-scroll{margin-bottom:14px}
   .bento-grid{grid-template-columns:repeat(4,1fr);gap:14px}
   .bento-wide{grid-column:span 2}
@@ -1375,6 +1375,19 @@ body{color:var(--text)}
 }
 @media(min-width:720px) and (max-width:1023px){.scroll-viewport{padding:16px 22px 40px}.bento-grid{grid-template-columns:repeat(2,1fr)}.bento-wide{grid-column:1/-1}.home-cols{grid-template-columns:1fr}.ribbon-grid{max-width:none}#view-course{grid-template-columns:190px 1fr;gap:14px}.st-btn{font-size:12.5px;padding:8px 10px}}
 @media(min-width:1280px){.bento-grid{grid-template-columns:repeat(6,1fr)}.bento-wide{grid-column:span 3}.tile-streak{grid-column:span 2}}
+@media(min-width:1500px){
+  body{font-size:15px}
+  .greeting-title{font-size:17px}.course-chip{font-size:13px;padding:8px 16px}
+  #view-course{grid-template-columns:260px 1fr;gap:26px}
+  .st-btn{font-size:14px;padding:11px 14px}
+  .subtabs-scroll{padding:10px}
+  .home-cols{grid-template-columns:1.5fr 1fr;gap:26px}
+  .tile-deck .deck-title{font-size:20px}.deck-sub{font-size:13px}
+  .horizon-title{font-size:15.5px}.horizon-topic{font-size:12.5px}
+  .icard,.qcard{padding:22px 26px}
+  .th-title{font-size:22px}.th-sub{font-size:14px}
+  .tl-title{font-size:14px}
+}
 .task-horizon-card .tl,.task-horizon-card .hu{border:none!important;background:transparent!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
 .task-horizon-card .tl-row .tl-body{flex:1;min-width:0}
 .hu-row .hu-when{font-family:var(--font-mono);font-size:10.5px;font-weight:800}
