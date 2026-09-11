@@ -35,13 +35,26 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);font-size:15px;display:flex;flex-direction:column}
 
 /* ── TOPBAR ── */
-.topbar{background:#fff;border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);z-index:50}
+.topbar{background:#fff;border-bottom:1px solid var(--border);height:52px;overflow:hidden;display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);z-index:50}
 .brand{font-family:'Georgia',serif;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-.4px}
 .brand span{color:var(--blue)}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .topbar-date{font-size:11px;color:var(--muted2);letter-spacing:.4px}
 .key-btn{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
 .key-btn:hover{background:#dbeafe}
+
+/* course nav */
+.course-nav{display:flex;gap:2px;margin-left:20px;overflow-x:auto;height:100%;align-items:stretch}
+.course-nav::-webkit-scrollbar{display:none}
+.cn-tab{display:flex;align-items:center;gap:7px;padding:0 14px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;user-select:none}
+.cn-tab:hover{color:var(--navy);background:var(--page)}
+.cn-tab.active{color:var(--navy);font-weight:600;border-bottom-color:var(--blue)}
+.cn-tab .sb-dot{width:8px;height:8px}
+.quick-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:8px}
+.qa{background:#fff;border:1.5px solid var(--border);color:var(--text2);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.qa:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.sidebar{width:180px}
+@media(max-width:900px){.course-nav{margin-left:8px}.cn-tab{padding:0 9px;font-size:12px}}
 
 /* ── LAYOUT ── */
 .layout{display:flex;flex:1;overflow:hidden}
@@ -462,6 +475,14 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">Mac<span>Ewan</span> Study Pro</div>
+  <nav class="course-nav">
+    <div class="cn-tab" id="sb-home" onclick="goHome()"><span class="sb-dot" style="background:#94a3b8"></span>All Courses</div>
+    <div class="cn-tab" id="sb-earth" onclick="openCourse('earth')"><span class="sb-dot" style="background:#6366f1"></span>Earth Science</div>
+    <div class="cn-tab" id="sb-english" onclick="openCourse('english')"><span class="sb-dot" style="background:#10b981"></span>English</div>
+    <div class="cn-tab" id="sb-comp" onclick="openCourse('comp')"><span class="sb-dot" style="background:#f59e0b"></span>Computing</div>
+    <div class="cn-tab" id="sb-math" onclick="openCourse('math')"><span class="sb-dot" style="background:#ef4444"></span>Math 099</div>
+    <div class="cn-tab" id="sb-anth" onclick="openCourse('anth')"><span class="sb-dot" style="background:#8b5cf6"></span>Anthropology</div>
+  </nav>
   <div class="topbar-right">
     <div class="topbar-date" id="hdr-date"></div>
     <button class="key-btn" onclick="showKeySetup()">🔑 API Key</button>
@@ -473,34 +494,6 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <div class="sb-section">
-      <div class="sb-label">Courses</div>
-      <div class="sb-course" id="sb-home" onclick="goHome()">
-        <div class="sb-dot" style="background:#e2e8f0"></div>
-        <div><div class="sb-course-name" style="color:var(--navy);font-weight:600">All Courses</div><div class="sb-course-code">Dashboard</div></div>
-      </div>
-      <div class="sb-course" id="sb-earth" onclick="openCourse('earth')">
-        <div class="sb-dot" style="background:#6366f1"></div>
-        <div><div class="sb-course-name">Earth Science</div><div class="sb-course-code">EASC 101</div></div>
-      </div>
-      <div class="sb-course" id="sb-english" onclick="openCourse('english')">
-        <div class="sb-dot" style="background:#10b981"></div>
-        <div><div class="sb-course-name">English</div><div class="sb-course-code">ENGL 102</div></div>
-      </div>
-      <div class="sb-course" id="sb-comp" onclick="openCourse('comp')">
-        <div class="sb-dot" style="background:#f59e0b"></div>
-        <div><div class="sb-course-name">Computing</div><div class="sb-course-code">CMPT 101</div></div>
-      </div>
-      <div class="sb-course" id="sb-math" onclick="openCourse('math')">
-        <div class="sb-dot" style="background:#ef4444"></div>
-        <div><div class="sb-course-name">Math 099</div><div class="sb-course-code">MATH 099</div></div>
-      </div>
-      <div class="sb-course" id="sb-anth" onclick="openCourse('anth')">
-        <div class="sb-dot" style="background:#8b5cf6"></div>
-        <div><div class="sb-course-name">Anthropology</div><div class="sb-course-code">ANTH 101</div></div>
-      </div>
-    </div>
-    <div class="sb-divider"></div>
     <div class="sb-section">
       <div class="sb-label">Tools</div>
       <div class="sb-tool" id="sb-today"    onclick="switchTool('today',this)"><div class="sb-tool-icon">📖</div><div class="sb-tool-name">Today's Lesson</div></div>
@@ -576,7 +569,15 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
           <div class="course-hdr-sub">MacEwan University · Edmonton, Alberta</div>
         </div>
         <div style="text-align:right">
-          <div class="st-live" id="st-live"><span class="st-dot"></span><span id="st-live-txt">0:00</span> today</div>
+          <div class="quick-row">
+            <button class="qa" onclick="switchTool('tutor',document.getElementById('sb-tutor'))">💬 AI Tutor</button>
+            <button class="qa" onclick="switchTool('work',document.getElementById('sb-work'))">📝 Review Work</button>
+            <button class="qa" onclick="switchTool('upload',document.getElementById('sb-upload'))">📎 Upload</button>
+            <button class="qa" onclick="switchTool('flash',document.getElementById('sb-flash'))">🎴 Flashcards</button>
+            <button class="qa" onclick="switchTool('iknow',document.getElementById('sb-iknow'))">🧠 What I Know</button>
+            <button class="qa" onclick="switchTool('exam',document.getElementById('sb-exam'))">📋 Exam</button>
+          </div>
+          <div class="st-live" id="st-live" style="display:inline-flex"><span class="st-dot"></span><span id="st-live-txt">0:00</span> today</div>
           <div style="font-size:10px;color:var(--muted2);margin-top:5px" id="st-week-txt">0m this week</div>
         </div>
       </div>
@@ -817,7 +818,7 @@ function goHome(){
   currentCourse=null;stStop();stRenderHome();stRender();renderHomeCal();renderHomeGrades();
   document.getElementById('view-home').style.display='block';
   document.getElementById('view-course').style.display='none';
-  document.querySelectorAll('.sb-course').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.cn-tab').forEach(s=>s.classList.remove('active'));
   document.getElementById('sb-home').classList.add('active');
   document.querySelectorAll('.sb-tool').forEach(s=>s.classList.remove('active'));
   let done=0;Object.values(assignments).forEach(arr=>arr.forEach(a=>{if(a.done)done++}));
@@ -836,7 +837,7 @@ function openCourse(key){
   document.getElementById('cv-title').textContent=c.title;
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-course').style.display='block';
-  document.querySelectorAll('.sb-course').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.cn-tab').forEach(s=>s.classList.remove('active'));
   document.getElementById('sb-'+key).classList.add('active');
   document.getElementById('sb-home').classList.remove('active');
   switchTool(currentTool,document.getElementById('sb-'+currentTool));
@@ -1298,6 +1299,162 @@ async function sendToFlashcards(i){
     btn.textContent=`✅ ${cards.length} cards added — go to Flashcards`;
   }catch(e){btn.textContent='❌ '+e.message;btn.disabled=false;}
 }
+
+/* ═══════ GRADES ═══════ */
+const GRADE_SCALE=[['A+',90],['A',85],['A-',80],['B+',77],['B',73],['B-',70],['C+',67],['C',63],['C-',60],['D+',55],['D',50],['F',0]];
+function letterFor(p){for(const [l,m] of GRADE_SCALE)if(p>=m)return l;return 'F';}
+function gradeCalc(course){const items=grades[course]||[];let wDone=0,earned=0,wTotal=0;items.forEach(i=>{const w=parseFloat(i.weight)||0;wTotal+=w;const mk=parseFloat(i.mark);if(i.mark!==''&&i.mark!=null&&!isNaN(mk)){wDone+=w;earned+=w*mk/100;}});return{items,wDone,earned,wTotal,current:wDone?earned/wDone*100:null,remaining:wTotal-wDone};}
+function renderGrades(c){
+  if(!grades[currentCourse])grades[currentCourse]=[{name:'Midterm',weight:30,mark:''},{name:'Final Exam',weight:40,mark:''},{name:'Assignments',weight:20,mark:''},{name:'Participation',weight:10,mark:''}];
+  const g=gradeCalc(currentCourse);
+  const rows=g.items.map((i,idx)=>`<div class="gr-row"><input class="gr-in" value="${i.name}" onchange="grUpd(${idx},'name',this.value)"><input class="gr-in" type="number" value="${i.weight}" placeholder="%" onchange="grUpd(${idx},'weight',this.value)"><input class="gr-in" type="number" value="${i.mark}" placeholder="—" onchange="grUpd(${idx},'mark',this.value)"><span style="font-size:12px;color:var(--muted)">${i.mark!==''&&!isNaN(parseFloat(i.mark))?letterFor(parseFloat(i.mark)):'not yet'}</span><button class="assign-del" onclick="grDel(${idx})">×</button></div>`).join('');
+  const cur=g.current;
+  return`<div class="two-col">
+    <div class="icard"><div class="icard-label">Current grade (on ${g.wDone}% of the course)</div><div class="gr-big" style="color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(1)+'%'}</div><div style="font-size:13px;color:var(--muted);margin-top:4px">${cur==null?'Enter a mark to see your standing':letterFor(cur)+' so far · '+g.remaining+'% still to be graded'}</div><div class="gr-scale">${GRADE_SCALE.slice(0,6).map(([l,m])=>`<span class="${cur!=null&&cur>=m?'hit':''}">${l} ≥${m}</span>`).join('')}</div></div>
+    <div class="icard"><div class="icard-label">What you need on the rest</div><div class="gr-need">${needFor(g)}</div></div>
+  </div>
+  <div class="icard"><div class="icard-label">Assessments <span style="text-transform:none;letter-spacing:0;color:var(--muted2);font-weight:500">— weights add to ${g.wTotal}${g.wTotal!==100?' ⚠️ (should be 100)':' ✓'}</span></div>
+  <div class="gr-row gr-head"><span>Assessment</span><span>Weight %</span><span>Your mark %</span><span>Letter</span><span></span></div>${rows}
+  <button class="retry-btn" style="margin-top:10px" onclick="grades['${currentCourse}'].push({name:'New item',weight:0,mark:''});persist();renderTool('grades',courses['${currentCourse}'])">+ Add assessment</button></div>
+  <div class="know-intro" style="font-size:12px">Letter scale: A+ 90, A 85, A- 80, B+ 77, B 73, B- 70, C+ 67, C 63, C- 60, D+ 55, D 50. Your instructor's syllabus overrides this — adjust if theirs differs.</div>`;
+}
+function needFor(g){if(!g.remaining||g.remaining<=0)return g.current==null?'Enter your marks above.':`Course complete. Final: <strong>${g.current.toFixed(1)}% (${letterFor(g.current)})</strong>.`;
+  return [['A+',90],['A',85],['A-',80],['B+',77],['B',73]].map(([l,t])=>{const need=(t*g.wTotal-g.earned*100)/g.remaining;return`<div>For <strong>${l}</strong>: average <strong>${need<=0?'anything (locked in)':need>100?'impossible (>100%)':need.toFixed(1)+'%'}</strong> on the remaining ${g.remaining}%</div>`;}).join('');}
+function grUpd(i,k,v){grades[currentCourse][i][k]=k==='name'?v:(v===''?'':parseFloat(v));persist();renderTool('grades',courses[currentCourse]);}
+function grDel(i){grades[currentCourse].splice(i,1);persist();renderTool('grades',courses[currentCourse]);}
+function renderHomeGrades(){const el=document.getElementById('home-grades');if(!el)return;el.innerHTML=Object.keys(courses).map(k=>{const g=gradeCalc(k);const cur=g.current;return`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)"><span class="sb-dot" style="background:${courses[k].color}"></span><span style="flex:1;font-size:13px;color:var(--text2)">${courses[k].code}</span><strong style="font-family:Georgia,serif;font-size:16px;color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(0)+'%'}</strong><span style="font-size:11px;color:var(--muted2);width:26px">${cur==null?'':letterFor(cur)}</span></div>`;}).join('');
+  const due=Object.keys(courses).reduce((a,k)=>a+(flashcards[k]||[]).filter(c=>!c.due||c.due<=Date.now()).length,0);const f=document.getElementById('home-due-fc');if(f)f.textContent=due?`🎴 ${due} flashcards due for review today`:'';}
+
+/* ═══════ UNIFIED CALENDAR ═══════ */
+function renderHomeCal(){const el=document.getElementById('home-cal');if(!el)return;const all=[];Object.keys(courses).forEach(k=>(assignments[k]||[]).forEach(a=>{if(a.due)all.push({...a,course:k});}));
+  const today=new Date();today.setHours(0,0,0,0);const end=new Date(today);end.setDate(end.getDate()+14);
+  const days={};all.forEach(a=>{const d=new Date(a.due+'T00:00:00');if(d<today&&!a.done){(days['overdue']=days['overdue']||[]).push(a);}else if(d<=end&&d>=today){(days[a.due]=days[a.due]||[]).push(a);}});
+  const keys=Object.keys(days).sort((a,b)=>a==='overdue'?-1:b==='overdue'?1:a.localeCompare(b));
+  if(!keys.length){el.innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px 0">Nothing due in the next 14 days. Add deadlines in each course under Assignments.</div>';return;}
+  el.innerHTML=keys.map(k=>{const d=k==='overdue'?null:new Date(k+'T00:00:00');const isT=d&&d.getTime()===today.getTime();return`<div class="cal-day-row"><div class="cal-date ${isT?'today':''}">${d?`<div class="d">${d.getDate()}</div><div class="w">${d.toLocaleDateString('en-CA',{weekday:'short'})}${isT?' · today':''}</div>`:`<div class="d" style="color:var(--red);font-size:13px">LATE</div>`}</div><div class="cal-items">${days[k].map(a=>`<div class="cal-item${a.done?' done':''}"><span class="sb-dot" style="background:${courses[a.course].color}"></span><span class="ct">${a.title}</span><span class="cc">${courses[a.course].code}</span></div>`).join('')}</div></div>`;}).join('');}
+
+/* ═══════ EXAM FORMAT ═══════ */
+function renderFormat(c){const f=examFormat[currentCourse]||{};
+  return`<div class="know-intro"><strong>Tell the AI how your instructor actually tests.</strong><br>Copy this from the syllabus. Every practice question, exam, and drill in ${c.code} will match it.</div>
+  <div class="icard"><div class="icard-label">Midterm format</div><input class="gr-in" id="ef-mid" value="${(f.midterm||'').replace(/"/g,'&quot;')}" placeholder="e.g. 40 multiple choice + 3 short answer, 90 min, closed book, worth 30%"></div>
+  <div class="icard"><div class="icard-label">Final exam format</div><input class="gr-in" id="ef-fin" value="${(f.final||'').replace(/"/g,'&quot;')}" placeholder="e.g. 60 MC + 2 essay questions, 3 hours, cumulative"></div>
+  <div class="icard"><div class="icard-label">Question style / what the instructor emphasizes</div><input class="gr-in" id="ef-sty" value="${(f.style||'').replace(/"/g,'&quot;')}" placeholder="e.g. lots of 'apply the concept to a scenario', diagrams to label, definitions with examples"></div>
+  <div class="icard"><div class="icard-label">Anything else (allowed materials, topics excluded, instructor hints)</div><textarea class="gr-in" id="ef-not" style="min-height:70px">${f.notes||''}</textarea></div>
+  <button class="ai-btn" onclick="examFormat['${currentCourse}']={midterm:document.getElementById('ef-mid').value,final:document.getElementById('ef-fin').value,style:document.getElementById('ef-sty').value,notes:document.getElementById('ef-not').value};persist();this.textContent='✅ Saved'">💾 Save format</button>`;}
+
+/* ═══════ EXAM MODE ═══════ */
+let exam=null,exTimer=null;
+function renderExamSetup(c){clearInterval(exTimer);const hist=examHistory[currentCourse]||[];
+  return`<div class="know-intro"><strong>Real exam conditions.</strong> Timed, no feedback until you submit, questions in your instructor's format. ${examFormat[currentCourse]?'✓ Using your saved exam format.':'⚠️ No exam format saved — set it under <strong>Exam Format</strong> for accurate questions.'}</div>
+  <div class="icard"><div class="icard-label">Set up</div><div class="ex-setup">
+    <div><div class="gr-head" style="margin-bottom:4px">Questions</div><select class="gr-in" id="ex-n"><option>10</option><option selected>20</option><option>30</option></select></div>
+    <div><div class="gr-head" style="margin-bottom:4px">Time (min)</div><select class="gr-in" id="ex-t"><option>15</option><option selected>30</option><option>45</option><option>60</option><option>90</option></select></div>
+    <div><div class="gr-head" style="margin-bottom:4px">Type</div><select class="gr-in" id="ex-type"><option value="mixed" selected>Mixed (MC + short answer)</option><option value="mc">Multiple choice only</option><option value="short">Short answer only</option><option value="problems">Worked problems</option></select></div>
+    <div><div class="gr-head" style="margin-bottom:4px">Scope</div><select class="gr-in" id="ex-scope"><option value="all" selected>Whole course</option><option value="weak">My weak topics</option><option value="recent">Today + recent lessons</option></select></div>
+  </div><button class="ai-btn" id="ex-start" onclick="startExam()">▶ Start exam</button></div>
+  <div class="ai-loading" id="ex-loading"><div class="spinner"></div><div class="loading-txt"><strong>Writing your exam...</strong>Matching ${c.code}'s format</div></div>
+  ${hist.length?`<div class="icard"><div class="icard-label">Past exams</div>${hist.slice(0,8).map(x=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text2)">${x.date} · ${x.n} q · ${x.type}</span><strong style="color:${x.pct>=85?'var(--green)':x.pct>=70?'var(--blue)':'var(--red)'}">${x.pct}% (${letterFor(x.pct)})</strong></div>`).join('')}</div>`:''}`;}
+async function startExam(){const c=courses[currentCourse];const n=+document.getElementById('ex-n').value,t=+document.getElementById('ex-t').value,type=document.getElementById('ex-type').value,scope=document.getElementById('ex-scope').value;
+  document.getElementById('ex-start').disabled=true;document.getElementById('ex-loading').classList.add('show');
+  try{if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    const weak=(weakness[currentCourse]||[]).filter(w=>!w.done).map(w=>w.topic).join('; ');
+    const scopeTxt=scope==='weak'?`Focus ONLY on these weak topics: ${weak||'(none recorded — use whole course)'}`:scope==='recent'?`Focus on: ${c.today.topic}; ${c.review.last}; ${c.tomorrow.topic}`:'Cover the whole course proportionally to how a real exam would.';
+    const typeTxt={mixed:'about 70% multiple choice (4 options) and 30% short answer',mc:'all multiple choice with 4 options',short:'all short-answer (2-4 sentence answers expected)',problems:'all worked problems requiring a full solution (math/code/calculation)'}[type];
+    const raw=await ai(`Write a ${n}-question university exam for ${c.title} at MacEwan University. ${typeTxt}. ${scopeTxt}\n\nCOURSE:\n${c.knowContext}${fmtCtx(c)}\n\nMake it as hard as a real ${c.code} exam. Vary difficulty. Respond ONLY with raw JSON: {"questions":[{"type":"mc","q":"...","opts":["A","B","C","D"],"ans":0,"topic":"short topic label"},{"type":"short","q":"...","model":"model answer","topic":"..."}]}`,4000);
+    exam={qs:aiJSON(raw).questions.slice(0,n),answers:{},secs:t*60,type,start:Date.now()};renderExamLive();}
+  catch(e){alert(e.message);const b=document.getElementById('ex-start');if(b)b.disabled=false;}
+  finally{document.getElementById('ex-loading')?.classList.remove('show');}}
+function renderExamLive(){const el=document.getElementById('tool-content');
+  el.innerHTML=`<div class="ex-timer" id="ex-timer"><span>📝 Exam in progress · ${exam.qs.length} questions · no feedback until submit</span><span class="t" id="ex-clock">--:--</span></div>
+  ${exam.qs.map((q,i)=>`<div class="ex-q"><div class="qnum">Question ${i+1}${q.topic?' · '+q.topic:''}</div><div class="qtext">${q.q}</div>${q.type==='mc'?`<div class="opts">${q.opts.map((o,oi)=>`<div class="opt" id="exo-${i}-${oi}" onclick="exPick(${i},${oi})"><span class="opt-l">${'ABCD'[oi]}</span>${o}</div>`).join('')}</div>`:`<textarea class="ex-ta" placeholder="Your answer..." oninput="exam.answers[${i}]=this.value"></textarea>`}</div>`).join('')}
+  <button class="ai-btn" onclick="submitExam()">✅ Submit exam</button><div class="ai-loading" id="ex-grading"><div class="spinner"></div><div class="loading-txt"><strong>Grading...</strong>Checking every answer</div></div>`;
+  clearInterval(exTimer);exTimer=setInterval(()=>{exam.secs--;const m=Math.floor(exam.secs/60),s=exam.secs%60;const ck=document.getElementById('ex-clock');if(!ck){clearInterval(exTimer);return;}ck.textContent=`${m}:${String(s).padStart(2,'0')}`;if(exam.secs<=120)document.getElementById('ex-timer').classList.add('warn');if(exam.secs<=0){clearInterval(exTimer);alert("⏰ Time's up — submitting.");submitExam();}},1000);document.getElementById('main-panel').scrollTo(0,0);}
+function exPick(i,oi){exam.answers[i]=oi;exam.qs[i].opts.forEach((_,k)=>document.getElementById(`exo-${i}-${k}`).classList.toggle('sel',k===oi));}
+async function submitExam(){clearInterval(exTimer);const c=courses[currentCourse];document.getElementById('ex-grading')?.classList.add('show');
+  try{const shorts=exam.qs.map((q,i)=>({i,q,a:exam.answers[i]})).filter(x=>x.q.type!=='mc');let shortGrades={};
+    if(shorts.length){const raw=await ai(`Grade these ${c.title} short-answer/problem responses like a strict professor. For each give score 0-100 and one-sentence feedback. Respond ONLY with raw JSON: {"grades":{"<index>":{"score":0-100,"fb":"..."}}}\n\n${shorts.map(x=>`[${x.i}] QUESTION: ${x.q.q}\nMODEL ANSWER: ${x.q.model}\nSTUDENT ANSWER: ${x.a||'(blank)'}`).join('\n\n')}`,2000);shortGrades=aiJSON(raw).grades||{};}
+    let total=0;const rows=exam.qs.map((q,i)=>{let sc,fb,cls;if(q.type==='mc'){sc=exam.answers[i]===q.ans?100:0;fb=sc?'Correct':`Correct answer: ${'ABCD'[q.ans]}. ${q.opts[q.ans]}`;}else{sc=shortGrades[i]?.score??0;fb=shortGrades[i]?.fb||'';}
+      total+=sc;cls=sc>=80?'ok':sc>=50?'part':'bad';if(sc<60)addWeak(currentCourse,q.topic||q.q.slice(0,90),'Exam');
+      return`<div class="ex-res-q ${cls}"><div style="display:flex;justify-content:space-between;gap:10px"><strong style="font-size:13px;color:var(--navy)">Q${i+1}. ${q.q}</strong><span style="font-weight:700;color:${cls==='ok'?'var(--green)':cls==='part'?'var(--yellow)':'var(--red)'}">${sc}%</span></div><div style="font-size:12px;color:var(--muted);margin-top:4px">${q.type==='mc'?`You: ${exam.answers[i]!=null?'ABCD'[exam.answers[i]]+'. '+q.opts[exam.answers[i]]:'(blank)'} — `:''}${fb}${q.type!=='mc'?`<br><em>Model answer:</em> ${q.model}`:''}</div></div>`;}).join('');
+    const pct=Math.round(total/exam.qs.length);(examHistory[currentCourse]=examHistory[currentCourse]||[]).unshift({date:new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric'}),n:exam.qs.length,type:exam.type,pct});persist();
+    const mins=Math.round((Date.now()-exam.start)/60000);
+    document.getElementById('tool-content').innerHTML=`<div class="score-banner ${pct>=85?'ga':pct>=70?'gb':pct>=60?'gc':'gd'}"><div class="score-circle">${letterFor(pct)}</div><div class="score-text"><h3>${pct}% — ${pct>=90?'A+ territory. Keep this up.':pct>=80?'Solid. Fix the red ones and this is an A+.':pct>=70?'Passing but not A+. Weak topics added to your Study Plan.':'Not there yet. Every missed topic is now in your Study Plan — hit those first.'}</h3><p>${c.code} · ${exam.qs.length} questions · ${mins} min · ${new Date().toLocaleDateString('en-CA')}</p></div></div>${rows}<div style="display:flex;gap:8px;margin-top:10px"><button class="retry-btn" onclick="renderTool('exam',courses['${currentCourse}'])">↩ New exam</button><button class="retry-btn" onclick="switchTool('plan',document.getElementById('sb-plan'))">🎯 See Study Plan</button></div>`;document.getElementById('main-panel').scrollTo(0,0);}
+  catch(e){alert(e.message);}}
+
+/* ═══════ STUDY PLAN ═══════ */
+function esc(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' ');}
+function renderPlan(c){const w=(weakness[currentCourse]||[]).filter(x=>!x.done).sort((a,b)=>b.count-a.count||b.last-a.last);const done=(weakness[currentCourse]||[]).filter(x=>x.done);
+  const g=gradeCalc(currentCourse);const ex=(examHistory[currentCourse]||[])[0];
+  return`<div class="know-intro"><strong>Built from your own results.</strong> Everything you got wrong in Quiz, Exam Mode, What I Know, Drills, or rated Hard on a flashcard lands here — ranked by how often it's tripped you up. Study top-down.</div>
+  <div class="stat-strip"><div class="stat"><div class="stat-num">${w.length}</div><div class="stat-lbl">Weak topics</div></div><div class="stat"><div class="stat-num">${done.length}</div><div class="stat-lbl">Fixed</div></div><div class="stat"><div class="stat-num">${ex?ex.pct+'%':'—'}</div><div class="stat-lbl">Last exam</div></div><div class="stat"><div class="stat-num">${g.current!=null?g.current.toFixed(0)+'%':'—'}</div><div class="stat-lbl">Current grade</div></div></div>
+  ${w.length?w.map((x,i)=>`<div class="sp-item"><div class="sp-rank">${i+1}</div><div style="flex:1"><div class="sp-topic">${x.topic}<span class="sp-src">${x.src} ×${x.count}</span></div><div class="sp-why">Missed ${x.count} time${x.count>1?'s':''} · last ${new Date(x.last).toLocaleDateString('en-CA',{month:'short',day:'numeric'})}</div><div class="sp-act"><button class="retry-btn" onclick="planAsk('${esc(x.topic)}')">💬 Explain this to me</button><button class="retry-btn" onclick="planCards('${esc(x.topic)}',this)">🎴 5 flashcards</button><button class="retry-btn" onclick="planDone('${esc(x.topic)}')">✓ I've got it now</button></div></div></div>`).join(''):`<div class="fc-empty"><strong>No weak spots recorded yet</strong>Take a quiz, run Exam Mode, or use What I Know — misses show up here automatically.</div>`}
+  <div class="icard" style="margin-top:14px"><div class="icard-label">This week's plan for ${c.code}</div><ul><li><strong>Mon/Wed/Fri:</strong> 20 min flashcards (due cards first) + 1 weak topic from the list above</li><li><strong>Tue/Thu:</strong> Read ahead for the next lecture, then What I Know on what you read</li><li><strong>Weekend:</strong> One timed Exam Mode run (20 q, 30 min). Anything under 80% → back to the list</li><li><strong>Every day:</strong> 10 min re-reading today's lecture notes before bed — retention doubles</li></ul></div>`;}
+function planAsk(t){switchTool('tutor',document.getElementById('sb-tutor'));setTimeout(()=>sendChatMsg(`I keep getting this wrong: "${t}". Explain it to me simply, then give me a quick check question.`),200);}
+async function planCards(t,btn){btn.disabled=true;btn.textContent='⏳';try{const c=courses[currentCourse];const raw=await ai(`Make 5 flashcards for ${c.title} specifically on: "${t}". Respond ONLY with raw JSON array [{"q":"...","a":"..."}]`,800);const cards=aiJSON(raw).map(x=>({...x,rating:null,due:0}));flashcards[currentCourse]=[...(flashcards[currentCourse]||[]),...cards];persist();updateDueBadge();btn.textContent='✅ Added';}catch(e){btn.textContent='❌';btn.disabled=false;}}
+function planDone(t){const w=(weakness[currentCourse]||[]).find(x=>x.topic===t);if(w)w.done=true;persist();renderTool('plan',courses[currentCourse]);}
+
+/* ═══════ DRILLS ═══════ */
+function renderDrills(c){const k=currentCourse;const map={
+  math:[['🧮','Step-by-step solver','Type any problem — get the solution one revealed step at a time','drillMathSolve'],['🔁','Similar problem generator',"Practice the same skill with fresh numbers until it's automatic",'drillMathSimilar']],
+  comp:[['👁️','Code tracing: what does this print?','The #1 exam question type in CMPT 101','drillTrace'],['🔢',"Binary / hex / two's complement drill","Timed conversions — they're free marks if you're fast",'drillBinary']],
+  english:[['✍️','Thesis workshop','Paste a thesis → weak/ok/strong rating + a stronger rewrite','drillThesis'],['📚','MLA citation checker','Paste citations → every error flagged and corrected','drillMLA']],
+  earth:[['💎','Mineral & rock ID','Given the properties, name the specimen — lab is 30–40% of your grade','drillMineral'],['🗺️','Plate boundary & fault scenarios','Read a scenario, identify the boundary/fault type and the evidence','drillTectonic']],
+  anth:[['🧑‍🏫','Theorist matching','Boas → ? Match theorists, theories, and ethnographies','drillTheorist'],['⚖️','Concept pairs','Emic/etic, sex/gender, ethnography/ethnology… the ones everyone confuses','drillConcept']]};
+  return`<div class="know-intro"><strong>Targeted practice for how ${c.code} is actually tested.</strong> These drills hit the exact question types that separate A from A+.</div>${(map[k]||[]).map(d=>`<div class="dr-card" style="display:flex;gap:14px;align-items:center;cursor:pointer" onclick="${d[3]}()"><div style="font-size:28px">${d[0]}</div><div style="flex:1"><div class="sp-topic">${d[1]}</div><div class="sp-why">${d[2]}</div></div><div class="cc-arrow">→</div></div>`).join('')}<div id="drill-area" style="margin-top:14px"></div>`;}
+function drillBox(title,inner){const a=document.getElementById('drill-area');a.innerHTML=`<div class="icard"><div class="icard-label">${title}</div>${inner}</div>`;a.scrollIntoView({behavior:'smooth'});}
+function drillLoad(msg){document.getElementById('drill-out').innerHTML=`<div class="ai-loading show"><div class="spinner"></div><div class="loading-txt"><strong>${msg}</strong></div></div>`;}
+function drillErr(e){const o=document.getElementById('drill-out');if(o)o.innerHTML=`<div class="rsec rs-bad"><h4>Error</h4><p style="font-size:13px">${e.message}</p></div>`;}
+let drCur=null;
+
+// MATH
+function drillMathSolve(){drillBox('🧮 Step-by-step solver',`<textarea class="ex-ta" id="dr-in" placeholder="e.g. Solve 2x² − 5x − 3 = 0   or   Find the domain of f(x) = √(x−3)/(x²−9)   or   Verify (1−cos²x)/sin x = sin x"></textarea><div style="margin-top:8px"><button class="ai-btn" onclick="runMathSolve()">Solve step by step</button></div><div id="drill-out" style="margin-top:12px"></div>`);}
+async function runMathSolve(){const p=document.getElementById('dr-in').value.trim();if(!p)return;drillLoad('Working it out...');try{const raw=await ai(`You are a MATH 099 precalculus tutor at MacEwan. Solve this problem showing every step a student must write on an exam to get full marks. Respond ONLY with raw JSON: {"steps":[{"do":"what to do in this step","math":"the math written out","why":"one-line reason"}],"answer":"final answer, exact form","check":"how to verify by substitution","trap":"the most common mistake students make on this type"}\n\nPROBLEM: ${p}`,1500);const r=aiJSON(raw);drCur=p;
+  document.getElementById('drill-out').innerHTML=`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Steps are blurred — try each one yourself, then click to reveal.</div>${r.steps.map((s,i)=>`<div class="dr-step hidden" onclick="this.classList.remove('hidden')"><strong>Step ${i+1}: ${s.do}</strong><br><span style="font-family:'Courier New',monospace;font-size:14px;color:var(--navy)">${s.math}</span><br><span style="color:var(--muted)">${s.why}</span></div>`).join('')}<div class="dr-step hidden" onclick="this.classList.remove('hidden')" style="border-color:var(--green);background:var(--green-light)"><strong>Answer:</strong> ${r.answer}<br><strong>Check:</strong> ${r.check}</div><div class="dr-step" style="border-color:var(--red);background:var(--red-light)"><strong>⚠️ Common trap:</strong> ${r.trap}</div><button class="retry-btn" style="margin-top:6px" onclick="drillMathSimilarFrom(drCur)">🔁 Give me a similar problem</button>`;}catch(e){drillErr(e);}}
+function drillMathSimilar(){drillBox('🔁 Similar problem generator',`<textarea class="ex-ta" id="dr-in" placeholder="Paste a problem type or topic — e.g. 'solving log equations' or 'x² + 6x + 8 = 0'"></textarea><div style="margin-top:8px"><button class="ai-btn" onclick="drillMathSimilarFrom(document.getElementById('dr-in').value)">Generate 3 practice problems</button></div><div id="drill-out" style="margin-top:12px"></div>`);}
+async function drillMathSimilarFrom(p){if(!p)return;if(!document.getElementById('drill-out'))drillMathSimilar();drillLoad('Writing problems...');try{const raw=await ai(`MATH 099 tutor. Create 3 NEW practice problems of the same type/skill as: "${p}" — same difficulty, different numbers. Respond ONLY with raw JSON: {"problems":[{"q":"problem","a":"final answer (exact)","hint":"one hint"}]}`,900);const r=aiJSON(raw);document.getElementById('drill-out').innerHTML=r.problems.map((x,i)=>`<div class="dr-card"><div class="qtext">${i+1}. ${x.q}</div><div class="dr-step hidden" onclick="this.classList.remove('hidden')">💡 Hint: ${x.hint}</div><div class="dr-step hidden" onclick="this.classList.remove('hidden')" style="border-color:var(--green);background:var(--green-light)">✅ Answer: ${x.a}</div></div>`).join('');}catch(e){drillErr(e);}}
+
+// CMPT — code tracing
+async function drillTrace(){drillBox('👁️ Code tracing',`<div id="drill-out"></div>`);drillLoad('Writing a program...');try{const raw=await ai(`CMPT 101 (Python) exam-style code tracing question. Write a 6-14 line Python snippet using concepts from: loops, conditionals, strings/slicing, lists, functions with return, accumulator patterns, integer division/modulo. It must have at least one subtle trap. Respond ONLY with raw JSON: {"code":"...python...","output":"exact printed output","explain":"line-by-line trace in 4-8 short lines","trap":"the trap"}`,900);drCur=aiJSON(raw);document.getElementById('drill-out').innerHTML=`<div class="qtext">What does this program print?</div><div class="dr-code">${drCur.code.replace(/</g,'&lt;')}</div><textarea class="ex-ta" id="dr-ans" placeholder="Type the exact output..."></textarea><div style="display:flex;gap:8px;margin-top:8px"><button class="ai-btn" onclick="checkTrace()">Check</button><button class="retry-btn" onclick="drillTrace()">Next program →</button></div><div id="dr-rev" style="margin-top:10px"></div>`;}catch(e){drillErr(e);}}
+function checkTrace(){const norm=s=>s.trim().split('\n').map(l=>l.trimEnd()).join('\n');const ok=norm(document.getElementById('dr-ans').value)===norm(drCur.output);if(!ok)addWeak(currentCourse,'Code tracing: '+drCur.trap.slice(0,70),'Drill');
+  document.getElementById('dr-rev').innerHTML=`<div class="dr-step" style="border-color:${ok?'var(--green);background:var(--green-light)':'var(--red);background:var(--red-light)'}"><strong>${ok?'✅ Correct!':'❌ Not quite.'}</strong> Expected output:<br><span style="font-family:'Courier New',monospace;white-space:pre">${drCur.output.replace(/</g,'&lt;')}</span></div><div class="dr-step"><strong>Trace:</strong><br>${drCur.explain.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div><div class="dr-step" style="border-color:var(--red);background:var(--red-light)"><strong>⚠️ Trap:</strong> ${drCur.trap}</div>`;}
+// CMPT — binary
+let binQ=null;const binScore={ok:0,n:0};
+function drillBinary(){drillBox('🔢 Number systems drill',`<div id="drill-out"></div>`);nextBin();}
+function nextBin(){const types=['dec2bin','bin2dec','dec2hex','hex2dec','twos','bin2hex'];const t=types[Math.floor(Math.random()*types.length)];let q,a,hint;const n=Math.floor(Math.random()*200)+5;
+  if(t==='dec2bin'){q=`Convert ${n} to binary`;a=n.toString(2);hint='Repeated division by 2, read remainders bottom-up — or subtract powers of 2 (128,64,32,16,8,4,2,1)';}
+  else if(t==='bin2dec'){q=`Convert ${n.toString(2)}₂ to decimal`;a=String(n);hint='Add the powers of 2 where there is a 1, right to left: 1,2,4,8,16,32,64,128';}
+  else if(t==='dec2hex'){q=`Convert ${n} to hexadecimal`;a=n.toString(16).toUpperCase();hint='Divide by 16; remainders 10-15 → A-F';}
+  else if(t==='hex2dec'){q=`Convert ${n.toString(16).toUpperCase()}₁₆ to decimal`;a=String(n);hint='Right digit ×1, next ×16, next ×256. A=10 … F=15';}
+  else if(t==='bin2hex'){q=`Convert ${n.toString(2)}₂ to hexadecimal`;a=n.toString(16).toUpperCase();hint='Group into 4 bits from the right, pad the left with 0s, convert each group';}
+  else{const m=Math.floor(Math.random()*120)+1;q=`Write −${m} in 8-bit two's complement (binary)`;a=(256-m).toString(2).padStart(8,'0');hint=`Write +${m} in 8 bits, flip every bit, add 1`;}
+  binQ={q,a,hint,t};document.getElementById('drill-out').innerHTML=`<div class="qtext">${q}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="gr-in" id="dr-ans" placeholder="Answer" onkeydown="if(event.key==='Enter')checkBin()" style="max-width:220px;font-family:'Courier New',monospace"><button class="ai-btn" onclick="checkBin()">Check</button><button class="retry-btn" style="margin:0" onclick="document.getElementById('dr-hint').style.display='block'">Hint</button></div><div id="dr-hint" class="dr-step" style="display:none;margin-top:8px">💡 ${hint}</div><div id="dr-rev" style="margin-top:10px"></div><div style="font-size:12px;color:var(--muted2);margin-top:8px">This session: <strong id="bin-score">${binScore.ok}/${binScore.n}</strong></div>`;document.getElementById('dr-ans').focus();}
+function checkBin(){const v=document.getElementById('dr-ans').value.trim().toUpperCase().replace(/^0B|^0X/,'');const ok=v===binQ.a.toUpperCase();binScore.n++;if(ok)binScore.ok++;else addWeak(currentCourse,{dec2bin:'Decimal → binary conversion',bin2dec:'Binary → decimal',dec2hex:'Decimal → hex',hex2dec:'Hex → decimal',bin2hex:'Binary → hex grouping',twos:"Two's complement"}[binQ.t],'Drill');
+  document.getElementById('dr-rev').innerHTML=`<div class="dr-step" style="border-color:${ok?'var(--green);background:var(--green-light)':'var(--red);background:var(--red-light)'}"><strong>${ok?'✅ Correct':'❌ Wrong'}</strong> — answer: <span style="font-family:'Courier New',monospace">${binQ.a}</span></div><button class="retry-btn" style="margin-top:6px" onclick="nextBin()">Next →</button>`;document.getElementById('bin-score').textContent=`${binScore.ok}/${binScore.n}`;}
+
+// ENGL
+function drillThesis(){drillBox('✍️ Thesis workshop',`<textarea class="ex-ta" id="dr-in" placeholder="Paste your thesis statement (1-2 sentences). Optionally add the essay prompt on a new line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runThesis()">Rate my thesis</button><div id="drill-out" style="margin-top:12px"></div>`);}
+async function runThesis(){const p=document.getElementById('dr-in').value.trim();if(!p)return;drillLoad('Evaluating...');try{const raw=await ai(`ENGL 102 (MacEwan) instructor. Evaluate this thesis statement against: arguable (not fact/question/announcement), specific, focused, answers "so what", signals structure/reasoning. Respond ONLY with raw JSON: {"rating":"weak"|"ok"|"strong","score":0-10,"problems":["..."],"rewrite":"a stronger version keeping the student's idea","why":"why the rewrite is better in 2 sentences","test":"one question the student should ask themselves about their thesis"}\n\nTHESIS: ${p}`,900);const r=aiJSON(raw);if(r.rating!=='strong')addWeak(currentCourse,'Thesis statements: '+(r.problems[0]||'').slice(0,60),'Drill');const col={weak:'var(--red)',ok:'var(--yellow)',strong:'var(--green)'}[r.rating];document.getElementById('drill-out').innerHTML=`<div class="score-banner" style="background:#fff;border:1px solid var(--border)"><div class="score-circle" style="background:var(--page);color:${col};font-size:18px">${r.score}/10</div><div class="score-text"><h3 style="color:${col};text-transform:uppercase;letter-spacing:.5px;font-size:13px">${r.rating}</h3><p>${r.problems.join(' · ')}</p></div></div><div class="dr-step" style="border-color:var(--green);background:var(--green-light)"><strong>Stronger rewrite:</strong><br>${r.rewrite}<br><span style="color:var(--muted)">${r.why}</span></div><div class="dr-step">🧭 Ask yourself: ${r.test}</div>`;}catch(e){drillErr(e);}}
+function drillMLA(){drillBox('📚 MLA citation checker',`<textarea class="ex-ta" id="dr-in" style="min-height:140px" placeholder="Paste Works Cited entries and/or in-text citations. One per line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runMLA()">Check citations</button><div id="drill-out" style="margin-top:12px"></div>`);}
+async function runMLA(){const p=document.getElementById('dr-in').value.trim();if(!p)return;drillLoad('Checking against MLA 9...');try{const raw=await ai(`MLA 9th edition expert. Check each citation. Respond ONLY with raw JSON: {"items":[{"original":"...","ok":true|false,"errors":["specific error"],"fixed":"corrected citation (mark italics as *Title*)"}],"general":"one tip"}\n\n${p}`,1500);const r=aiJSON(raw);if(r.items.some(x=>!x.ok))addWeak(currentCourse,'MLA formatting','Drill');document.getElementById('drill-out').innerHTML=r.items.map(x=>`<div class="dr-step" style="border-color:${x.ok?'var(--green);background:var(--green-light)':'var(--red);background:var(--red-light)'}"><strong>${x.ok?'✅ Correct':'❌ '+x.errors.join('; ')}</strong><br><span style="color:var(--muted)">${x.original}</span>${x.ok?'':'<br><strong>Fixed:</strong> '+x.fixed.replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>`).join('')+`<div class="dr-step">💡 ${r.general}</div>`;}catch(e){drillErr(e);}}
+
+// EASC
+function mcDrill(title,r,tag){const opts=[...r.options].sort(()=>Math.random()-.5);drCur=r;document.getElementById('drill-out').innerHTML=`${r.scenario?`<div class="dr-step" style="background:#fff;border-color:var(--border)">${r.scenario}</div>`:''}<div class="qtext">${r.question}</div>${r.props?`<ul style="padding-left:18px;margin-bottom:12px">${r.props.map(p=>`<li style="font-size:13px;color:var(--text2);line-height:1.7">${p}</li>`).join('')}</ul>`:''}<div class="opts">${opts.map((o,i)=>`<div class="opt" onclick="mcPick(this,${i},'${tag}')" data-v="${o.replace(/"/g,'&quot;')}"><span class="opt-l">•</span>${o}</div>`).join('')}</div><div id="dr-rev" style="margin-top:10px"></div>`;}
+function mcPick(el,i,tag){const ok=el.dataset.v===drCur.answer;document.querySelectorAll('#drill-out .opt').forEach(x=>x.style.pointerEvents='none');el.classList.add(ok?'correct':'wrong');if(!ok){addWeak(currentCourse,drCur.weakLabel||drCur.answer,tag);document.querySelectorAll('#drill-out .opt').forEach(x=>{if(x.dataset.v===drCur.answer)x.classList.add('correct');});}
+  document.getElementById('dr-rev').innerHTML=`<div class="dr-step"><strong>${ok?'✅ Correct: ':'❌ Answer: '}${drCur.answer}</strong>${drCur.type?' ('+drCur.type+')':''}<br>${drCur.key?'Key giveaway: '+drCur.key:''}${drCur.evidence?'Evidence: '+drCur.evidence:''}${drCur.extra?'<br>📌 '+drCur.extra:''}</div><button class="retry-btn" style="margin-top:6px" onclick="${drCur.next}()">Next →</button>`;}
+async function drillMineral(){drillBox('💎 Mineral & rock ID',`<div id="drill-out"></div>`);drillLoad('Picking a specimen...');try{const raw=await ai(`EASC 101 lab practical. Pick ONE common lab specimen (rock-forming mineral OR igneous/sedimentary/metamorphic rock a first-year would be tested on). Describe it ONLY by observable properties as a lab card would (luster, colour, streak, hardness, cleavage/fracture, other tests; or for rocks: texture, grain size, composition, foliation, reaction to HCl). Do NOT name it. Respond ONLY with raw JSON: {"props":["property 1","property 2","..."],"answer":"name","type":"mineral|igneous|sedimentary|metamorphic","options":["answer","distractor","distractor","distractor"],"key":"the single most diagnostic property"}`,700);const r=aiJSON(raw);r.question='Identify this specimen';r.weakLabel=`Identifying ${r.answer} (${r.type})`;r.next='drillMineral';mcDrill('',r,'Lab drill');}catch(e){drillErr(e);}}
+async function drillTectonic(){drillBox('🗺️ Tectonic scenarios',`<div id="drill-out"></div>`);drillLoad('Building a scenario...');try{const raw=await ai(`EASC 101. Write a short real-world-style geological scenario (3-4 sentences, a real or realistic location) with clues. Ask the student to identify EITHER the plate boundary type (divergent / convergent oceanic-continental / convergent oceanic-oceanic / convergent continental-continental / transform / hot spot) OR the fault type (normal / reverse / thrust / strike-slip). Respond ONLY with raw JSON: {"scenario":"...","question":"...","options":["...","...","...","..."],"answer":"exact option text","evidence":"which clues gave it away","extra":"one related fact instructors test"}`,700);const r=aiJSON(raw);r.weakLabel=r.answer+' identification';r.next='drillTectonic';mcDrill('',r,'Drill');}catch(e){drillErr(e);}}
+
+// ANTH
+const ANTH_PAIRS=[['Franz Boas','Historical particularism · cultural relativism · four-field approach'],['Bronislaw Malinowski','Functionalism · participant observation · Trobriand kula'],['A.R. Radcliffe-Brown','Structural-functionalism · social structure'],['Ruth Benedict','Patterns of Culture · Apollonian/Dionysian'],['Margaret Mead','Coming of Age in Samoa · nature vs nurture'],['Claude Lévi-Strauss','Structuralism · binary oppositions · alliance theory'],['Clifford Geertz','Interpretive anthropology · thick description · Balinese cockfight'],['Marvin Harris',"Cultural materialism · India's sacred cow"],['Victor Turner','Ritual · liminality · communitas'],['E.B. Tylor','1871 definition of culture · animism · unilineal evolution'],['Lewis Henry Morgan','Savagery–barbarism–civilization · kinship terminology'],['Arnold van Gennep','Rites of passage: separation, liminality, incorporation'],['E.E. Evans-Pritchard','The Nuer · Azande witchcraft, oracles and magic'],['Marcel Mauss','The Gift · reciprocity and obligation'],['Marshall Sahlins','Original affluent society · types of reciprocity'],['Mary Douglas','Purity and Danger · pollution and taboo'],['Julian Steward','Cultural ecology · multilinear evolution'],['Leslie White','Neo-evolutionism · culture = energy × technology'],['Sapir & Whorf','Linguistic relativity hypothesis'],['Horace Miner','Body Ritual among the Nacirema'],['Laura Bohannan','Shakespeare in the Bush'],['Napoleon Chagnon','Yanomamö: The Fierce People'],['Pierre Bourdieu','Practice theory · habitus'],['Arjun Appadurai','Globalization · -scapes'],['Émile Durkheim','Sacred/profane · collective effervescence · totemism'],['Max Weber','Power vs authority · class, status, party']];
+const ANTH_CONCEPTS=[['Emic',"Insider's perspective — meanings as members understand them"],['Etic','Outsider/analytical perspective using scientific categories'],['Ethnography','A written description of one culture from fieldwork'],['Ethnology','Cross-cultural comparison of ethnographies'],['Sex','Biological classification (chromosomes, anatomy)'],['Gender','Cultural construction of roles and identities'],['Matrilineal','Descent traced through mothers (NOT female rule)'],['Matriarchal','Society ruled by women — essentially no documented cases'],['Polygyny','One man, multiple wives (common)'],['Polyandry','One woman, multiple husbands (rare; Tibet/Nyinba)'],['Bridewealth',"Goods from groom's family to bride's family"],['Dowry',"Goods from bride's family to the couple/groom's family"],['Exogamy',"Rule to marry OUTSIDE one's group"],['Endogamy',"Rule to marry INSIDE one's group"],['Shaman','Part-time religious specialist, altered states, healing'],['Priest','Full-time specialist in a hierarchy of an organized religion'],['Imitative magic','Like produces like (voodoo doll) — Frazer'],['Contagious magic','Things once in contact keep a connection (hair, nails) — Frazer'],['Cultural relativism','Understand a culture by its own standards (methodological)'],['Moral relativism','All moral systems equally valid — NOT what anthropology claims'],['Band','Small, egalitarian, foragers, informal leadership'],['Chiefdom','Ranked, hereditary chief, redistribution — no formal laws'],['Tribe','Horticultural/pastoral, big men, segmentary lineages'],['State','Stratified, central government, monopoly on force, laws'],['Generalized reciprocity','Giving without expecting immediate return (family)'],['Negative reciprocity','Trying to get more than you give (strangers, haggling)'],['Enculturation',"Learning one's own culture from birth"],['Acculturation','Culture change from contact between groups']];
+let matchSel=null,matchDone=0;
+function drillTheorist(){drillMatch('🧑‍🏫 Theorist matching',ANTH_PAIRS,'Theorist matching');}
+function drillConcept(){drillMatch('⚖️ Concept pairs',ANTH_CONCEPTS,'Concept confusion');}
+function drillMatch(title,pool,tag){const set=[...pool].sort(()=>Math.random()-.5).slice(0,6);const left=set.map((p,i)=>({t:p[0],i})),right=set.map((p,i)=>({t:p[1],i})).sort(()=>Math.random()-.5);matchSel=null;matchDone=0;
+  drillBox(title,`<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Click a name on the left, then its match on the right. 6 pairs.</div><div class="dr-match"><div>${left.map(x=>`<div class="dr-mi" data-i="${x.i}" data-side="L" onclick="matchClick(this,'${tag}')">${x.t}</div>`).join('')}</div><div>${right.map(x=>`<div class="dr-mi" data-i="${x.i}" data-side="R" onclick="matchClick(this,'${tag}')" style="font-size:12px">${x.t}</div>`).join('')}</div></div><div id="dr-rev" style="margin-top:10px"></div><button class="retry-btn" style="margin-top:8px" onclick="${tag==='Theorist matching'?'drillTheorist()':'drillConcept()'}">New set →</button>`);}
+function matchClick(el,tag){if(el.classList.contains('ok'))return;if(!matchSel){matchSel=el;el.classList.add('sel');return;}if(matchSel===el){el.classList.remove('sel');matchSel=null;return;}if(matchSel.dataset.side===el.dataset.side){matchSel.classList.remove('sel');matchSel=el;el.classList.add('sel');return;}
+  const ok=matchSel.dataset.i===el.dataset.i;if(ok){matchSel.classList.add('ok');el.classList.add('ok');matchDone++;if(matchDone===6)document.getElementById('dr-rev').innerHTML='<div class="dr-step" style="border-color:var(--green);background:var(--green-light)">🎉 All 6 matched.</div>';}else{const L=matchSel.dataset.side==='L'?matchSel:el;addWeak(currentCourse,tag+': '+L.textContent.slice(0,60),'Drill');matchSel.classList.add('bad');el.classList.add('bad');setTimeout(()=>{document.querySelectorAll('.dr-mi.bad').forEach(x=>x.classList.remove('bad'));},600);}matchSel.classList.remove('sel');matchSel=null;}
+
 
 /* get an a */
 function renderAgrade(c){
