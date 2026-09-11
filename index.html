@@ -5,515 +5,630 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MacEwan Study Pro</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Georgia&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f7fa;
-  --surface:#ffffff;
+  --page:#f2f1ee;
+  --sidebar:#ffffff;
   --card:#ffffff;
-  --card2:#f0f4ff;
-  --border:#e2e8f0;
-  --border2:#d0d9e8;
-  --accent:#2563eb;
-  --accent-light:#eff6ff;
-  --green:#16a34a;
-  --green-light:#f0fdf4;
-  --yellow:#d97706;
-  --yellow-light:#fffbeb;
-  --red:#dc2626;
-  --red-light:#fef2f2;
-  --purple:#7c3aed;
-  --purple-light:#f5f3ff;
+  --border:#e8e5e0;
+  --border2:#dedad3;
+  --navy:#0f172a;
+  --blue:#1e40af;
+  --blue-light:#eff6ff;
+  --blue-border:#bfdbfe;
   --text:#0f172a;
   --text2:#334155;
   --muted:#64748b;
   --muted2:#94a3b8;
-  --radius:12px;
-  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
-  --shadow-md:0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
-  --shadow-lg:0 12px 32px rgba(0,0,0,.1),0 4px 10px rgba(0,0,0,.05);
+  --green:#16a34a;
+  --green-light:#f0fdf4;
+  --red:#dc2626;
+  --red-light:#fef2f2;
+  --yellow:#d97706;
+  --yellow-light:#fffbeb;
+  --radius:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.07);
 }
-body{font-size:17px;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);font-size:15px;display:flex;flex-direction:column}
 
-/* ── HEADER ── */
-header{background:#fff;border-bottom:1px solid var(--border);padding:0 36px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;height:68px;box-shadow:var(--shadow)}
-.logo-badge{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:21px;flex-shrink:0}
-.logo-text{font-family:'Playfair Display',serif;font-size:23px;font-weight:900;color:var(--text)}
-.logo-text span{color:var(--accent)}
-.header-sub{font-size:23px;color:var(--muted);margin-top:1px}
-.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.hdr-date{font-size:21px;color:var(--muted);text-align:right}
-.hdr-date strong{display:block;color:var(--accent);font-size:19px;font-weight:600}
+/* ── TOPBAR ── */
+.topbar{background:#fff;border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);z-index:50}
+.brand{font-family:'Georgia',serif;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-.4px}
+.brand span{color:var(--blue)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.topbar-date{font-size:11px;color:var(--muted2);letter-spacing:.4px}
+.key-btn{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.key-btn:hover{background:#dbeafe}
 
-/* ── HOME ── */
-#home-view{padding:40px 36px}
-.home-hero{margin-bottom:28px}
-.home-hero h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;line-height:1.18;color:var(--text);margin-bottom:8px}
-.home-hero h1 span{color:var(--accent)}
-.home-hero p{font-size:23px;color:var(--muted);max-width:480px;line-height:1.65}
-.stats-row{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap}
-.stat-pill{background:#fff;border:1px solid var(--border);border-radius:40px;padding:7px 16px;font-size:21px;color:var(--muted);display:flex;align-items:center;gap:6px;box-shadow:var(--shadow)}
-.stat-pill strong{color:var(--text);font-weight:600}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;overflow:hidden}
 
-/* course cards */
-.ccard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;position:relative;overflow:hidden;box-shadow:var(--shadow)}
-.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0}
-.ccard:nth-child(1)::before{background:var(--accent)}
-.ccard:nth-child(2)::before{background:var(--green)}
-.ccard:nth-child(3)::before{background:var(--yellow)}
-.ccard:nth-child(4)::before{background:#ea580c}
-.ccard:nth-child(5)::before{background:var(--purple)}
-.ccard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
-.ccard-code{font-size:19px;font-weight:700;letter-spacing:1.4px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
-.ccard-title{font-size:19px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.25}
-.ccard-desc{font-size:21px;color:var(--muted);line-height:1.6;margin-bottom:16px}
-.ccard-footer{display:flex;align-items:center;justify-content:space-between}
-.ccard-chip{font-size:23px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--accent-light);color:var(--accent);border:1px solid #bfdbfe}
-.ccard-arrow{color:var(--muted2);font-size:21px;transition:transform .15s,color .15s}
-.ccard:hover .ccard-arrow{transform:translateX(4px);color:var(--accent)}
+/* ── SIDEBAR ── */
+.sidebar{width:190px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:2px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.sb-section{padding:16px 12px 4px}
+.sb-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;padding:0 4px}
+.sb-course{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:background .12s;border-left:2px solid transparent}
+.sb-course:hover{background:#f8f7f5}
+.sb-course.active{background:var(--blue-light);border-left-color:var(--blue)}
+.sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-course-info{}
+.sb-course-name{font-size:12px;font-weight:500;color:var(--muted);line-height:1.2}
+.sb-course.active .sb-course-name{color:var(--navy);font-weight:600}
+.sb-course-code{font-size:10px;color:var(--muted2)}
+.sb-course.active .sb-course-code{color:var(--muted)}
+.sb-divider{height:1px;background:var(--border);margin:10px 12px}
+.sb-tool{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:1px;transition:background .12s}
+.sb-tool:hover{background:#f8f7f5}
+.sb-tool.active{background:var(--blue-light)}
+.sb-tool-icon{font-size:13px;width:20px;text-align:center;flex-shrink:0}
+.sb-tool-name{font-size:12px;color:var(--muted2);white-space:nowrap}
+.sb-tool.active .sb-tool-name{color:var(--navy);font-weight:600}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;background:var(--page);padding:24px 28px}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── HOME VIEW ── */
+.home-hero{margin-bottom:24px}
+.home-hero h1{font-family:'Georgia',serif;font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-.5px;margin-bottom:6px}
+.home-hero h1 span{color:var(--blue)}
+.home-hero p{font-size:13px;color:var(--muted);line-height:1.65;max-width:480px}
+.home-stats{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.home-stat{background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;box-shadow:var(--shadow)}
+.home-stat strong{color:var(--navy);font-weight:600}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.course-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.course-card:nth-child(1)::before{background:#6366f1}
+.course-card:nth-child(2)::before{background:#10b981}
+.course-card:nth-child(3)::before{background:#f59e0b}
+.course-card:nth-child(4)::before{background:#ef4444}
+.course-card:nth-child(5)::before{background:#8b5cf6}
+.course-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border2)}
+.cc-code{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted2);text-transform:uppercase;margin-bottom:5px}
+.cc-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px;line-height:1.25;font-family:'Georgia',serif}
+.cc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.cc-footer{display:flex;align-items:center;justify-content:space-between}
+.cc-chip{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-border)}
+.cc-arrow{color:var(--muted2);font-size:16px;transition:all .15s}
+.course-card:hover .cc-arrow{transform:translateX(3px);color:var(--blue)}
 
 /* ── COURSE VIEW ── */
-#course-view{display:none}
-.course-hdr{padding:16px 36px 0;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--border)}
-.back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 13px;border-radius:8px;cursor:pointer;font-size:21px;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px;font-weight:500}
-.back-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
-.cv-info .code{font-size:19px;color:var(--muted);font-weight:700;letter-spacing:.8px;text-transform:uppercase}
-.cv-info .title{font-size:23px;font-weight:700;color:var(--text);font-family:'Playfair Display',serif}
+.course-hdr{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.course-badge{background:var(--navy);color:#fff;border-radius:5px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;display:inline-block;margin-bottom:7px}
+.course-hdr-title{font-family:'Georgia',serif;font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.4px;line-height:1.2;margin-bottom:3px}
+.course-hdr-sub{font-size:12px;color:var(--muted2)}
 
-/* ── TABS ── */
-.tab-bar{display:flex;padding:0 36px;border-bottom:1px solid var(--border);overflow-x:auto;background:#fff}
-.tab-btn{background:none;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:21px;font-weight:500;padding:12px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;gap:5px}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.tab-content{display:none;padding:28px 36px;max-width:980px}
-.tab-content.active{display:block}
-.sec-title{font-family:'Playfair Display',serif;font-size:23px;margin-bottom:18px;color:var(--text)}
+/* stat strip */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;box-shadow:var(--shadow)}
+.stat-num{font-size:20px;font-weight:700;color:var(--navy);line-height:1;font-family:'Georgia',serif}
+.stat-lbl{font-size:9px;color:var(--muted2);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
 
-/* ── INFO CARDS ── */
-.icard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow)}
-.icard h3{font-size:21px;font-weight:700;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px}
-.icard p,.icard li{font-size:19px;color:var(--text2);line-height:1.75}
-.icard ul{padding-left:17px}
-.icard li{margin-bottom:5px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* info cards */
+.icard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.icard-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.icard-title{font-family:'Georgia',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.3}
+.icard ul{padding-left:16px}
+.icard li{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:4px}
+.icard p{font-size:13px;color:var(--text2);line-height:1.75}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.badge{display:inline-flex;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;margin:2px}
+.badge-b{background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-border)}
+.badge-g{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
 
-/* ── QUIZ ── */
-.qcard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;box-shadow:var(--shadow)}
-.qnum{font-size:19px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
-.qtext{font-size:23px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.5}
+/* quiz */
+.qcard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow)}
+.qnum{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.qtext{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;line-height:1.5;font-family:'Georgia',serif}
 .opts{display:flex;flex-direction:column;gap:7px}
-.opt{display:flex;align-items:center;gap:9px;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;cursor:pointer;font-size:19px;color:var(--text2);transition:all .15s;font-weight:500}
-.opt:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.opt{display:flex;align-items:center;gap:10px;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;font-weight:500}
+.opt:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
 .opt.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
 .opt.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
-.opt-l{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;flex-shrink:0;color:var(--muted)}
-.qfb{display:none;margin-top:10px;font-size:19px;padding:10px 14px;border-radius:8px;line-height:1.6;font-weight:500}
+.opt-l{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--muted)}
+.qfb{display:none;margin-top:10px;font-size:13px;padding:10px 14px;border-radius:8px;line-height:1.6;font-weight:500}
 .qfb.show{display:block}
 .qfb.good{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
 .qfb.bad{background:var(--red-light);color:var(--red);border:1px solid #fecaca}
 
-/* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;font-size:23px;font-weight:600;padding:3px 9px;border-radius:20px;margin:2px}
-.badge-b{background:var(--accent-light);color:var(--accent);border:1px solid #bfdbfe}
-.badge-g{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
-.badge-y{background:var(--yellow-light);color:var(--yellow);border:1px solid #fde68a}
-
-/* ── TIPS ── */
-.tip-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:13px}
-.tip-ico{width:32px;height:32px;border-radius:9px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
-.tip-txt{font-size:19px;color:var(--text2);line-height:1.65}
-.tip-txt strong{color:var(--text);display:block;margin-bottom:2px;font-size:19px;font-weight:600}
-
-/* ── PROGRESS ── */
-.pbar-wrap{margin-bottom:10px}
-.pbar-label{font-size:23px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;font-weight:500}
-.pbar-track{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
-.pbar-fill{height:100%;border-radius:3px;transition:width .6s ease}
-
-/* ══ WHAT I KNOW ══ */
-.know-intro{background:linear-gradient(135deg,var(--accent-light),#f0fdf4);border:1px solid #bfdbfe;border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;font-size:19px;color:var(--text2);line-height:1.7}
-.know-intro strong{color:var(--text)}
-.know-ta-wrap{position:relative;margin-bottom:12px}
-.know-ta{width:100%;min-height:150px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;color:var(--text);font-family:'Inter',sans-serif;font-size:19px;line-height:1.7;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow)}
-.know-ta:focus{border-color:var(--accent)}
-.know-ta::placeholder{color:var(--muted2)}
-.char-c{position:absolute;bottom:10px;right:14px;font-size:19px;color:var(--muted2)}
-.ai-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:11px 24px;font-size:19px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;box-shadow:0 2px 8px rgba(37,99,235,.25)}
-.ai-btn:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.3)}
-.ai-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
-.ai-loading{display:none;margin-top:22px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:30px;text-align:center;box-shadow:var(--shadow)}
-.ai-loading.show{display:block}
-.spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:19px;color:var(--muted)}
-.loading-txt strong{display:block;color:var(--accent);font-size:23px;margin-bottom:3px;font-weight:600}
-.ai-result{display:none;margin-top:22px}
-.ai-result.show{display:block}
-.score-banner{border-radius:var(--radius);padding:18px 22px;margin-bottom:14px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow)}
-.ga{background:var(--green-light);border:1px solid #bbf7d0}
-.gb{background:var(--accent-light);border:1px solid #bfdbfe}
-.gc{background:var(--yellow-light);border:1px solid #fde68a}
-.gd{background:var(--red-light);border:1px solid #fecaca}
-.score-circle{width:60px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex-shrink:0;font-family:'Playfair Display',serif}
-.ga .score-circle{background:#dcfce7;color:var(--green)}
-.gb .score-circle{background:#dbeafe;color:var(--accent)}
-.gc .score-circle{background:#fef3c7;color:var(--yellow)}
-.gd .score-circle{background:#fee2e2;color:var(--red)}
-.score-text h3{font-size:19px;font-weight:700;color:var(--text);margin-bottom:3px}
-.score-text p{font-size:21px;color:var(--muted)}
-.rsec{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;box-shadow:var(--shadow)}
-.rsec h4{font-size:21px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px}
-.rsec.rs-good h4{color:var(--green)}
-.rsec.rs-bad  h4{color:var(--red)}
-.rsec.rs-warn h4{color:var(--yellow)}
-.rsec.rs-info h4{color:var(--accent)}
-.rsec ul{padding-left:16px}
-.rsec li{font-size:19px;color:var(--text2);line-height:1.75;margin-bottom:5px}
-.rsec li .hl{color:var(--text);font-weight:600}
-.retry-btn{background:none;border:1.5px solid var(--border);color:var(--muted);padding:9px 18px;border-radius:8px;cursor:pointer;font-size:21px;font-family:'Inter',sans-serif;transition:all .15s;margin-top:6px;font-weight:500}
-.retry-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
-
-/* ══ FLASHCARDS ══ */
-.fc-controls{display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
-.fc-gen-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:19px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;box-shadow:0 2px 8px rgba(37,99,235,.2)}
-.fc-gen-btn:hover{background:#1d4ed8;transform:translateY(-1px)}
-.fc-gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.fc-count{font-size:21px;color:var(--muted);margin-left:auto;font-weight:500}
-.fc-area{perspective:1000px}
-.fc-card{width:100%;max-width:560px;margin:0 auto 20px;height:210px;cursor:pointer;position:relative}
+/* flashcards */
+.fc-card{width:100%;max-width:520px;margin:0 auto 18px;height:200px;cursor:pointer;perspective:1000px}
 .fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s ease}
 .fc-card.flipped .fc-inner{transform:rotateY(180deg)}
 .fc-front,.fc-back{position:absolute;inset:0;border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;backface-visibility:hidden;box-shadow:var(--shadow-md)}
 .fc-front{background:#fff;border:1.5px solid var(--border)}
-.fc-back{background:var(--accent-light);border:1.5px solid var(--accent);transform:rotateY(180deg)}
-.fc-label{font-size:19px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px}
-.fc-front .fc-label{color:var(--accent)}
-.fc-back .fc-label{color:var(--green)}
-.fc-text{font-size:19px;font-weight:600;color:var(--text);line-height:1.4}
-.fc-back .fc-text{font-size:23px;font-weight:400;color:var(--text2);line-height:1.65}
-.fc-hint{font-size:23px;color:var(--muted2);margin-top:14px}
-.fc-nav{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:18px}
-.fc-nav-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:21px;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:var(--shadow)}
-.fc-nav-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.fc-back{background:var(--blue-light);border:1.5px solid var(--blue);transform:rotateY(180deg)}
+.fc-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.fc-front .fc-lbl{color:var(--blue)}
+.fc-back .fc-lbl{color:var(--green)}
+.fc-text{font-size:15px;font-weight:600;color:var(--navy);line-height:1.4;font-family:'Georgia',serif}
+.fc-back .fc-text{font-size:13px;font-weight:400;color:var(--text2);line-height:1.7;font-family:'Inter',sans-serif}
+.fc-hint{font-size:11px;color:var(--muted2);margin-top:12px}
+.fc-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin-bottom:16px}
+.fc-nav-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:var(--shadow)}
+.fc-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
 .fc-nav-btn:disabled{opacity:.3;cursor:not-allowed}
-.fc-progress-txt{font-size:19px;color:var(--muted);font-weight:500}
+.fc-prog{font-size:13px;color:var(--muted);font-weight:500}
 .fc-rating{display:flex;justify-content:center;gap:10px}
-.fc-rate-btn{border:none;border-radius:9px;padding:9px 20px;font-size:21px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.fc-rate-btn{border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
 .fc-rate-btn:hover{transform:translateY(-1px)}
 .rate-easy{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
 .rate-hard{background:var(--red-light);color:var(--red);border:1px solid #fecaca}
 .rate-ok{background:var(--yellow-light);color:var(--yellow);border:1px solid #fde68a}
-.fc-empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:19px;background:#fff;border:1px dashed var(--border2);border-radius:var(--radius)}
-.fc-empty strong{display:block;color:var(--text);font-size:21px;margin-bottom:8px;font-weight:700}
+.fc-empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:13px;background:#fff;border:1px dashed var(--border2);border-radius:var(--radius)}
+.fc-empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:8px;font-weight:700;font-family:'Georgia',serif}
 
-/* ══ AI TUTOR CHAT ══ */
-.chat-wrap{display:flex;flex-direction:column;height:500px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
-.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
-.chat-msgs::-webkit-scrollbar{width:4px}
+/* what i know */
+.know-intro{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.7}
+.know-intro strong{color:var(--navy)}
+.know-ta-wrap{position:relative;margin-bottom:12px}
+.know-ta{width:100%;min-height:140px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.7;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow)}
+.know-ta:focus{border-color:var(--blue)}
+.know-ta::placeholder{color:var(--muted2)}
+.char-c{position:absolute;bottom:10px;right:14px;font-size:10px;color:var(--muted2)}
+.ai-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.ai-btn:hover{background:#1e293b;transform:translateY(-1px)}
+.ai-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.ai-loading{display:none;margin-top:20px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;box-shadow:var(--shadow)}
+.ai-loading.show{display:block}
+.spinner{width:30px;height:30px;border:2.5px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:var(--muted)}
+.loading-txt strong{display:block;color:var(--navy);font-size:14px;margin-bottom:3px;font-weight:600}
+.ai-result{display:none;margin-top:20px}
+.ai-result.show{display:block}
+.score-banner{border-radius:var(--radius);padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)}
+.ga{background:var(--green-light);border:1px solid #bbf7d0}
+.gb{background:var(--blue-light);border:1px solid var(--blue-border)}
+.gc{background:var(--yellow-light);border:1px solid #fde68a}
+.gd{background:var(--red-light);border:1px solid #fecaca}
+.score-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex-shrink:0;font-family:'Georgia',serif}
+.ga .score-circle{background:#dcfce7;color:var(--green)}
+.gb .score-circle{background:#dbeafe;color:var(--blue)}
+.gc .score-circle{background:#fef3c7;color:var(--yellow)}
+.gd .score-circle{background:#fee2e2;color:var(--red)}
+.score-text h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:3px;font-family:'Georgia',serif}
+.score-text p{font-size:11px;color:var(--muted)}
+.rsec{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow)}
+.rsec h4{font-size:10px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px}
+.rsec.rs-good h4{color:var(--green)}
+.rsec.rs-bad h4{color:var(--red)}
+.rsec.rs-warn h4{color:var(--yellow)}
+.rsec.rs-info h4{color:var(--blue)}
+.rsec ul{padding-left:16px}
+.rsec li{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:4px}
+.rsec li .hl{color:var(--navy);font-weight:600}
+.retry-btn{background:none;border:1.5px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all .15s;margin-top:6px}
+.retry-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+
+/* chat */
+.chat-wrap{display:flex;flex-direction:column;height:480px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-msgs::-webkit-scrollbar{width:3px}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.msg{max-width:80%;padding:11px 15px;border-radius:12px;font-size:19px;line-height:1.65}
-.msg.ai{background:var(--bg);border:1px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:4px 12px 12px 12px}
-.msg.ai strong{color:var(--accent);font-size:19px;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-.msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-radius:12px 4px 12px 12px}
-.msg.typing{display:flex;gap:4px;align-items:center;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:4px 12px 12px 12px;align-self:flex-start;width:60px}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:blink 1.2s infinite}
+.msg{max-width:80%;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.65}
+.msg.ai{background:var(--page);border:1px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:4px 10px 10px 10px}
+.msg.ai strong{color:var(--blue);font-size:10px;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.msg.user{background:var(--navy);color:#fff;align-self:flex-end;border-radius:10px 4px 10px 10px}
+.msg.typing{display:flex;gap:4px;align-items:center;padding:12px 14px;background:var(--page);border:1px solid var(--border);border-radius:4px 10px 10px 10px;align-self:flex-start;width:56px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:blink 1.2s infinite}
 .dot:nth-child(2){animation-delay:.2s}
 .dot:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
-.chat-input-row{border-top:1px solid var(--border);padding:12px;display:flex;gap:8px;background:#fafafa}
-.chat-input{flex:1;background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'Inter',sans-serif;font-size:19px;outline:none;transition:border-color .2s}
-.chat-input:focus{border-color:var(--accent)}
+.chat-sugs{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#fafaf9;border-top:1px solid var(--border)}
+.chat-sug{background:#fff;border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;font-weight:500}
+.chat-sug:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.chat-input-row{border-top:1px solid var(--border);padding:10px 12px;display:flex;gap:8px;background:#fff}
+.chat-input{flex:1;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.chat-input:focus{border-color:var(--blue)}
 .chat-input::placeholder{color:var(--muted2)}
-.chat-send{background:var(--accent);color:#fff;border:none;border-radius:9px;width:38px;height:38px;cursor:pointer;font-size:19px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.chat-send:hover{background:#1d4ed8}
+.chat-send{background:var(--navy);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.chat-send:hover{background:#1e293b}
 .chat-send:disabled{opacity:.35;cursor:not-allowed}
-.chat-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;background:#fafafa;border-top:1px solid var(--border)}
-.chat-sug{background:#fff;border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:23px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;font-weight:500}
-.chat-sug:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
 
-/* ══ NOTES ══ */
-.notes-ta{width:100%;min-height:340px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;color:var(--text);font-family:'Inter',sans-serif;font-size:19px;line-height:1.85;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow)}
-.notes-ta:focus{border-color:var(--accent)}
+/* notes */
+.notes-ta{width:100%;min-height:320px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.85;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow)}
+.notes-ta:focus{border-color:var(--blue)}
 .notes-ta::placeholder{color:var(--muted2)}
 .notes-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.notes-bar span{font-size:21px;color:var(--muted);font-weight:500}
-.notes-save-btn{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0;border-radius:8px;padding:7px 16px;font-size:21px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.notes-bar span{font-size:12px;color:var(--muted);font-weight:500}
+.notes-save-btn{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
 .notes-save-btn:hover{background:#dcfce7}
-.notes-saved-msg{font-size:21px;color:var(--green);margin-top:8px;display:none;font-weight:500}
-.notes-saved-msg.show{display:block}
+.notes-saved{font-size:12px;color:var(--green);margin-top:8px;display:none;font-weight:500}
+.notes-saved.show{display:block}
 
-/* ══ ASSIGNMENTS ══ */
-.assign-add{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;background:#fff;padding:16px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow)}
-.assign-input{background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:19px;outline:none;flex:1;min-width:150px;transition:border-color .2s}
-.assign-input:focus{border-color:var(--accent)}
+/* assignments */
+.assign-add{display:flex;gap:8px;margin-bottom:16px;background:#fff;padding:14px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);flex-wrap:wrap}
+.assign-input{background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;flex:1;min-width:140px;transition:border-color .2s}
+.assign-input:focus{border-color:var(--blue)}
 .assign-input::placeholder{color:var(--muted2)}
-.assign-add-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:19px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 6px rgba(37,99,235,.2)}
-.assign-add-btn:hover{background:#1d4ed8}
+.assign-add-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.assign-add-btn:hover{background:#1e293b}
 .assign-list{display:flex;flex-direction:column;gap:8px}
-.assign-item{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all .15s;box-shadow:var(--shadow)}
-.assign-item:hover{border-color:var(--border2);box-shadow:var(--shadow-md)}
+.assign-item{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;transition:all .15s;box-shadow:var(--shadow)}
+.assign-item:hover{border-color:var(--border2)}
 .assign-item.done{opacity:.5}
 .assign-item.done .assign-name{text-decoration:line-through;color:var(--muted)}
-.assign-cb{width:20px;height:20px;border:2px solid var(--border2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:23px}
+.assign-cb{width:20px;height:20px;border:2px solid var(--border2);border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:11px}
 .assign-cb.checked{background:var(--green);border-color:var(--green);color:#fff}
-.assign-name{font-size:19px;font-weight:500;color:var(--text);flex:1}
-.assign-due{font-size:23px;color:var(--muted);flex-shrink:0;font-weight:500}
+.assign-name{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.assign-due{font-size:11px;color:var(--muted);flex-shrink:0;font-weight:500}
 .assign-due.overdue{color:var(--red);font-weight:600}
 .assign-due.soon{color:var(--yellow);font-weight:600}
-.assign-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:21px;line-height:1;padding:2px 5px;border-radius:5px;transition:all .15s;flex-shrink:0}
+.assign-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:18px;line-height:1;padding:2px 5px;border-radius:5px;transition:all .15s;flex-shrink:0}
 .assign-del:hover{color:var(--red);background:var(--red-light)}
-.assign-empty{text-align:center;padding:40px;color:var(--muted);font-size:19px;background:#fff;border:1px dashed var(--border2);border-radius:var(--radius)}
-.assign-priority{font-size:19px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;letter-spacing:.3px}
+.assign-empty{text-align:center;padding:40px;color:var(--muted);font-size:13px;background:#fff;border:1px dashed var(--border2);border-radius:var(--radius)}
+.assign-priority{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0}
 .p-high{background:var(--red-light);color:var(--red)}
 .p-med{background:var(--yellow-light);color:var(--yellow)}
 .p-low{background:var(--green-light);color:var(--green)}
 
-/* ══ POMODORO ══ */
-.pom-wrap{max-width:380px}
-.pom-display{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:36px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-md)}
-.pom-mode-lbl{font-size:23px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.pom-time{font-family:'Playfair Display',serif;font-size:72px;font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1}
-.pom-session{font-size:21px;color:var(--muted);margin-top:10px;font-weight:500}
-.pom-btns{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
-.pom-btn{border-radius:9px;padding:11px 26px;font-size:19px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:none}
-.pom-start{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25)}
-.pom-start:hover{background:#1d4ed8;transform:translateY(-1px)}
+/* tips */
+.tip-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.tip-ico{width:30px;height:30px;border-radius:8px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tip-txt{font-size:13px;color:var(--text2);line-height:1.65}
+.tip-txt strong{color:var(--navy);display:block;margin-bottom:2px;font-size:13px;font-weight:600}
+
+/* pomodoro */
+.pom-wrap{max-width:360px}
+.pom-display{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin-bottom:14px;box-shadow:var(--shadow-md)}
+.pom-mode-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.pom-time{font-family:'Georgia',serif;font-size:60px;font-weight:700;color:var(--navy);letter-spacing:-2px;line-height:1}
+.pom-session{font-size:12px;color:var(--muted2);margin-top:10px;font-weight:500}
+.pom-btns{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.pom-btn{border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:none}
+.pom-start{background:var(--navy);color:#fff}
+.pom-start:hover{background:#1e293b;transform:translateY(-1px)}
 .pom-reset{background:#fff;border:1.5px solid var(--border);color:var(--muted)}
-.pom-reset:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.pom-reset:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
 .pom-modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.pom-mode-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 16px;font-size:23px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
-.pom-mode-btn.active,.pom-mode-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
-.pom-ring{width:160px;height:160px;margin:0 auto 16px;position:relative}
+.pom-mode-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.pom-mode-btn.active,.pom-mode-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.pom-ring{width:150px;height:150px;margin:0 auto 16px}
 .pom-ring svg{transform:rotate(-90deg)}
 .pom-ring-track{fill:none;stroke:var(--border);stroke-width:8}
-.pom-ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s linear}
+.pom-ring-fill{fill:none;stroke:var(--blue);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s linear}
 
-@media(max-width:660px){
-  header{padding:0 16px}
-  #home-view{padding:24px 16px}
-  .course-hdr,.tab-bar{padding-left:16px;padding-right:16px}
-  .tab-content{padding:20px 16px}
-  .two-col{grid-template-columns:1fr}
-  .pom-time{font-size:60px}
+/* work review */
+.work-type-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.work-type-btn{background:#fff;border:1.5px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 16px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.work-type-btn.active,.work-type-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.work-ta{width:100%;min-height:280px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.8;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow);margin-bottom:12px}
+.work-ta:focus{border-color:var(--blue)}
+.work-ta::placeholder{color:var(--muted2)}
+.work-ta.code{font-family:'Courier New',monospace;font-size:12.5px;line-height:1.6}
+.work-instr{width:100%;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s;margin-bottom:12px}
+.work-instr:focus{border-color:var(--blue)}
+.work-instr::placeholder{color:var(--muted2)}
+.review-grade-row{display:flex;gap:12px;margin-bottom:14px}
+.review-grade-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;flex:1;text-align:center;box-shadow:var(--shadow)}
+.review-grade-num{font-family:'Georgia',serif;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.review-grade-lbl{font-size:10px;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase}
+.review-summary{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius);padding:16px 20px;margin-bottom:14px;font-size:14px;color:var(--text2);line-height:1.7;font-family:'Georgia',serif}
+.review-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.review-item-ico{font-size:14px;flex-shrink:0;margin-top:2px}
+.review-item-txt{font-size:13px;color:var(--text2);line-height:1.7}
+.review-item-txt strong{color:var(--navy)}
+
+/* upload */
+.drop-zone{background:#fff;border:2px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px}
+.drop-zone:hover,.drop-zone.over{border-color:var(--blue);background:var(--blue-light)}
+.drop-icon{font-size:36px;margin-bottom:10px}
+.drop-title{font-family:'Georgia',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.drop-sub{font-size:12px;color:var(--muted)}
+.drop-formats{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.drop-fmt{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--page);color:var(--muted);border:1px solid var(--border)}
+.file-chip{display:inline-flex;align-items:center;gap:8px;background:var(--blue-light);border:1px solid var(--blue-border);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--blue);font-weight:500;margin-bottom:12px}
+.file-chip .rm{cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
+.file-chip .rm:hover{color:var(--red)}
+.mode-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.paste-ta{width:100%;min-height:200px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.7;resize:vertical;outline:none;transition:border-color .2s;box-shadow:var(--shadow);margin-bottom:12px}
+.paste-ta:focus{border-color:var(--blue)}
+.paste-ta::placeholder{color:var(--muted2)}
+.summary-section{margin-bottom:10px}
+.summary-point{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.summary-point:last-child{border-bottom:none}
+.summary-num{font-size:11px;font-weight:700;color:var(--blue);min-width:20px;margin-top:2px}
+.summary-txt{font-size:13px;color:var(--text2);line-height:1.7}
+.summary-txt strong{color:var(--navy)}
+.hist-item{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
+.hist-item:hover{border-color:var(--blue);background:var(--blue-light)}
+.hist-name{font-size:13px;font-weight:500;color:var(--navy);flex:1}
+.hist-date{font-size:11px;color:var(--muted2)}
+
+/* api key banner */
+#api-key-banner{display:none;background:var(--yellow-light);border-bottom:2px solid #fde68a;padding:12px 24px;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
+#api-key-banner.show{display:flex}
+.banner-title{font-size:14px;font-weight:700;color:#92400e;margin-bottom:2px}
+.banner-sub{font-size:12px;color:#a16207}
+.banner-input{flex:2;min-width:220px;padding:9px 13px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:#fff;color:var(--text)}
+.banner-input:focus{border-color:var(--yellow)}
+.banner-save{background:#92400e;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s}
+.banner-save:hover{background:#78350f}
+.banner-close{background:none;border:1.5px solid #fde68a;color:#a16207;border-radius:8px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.banner-close:hover{background:#fef3c7}
+#api-key-saved{display:none;position:fixed;bottom:22px;right:22px;background:var(--green);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;box-shadow:var(--shadow-md);z-index:999;align-items:center;gap:8px}
+#api-key-saved.show{display:flex}
+
+/* progress bar */
+.pbar-wrap{margin-bottom:10px}
+.pbar-label{font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;font-weight:500}
+.pbar-track{height:6px;background:var(--page);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.pbar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+
+/* fc gen btn */
+.fc-gen-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.fc-gen-btn:hover{background:#1e293b;transform:translateY(-1px)}
+.fc-gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+@media(max-width:680px){
+  .sidebar{display:none}
+  .topbar{padding:0 16px}
+  .main{padding:16px}
+  .two-col,.stat-strip{grid-template-columns:1fr}
+  .pom-time{font-size:48px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-badge">M</div>
-  <div>
-    <div class="logo-text">MacEwan <span>Study Pro</span></div>
-    <div class="header-sub">Edmonton, Alberta · Fall 2026</div>
-  </div>
-  <div class="hdr-right">
-    <div class="hdr-date"><strong id="hdr-date"></strong><span id="hdr-time"></span></div>
-    <button onclick="showKeySetup()" title="Set API Key" style="background:none;border:1.5px solid #e2e8f0;border-radius:8px;padding:6px 12px;font-size:14px;cursor:pointer;color:#64748b;font-family:'Inter',sans-serif;transition:all .15s" onmouseover="this.style.borderColor='#2563eb';this.style.color='#2563eb'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#64748b'">🔑 API Key</button>
-  </div>
-</header>
-
 <!-- API KEY BANNER -->
-<div id="api-key-banner" style="display:none;background:#fffbeb;border-bottom:2px solid #fde68a;padding:14px 36px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-  <span style="font-size:18px">🔑</span>
-  <div style="flex:1;min-width:200px">
-    <div style="font-size:16px;font-weight:700;color:#92400e;margin-bottom:2px">API Key Required</div>
-    <div style="font-size:14px;color:#a16207">Get a free key at <strong>console.anthropic.com</strong> → API Keys → Create Key</div>
-  </div>
-  <input id="api-key-input" type="password" placeholder="Paste your sk-ant-... key here"
-    style="flex:2;min-width:240px;padding:10px 14px;border:1.5px solid #fde68a;border-radius:9px;font-size:15px;font-family:'Inter',sans-serif;outline:none;background:#fff;color:#0f172a">
-  <button onclick="saveKey()" style="background:#d97706;color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap">Save Key</button>
-  <button onclick="document.getElementById('api-key-banner').style.display='none'" style="background:none;border:1.5px solid #fde68a;color:#a16207;border-radius:9px;padding:10px 14px;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif">✕</button>
+<div id="api-key-banner">
+  <div style="flex:1;min-width:200px"><div class="banner-title">🔑 API Key Required</div><div class="banner-sub">Get a free key at <strong>console.anthropic.com</strong> → API Keys → Create Key</div></div>
+  <input id="api-key-input" class="banner-input" type="password" placeholder="Paste your sk-ant-... key here">
+  <button class="banner-save" onclick="saveKey()">Save Key</button>
+  <button class="banner-close" onclick="dismissBanner()">✕</button>
 </div>
+<div id="api-key-saved">✅ API key saved — AI features active!</div>
 
-<!-- SAVED TOAST -->
-<div id="api-key-saved" style="display:none;position:fixed;bottom:24px;right:24px;background:#16a34a;color:#fff;padding:14px 22px;border-radius:12px;font-size:16px;font-weight:600;font-family:'Inter',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:999;align-items:center;gap:8px">
-  ✅ API key saved — AI features are now active!
-</div>
-
-<!-- HOME -->
-<div id="home-view">
-  <div class="home-hero">
-    <h1>Your <span>MacEwan</span> study hub.</h1>
-    <p>AI flashcards, a live tutor, knowledge grading, focus timer, and assignment tracker — all in one place, built for your 5 courses.</p>
-  </div>
-  <div class="stats-row">
-    <div class="stat-pill">📚 <strong>5</strong> courses enrolled</div>
-    <div class="stat-pill">🗓️ <strong>Week 4</strong> of 13</div>
-    <div class="stat-pill">⏱ <strong id="pom-total-home">0</strong> focus sessions today</div>
-    <div class="stat-pill">✅ <strong id="assign-done-home">0</strong> tasks completed</div>
-  </div>
-  <div class="grid">
-    <div class="ccard" onclick="openCourse('earth')"><div class="ccard-code">ERSC 101</div><div class="ccard-title">Earth Science 101</div><div class="ccard-desc">Plate tectonics, Earth's layers, rock cycle, weather, geological time.</div><div class="ccard-footer"><div class="ccard-chip">🌍 Natural Sciences</div><div class="ccard-arrow">→</div></div></div>
-    <div class="ccard" onclick="openCourse('english')"><div class="ccard-code">ENGL 102</div><div class="ccard-title">English 102</div><div class="ccard-desc">Academic writing, argumentation, thesis, MLA citation, PIE paragraphs.</div><div class="ccard-footer"><div class="ccard-chip">📝 Humanities</div><div class="ccard-arrow">→</div></div></div>
-    <div class="ccard" onclick="openCourse('comp')"><div class="ccard-code">COMP 101</div><div class="ccard-title">Computing 101</div><div class="ccard-desc">Programming logic, variables, data types, conditionals, loops, functions.</div><div class="ccard-footer"><div class="ccard-chip">💻 Technology</div><div class="ccard-arrow">→</div></div></div>
-    <div class="ccard" onclick="openCourse('math')"><div class="ccard-code">MATH 099</div><div class="ccard-title">Math 099</div><div class="ccard-desc">Pre-calculus algebra, linear equations, graphing, factoring, quadratics.</div><div class="ccard-footer"><div class="ccard-chip">🔢 Mathematics</div><div class="ccard-arrow">→</div></div></div>
-    <div class="ccard" onclick="openCourse('anth')"><div class="ccard-code">ANTH 101</div><div class="ccard-title">Anthropology 101</div><div class="ccard-desc">Human evolution, culture, ethnocentrism, ethnography, fieldwork.</div><div class="ccard-footer"><div class="ccard-chip">🏺 Social Sciences</div><div class="ccard-arrow">→</div></div></div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">Mac<span>Ewan</span> Study Pro</div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="hdr-date"></div>
+    <button class="key-btn" onclick="showKeySetup()">🔑 API Key</button>
   </div>
 </div>
 
-<!-- COURSE VIEW -->
-<div id="course-view">
-  <div class="course-hdr">
-    <button class="back-btn" onclick="goHome()">← Back</button>
-    <div class="cv-info"><div class="code" id="cv-code"></div><div class="title" id="cv-title"></div></div>
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Courses</div>
+      <div class="sb-course" id="sb-home" onclick="goHome()">
+        <div class="sb-dot" style="background:#e2e8f0"></div>
+        <div><div class="sb-course-name" style="color:var(--navy);font-weight:600">All Courses</div><div class="sb-course-code">Dashboard</div></div>
+      </div>
+      <div class="sb-course" id="sb-earth" onclick="openCourse('earth')">
+        <div class="sb-dot" style="background:#6366f1"></div>
+        <div><div class="sb-course-name">Earth Science</div><div class="sb-course-code">ERSC 101</div></div>
+      </div>
+      <div class="sb-course" id="sb-english" onclick="openCourse('english')">
+        <div class="sb-dot" style="background:#10b981"></div>
+        <div><div class="sb-course-name">English</div><div class="sb-course-code">ENGL 102</div></div>
+      </div>
+      <div class="sb-course" id="sb-comp" onclick="openCourse('comp')">
+        <div class="sb-dot" style="background:#f59e0b"></div>
+        <div><div class="sb-course-name">Computing</div><div class="sb-course-code">COMP 101</div></div>
+      </div>
+      <div class="sb-course" id="sb-math" onclick="openCourse('math')">
+        <div class="sb-dot" style="background:#ef4444"></div>
+        <div><div class="sb-course-name">Math 099</div><div class="sb-course-code">MATH 099</div></div>
+      </div>
+      <div class="sb-course" id="sb-anth" onclick="openCourse('anth')">
+        <div class="sb-dot" style="background:#8b5cf6"></div>
+        <div><div class="sb-course-name">Anthropology</div><div class="sb-course-code">ANTH 101</div></div>
+      </div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-label">Tools</div>
+      <div class="sb-tool" id="sb-today"    onclick="switchTool('today',this)"><div class="sb-tool-icon">📖</div><div class="sb-tool-name">Today's Lesson</div></div>
+      <div class="sb-tool" id="sb-review"   onclick="switchTool('review',this)"><div class="sb-tool-icon">🔁</div><div class="sb-tool-name">Review</div></div>
+      <div class="sb-tool" id="sb-tomorrow" onclick="switchTool('tomorrow',this)"><div class="sb-tool-icon">🔮</div><div class="sb-tool-name">Tomorrow</div></div>
+      <div class="sb-tool" id="sb-quiz"     onclick="switchTool('quiz',this)"><div class="sb-tool-icon">❓</div><div class="sb-tool-name">Quiz</div></div>
+      <div class="sb-tool" id="sb-flash"    onclick="switchTool('flash',this)"><div class="sb-tool-icon">🎴</div><div class="sb-tool-name">Flashcards</div></div>
+      <div class="sb-tool" id="sb-iknow"    onclick="switchTool('iknow',this)"><div class="sb-tool-icon">🧠</div><div class="sb-tool-name">What I Know</div></div>
+      <div class="sb-tool" id="sb-tutor"    onclick="switchTool('tutor',this)"><div class="sb-tool-icon">💬</div><div class="sb-tool-name">AI Tutor</div></div>
+      <div class="sb-tool" id="sb-work"     onclick="switchTool('work',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Review My Work</div></div>
+      <div class="sb-tool" id="sb-upload"   onclick="switchTool('upload',this)"><div class="sb-tool-icon">📎</div><div class="sb-tool-name">Upload Materials</div></div>
+      <div class="sb-tool" id="sb-notes"    onclick="switchTool('notes',this)"><div class="sb-tool-icon">✏️</div><div class="sb-tool-name">My Notes</div></div>
+      <div class="sb-tool" id="sb-assign"   onclick="switchTool('assign',this)"><div class="sb-tool-icon">📅</div><div class="sb-tool-name">Assignments</div></div>
+      <div class="sb-tool" id="sb-timer"    onclick="switchTool('timer',this)"><div class="sb-tool-icon">⏱</div><div class="sb-tool-name">Focus Timer</div></div>
+      <div class="sb-tool" id="sb-agrade"   onclick="switchTool('agrade',this)"><div class="sb-tool-icon">🏆</div><div class="sb-tool-name">Get an A</div></div>
+    </div>
   </div>
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('today',this)">📖 Lesson</button>
-    <button class="tab-btn" onclick="switchTab('review',this)">🔁 Review</button>
-    <button class="tab-btn" onclick="switchTab('tomorrow',this)">🔮 Tomorrow</button>
-    <button class="tab-btn" onclick="switchTab('quiz',this)">❓ Quiz</button>
-    <button class="tab-btn" onclick="switchTab('flash',this)">🎴 Flashcards</button>
-    <button class="tab-btn" onclick="switchTab('iknow',this)">🧠 What I Know</button>
-    <button class="tab-btn" onclick="switchTab('tutor',this)">💬 AI Tutor</button>
-    <button class="tab-btn" onclick="switchTab('notes',this)">✏️ My Notes</button>
-    <button class="tab-btn" onclick="switchTab('assign',this)">📅 Assignments</button>
-    <button class="tab-btn" onclick="switchTab('timer',this)">⏱ Focus Timer</button>
-    <button class="tab-btn" onclick="switchTab('agrade',this)">🏆 Get an A</button>
+
+  <!-- MAIN -->
+  <div class="main" id="main-panel">
+
+    <!-- HOME -->
+    <div id="view-home">
+      <div class="home-hero">
+        <h1>Your <span>MacEwan</span> study hub.</h1>
+        <p>AI flashcards, a live tutor, knowledge grading, a focus timer, and assignment tracking — all built for your 5 courses.</p>
+      </div>
+      <div class="home-stats">
+        <div class="home-stat">📚 <strong>5</strong> courses enrolled</div>
+        <div class="home-stat">🗓️ <strong>Week 4</strong> of 13</div>
+        <div class="home-stat">⏱ <strong id="pom-total-home">0</strong> focus sessions today</div>
+        <div class="home-stat">✅ <strong id="assign-done-home">0</strong> tasks done</div>
+      </div>
+      <div class="course-grid">
+        <div class="course-card" onclick="openCourse('earth')"><div class="cc-code">ERSC 101</div><div class="cc-title">Earth Science 101</div><div class="cc-desc">Plate tectonics, Earth's layers, rock cycle, weather systems, geological time.</div><div class="cc-footer"><div class="cc-chip">🌍 Natural Sciences</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('english')"><div class="cc-code">ENGL 102</div><div class="cc-title">English 102</div><div class="cc-desc">Academic writing, argumentation, thesis construction, MLA citation, PIE structure.</div><div class="cc-footer"><div class="cc-chip">📝 Humanities</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('comp')"><div class="cc-code">COMP 101</div><div class="cc-title">Computing 101</div><div class="cc-desc">Programming logic, variables, data types, conditionals, loops, functions.</div><div class="cc-footer"><div class="cc-chip">💻 Technology</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('math')"><div class="cc-code">MATH 099</div><div class="cc-title">Math 099</div><div class="cc-desc">Pre-calculus algebra, linear equations, graphing, factoring, quadratics.</div><div class="cc-footer"><div class="cc-chip">🔢 Mathematics</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('anth')"><div class="cc-code">ANTH 101</div><div class="cc-title">Anthropology 101</div><div class="cc-desc">Human evolution, culture, ethnocentrism, ethnography, fieldwork methods.</div><div class="cc-footer"><div class="cc-chip">🏺 Social Sciences</div><div class="cc-arrow">→</div></div></div>
+      </div>
+    </div>
+
+    <!-- COURSE -->
+    <div id="view-course" style="display:none">
+      <div class="course-hdr">
+        <div class="course-badge" id="cv-code"></div>
+        <div class="course-hdr-title" id="cv-title"></div>
+        <div class="course-hdr-sub">MacEwan University · Edmonton, Alberta</div>
+      </div>
+      <div id="tool-content"></div>
+    </div>
+
   </div>
-  <div id="tab-today"    class="tab-content active"></div>
-  <div id="tab-review"   class="tab-content"></div>
-  <div id="tab-tomorrow" class="tab-content"></div>
-  <div id="tab-quiz"     class="tab-content"></div>
-  <div id="tab-flash"    class="tab-content"></div>
-  <div id="tab-iknow"    class="tab-content"></div>
-  <div id="tab-tutor"    class="tab-content"></div>
-  <div id="tab-notes"    class="tab-content"></div>
-  <div id="tab-assign"   class="tab-content"></div>
-  <div id="tab-timer"    class="tab-content"></div>
-  <div id="tab-agrade"   class="tab-content"></div>
 </div>
 
 <script>
-/* ── API KEY ── */
+/* ── clock ── */
+function tick(){const n=new Date();document.getElementById('hdr-date').textContent=n.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})+' · '+n.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});}
+tick();setInterval(tick,30000);
+
+/* ── API key ── */
 function getKey(){return localStorage.getItem('anthropic_key')||'';}
-function saveKey(){
-  const k=document.getElementById('api-key-input').value.trim();
-  if(!k.startsWith('sk-ant-')){alert('That doesn\'t look right — your key should start with sk-ant-');return;}
-  localStorage.setItem('anthropic_key',k);
-  document.getElementById('api-key-banner').style.display='none';
-  document.getElementById('api-key-saved').style.display='flex';
-  setTimeout(()=>document.getElementById('api-key-saved').style.display='none',3000);
-}
-function showKeySetup(){document.getElementById('api-key-banner').style.display='block';document.getElementById('api-key-input').focus();}
-function checkKeyOnLoad(){if(!getKey())document.getElementById('api-key-banner').style.display='block';}
+function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k.startsWith('sk-ant-')){alert('Key should start with sk-ant-');return;}localStorage.setItem('anthropic_key',k);document.getElementById('api-key-banner').classList.remove('show');const t=document.getElementById('api-key-saved');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function showKeySetup(){document.getElementById('api-key-banner').classList.add('show');document.getElementById('api-key-input').focus();}
+function dismissBanner(){document.getElementById('api-key-banner').classList.remove('show');localStorage.setItem('banner_dismissed','1');}
+if(!getKey()&&!localStorage.getItem('banner_dismissed'))document.getElementById('api-key-banner').classList.add('show');
 
-/* clock */
-function tick(){const n=new Date();document.getElementById('hdr-date').textContent=n.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});document.getElementById('hdr-time').textContent=' · '+n.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});}
-tick();setInterval(tick,30000);checkKeyOnLoad();
-
-/* state */
-let currentCourse=null;
+/* ── state ── */
+let currentCourse=null,currentTool='today';
 const flashcards={},chatHistory={},assignments={},notes={};
 let pomSessions=0;
 
-/* ── COURSE DATA ── */
+/* ── course data ── */
 const courses={
-  earth:{code:'ERSC 101',title:'Earth Science 101',
+  earth:{code:'ERSC 101',title:'Earth Science 101',color:'#6366f1',
     today:{topic:"Plate Tectonics & Earth's Dynamic Crust",points:["The lithosphere is divided into ~15 major tectonic plates floating on the semi-molten asthenosphere.","Plates move 2–10 cm per year driven by convection currents in the mantle.","Three boundary types: convergent (collision), divergent (spreading), transform (sliding).","Subduction: oceanic crust sinks beneath continental crust, forming trenches & volcanoes.","The Ring of Fire encircles the Pacific and accounts for ~90% of world earthquakes."],vocab:['Lithosphere','Asthenosphere','Subduction','Convection current','Fault line','Epicenter']},
-    review:{last:"Earth's Interior Structure",recap:["Crust (0–70 km): thin outermost layer — oceanic (basalt) and continental (granite).","Mantle (70–2900 km): silicate rock, semi-solid; drives plate movement.","Outer Core (2900–5150 km): liquid iron-nickel; generates Earth's magnetic field.","Inner Core (5150–6371 km): solid iron-nickel; extreme pressure keeps it solid at 5000°C."]},
+    review:{last:"Earth's Interior Structure",recap:["Crust (0–70 km): thin outermost layer — oceanic (basalt) and continental (granite).","Mantle (70–2900 km): silicate rock, semi-solid; drives plate movement via convection.","Outer Core (2900–5150 km): liquid iron-nickel; generates Earth's magnetic field.","Inner Core (5150–6371 km): solid iron-nickel; extreme pressure keeps it solid at 5000°C."]},
     tomorrow:{topic:"Volcanoes & Volcanic Landforms",prep:["Read Ch. 7: shield, composite (stratovolcano), cinder cone volcanoes.","Know magma (underground) vs lava (above ground).","Understand how plate boundaries determine volcano locations.","Review the 1980 Mt. St. Helens eruption as a case study.","Key terms: pyroclastic flow, caldera, vent, crater."]},
-    quiz:[{q:"Which Earth layer generates the magnetic field?",opts:["Crust","Mantle","Outer Core","Inner Core"],ans:2,exp:"The liquid iron-nickel Outer Core generates electric currents that create Earth's magnetic field."},{q:"The San Andreas Fault is what type of boundary?",opts:["Convergent","Divergent","Transform","Subduction"],ans:2,exp:"Transform boundary — the Pacific and North American plates slide horizontally past each other."},{q:"Oceanic crust is primarily composed of:",opts:["Granite","Basalt","Limestone","Marble"],ans:1,exp:"Oceanic crust is denser and made primarily of basalt."},{q:"The Ring of Fire surrounds which ocean?",opts:["Atlantic","Indian","Arctic","Pacific"],ans:3,exp:"The Ring of Fire surrounds the Pacific Ocean — Earth's most seismically active zone."}],
+    quiz:[{q:"Which Earth layer generates the magnetic field?",opts:["Crust","Mantle","Outer Core","Inner Core"],ans:2,exp:"The liquid iron-nickel Outer Core generates electric currents creating Earth's magnetic field."},{q:"The San Andreas Fault is what boundary type?",opts:["Convergent","Divergent","Transform","Subduction"],ans:2,exp:"Transform boundary — Pacific and North American plates slide horizontally past each other."},{q:"Oceanic crust is primarily composed of:",opts:["Granite","Basalt","Limestone","Marble"],ans:1,exp:"Oceanic crust is denser and made primarily of basalt."},{q:"The Ring of Fire surrounds which ocean?",opts:["Atlantic","Indian","Arctic","Pacific"],ans:3,exp:"The Ring of Fire surrounds the Pacific Ocean — Earth's most seismically active zone."}],
     agrade:[{icon:'🗓️',title:'Attend every lecture',tip:'Earth Science builds on itself — one missed class creates chain gaps.'},{icon:'🗺️',title:'Draw diagrams from memory',tip:"Redraw Earth's layers and plate boundaries without looking. Visual recall is powerful."},{icon:'📰',title:'Connect to current events',tip:'Follow earthquake and volcano news. Real events anchor abstract concepts.'},{icon:'🧪',title:'Lab reports matter',tip:'Labs can be 20–30% of your grade. Format correctly, include units.'},{icon:'📆',title:'Study 3 days before exams',tip:'Vocab Day 1, concept connections Day 2, practice questions Day 3.'},{icon:'🙋',title:'Use office hours',tip:'One targeted question per week shows engagement and closes gaps early.'}],
-    knowContext:"Course: Earth Science 101 (ERSC 101) at MacEwan University, Edmonton Alberta.\nKey topics: Earth's layers (crust, mantle, outer core, inner core), plate tectonics (convergent/divergent/transform boundaries), subduction, convection currents, lithosphere, asthenosphere, Ring of Fire, rock cycle (igneous/sedimentary/metamorphic), weathering, erosion, oceans, weather systems, geological time, fossils, earthquakes (Richter scale, P-waves, S-waves), volcanoes (shield, composite, cinder cone), magma vs lava, pyroclastic flow, caldera.",
+    knowContext:"Course: Earth Science 101 (ERSC 101) at MacEwan University, Edmonton Alberta.\nKey topics: Earth's layers (crust, mantle, outer core, inner core), plate tectonics (convergent/divergent/transform boundaries), subduction, convection currents, lithosphere, asthenosphere, Ring of Fire, rock cycle (igneous/sedimentary/metamorphic), weathering, erosion, oceans, weather systems, geological time, fossils, earthquakes (Richter scale, P-waves, S-waves), volcanoes (shield, composite, cinder cone), magma vs lava, pyroclastic flow.",
     suggestions:["What's the difference between P-waves and S-waves?","Explain convergent vs divergent boundaries","How does subduction cause volcanoes?","What drives plate movement?","Explain the rock cycle step by step"]},
-
-  english:{code:'ENGL 102',title:'English 102',
+  english:{code:'ENGL 102',title:'English 102',color:'#10b981',
     today:{topic:"Building a Strong Argumentative Thesis",points:["A thesis is a single, debatable claim your essay will prove with evidence.","Weak: 'Social media has effects.' Strong: 'Instagram's algorithm worsens teen anxiety by prioritizing engagement over wellbeing.'","Your thesis must answer: What? So what? How? (claim + significance + direction).","Place the thesis at the end of your introduction paragraph.","Every body paragraph's topic sentence must directly support the thesis."],vocab:['Thesis','Claim','Counterclaim','Warrant','Evidence','Concession','Rebuttal']},
     review:{last:"Introduction Paragraphs & Hooks",recap:["Hook options: startling statistic, anecdote, provocative question, bold statement.","Background narrows from broad context → specific issue → your thesis.","Never start with 'In this essay I will...' — show, don't announce.","The intro should be roughly 10% of total essay length."]},
-    tomorrow:{topic:"Body Paragraphs — PIE Structure",prep:["PIE: Point (topic sentence) → Illustration (evidence/quote) → Explanation (analysis).","Never drop a quote in without a signal phrase.","Signal phrases: 'According to...', 'As [Author] argues...'","MLA in-text citation: (Author last name page#).","Bring a paragraph you drafted to workshop."]},
-    quiz:[{q:"Which is the strongest thesis?",opts:["Climate change is bad.","This essay will discuss climate change.","Governments must implement carbon taxes because voluntary corporate action has consistently failed to reduce emissions.","Climate change affects many people worldwide."],ans:2,exp:"Strong thesis: specific, arguable, and tells the reader what the essay will prove and how."},{q:"Where does the thesis belong in MLA essays?",opts:["First sentence","End of the introduction","First body paragraph","The conclusion"],ans:1,exp:"The thesis is the final sentence of the introductory paragraph."},{q:"PIE stands for:",opts:["Purpose, Insight, Evidence","Point, Illustration, Explanation","Premise, Information, Example","Proof, Idea, Evaluation"],ans:1,exp:"PIE = Point (topic sentence) + Illustration (evidence) + Explanation (your analysis)."},{q:"Correct MLA in-text citation:",opts:["(Smith, 2020, p.45)","[Smith 45]","(Smith 45)","Smith (45)"],ans:2,exp:"MLA in-text uses author last name and page number with no comma: (Smith 45)."}],
-    agrade:[{icon:'✍️',title:'Write every single day',tip:'Even 10 minutes of freewriting builds the writing muscle fast.'},{icon:'📚',title:'Read texts twice',tip:'First for content, second for how the author argues.'},{icon:'🔄',title:'Revise, not just proofread',tip:'Revision = rethinking your argument, not just fixing commas.'},{icon:'💬',title:'Go to the Writing Centre',tip:"MacEwan's Writing Centre gives free feedback on drafts before submission."},{icon:'📖',title:'Cite as you write',tip:'Add citations immediately when using a source. Fixing them later wastes hours.'},{icon:'⏰',title:'Submit 24 hours early',tip:'Fresh eyes catch formatting errors that last-minute writers miss.'}],
+    tomorrow:{topic:"Body Paragraphs — PIE Structure",prep:["PIE: Point (topic sentence) → Illustration (evidence) → Explanation (analysis).","Never drop a quote in without a signal phrase.","Signal phrases: 'According to...', 'As [Author] argues...'","MLA in-text citation: (Author last name page#).","Bring a paragraph you drafted to workshop."]},
+    quiz:[{q:"Which is the strongest thesis?",opts:["Climate change is bad.","This essay will discuss climate change.","Governments must implement carbon taxes because voluntary corporate action has consistently failed to reduce emissions.","Climate change affects many people."],ans:2,exp:"Strong thesis: specific, arguable, tells the reader what the essay will prove and how."},{q:"Where does the thesis belong?",opts:["First sentence","End of the introduction","First body paragraph","The conclusion"],ans:1,exp:"The thesis is the final sentence of the intro paragraph."},{q:"PIE stands for:",opts:["Purpose, Insight, Evidence","Point, Illustration, Explanation","Premise, Information, Example","Proof, Idea, Evaluation"],ans:1,exp:"PIE = Point (topic sentence) + Illustration (evidence) + Explanation (your analysis)."},{q:"Correct MLA in-text citation:",opts:["(Smith, 2020, p.45)","[Smith 45]","(Smith 45)","Smith (45)"],ans:2,exp:"MLA in-text uses author last name and page number with no comma: (Smith 45)."}],
+    agrade:[{icon:'✍️',title:'Write every single day',tip:'Even 10 minutes of freewriting builds the writing muscle fast.'},{icon:'📚',title:'Read texts twice',tip:'First for content, second for how the author argues.'},{icon:'🔄',title:'Revise, not just proofread',tip:'Revision = rethinking your argument, not just fixing commas.'},{icon:'💬',title:'Go to the Writing Centre',tip:"MacEwan's Writing Centre gives free feedback on drafts before submission."},{icon:'📖',title:'Cite as you write',tip:'Add citations immediately when using a source.'},{icon:'⏰',title:'Submit 24 hours early',tip:'Fresh eyes catch formatting errors that last-minute writers miss.'}],
     knowContext:"Course: English 102 (ENGL 102) at MacEwan University, Edmonton Alberta.\nKey topics: Academic writing, thesis construction (debatable, specific, arguable), essay structure (hook, background, thesis, body paragraphs, conclusion), PIE paragraph method (Point-Illustration-Explanation), types of evidence, integrating quotes with signal phrases, MLA citation format (in-text and Works Cited), counterargument and rebuttal, critical reading strategies, revision vs proofreading, argumentation, rhetorical modes, concession.",
     suggestions:["What makes a thesis weak vs strong?","Explain the PIE method with an example","How do I integrate a quote properly in MLA?","What's the difference between a concession and rebuttal?","Show me a correct MLA Works Cited entry"]},
-
-  comp:{code:'COMP 101',title:'Computing 101',
-    today:{topic:"Variables, Data Types & Conditional Logic",points:["A variable is a named container storing a value in memory (e.g., age = 20).","Core data types: Integer (whole numbers), Float (decimals), String (text), Boolean (True/False).","Assignment operator = assigns a value; == tests for equality.","if / elif / else lets programs make decisions based on conditions.","Python indentation is mandatory — 4 spaces define a code block.","Example: if grade >= 90: print('A') elif grade >= 80: print('B') else: print('Study more!')"],vocab:['Variable','Data type','Integer','Float','Boolean','Conditional','Operator','Indentation']},
+  comp:{code:'COMP 101',title:'Computing 101',color:'#f59e0b',
+    today:{topic:"Variables, Data Types & Conditional Logic",points:["A variable is a named container storing a value in memory (e.g., age = 20).","Core data types: Integer (whole numbers), Float (decimals), String (text), Boolean (True/False).","Assignment operator = assigns a value; == tests for equality.","if / elif / else lets programs make decisions based on conditions.","Python indentation is mandatory — 4 spaces define a code block.","if grade >= 90: print('A') elif grade >= 80: print('B') else: print('Study more!')"],vocab:['Variable','Data type','Integer','Float','Boolean','Conditional','Operator','Indentation']},
     review:{last:"Introduction to Algorithms & Pseudocode",recap:["An algorithm is a step-by-step procedure to solve a problem.","Pseudocode is plain-language algorithm writing before actual coding.","Three control structures: sequence, selection (if/else), repetition (loops).","Good algorithms are: correct, efficient, and unambiguous."]},
     tomorrow:{topic:"Loops — for and while",prep:["A for loop iterates over a sequence: for i in range(5): ...","A while loop runs as long as a condition is True — watch for infinite loops!","for = known iterations; while = unknown iterations.","Practice: write a loop that prints numbers 1–10 and their squares.","Nested loops: a loop inside a loop — used for grids and patterns."]},
-    quiz:[{q:"What data type is the value True?",opts:["Integer","String","Float","Boolean"],ans:3,exp:"Boolean is the True/False data type used in conditions and logical operations."},{q:"What does == do in Python?",opts:["Assigns a value","Tests for equality","Multiplies values","Checks greater than"],ans:1,exp:"== compares two values and returns True or False. = is the assignment operator."},{q:"What does print(type(3.14)) output?",opts:["<class 'int'>","<class 'float'>","<class 'str'>","<class 'bool'>"],ans:1,exp:"3.14 is a floating-point number, so its type is float."},{q:"Correct Python if syntax:",opts:["if (x > 5) {","if x > 5:","IF x > 5 THEN","if x > 5 do"],ans:1,exp:"Python uses a colon, no curly braces, and indentation to define blocks."}],
-    agrade:[{icon:'💻',title:'Code every day — even 20 min',tip:'Daily practice beats a 3-hour weekly session every time.'},{icon:'🐛',title:'Read error messages carefully',tip:'The last line of the traceback tells you exactly what went wrong.'},{icon:'🧩',title:'Break problems into steps',tip:'Write the steps in plain English before writing any code.'},{icon:'🔍',title:'Test with edge cases',tip:'What if the user enters 0? A negative? An empty string?'},{icon:'📓',title:'Keep a code notebook',tip:'Write down new patterns and solutions you discover each session.'},{icon:'🤝',title:'Pair program with classmates',tip:'Explaining code to someone else immediately reveals your own gaps.'}],
-    knowContext:"Course: Computing 101 (COMP 101) at MacEwan University, Edmonton Alberta.\nKey topics: Algorithms, pseudocode, computational thinking, variables, data types (int, float, string, boolean), assignment vs comparison operators (= vs ==), conditional logic (if/elif/else), Python syntax and indentation rules, loops (for, while, nested loops, infinite loop risk), functions (def, parameters, return), lists and arrays, input/output, debugging strategies, control structures (sequence, selection, repetition), scope.",
+    quiz:[{q:"What data type is the value True?",opts:["Integer","String","Float","Boolean"],ans:3,exp:"Boolean is the True/False data type used in conditions."},{q:"What does == do in Python?",opts:["Assigns a value","Tests for equality","Multiplies values","Checks greater than"],ans:1,exp:"== compares two values and returns True or False. = is the assignment operator."},{q:"What does print(type(3.14)) output?",opts:["<class 'int'>","<class 'float'>","<class 'str'>","<class 'bool'>"],ans:1,exp:"3.14 is a float."},{q:"Correct Python if syntax:",opts:["if (x > 5) {","if x > 5:","IF x > 5 THEN","if x > 5 do"],ans:1,exp:"Python uses a colon, no curly braces, and indentation to define blocks."}],
+    agrade:[{icon:'💻',title:'Code every day — even 20 min',tip:'Daily practice beats a 3-hour weekly session.'},{icon:'🐛',title:'Read error messages carefully',tip:'The last line of the traceback tells you exactly what went wrong.'},{icon:'🧩',title:'Break problems into steps',tip:'Write the steps in plain English before writing any code.'},{icon:'🔍',title:'Test with edge cases',tip:'What if the user enters 0? A negative? An empty string?'},{icon:'📓',title:'Keep a code notebook',tip:'Write down new patterns and solutions you discover.'},{icon:'🤝',title:'Pair program with classmates',tip:'Explaining code to someone else reveals your own gaps.'}],
+    knowContext:"Course: Computing 101 (COMP 101) at MacEwan University, Edmonton Alberta.\nKey topics: Algorithms, pseudocode, variables, data types (int, float, string, boolean), assignment vs comparison operators (= vs ==), conditional logic (if/elif/else), Python syntax and indentation, loops (for, while, nested loops), functions (def, parameters, return), lists, input/output, debugging, control structures.",
     suggestions:["What's the difference between = and == in Python?","Explain while loops with an example","What do int, float, str, bool mean?","Walk me through writing a basic function","What is a list and how do I index it?"]},
-
-  math:{code:'MATH 099',title:'Math 099',
+  math:{code:'MATH 099',title:'Math 099',color:'#ef4444',
     today:{topic:"Solving Linear Equations & Inequalities",points:["Goal: isolate the variable on one side using inverse operations.","Whatever you do to one side, do to the other (balance principle).","Steps: Distribute → Combine like terms → Move variables → Divide/Multiply.","Example: 3x + 5 = 20 → 3x = 15 → x = 5. Check: 3(5)+5=20 ✓","Inequalities work the same, BUT flip the sign when multiplying or dividing by a negative.","Number line: open circle for < >, closed circle for ≤ ≥."],vocab:['Variable','Coefficient','Like terms','Inverse operation','Inequality','Solution set']},
     review:{last:"Order of Operations & Algebraic Expressions",recap:["BEDMAS: Brackets → Exponents → Division/Multiplication → Addition/Subtraction.","A term has a coefficient and a variable: 4x (coefficient=4, variable=x).","Like terms share the same variable and exponent: 3x and 7x are like terms.","Distributive property: a(b + c) = ab + ac"]},
     tomorrow:{topic:"Graphing Linear Equations (Slope-Intercept Form)",prep:["Slope-intercept form: y = mx + b (m = slope, b = y-intercept).","Slope = rise/run = (y₂ - y₁)/(x₂ - x₁).","Positive slope: rises left to right. Negative slope: falls left to right.","To graph: plot b on y-axis, then use slope to find the next point.","Practice converting standard form Ax + By = C to slope-intercept."]},
-    quiz:[{q:"Solve for x: 2x - 4 = 10",opts:["x = 3","x = 7","x = 5","x = 6"],ans:1,exp:"2x - 4 = 10 → 2x = 14 → x = 7. Check: 2(7)-4=10 ✓"},{q:"When do you flip the inequality sign?",opts:["Always","When adding a negative","When multiplying or dividing by a negative","When moving terms"],ans:2,exp:"The sign flips ONLY when multiplying or dividing both sides by a negative number."},{q:"Simplify: 3x + 5 - x + 2",opts:["2x + 7","4x + 7","2x + 3","3x + 7"],ans:0,exp:"Combine like terms: 3x - x = 2x and 5 + 2 = 7, giving 2x + 7."},{q:"In BEDMAS, what comes after Brackets?",opts:["Division","Multiplication","Exponents","Addition"],ans:2,exp:"BEDMAS: Brackets, Exponents, Division/Multiplication (left to right), Addition/Subtraction."}],
-    agrade:[{icon:'✏️',title:'Show every step',tip:'Marks are given for process, not just the final answer.'},{icon:'🔁',title:'Practice problems daily',tip:'Do 10 practice questions each night. Math is built on repetition.'},{icon:'❌',title:'Learn from wrong answers',tip:'Redo wrong problems from scratch without looking at the solution first.'},{icon:'🧮',title:'Always check your answers',tip:'Substitute your answer back into the original equation to verify.'},{icon:'📐',title:'Use graph paper',tip:'Neat, accurate graphs earn full marks. Rough sketches lose easy points.'},{icon:'🆘',title:'Visit the Math Help Centre',tip:"MacEwan's Math Help Centre offers drop-in tutoring — go before the exam."}],
-    knowContext:"Course: Math 099 at MacEwan University, Edmonton Alberta.\nKey topics: Order of operations (BEDMAS), algebraic expressions, like terms, coefficients, distributive property, solving linear equations (one-step, multi-step, variables on both sides), inequalities (sign-flipping rules), number lines, slope-intercept form (y=mx+b), calculating slope (rise/run), graphing linear equations, standard form, systems of equations (substitution, elimination), factoring (GCF, trinomials), polynomials, quadratic equations, quadratic formula, Pythagorean theorem, functions, domain and range.",
+    quiz:[{q:"Solve for x: 2x - 4 = 10",opts:["x = 3","x = 7","x = 5","x = 6"],ans:1,exp:"2x - 4 = 10 → 2x = 14 → x = 7. Check: 2(7)-4=10 ✓"},{q:"When do you flip the inequality sign?",opts:["Always","When adding a negative","When multiplying or dividing by a negative","When moving terms"],ans:2,exp:"The sign flips ONLY when multiplying or dividing both sides by a negative."},{q:"Simplify: 3x + 5 - x + 2",opts:["2x + 7","4x + 7","2x + 3","3x + 7"],ans:0,exp:"3x - x = 2x and 5 + 2 = 7, giving 2x + 7."},{q:"In BEDMAS, what comes after Brackets?",opts:["Division","Multiplication","Exponents","Addition"],ans:2,exp:"BEDMAS: Brackets, Exponents, Division/Multiplication, Addition/Subtraction."}],
+    agrade:[{icon:'✏️',title:'Show every step',tip:'Marks are given for process, not just the final answer.'},{icon:'🔁',title:'Practice problems daily',tip:'Do 10 practice questions each night. Math lives in repetition.'},{icon:'❌',title:'Learn from wrong answers',tip:'Redo wrong problems from scratch without looking at the solution.'},{icon:'🧮',title:'Always check your answers',tip:'Substitute your answer back into the original equation to verify.'},{icon:'📐',title:'Use graph paper',tip:'Neat, accurate graphs earn full marks.'},{icon:'🆘',title:'Visit the Math Help Centre',tip:"MacEwan's Math Help Centre offers drop-in tutoring."}],
+    knowContext:"Course: Math 099 at MacEwan University, Edmonton Alberta.\nKey topics: BEDMAS, algebraic expressions, like terms, coefficients, distributive property, solving linear equations (one-step, multi-step, variables on both sides), inequalities (sign-flipping rules), number lines, slope-intercept form (y=mx+b), calculating slope, graphing linear equations, standard form, systems of equations (substitution, elimination), factoring (GCF, trinomials), polynomials, quadratic equations, quadratic formula, Pythagorean theorem, functions, domain and range.",
     suggestions:["Walk me through solving 3x + 7 = 22 step by step","Why do you flip the inequality sign?","Explain slope-intercept form with an example","How do I factor a trinomial?","What is the quadratic formula and when do I use it?"]},
-
-  anth:{code:'ANTH 101',title:'Anthropology 101',
-    today:{topic:"Culture, Ethnocentrism & Cultural Relativism",points:["Culture = shared beliefs, values, practices, symbols, and norms of a group.","All cultures have universal traits (family, language, ritual) and unique features.","Ethnocentrism: judging another culture by the standards of your own — leads to bias.","Cultural relativism: understanding a culture on its own terms, without judgment.","Anthropologists aim for cultural relativism but stay ethically grounded (not moral relativism).","Case study: Ruth Benedict's Patterns of Culture (1934) — compared Zuni, Dobu, and Kwakiutl societies."],vocab:['Culture','Ethnocentrism','Cultural relativism','Enculturation','Norms','Values','Symbol','Subculture']},
-    review:{last:"The Four Fields of Anthropology",recap:["Biological/Physical Anthropology: human evolution, genetics, primatology.","Archaeology: study of past societies through material remains.","Linguistic Anthropology: how language shapes and is shaped by culture.","Cultural Anthropology: study of living human cultures — today's topic builds on this."]},
+  anth:{code:'ANTH 101',title:'Anthropology 101',color:'#8b5cf6',
+    today:{topic:"Culture, Ethnocentrism & Cultural Relativism",points:["Culture = shared beliefs, values, practices, symbols, and norms of a group.","All cultures have universal traits (family, language, ritual) and unique features.","Ethnocentrism: judging another culture by the standards of your own — leads to bias.","Cultural relativism: understanding a culture on its own terms, without judgment.","Anthropologists aim for cultural relativism but stay ethically grounded (not moral relativism).","Ruth Benedict's Patterns of Culture (1934) compared Zuni, Dobu, and Kwakiutl societies."],vocab:['Culture','Ethnocentrism','Cultural relativism','Enculturation','Norms','Values','Symbol','Subculture']},
+    review:{last:"The Four Fields of Anthropology",recap:["Biological/Physical Anthropology: human evolution, genetics, primatology.","Archaeology: study of past societies through material remains.","Linguistic Anthropology: how language shapes and is shaped by culture.","Cultural Anthropology: study of living human cultures."]},
     tomorrow:{topic:"Fieldwork, Ethnography & Participant Observation",prep:["Ethnography = a written account of a culture based on firsthand fieldwork.","Participant observation: the anthropologist lives within the culture being studied.","Key challenge: going native vs maintaining analytical distance.","Read excerpt from Bronislaw Malinowski's Argonauts of the Western Pacific.","Key terms: interlocutor, field notes, thick description (Geertz)."]},
-    quiz:[{q:"What is ethnocentrism?",opts:["Celebrating cultural differences","Judging other cultures by the standards of your own","A branch of anthropology","The study of ethnic minorities"],ans:1,exp:"Ethnocentrism is viewing one's own culture as normal or superior and judging others by that standard."},{q:"Which is NOT one of the four fields of anthropology?",opts:["Biological Anthropology","Archaeology","Political Science","Linguistic Anthropology"],ans:2,exp:"The four fields are Biological/Physical, Archaeology, Linguistic, and Cultural Anthropology."},{q:"Cultural relativism means:",opts:["All cultures are morally equal","Understanding a culture on its own terms","Cultures should not be compared","Western culture is the standard"],ans:1,exp:"Cultural relativism is understanding cultures from within their own framework — not a statement of moral equivalence."},{q:"Enculturation refers to:",opts:["Moving between cultures","Learning one's own culture from birth","Comparing two cultures","Adopting a new culture's practices"],ans:1,exp:"Enculturation: the process of learning and internalizing the culture you grow up in."}],
-    agrade:[{icon:'🌍',title:'Apply concepts to real life',tip:"When you see a cultural practice in the news, ask: how would an anthropologist analyze this?"},{icon:'📰',title:'Do the readings',tip:'Professors pull exam questions directly from assigned ethnography excerpts.'},{icon:'🗣️',title:'Participate in discussions',tip:'Anthropology often includes participation marks. Share your analysis.'},{icon:'🃏',title:'Flashcard your key theorists',tip:'Know each theorist, their theory, and one famous work.'},{icon:'✍️',title:'Essay structure is everything',tip:'Thesis + ethnographic evidence + theoretical framing. Never just summarize.'},{icon:'🔗',title:'Connect all four fields',tip:'Drawing cross-discipline connections impresses instructors.'}],
-    knowContext:"Course: Anthropology 101 (ANTH 101) at MacEwan University, Edmonton Alberta.\nKey topics: The four fields (biological/physical, archaeology, linguistic, cultural anthropology), culture components (beliefs, values, norms, symbols, practices), ethnocentrism vs cultural relativism vs moral relativism, enculturation, ethnography, fieldwork, participant observation, emic vs etic perspectives, holism, key theorists (Ruth Benedict, Franz Boas, Bronislaw Malinowski, Clifford Geertz), human evolution, fossil record, kinship systems, marriage, religion, ritual, language, communication, economic and political systems across cultures, subcultures.",
+    quiz:[{q:"What is ethnocentrism?",opts:["Celebrating cultural differences","Judging other cultures by the standards of your own","A branch of anthropology","The study of ethnic minorities"],ans:1,exp:"Ethnocentrism is viewing one's own culture as normal or superior and judging others by that standard."},{q:"Which is NOT one of the four fields?",opts:["Biological Anthropology","Archaeology","Political Science","Linguistic Anthropology"],ans:2,exp:"The four fields: Biological/Physical, Archaeology, Linguistic, Cultural."},{q:"Cultural relativism means:",opts:["All cultures are morally equal","Understanding a culture on its own terms","Cultures should not be compared","Western culture is the standard"],ans:1,exp:"Cultural relativism: understanding cultures from within their own framework."},{q:"Enculturation refers to:",opts:["Moving between cultures","Learning one's own culture from birth","Comparing two cultures","Adopting a new culture"],ans:1,exp:"Enculturation: learning and internalizing the culture you grow up in."}],
+    agrade:[{icon:'🌍',title:'Apply concepts to real life',tip:"When you see a cultural practice in the news, ask: how would an anthropologist analyze this?"},{icon:'📰',title:'Do the readings',tip:'Professors pull exam questions directly from assigned ethnography excerpts.'},{icon:'🗣️',title:'Participate in discussions',tip:'Anthropology often includes participation marks.'},{icon:'🃏',title:'Flashcard your key theorists',tip:'Know each theorist, their theory, and one famous work.'},{icon:'✍️',title:'Essay structure is everything',tip:'Thesis + ethnographic evidence + theoretical framing. Never just summarize.'},{icon:'🔗',title:'Connect all four fields',tip:'Drawing cross-discipline connections impresses instructors.'}],
+    knowContext:"Course: Anthropology 101 (ANTH 101) at MacEwan University, Edmonton Alberta.\nKey topics: The four fields (biological/physical, archaeology, linguistic, cultural), culture components (beliefs, values, norms, symbols, practices), ethnocentrism vs cultural relativism vs moral relativism, enculturation, ethnography, fieldwork, participant observation, emic vs etic perspectives, holism, key theorists (Ruth Benedict, Franz Boas, Bronislaw Malinowski, Clifford Geertz), human evolution, fossil record, kinship systems, religion, ritual, language, economic and political systems, subcultures.",
     suggestions:["What's the difference between cultural relativism and moral relativism?","Who is Ruth Benedict and what did she contribute?","Explain emic vs etic perspectives","What is participant observation and why does it matter?","How does language shape culture?"]}
 };
 
-/* ── NAV ── */
+/* ── navigation ── */
+function goHome(){
+  currentCourse=null;
+  document.getElementById('view-home').style.display='block';
+  document.getElementById('view-course').style.display='none';
+  document.querySelectorAll('.sb-course').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sb-home').classList.add('active');
+  document.querySelectorAll('.sb-tool').forEach(s=>s.classList.remove('active'));
+  let done=0;Object.values(assignments).forEach(arr=>arr.forEach(a=>{if(a.done)done++}));
+  document.getElementById('assign-done-home').textContent=done;
+  document.getElementById('pom-total-home').textContent=pomSessions;
+}
+
 function openCourse(key){
   currentCourse=key;
   const c=courses[key];
-  document.getElementById('cv-code').textContent=c.code;
-  document.getElementById('cv-title').textContent=c.title;
   if(!chatHistory[key])chatHistory[key]=[];
   if(!assignments[key])assignments[key]=[];
   if(!flashcards[key])flashcards[key]=[];
   if(!notes[key])notes[key]='';
-  renderAll(c);
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
-  document.querySelectorAll('.tab-content').forEach((t,i)=>t.classList.toggle('active',i===0));
-  document.getElementById('home-view').style.display='none';
-  document.getElementById('course-view').style.display='block';
-  window.scrollTo(0,0);
-}
-function goHome(){
-  document.getElementById('course-view').style.display='none';
-  document.getElementById('home-view').style.display='block';
-  let done=0;Object.values(assignments).forEach(arr=>arr.forEach(a=>{if(a.done)done++}));
-  document.getElementById('assign-done-home').textContent=done;
-  document.getElementById('pom-total-home').textContent=pomSessions;
-  window.scrollTo(0,0);
-}
-function switchTab(name,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('cv-code').textContent=c.code;
+  document.getElementById('cv-title').textContent=c.title;
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-course').style.display='block';
+  document.querySelectorAll('.sb-course').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sb-'+key).classList.add('active');
+  document.getElementById('sb-home').classList.remove('active');
+  switchTool(currentTool,document.getElementById('sb-'+currentTool));
 }
 
-/* ── RENDER ALL ── */
-function renderAll(c){renderToday(c);renderReview(c);renderTomorrow(c);renderQuiz(c);renderFlash(c);renderIKnow(c);renderTutor(c);renderNotes(c);renderAssign(c);renderTimer();renderAgrade(c);}
-function icard(icon,title,body){return`<div class="icard"><h3>${icon} ${title}</h3>${body}</div>`}
+function switchTool(name,btn){
+  if(!currentCourse)return;
+  currentTool=name;
+  document.querySelectorAll('.sb-tool').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderTool(name,courses[currentCourse]);
+}
+
+/* ── RENDERERS ── */
+function icard(label,body){return`<div class="icard"><div class="icard-label">${label}</div>${body}</div>`;}
+
+function renderTool(name,c){
+  const el=document.getElementById('tool-content');
+  if(name==='today')el.innerHTML=renderToday(c);
+  else if(name==='review')el.innerHTML=renderReview(c);
+  else if(name==='tomorrow')el.innerHTML=renderTomorrow(c);
+  else if(name==='quiz'){el.innerHTML=renderQuiz(c);}
+  else if(name==='flash'){el.innerHTML=renderFlashHTML(c);renderFCArea();}
+  else if(name==='iknow')el.innerHTML=renderIKnow(c);
+  else if(name==='tutor'){el.innerHTML=renderTutorHTML(c);renderChatMsgs();renderChatSugs();}
+  else if(name==='work')el.innerHTML=renderWorkReview(c);
+  else if(name==='upload'){el.innerHTML=renderUpload(c);renderUploadHistory();}
+  else if(name==='notes')el.innerHTML=renderNotes(c);
+  else if(name==='assign'){el.innerHTML=renderAssignHTML(c);renderAssignList();}
+  else if(name==='timer')el.innerHTML=renderTimerHTML();
+  else if(name==='agrade')el.innerHTML=renderAgrade(c);
+  // re-bind pomodoro after render
+  if(name==='timer')updatePomDisplay();
+}
 
 function renderToday(c){
   const t=c.today;
   const vocab=t.vocab.map(v=>`<span class="badge badge-b">${v}</span>`).join(' ');
   const pts='<ul>'+t.points.map(p=>`<li>${p}</li>`).join('')+'</ul>';
-  document.getElementById('tab-today').innerHTML=`<h2 class="sec-title">📖 Today's Lesson</h2><div class="two-col">${icard('🎯','Topic',`<p style="font-size:21px;font-weight:700;color:var(--text)">${t.topic}</p>`)}${icard('🔤','Key Vocabulary',`<p>${vocab}</p>`)}</div>${icard('📌','Lesson Notes',pts)}`;
+  return`<div class="two-col">${icard('🎯 Topic',`<div class="icard-title">${t.topic}</div>`)}${icard('🔤 Key Vocabulary',`<p>${vocab}</p>`)}</div>${icard('📌 Lesson Notes',pts)}`;
 }
 function renderReview(c){
   const r=c.review;
   const rc='<ul>'+r.recap.map(p=>`<li>${p}</li>`).join('')+'</ul>';
-  document.getElementById('tab-review').innerHTML=`<h2 class="sec-title">🔁 Review</h2>${icard('📚','Last Lesson',`<p style="font-size:23px;font-weight:600;color:var(--text);margin-bottom:10px">${r.last}</p>${rc}`)}${icard('💡','Active Recall Tip','<p>Before re-reading notes, recall last lesson from memory for 5 minutes. This technique doubles retention compared to re-reading.</p>')}`;
+  return icard('📚 Last Lesson',`<div class="icard-title">${r.last}</div>${rc}`)+icard('💡 Active Recall Tip','<p>Before re-reading notes, try to recall last lesson from memory for 5 minutes. This technique doubles retention.</p>');
 }
 function renderTomorrow(c){
   const t=c.tomorrow;
   const prep='<ul>'+t.prep.map(p=>`<li>${p}</li>`).join('')+'</ul>';
-  document.getElementById('tab-tomorrow').innerHTML=`<h2 class="sec-title">🔮 Tomorrow's Lesson</h2>${icard('📅','Coming Up',`<p style="font-size:23px;font-weight:600;color:var(--text);margin-bottom:10px">${t.topic}</p>${prep}`)}${icard('✅',"Tonight's Prep Checklist",'<ul><li>Review today\'s notes while fresh (15 min)</li><li>Pre-read the section for tomorrow\'s topic</li><li>Write 2–3 questions you want answered in class</li><li>Prepare any materials or assignments due tomorrow</li></ul>')}`;
+  return icard('📅 Coming Up',`<div class="icard-title">${t.topic}</div>${prep}`)+icard("✅ Tonight's Prep Checklist",'<ul><li>Review today\'s notes while fresh (15 min)</li><li>Pre-read the section for tomorrow\'s topic</li><li>Write 2–3 questions you want answered in class</li><li>Prepare any materials or assignments due tomorrow</li></ul>');
 }
 function renderQuiz(c){
-  let html=`<h2 class="sec-title">❓ Practice Quiz</h2>`;
+  let h='';
   c.quiz.forEach((q,qi)=>{
     const opts=q.opts.map((o,oi)=>`<div class="opt" onclick="checkAnswer(${qi},${oi},${q.ans})"><span class="opt-l">${'ABCD'[oi]}</span>${o}</div>`).join('');
-    html+=`<div class="qcard"><div class="qnum">Question ${qi+1} of ${c.quiz.length}</div><div class="qtext">${q.q}</div><div class="opts" id="opts-${qi}">${opts}</div><div class="qfb" id="fb-${qi}"></div></div>`;
+    h+=`<div class="qcard"><div class="qnum">Question ${qi+1} of ${c.quiz.length}</div><div class="qtext">${q.q}</div><div class="opts" id="opts-${qi}">${opts}</div><div class="qfb" id="fb-${qi}"></div></div>`;
   });
-  document.getElementById('tab-quiz').innerHTML=html;
+  return h;
 }
 function checkAnswer(qi,chosen,correct){
   const opts=document.querySelectorAll(`#opts-${qi} .opt`);
@@ -525,11 +640,10 @@ function checkAnswer(qi,chosen,correct){
   fb.className='qfb show '+(chosen===correct?'good':'bad');
 }
 
-/* ── FLASHCARDS ── */
+/* flashcards */
 let fcIndex=0;
-function renderFlash(c){
-  document.getElementById('tab-flash').innerHTML=`<h2 class="sec-title">🎴 Flashcards</h2><div class="fc-controls"><button class="fc-gen-btn" id="fc-gen-btn" onclick="generateFlashcards()">✨ Generate AI Flashcards</button><span class="fc-count" id="fc-count">${(flashcards[currentCourse]||[]).length} cards</span></div><div id="fc-loading" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:19px"><div class="spinner"></div>Generating flashcards with AI...</div><div id="fc-area"></div>`;
-  renderFCArea();
+function renderFlashHTML(c){
+  return`<div style="margin-bottom:18px;display:flex;align-items:center;gap:10px"><button class="fc-gen-btn" id="fc-gen-btn" onclick="generateFlashcards()">✨ Generate AI Flashcards</button><span style="font-size:13px;color:var(--muted);margin-left:auto" id="fc-count">${(flashcards[currentCourse]||[]).length} cards</span></div><div id="fc-loading" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:13px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"><div class="spinner"></div>Generating flashcards with AI...</div><div id="fc-area"></div>`;
 }
 function renderFCArea(){
   const cards=flashcards[currentCourse]||[];
@@ -537,32 +651,30 @@ function renderFCArea(){
   if(!cards.length){area.innerHTML=`<div class="fc-empty"><strong>No flashcards yet</strong>Click "Generate AI Flashcards" to create a set instantly.</div>`;return;}
   if(fcIndex>=cards.length)fcIndex=0;
   const card=cards[fcIndex];
-  area.innerHTML=`<div class="fc-card" id="fc-card" onclick="flipCard()"><div class="fc-inner"><div class="fc-front"><div class="fc-label">Question</div><div class="fc-text">${card.q}</div><div class="fc-hint">Tap to reveal answer</div></div><div class="fc-back"><div class="fc-label">Answer</div><div class="fc-text">${card.a}</div></div></div></div><div class="fc-nav"><button class="fc-nav-btn" onclick="fcNav(-1)" ${fcIndex===0?'disabled':''}>←</button><span class="fc-progress-txt">${fcIndex+1} / ${cards.length}</span><button class="fc-nav-btn" onclick="fcNav(1)" ${fcIndex===cards.length-1?'disabled':''}>→</button></div><div class="fc-rating"><button class="fc-rate-btn rate-hard" onclick="rateCard('hard')">😓 Hard</button><button class="fc-rate-btn rate-ok" onclick="rateCard('ok')">🤔 Got it</button><button class="fc-rate-btn rate-easy" onclick="rateCard('easy')">✅ Easy</button></div>`;
+  area.innerHTML=`<div class="fc-card" id="fc-card" onclick="flipCard()"><div class="fc-inner"><div class="fc-front"><div class="fc-lbl">Question</div><div class="fc-text">${card.q}</div><div class="fc-hint">Click to reveal answer</div></div><div class="fc-back"><div class="fc-lbl">Answer</div><div class="fc-text">${card.a}</div></div></div></div><div class="fc-nav"><button class="fc-nav-btn" onclick="fcNav(-1)" ${fcIndex===0?'disabled':''}>←</button><span class="fc-prog">${fcIndex+1} / ${cards.length}</span><button class="fc-nav-btn" onclick="fcNav(1)" ${fcIndex===cards.length-1?'disabled':''}>→</button></div><div class="fc-rating"><button class="fc-rate-btn rate-hard" onclick="rateCard('hard')">😓 Hard</button><button class="fc-rate-btn rate-ok" onclick="rateCard('ok')">🤔 Got it</button><button class="fc-rate-btn rate-easy" onclick="rateCard('easy')">✅ Easy</button></div>`;
 }
 function flipCard(){document.getElementById('fc-card')?.classList.toggle('flipped')}
 function fcNav(dir){fcIndex+=dir;renderFCArea()}
 function rateCard(r){const cards=flashcards[currentCourse];if(cards&&cards[fcIndex])cards[fcIndex].rating=r;fcNav(1)}
 async function generateFlashcards(){
   const c=courses[currentCourse];
-  const btn=document.getElementById('fc-gen-btn');
-  const loading=document.getElementById('fc-loading');
+  const btn=document.getElementById('fc-gen-btn');const loading=document.getElementById('fc-loading');
   btn.disabled=true;loading.style.display='block';
   try{
-    if(!getKey()){throw new Error('No API key saved. Click the 🔑 API Key button at the top to add your key.');}
+    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Generate 10 flashcard question-answer pairs for a university student studying ${c.title} at MacEwan University in Edmonton, Alberta.\n\n${c.knowContext}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]\n\nMake questions specific and testable. Answers concise but complete.`}]})});
     const data=await res.json();
-    if(!res.ok){throw new Error(`API error ${res.status}: ${data?.error?.message||JSON.stringify(data)}`);}
-    if(!data.content||!data.content.length){throw new Error('Empty response from API. Check your key and try again.');}
-    const raw=data.content.map(b=>b.text||'').join('');
-    flashcards[currentCourse]=JSON.parse(raw.replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null}));
+    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!data.content?.length)throw new Error('Empty response. Check your API key.');
+    flashcards[currentCourse]=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null}));
     fcIndex=0;document.getElementById('fc-count').textContent=flashcards[currentCourse].length+' cards';renderFCArea();
-  }catch(e){document.getElementById('fc-area').innerHTML=`<div class="fc-empty"><strong>Error generating flashcards</strong>${e.message}</div>`;}
+  }catch(e){document.getElementById('fc-area').innerHTML=`<div class="fc-empty"><strong>Error</strong>${e.message}</div>`;}
   finally{btn.disabled=false;loading.style.display='none';}
 }
 
-/* ── WHAT I KNOW ── */
+/* what i know */
 function renderIKnow(c){
-  document.getElementById('tab-iknow').innerHTML=`<h2 class="sec-title">🧠 What I Know</h2><div class="know-intro"><strong>Be honest. The AI won't sugarcoat it.</strong><br>Write everything you know about <strong>${c.title}</strong> from memory — no notes. The AI grades your understanding, exposes your exact blind spots, and gives a targeted plan to fix them.</div><div class="know-ta-wrap"><textarea class="know-ta" id="know-input" placeholder="Write everything you know about ${c.title} from memory — concepts, definitions, formulas, examples, how things connect..." oninput="document.getElementById('char-c').textContent=this.value.length+' / 3000'" maxlength="3000"></textarea><span class="char-c" id="char-c">0 / 3000</span></div><button class="ai-btn" id="know-btn" onclick="evaluateKnowledge()">🔍 Evaluate My Knowledge</button><div class="ai-loading" id="ai-loading"><div class="spinner"></div><div class="loading-txt"><strong>Evaluating your knowledge...</strong>Comparing against the full ${c.title} curriculum</div></div><div class="ai-result" id="ai-result"></div>`;
+  return`<div class="know-intro"><strong>Be honest — the AI won't sugarcoat it.</strong><br>Write everything you know about <strong>${c.title}</strong> from memory. No notes. The AI grades your understanding, exposes your exact blind spots, and gives you a targeted plan to fix them.</div><div class="know-ta-wrap"><textarea class="know-ta" id="know-input" placeholder="Write everything you know about ${c.title} from memory..." oninput="document.getElementById('char-c').textContent=this.value.length+' / 3000'" maxlength="3000"></textarea><span class="char-c" id="char-c">0 / 3000</span></div><button class="ai-btn" id="know-btn" onclick="evaluateKnowledge()">🔍 Evaluate My Knowledge</button><div class="ai-loading" id="ai-loading"><div class="spinner"></div><div class="loading-txt"><strong>Evaluating your knowledge...</strong>Comparing against the full ${c.title} curriculum</div></div><div class="ai-result" id="ai-result"></div>`;
 }
 async function evaluateKnowledge(){
   const c=courses[currentCourse];const input=document.getElementById('know-input').value.trim();
@@ -570,36 +682,35 @@ async function evaluateKnowledge(){
   const btn=document.getElementById('know-btn');const loading=document.getElementById('ai-loading');const result=document.getElementById('ai-result');
   btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
   try{
-    if(!getKey()){throw new Error('No API key saved. Click the 🔑 API Key button at the top to add your key.');}
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`You are a strict university professor evaluating a student's self-reported knowledge for ${c.title} at MacEwan University, Edmonton, Alberta.\n\n${c.knowContext}\n\nThe student wrote:\n"""\n${input}\n"""\n\nEvaluate rigorously and directly. If knowledge is incomplete or vague, say so. Respond ONLY with raw JSON (no markdown):\n{"grade":"A"|"B"|"C"|"D","score":0-100,"headline":"one blunt sentence","strengths":["..."],"weaknesses":["specific gap 1","specific gap 2","specific gap 3"],"missing":["important topic not mentioned 1","topic 2","topic 3"],"improve":["specific action 1","action 2","action 3","action 4"]}`}]})});
+    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`You are a strict university professor evaluating a student's self-reported knowledge for ${c.title} at MacEwan University, Edmonton, Alberta.\n\n${c.knowContext}\n\nThe student wrote:\n"""\n${input}\n"""\n\nEvaluate rigorously and directly. Respond ONLY with raw JSON:\n{"grade":"A"|"B"|"C"|"D","score":0-100,"headline":"one blunt sentence","strengths":["..."],"weaknesses":["specific gap 1","specific gap 2","specific gap 3"],"missing":["important topic not mentioned 1","topic 2","topic 3"],"improve":["specific action 1","action 2","action 3","action 4"]}`}]})});
     const data=await res.json();
-    if(!res.ok){throw new Error(`API error ${res.status}: ${data?.error?.message||JSON.stringify(data)}`);}
-    if(!data.content||!data.content.length){throw new Error('Empty response from API. Check your key and try again.');}
+    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!data.content?.length)throw new Error('Empty response. Check your API key.');
     showResult(JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()),c);
-  }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:19px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
+  }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
   finally{btn.disabled=false;loading.classList.remove('show');}
 }
 function showResult(ev,c){
   const gc={A:'ga',B:'gb',C:'gc',D:'gd'}[ev.grade]||'gd';
   const result=document.getElementById('ai-result');
-  const str=ev.strengths?.length?'<ul>'+ev.strengths.map(s=>`<li><span class="hl">${s}</span></li>`).join('')+'</ul>':'<p style="font-size:19px;color:var(--text2)">No clear strengths identified — keep studying.</p>';
-  result.innerHTML=`<div class="score-banner ${gc}"><div class="score-circle">${ev.grade}</div><div class="score-text"><h3>${ev.score}/100 — ${ev.headline}</h3><p>${c.title} · Evaluated ${new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}</p></div></div><div class="two-col"><div class="rsec rs-good"><h4>✅ What You Got Right</h4>${str}</div><div class="rsec rs-bad"><h4>❌ Your Weaknesses</h4><ul>${ev.weaknesses.map(w=>`<li>${w}</li>`).join('')}</ul></div></div><div class="rsec rs-warn"><h4>🕳️ Topics You Didn't Mention</h4><ul>${ev.missing.map(m=>`<li>${m}</li>`).join('')}</ul></div><div class="rsec rs-info"><h4>📈 How to Improve — Specifically</h4><ul>${ev.improve.map(i=>`<li>${i}</li>`).join('')}</ul></div><button class="retry-btn" onclick="document.getElementById('know-input').value='';document.getElementById('char-c').textContent='0 / 3000';document.getElementById('ai-result').classList.remove('show')">↩ Try Again</button>`;
+  const str=ev.strengths?.length?'<ul>'+ev.strengths.map(s=>`<li><span class="hl">${s}</span></li>`).join('')+'</ul>':'<p style="font-size:13px;color:var(--text2)">No clear strengths identified — keep studying.</p>';
+  result.innerHTML=`<div class="score-banner ${gc}"><div class="score-circle">${ev.grade}</div><div class="score-text"><h3>${ev.score}/100 — ${ev.headline}</h3><p>${c.title} · ${new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}</p></div></div><div class="two-col"><div class="rsec rs-good"><h4>✅ What You Got Right</h4>${str}</div><div class="rsec rs-bad"><h4>❌ Your Weaknesses</h4><ul>${ev.weaknesses.map(w=>`<li>${w}</li>`).join('')}</ul></div></div><div class="rsec rs-warn"><h4>🕳️ Topics You Didn't Mention</h4><ul>${ev.missing.map(m=>`<li>${m}</li>`).join('')}</ul></div><div class="rsec rs-info"><h4>📈 How to Improve — Specifically</h4><ul>${ev.improve.map(i=>`<li>${i}</li>`).join('')}</ul></div><button class="retry-btn" onclick="document.getElementById('know-input').value='';document.getElementById('char-c').textContent='0 / 3000';document.getElementById('ai-result').classList.remove('show')">↩ Try Again</button>`;
   result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-/* ── AI TUTOR ── */
-function renderTutor(c){
-  chatHistory[currentCourse]=[{role:'assistant',content:`Hi! I'm your AI tutor for **${c.title}** at MacEwan University. Ask me anything — concepts, homework, exam prep, or anything you're confused about. I'm here to help you get an A.`}];
-  document.getElementById('tab-tutor').innerHTML=`<h2 class="sec-title">💬 AI Tutor</h2><div class="chat-wrap"><div class="chat-msgs" id="chat-msgs"></div><div class="chat-suggestions" id="chat-sugs"></div><div class="chat-input-row"><input class="chat-input" id="chat-input" placeholder="Ask anything about ${c.title}..." onkeydown="if(event.key==='Enter')sendChat()"><button class="chat-send" id="chat-send" onclick="sendChat()">↑</button></div></div>`;
-  renderChatMsgs();renderChatSugs();
+/* ai tutor */
+function renderTutorHTML(c){
+  if(!chatHistory[currentCourse].length)chatHistory[currentCourse]=[{role:'assistant',content:`Hi! I'm your AI tutor for **${c.title}** at MacEwan University. Ask me anything — concepts, homework, exam prep, or anything you're confused about.`}];
+  return`<div class="chat-wrap"><div class="chat-msgs" id="chat-msgs"></div><div class="chat-sugs" id="chat-sugs"></div><div class="chat-input-row"><input class="chat-input" id="chat-input" placeholder="Ask anything about ${c.title}..." onkeydown="if(event.key==='Enter')sendChat()"><button class="chat-send" id="chat-send" onclick="sendChat()">↑</button></div></div>`;
 }
 function renderChatMsgs(){
-  const msgs=document.getElementById('chat-msgs');if(!msgs)return;
+  const msgs=document.getElementById('chat-msgs');if(!msgs||!currentCourse)return;
   msgs.innerHTML=chatHistory[currentCourse].map(m=>`<div class="msg ${m.role==='assistant'?'ai':'user'}">${m.role==='assistant'?'<strong>AI Tutor</strong>':''}<span>${m.content.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</span></div>`).join('');
   msgs.scrollTop=msgs.scrollHeight;
 }
 function renderChatSugs(){
-  const c=courses[currentCourse];const el=document.getElementById('chat-sugs');if(!el||!c.suggestions)return;
+  const c=courses[currentCourse];const el=document.getElementById('chat-sugs');if(!el||!c?.suggestions)return;
   el.innerHTML=c.suggestions.map(s=>`<button class="chat-sug" onclick="sendChatMsg('${s.replace(/'/g,"\\'")}')">💬 ${s}</button>`).join('');
 }
 async function sendChat(){const input=document.getElementById('chat-input');const msg=input.value.trim();if(!msg)return;input.value='';sendChatMsg(msg);}
@@ -610,27 +721,25 @@ async function sendChatMsg(msg){
   msgs.innerHTML+='<div class="msg typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
   msgs.scrollTop=msgs.scrollHeight;
   try{
-    if(!getKey()){throw new Error('No API key saved. Click the 🔑 API Key button at the top right to add your key.');}
+    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
     const history=chatHistory[currentCourse].slice(-10).filter(h=>h.role==='user'||h.role==='assistant');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`You are an expert tutor for ${c.title} at MacEwan University in Edmonton, Alberta. ${c.knowContext}\n\nBe clear, specific, encouraging. Use examples. Break things into small steps when a student is struggling. Keep responses to 2–4 paragraphs max.`,messages:history.map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}))})});
     const data=await res.json();
-    if(!res.ok){throw new Error(`API error ${res.status}: ${data?.error?.message||'Check that your API key is correct.'}`);}
-    if(!data.content||!data.content.length){throw new Error('Empty response. Check your API key and try again.');}
+    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
     chatHistory[currentCourse].push({role:'assistant',content:data.content.map(b=>b.text||'').join('')});
-  }catch(e){chatHistory[currentCourse].push({role:'assistant',content:`Sorry, I couldn't connect right now. (${e.message})`});}
+  }catch(e){chatHistory[currentCourse].push({role:'assistant',content:`Sorry, I couldn't connect. (${e.message})`});}
   finally{document.getElementById('chat-send').disabled=false;renderChatMsgs();renderChatSugs();}
 }
 
-/* ── NOTES ── */
+/* notes */
 function renderNotes(c){
-  document.getElementById('tab-notes').innerHTML=`<h2 class="sec-title">✏️ My Notes</h2><div class="notes-bar"><span>Your private notes for ${c.title}</span><button class="notes-save-btn" onclick="saveNotes()">💾 Save Notes</button></div><textarea class="notes-ta" id="notes-ta" placeholder="Write your own notes here — key concepts, questions to ask, things to remember, connections you notice...">${notes[currentCourse]||''}</textarea><div class="notes-saved-msg" id="notes-saved">✅ Notes saved successfully</div>`;
+  return`<div class="notes-bar"><span>Your private notes for <strong>${c.title}</strong></span><button class="notes-save-btn" onclick="saveNotes()">💾 Save Notes</button></div><textarea class="notes-ta" id="notes-ta" placeholder="Write your own notes — key concepts, questions to ask, things to remember, connections you notice...">${notes[currentCourse]||''}</textarea><div class="notes-saved" id="notes-saved">✅ Notes saved</div>`;
 }
-function saveNotes(){notes[currentCourse]=document.getElementById('notes-ta').value;const msg=document.getElementById('notes-saved');msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);}
+function saveNotes(){notes[currentCourse]=document.getElementById('notes-ta').value;const m=document.getElementById('notes-saved');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);}
 
-/* ── ASSIGNMENTS ── */
-function renderAssign(c){
-  document.getElementById('tab-assign').innerHTML=`<h2 class="sec-title">📅 Assignments</h2><div class="assign-add"><input class="assign-input" id="assign-title" placeholder="Assignment title..." style="flex:2"><input class="assign-input" id="assign-due" type="date" style="max-width:150px"><select class="assign-input" id="assign-priority" style="max-width:110px"><option value="high">🔴 High</option><option value="med" selected>🟡 Medium</option><option value="low">🟢 Low</option></select><button class="assign-add-btn" onclick="addAssignment()">+ Add</button></div><div id="assign-list"></div>`;
-  renderAssignList();
+/* assignments */
+function renderAssignHTML(c){
+  return`<div class="assign-add"><input class="assign-input" id="assign-title" placeholder="Assignment title..." style="flex:2"><input class="assign-input" id="assign-due" type="date" style="max-width:148px"><select class="assign-input" id="assign-priority" style="max-width:108px"><option value="high">🔴 High</option><option value="med" selected>🟡 Medium</option><option value="low">🟢 Low</option></select><button class="assign-add-btn" onclick="addAssignment()">+ Add</button></div><div id="assign-list"></div>`;
 }
 function addAssignment(){
   const title=document.getElementById('assign-title').value.trim();if(!title)return;
@@ -640,13 +749,12 @@ function addAssignment(){
 function renderAssignList(){
   const list=document.getElementById('assign-list');if(!list)return;
   const items=assignments[currentCourse]||[];
-  if(!items.length){list.innerHTML=`<div class="assign-empty">No assignments yet. Add one above to start tracking.</div>`;return;}
+  if(!items.length){list.innerHTML=`<div class="assign-empty">No assignments yet. Add one above.</div>`;return;}
   list.innerHTML=items.map((a,i)=>{
     const today=new Date();today.setHours(0,0,0,0);
     const due=a.due?new Date(a.due+'T00:00:00'):null;
     const dueStr=due?due.toLocaleDateString('en-CA',{month:'short',day:'numeric'}):'No due date';
-    const overdue=due&&due<today&&!a.done;
-    const soon=due&&!overdue&&((due-today)/(1000*60*60*24))<=2&&!a.done;
+    const overdue=due&&due<today&&!a.done;const soon=due&&!overdue&&((due-today)/(1000*60*60*24))<=2&&!a.done;
     const pc={high:'p-high',med:'p-med',low:'p-low'}[a.priority]||'p-med';
     const pl={high:'High',med:'Med',low:'Low'}[a.priority]||'Med';
     return`<div class="assign-item${a.done?' done':''}"><div class="assign-cb${a.done?' checked':''}" onclick="toggleAssign(${i})">${a.done?'✓':''}</div><div class="assign-name">${a.title}</div><span class="assign-priority ${pc}">${pl}</span><div class="assign-due${overdue?' overdue':soon?' soon':''}">${dueStr}${overdue?' ⚠️':soon?' ⏰':''}</div><button class="assign-del" onclick="deleteAssign(${i})">×</button></div>`;
@@ -655,15 +763,14 @@ function renderAssignList(){
 function toggleAssign(i){assignments[currentCourse][i].done=!assignments[currentCourse][i].done;renderAssignList();}
 function deleteAssign(i){assignments[currentCourse].splice(i,1);renderAssignList();}
 
-/* ── POMODORO ── */
+/* pomodoro */
 let pomTimer=null,pomSecondsLeft=25*60,pomTotalSeconds=25*60,pomRunning=false,pomMode='work';
-const pomModes={work:{label:'Focus Time',mins:25,color:'#2563eb'},short:{label:'Short Break',mins:5,color:'#16a34a'},long:{label:'Long Break',mins:15,color:'#7c3aed'}};
-function renderTimer(){
-  document.getElementById('tab-timer').innerHTML=`<h2 class="sec-title">⏱ Focus Timer</h2><div class="pom-wrap"><div class="pom-modes" style="margin-bottom:18px"><button class="pom-mode-btn active" id="pmode-work" onclick="setPomMode('work')">🎯 Focus (25 min)</button><button class="pom-mode-btn" id="pmode-short" onclick="setPomMode('short')">☕ Break (5 min)</button><button class="pom-mode-btn" id="pmode-long" onclick="setPomMode('long')">🛋 Long Break (15 min)</button></div><div class="pom-display"><div class="pom-ring"><svg viewBox="0 0 120 120" width="160" height="160"><circle class="pom-ring-track" cx="60" cy="60" r="52"/><circle class="pom-ring-fill" id="pom-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="${2*Math.PI*52}" stroke-dashoffset="0"/></svg></div><div class="pom-mode-lbl" id="pom-mode-label">Focus Time</div><div class="pom-time" id="pom-time">25:00</div><div class="pom-session" id="pom-sess-label">Session ${pomSessions+1} · ${pomSessions} completed today</div></div><div class="pom-btns"><button class="pom-btn pom-start" id="pom-start-btn" onclick="togglePom()">▶ Start</button><button class="pom-btn pom-reset" onclick="resetPom()">↺ Reset</button></div></div>`;
-  updatePomDisplay();
+const pomModes={work:{label:'Focus Time',mins:25,color:'var(--blue)'},short:{label:'Short Break',mins:5,color:'var(--green)'},long:{label:'Long Break',mins:15,color:'var(--muted)'}};
+function renderTimerHTML(){
+  return`<div class="pom-wrap"><div class="pom-modes" style="margin-bottom:16px"><button class="pom-mode-btn active" id="pmode-work" onclick="setPomMode('work')">🎯 Focus (25 min)</button><button class="pom-mode-btn" id="pmode-short" onclick="setPomMode('short')">☕ Break (5 min)</button><button class="pom-mode-btn" id="pmode-long" onclick="setPomMode('long')">🛋 Long Break (15 min)</button></div><div class="pom-display"><div class="pom-ring"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="pom-ring-track" cx="60" cy="60" r="52"/><circle class="pom-ring-fill" id="pom-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="${2*Math.PI*52}" stroke-dashoffset="0"/></svg></div><div class="pom-mode-lbl" id="pom-mode-label">Focus Time</div><div class="pom-time" id="pom-time">25:00</div><div class="pom-session" id="pom-sess-label">Session 1 · 0 completed today</div></div><div class="pom-btns"><button class="pom-btn pom-start" id="pom-start-btn" onclick="togglePom()">▶ Start</button><button class="pom-btn pom-reset" onclick="resetPom()">↺ Reset</button></div></div>`;
 }
 function setPomMode(mode){pomMode=mode;resetPom();document.querySelectorAll('.pom-mode-btn').forEach(b=>b.classList.remove('active'));document.getElementById('pmode-'+mode)?.classList.add('active');}
-function togglePom(){pomRunning=!pomRunning;document.getElementById('pom-start-btn').textContent=pomRunning?'⏸ Pause':'▶ Start';if(pomRunning){pomTimer=setInterval(pomTick,1000);}else{clearInterval(pomTimer);}}
+function togglePom(){pomRunning=!pomRunning;document.getElementById('pom-start-btn').textContent=pomRunning?'⏸ Pause':'▶ Start';if(pomRunning)pomTimer=setInterval(pomTick,1000);else clearInterval(pomTimer);}
 function pomTick(){pomSecondsLeft--;if(pomSecondsLeft<=0){clearInterval(pomTimer);pomRunning=false;if(pomMode==='work')pomSessions++;document.getElementById('pom-start-btn').textContent='▶ Start';pomSecondsLeft=0;updatePomDisplay();setTimeout(()=>alert(pomMode==='work'?`✅ Focus session done! ${pomSessions} sessions today. Take a break.`:'☕ Break over — back to work!'),100);return;}updatePomDisplay();}
 function resetPom(){clearInterval(pomTimer);pomRunning=false;pomSecondsLeft=pomModes[pomMode].mins*60;pomTotalSeconds=pomModes[pomMode].mins*60;const btn=document.getElementById('pom-start-btn');if(btn)btn.textContent='▶ Start';updatePomDisplay();}
 function updatePomDisplay(){
@@ -675,11 +782,78 @@ function updatePomDisplay(){
   if(ring){const circ=2*Math.PI*52;ring.style.strokeDashoffset=circ*(1-pomSecondsLeft/pomTotalSeconds);ring.style.stroke=pomModes[pomMode].color;}
 }
 
-/* ── GET AN A ── */
+/* work review */
+let workType='essay';
+function renderWorkReview(c){
+  return`<div class="know-intro"><strong>Submit any work for a full professor-level review.</strong><br>Paste your essay, homework, lab report, code, or math solutions. The AI reviews it against <strong>${c.title}</strong> standards, gives you a realistic grade, and tells you exactly what to fix before you submit it for real.</div>
+  <div class="work-type-row">
+    <button class="work-type-btn active" onclick="setWorkType('essay',this)">📄 Essay / Paper</button>
+    <button class="work-type-btn" onclick="setWorkType('homework',this)">📋 Homework / Problems</button>
+    <button class="work-type-btn" onclick="setWorkType('lab',this)">🧪 Lab Report</button>
+    <button class="work-type-btn" onclick="setWorkType('code',this)">💻 Code</button>
+    <button class="work-type-btn" onclick="setWorkType('notes',this)">📝 Study Notes</button>
+  </div>
+  <input class="work-instr" id="work-instr" placeholder="Optional: paste the assignment instructions or rubric so the AI can grade against it exactly...">
+  <textarea class="work-ta" id="work-input" placeholder="Paste your work here..."></textarea>
+  <button class="ai-btn" id="work-btn" onclick="submitWork()">🔍 Review My Work</button>
+  <div class="ai-loading" id="work-loading"><div class="spinner"></div><div class="loading-txt"><strong>Reviewing your work...</strong>Reading carefully and checking against ${c.title} standards</div></div>
+  <div class="ai-result" id="work-result"></div>`;
+}
+function setWorkType(t,btn){
+  workType=t;
+  document.querySelectorAll('.work-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const ta=document.getElementById('work-input');
+  ta.classList.toggle('code',t==='code');
+  const ph={essay:'Paste your essay or paper here...',homework:'Paste your homework or problem set with your answers here...',lab:'Paste your lab report here...',code:'Paste your code here...',notes:'Paste your study notes here...'};
+  ta.placeholder=ph[t];
+}
+async function submitWork(){
+  const c=courses[currentCourse];
+  const input=document.getElementById('work-input').value.trim();
+  const instr=document.getElementById('work-instr').value.trim();
+  if(input.length<30){alert('Paste your work first — at least a few sentences.');return;}
+  const btn=document.getElementById('work-btn');const loading=document.getElementById('work-loading');const result=document.getElementById('work-result');
+  btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
+  const typeLabel={essay:'essay or academic paper',homework:'homework or problem set',lab:'lab report',code:'code submission',notes:'study notes'}[workType];
+  try{
+    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:`You are a rigorous but fair university professor at MacEwan University in Edmonton, Alberta, reviewing a student's ${typeLabel} for ${c.title}.\n\n${c.knowContext}\n\n${instr?`Assignment instructions / rubric:\n"""\n${instr}\n"""\n\n`:''}Student's work:\n"""\n${input}\n"""\n\nReview this thoroughly as a professor would. Be specific — quote or reference actual parts of their work. Be honest about the grade: don't inflate it. Respond ONLY with raw JSON (no markdown):\n{"grade":"A+"|"A"|"A-"|"B+"|"B"|"B-"|"C+"|"C"|"C-"|"D"|"F","score":0-100,"summary":"2-3 sentence overall assessment in a professor's voice","strengths":["specific thing done well 1","specific thing 2","specific thing 3"],"issues":["specific problem with location/quote 1","problem 2","problem 3","problem 4"],"fixes":["concrete action to fix issue 1","action 2","action 3","action 4"],"beforeSubmit":["final checklist item 1","item 2","item 3"]}`}]})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!data.content?.length)throw new Error('Empty response. Check your API key.');
+    showWorkResult(JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()),c);
+  }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
+  finally{btn.disabled=false;loading.classList.remove('show');}
+}
+function showWorkResult(r,c){
+  const g=r.grade.charAt(0);
+  const gcolor={A:'var(--green)',B:'var(--blue)',C:'var(--yellow)',D:'var(--red)',F:'var(--red)'}[g]||'var(--red)';
+  const result=document.getElementById('work-result');
+  result.innerHTML=`
+    <div class="review-grade-row">
+      <div class="review-grade-box"><div class="review-grade-num" style="color:${gcolor}">${r.grade}</div><div class="review-grade-lbl">Estimated Grade</div></div>
+      <div class="review-grade-box"><div class="review-grade-num" style="color:var(--navy)">${r.score}</div><div class="review-grade-lbl">Score / 100</div></div>
+    </div>
+    <div class="review-summary">"${r.summary}"</div>
+    <div class="two-col">
+      <div class="rsec rs-good"><h4>✅ What's Working</h4>${r.strengths.map(s=>`<div class="review-item"><div class="review-item-ico">✓</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
+      <div class="rsec rs-bad"><h4>❌ Problems Found</h4>${r.issues.map(s=>`<div class="review-item"><div class="review-item-ico">✗</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
+    </div>
+    <div class="rsec rs-info"><h4>🔧 How to Fix It</h4>${r.fixes.map((s,i)=>`<div class="review-item"><div class="review-item-ico" style="font-size:12px;font-weight:700;color:var(--blue)">${i+1}.</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
+    <div class="rsec rs-warn"><h4>📋 Before You Submit — Checklist</h4>${r.beforeSubmit.map(s=>`<div class="review-item"><div class="review-item-ico">☐</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
+    <button class="retry-btn" onclick="document.getElementById('work-result').classList.remove('show');document.getElementById('work-input').focus()">↩ Revise & Resubmit</button>`;
+  result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* get an a */
 function renderAgrade(c){
   const tips=c.agrade.map(t=>`<div class="tip-row"><div class="tip-ico">${t.icon}</div><div class="tip-txt"><strong>${t.title}</strong>${t.tip}</div></div>`).join('');
-  document.getElementById('tab-agrade').innerHTML=`<h2 class="sec-title">🏆 How to Get an A</h2>${icard('⭐','Course-Specific Strategies',tips)}${icard('📅','Universal A-Grade Habits','<div class="tip-row"><div class="tip-ico">😴</div><div class="tip-txt"><strong>Sleep 7–9 hours before any exam</strong>Sleep consolidates memory. All-nighters hurt more than they help.</div></div><div class="tip-row"><div class="tip-ico">🍎</div><div class="tip-txt"><strong>Eat before class and exams</strong>Cognitive performance drops measurably when hungry or dehydrated.</div></div><div class="tip-row"><div class="tip-ico">📧</div><div class="tip-txt"><strong>Email your professor in week 1</strong>Introduce yourself. Professors notice engaged students.</div></div>')}`;
+  return icard('⭐ Course-Specific Strategies',tips)+icard('📅 Universal A-Grade Habits','<div class="tip-row"><div class="tip-ico">😴</div><div class="tip-txt"><strong>Sleep 7–9 hours before any exam</strong>Sleep consolidates memory. All-nighters hurt more than they help.</div></div><div class="tip-row"><div class="tip-ico">🍎</div><div class="tip-txt"><strong>Eat before class and exams</strong>Cognitive performance drops measurably when hungry or dehydrated.</div></div><div class="tip-row"><div class="tip-ico">📧</div><div class="tip-txt"><strong>Email your professor in week 1</strong>Introduce yourself. Professors notice engaged students.</div></div>');
 }
+
+/* init */
+goHome();
 </script>
 </body>
 </html>
