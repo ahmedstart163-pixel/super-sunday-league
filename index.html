@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+The user responded: <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -655,6 +655,51 @@ select.gr-in option{background:var(--surface);color:var(--text)}
 .fc-gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
 
+
+.cf-row{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--card2);transition:border-color .15s,background .15s}
+.cf-row:hover{border-color:var(--border2);background:var(--hover)}
+.cf-row.cf-done{opacity:.62}
+.cf-num{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;background:var(--accent-tint);color:var(--accent);border:1px solid var(--accent-border)}
+.cf-body{flex:1;min-width:0}
+.cf-title{font-weight:700;font-size:14.5px;color:var(--text);display:flex;align-items:center;gap:6px}
+.cf-tick{font-size:16px;color:var(--green)}
+.cf-topic{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.cf-links{display:flex;gap:8px;flex-shrink:0}
+.cf-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:9px;font-size:12.5px;font-weight:600;text-decoration:none;background:var(--accent);color:#fff;border:1px solid var(--accent);white-space:nowrap}
+.cf-btn:hover{filter:brightness(1.08)}
+.cf-btn.cf-alt{background:transparent;color:var(--text2);border-color:var(--border2)}
+.cf-btn.cf-alt:hover{background:var(--hover);color:var(--text)}
+.cf-btn .ic{font-size:15px}
+.cf-notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.cf-note{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:9px;background:var(--card2);color:var(--text2);text-decoration:none;font-size:12.5px;font-weight:500;transition:all .15s}
+.cf-note:hover{border-color:var(--accent-border);color:var(--text);background:var(--hover)}
+.cf-note .ic{color:var(--muted);margin-right:0}
+.sy-kv{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5}
+.sy-kv:last-child{border-bottom:none}
+.sy-kv span{flex:0 0 110px;color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;padding-top:2px}
+.sy-kv b{flex:1;color:var(--text);font-weight:500}
+.sy-grade{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--border)}
+.sy-grade:last-of-type{border-bottom:none}
+.sy-w{flex:0 0 54px;height:40px;border-radius:10px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:15px;background:var(--accent-tint);color:var(--accent);border:1px solid var(--accent-border)}
+.sy-gn{font-weight:700;font-size:14px;color:var(--text)}
+.sy-gd{font-size:12px;color:var(--muted);margin-top:2px}
+.sy-tab{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+.sy-tab th{text-align:left;padding:8px 10px;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;border-bottom:1px solid var(--border2)}
+.sy-tab td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.sy-tab tr.sy-hot td{background:var(--accent-tint);color:var(--text)}
+.sy-tab td:first-child{font-family:var(--mono);font-weight:700;color:var(--muted)}
+
+/* --- readability fixes (light theme contrast) --- */
+[data-theme="light"]{--muted:#5C5C66;--muted2:#6E6E78}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--muted:#5C5C66;--muted2:#6E6E78}}
+.chat-sug{font-size:12px;color:var(--text2);font-weight:600}
+.chat-sug:hover{color:var(--accent)}
+.chat-sugs{background:var(--surface)}
+.chat-input{font-size:13.5px}
+.chat-input::placeholder{color:var(--muted);opacity:1}
+.know-ta::placeholder,.notes-ta::placeholder,.work-ta::placeholder,.work-instr::placeholder,.paste-ta::placeholder,.ex-ta::placeholder,.assign-input::placeholder{color:var(--muted);opacity:1}
+.ic{color:var(--muted)}
+@media(max-width:620px){.cf-row{flex-wrap:wrap}.cf-links{width:100%;margin-left:44px}.cf-btn{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -733,6 +778,8 @@ select.gr-in option{background:var(--surface);color:var(--text)}
     </div>
     <div class="sb-section"><div class="sb-label">Organize</div>
       <div class="sb-tool" id="sb-notes" onclick="switchTool('notes',this)"><span class="msi">edit</span><span class="sb-tool-name">Notes</span></div>
+      <div class="sb-tool" id="sb-syllabus" onclick="switchTool('syllabus',this)"><span class="msi">menu_book</span><span class="sb-tool-name">Syllabus</span></div>
+      <div class="sb-tool" id="sb-files" onclick="switchTool('files',this)"><span class="msi">folder_open</span><span class="sb-tool-name">Course files</span></div>
       <div class="sb-tool" id="sb-assign" onclick="switchTool('assign',this)"><span class="msi">calendar_month</span><span class="sb-tool-name">Assignments</span></div>
       <div class="sb-tool" id="sb-timer" onclick="switchTool('timer',this)"><span class="msi">schedule</span><span class="sb-tool-name">Focus timer</span></div>
       <div class="sb-tool" id="sb-grades" onclick="switchTool('grades',this)"><span class="msi">bar_chart</span><span class="sb-tool-name">Grades</span></div>
@@ -1070,6 +1117,189 @@ WHAT INSTRUCTORS TEST: definitions of key terms with examples; matching theorist
 COMMON STUDENT MISTAKES: matrilineal ≠ matriarchal; ethnography (description) vs ethnology (comparison); cultural relativism ≠ moral relativism / 'anything goes'; race is not biological; confusing polygyny/polyandry; assuming foragers were 'primitive' or starving; thinking chiefdoms have laws/courts (that's states); confusing functionalism (Malinowski — individual needs) with structural-functionalism (Radcliffe-Brown — social structure); Geertz is interpretive not materialist; Boas ≠ evolutionist; thinking Sapir-Whorf strong version is accepted (weak version is); mixing up Frazer's imitative vs contagious magic; forgetting the anthropological definition of culture is learned, not genetic; writing 'tribe' loosely (it's a technical political type).`,
     suggestions:["What's the difference between cultural relativism and moral relativism?","Who is Ruth Benedict and what did she contribute?","Explain emic vs etic perspectives","What is participant observation and why does it matter?","How does language shape culture?"]}
 };
+const MATH_SYLLABUS={
+  course:'MATH 099, Section AS95 — Precalculus Mathematics, Fall 2026',
+  instructor:'Dr. Nataliya Zadorozhna',
+  office:'5-107B',
+  email:'zadorozhnan@macewan.ca',
+  hours:'Tuesdays & Thursdays 10 a.m.–noon (Thursdays 10–11 a.m. in the Math Learning Centre, 6-313B)',
+  modality:'Online. Lecture videos are posted weekly on Google Drive (MacEwan account required) covering that week’s scheduled sections.',
+  text:'Stewart, Redlin & Watson, <em>Precalculus: Mathematics for Calculus</em>, 8th ed. (any older edition is fine). Recommended, not required. WebAssign class key: macewan.ab 8374 5665 — no coursework is done on WebAssign.',
+  prereq:'Mathematics 30-1 or Mathematics 30-2',
+  grading:[
+    {n:'Quiz 1 & 2 combined',w:30,d:'Oct 21 (Wed), 7:30–8:30 p.m., room 6-212 — weeks 1–4 material'},
+    {n:'Term Exam',w:30,d:'Nov 18 (Wed), 7:30–9:00 p.m., room 6-212 — weeks 5–9 material'},
+    {n:'Final Exam (cumulative)',w:40,d:'Date TBA'}
+  ],
+  rules:[
+    'Assignments are NOT for grading — they are self-study only.',
+    'If one assessment is excused, its weight moves to the final exam. Missing a second assessment scores zero.',
+    'Photo ID required at every assessment.',
+    'Calculators, cell phones and other electronic devices are prohibited during exams.',
+    'You may be refused entry once an assessment has been running 15 minutes, and must stay at least 20 minutes.'
+  ],
+  weeks:[
+    ['1','Sep 2–4','1.1, 1.2',''],
+    ['2','Sep 7–11','1.3, 1.4, 1.5',''],
+    ['3','Sep 14–18','1.7, 1.8, 1.9','Assignment 1'],
+    ['4','Sep 21–25','1.10, 2.1, 2.2','Assignment 2'],
+    ['5','Sep 28–Oct 2','2.3, 2.4','Assignment 3'],
+    ['6','Oct 5–9','2.5, 2.6, 2.7','Assignment 4 (Ch. 2.2–2.4)'],
+    ['7','Oct 12–16','3.1, 3.3','Assignment 5 (Ch. 2.5–2.7)'],
+    ['8','Oct 19–23','6.1, 6.2, 6.3','<strong>Quiz 1,2 — Oct 21</strong> · Assignment 6 (Ch. 3.1–3.3)'],
+    ['9','Oct 26–30','5.1, 5.2','Assignment 7 (Ch. 6.1–6.3)'],
+    ['10','Nov 2–6','5.3, 5.4','Assignment 8 (Ch. 5.1–5.2)'],
+    ['11','Nov 9–13','Reading Week — classes cancelled',''],
+    ['12','Nov 16–20','7.1, 7.2','<strong>Term Exam — Nov 18</strong>'],
+    ['13','Nov 23–27','7.3, 7.4','Assignment 9']
+  ]
+};
+const MATH_OUTLINE=[
+  {n:'Course Outline — Math 099 Fall 2026',id:'2244480',note:'Grading scheme, exam dates, policies, textbook'},
+  {n:'Math & Stats Learning Centre schedule (Rm 6-313B)',id:'2203112',note:'LRC Fall 2026 drop-in tutoring hours'}
+];
+const MATH_EXAMS=[
+  {n:'Midterm 1 Practice Problems',id:'2173311',s:'2173310'},
+  {n:'Practice Midterm',id:'2173299',s:'2173300'},
+  {n:'Final, Fall 2018',id:'2173286',s:'2173287'},
+  {n:'Practice Final',id:'2173292',s:'2173293'}
+];
+const MATH_NOTES=[
+  ['1.1 Real numbers','2173346'],['1.2 Exponents and Radicals','2173347'],['1.3 Algebraic expressions (part 1)','2173348'],
+  ['1.4 Rational expressions','2173350'],['1.5 Equations','2173351'],['1.7 Modeling with equations (part 1)','2173352'],
+  ['1.7 Modeling with equations (part 2)','2173354'],['1.8 Inequalities (part 1)','2173353'],['1.8 Inequalities (part 2)','2173355'],
+  ['1.9 Coordinate geometry','2173356'],['1.10 Lines (part 1)','2173357'],['1.10 Lines (part 2)','2173358'],
+  ['2.1 Functions','2173359'],['2.2 Graphs of functions','2173360'],['2.3 Getting info from the graphs','2173362'],
+  ['2.3 Getting info from the graphs (part 2)','2173361'],['2.4 Average rate of change','2173363'],
+  ['2.5 Linear functions and models','2173365'],['2.5 Linear functions and models (part 2)','2173364'],
+  ['2.6 Transformation of functions','2173366'],['2.7 Combining functions','2173367'],
+  ['3.1 Quadratic functions','2173368'],['3.3 Division of polynomials','2173369'],
+  ['5.1 The Unit Circle (part 1)','2173370'],['5.1 The Unit Circle','2173371'],
+  ['5.2 Trig Functions (part 1)','2173372'],['5.2 Trig Functions','2173373'],
+  ['5.3 Trig graphs (part 1)','2173376'],['5.3 Trig graphs','2173378'],['5.4 More trig graphs','2173377'],
+  ['6.1 Measure of an angle','2173380'],['6.2 Trigonometry of right triangles','2173381'],
+  ['6.2 Trigs of right triangles (part 1)','2173382'],['6.3 Trig functions of angles (part 1)','2173383'],
+  ['7.1 Trig identities','2173384'],['7.2 Addition and subtraction formulas','2173386'],
+  ['7.3 Double angle and half angle formulas (part 1)','2173387'],['7.4 & 7.5 Trig equations','2173388']
+];
+const MOODLE='https://meskanas.macewan.ca/mod/resource/view.php?id=';
+const MATH_ASSIGNMENTS=[
+  {n:'Assignment 1',topic:'Real numbers, exponents & radicals, algebraic expressions',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173263',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173273'},
+  {n:'Assignment 2',topic:'Rational expressions, equations, modeling with equations',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173269',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173274'},
+  {n:'Assignment 3',topic:'Inequalities, coordinate geometry, lines',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173267',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173275'},
+  {n:'Assignment 4',topic:'Functions, graphs, getting info from graphs',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173268',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173276'},
+  {n:'Assignment 5',topic:'Average rate of change, linear models, transformations, combining functions',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173270',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173277'},
+  {n:'Assignment 6',topic:'Quadratic functions, division of polynomials',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173271',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173279'},
+  {n:'Assignment 7',topic:'The unit circle, trig functions, trig graphs',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173265',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173280'},
+  {n:'Assignment 8',topic:'Angle measure, right-triangle trig, trig functions of angles',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173264',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173281'},
+  {n:'Assignment 9',topic:'Trig identities, addition/subtraction & double-angle formulas, trig equations',q:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173266',s:'https://meskanas.macewan.ca/mod/resource/view.php?id=2173282'}
+];
+
+/* ── course files (MATH 099 assignment bank) ── */
+
+function renderSyllabus(c){
+  if(currentCourse!=='math') return icard('Syllabus','<p>No syllabus loaded for this course yet.</p>');
+  const S=MATH_SYLLABUS;
+  const grade=S.grading.map(g=>`<div class="sy-grade">
+      <div class="sy-w">${g.w}%</div>
+      <div><div class="sy-gn">${g.n}</div><div class="sy-gd">${g.d}</div></div>
+    </div>`).join('');
+  const weeks=S.weeks.map(w=>`<tr${/Exam|Quiz/.test(w[3])?' class="sy-hot"':''}><td>${w[0]}</td><td>${w[1]}</td><td>${w[2]}</td><td>${w[3]||'—'}</td></tr>`).join('');
+  const rules=S.rules.map(r=>`<li>${r}</li>`).join('');
+  return icard('MATH 099 AS95 — Fall 2026',
+      `<div class="sy-kv"><span>Instructor</span><b>${S.instructor}</b></div>
+       <div class="sy-kv"><span>Office</span><b>${S.office}</b></div>
+       <div class="sy-kv"><span>Email</span><b><a href="mailto:${S.email}" style="color:var(--accent)">${S.email}</a></b></div>
+       <div class="sy-kv"><span>Office hours</span><b>${S.hours}</b></div>
+       <div class="sy-kv"><span>Format</span><b>${S.modality}</b></div>
+       <div class="sy-kv"><span>Prerequisite</span><b>${S.prereq}</b></div>
+       <div class="sy-kv"><span>Textbook</span><b>${S.text}</b></div>`)
+    + icard('Grade breakdown', grade + `<button class="retry-btn" style="margin-top:12px" onclick="applySyllabusWeights()"><span class="msi ic">download</span>Load these into Grades</button>`)
+    + icard('Weekly schedule', `<div style="overflow-x:auto"><table class="sy-tab"><thead><tr><th>Wk</th><th>Dates</th><th>Sections</th><th>Assessment / assignment</th></tr></thead><tbody>${weeks}</tbody></table></div>`)
+    + icard('Exam rules to remember', `<ul>${rules}</ul>`);
+}
+function applySyllabusWeights(){
+  grades['math']=MATH_SYLLABUS.grading.map(g=>({name:g.n,weight:g.w,mark:''}));
+  persist();
+  switchTool('grades',document.getElementById('sb-grades'));
+}
+
+function renderFiles(c){
+  if(currentCourse!=='math') return icard('Course files','<p>No files linked for this course yet.</p>');
+
+  const outline = MATH_OUTLINE.map(o=>`<div class="cf-row">
+      <div class="cf-num"><span class="msi" style="font-size:16px">description</span></div>
+      <div class="cf-body"><div class="cf-title">${o.n}</div><div class="cf-topic">${o.note}</div></div>
+      <div class="cf-links"><a class="cf-btn" href="${MOODLE}${o.id}" target="_blank" rel="noopener"><span class="msi ic">open_in_new</span>Open</a></div>
+    </div>`).join('');
+
+  const rows = MATH_ASSIGNMENTS.map((a,i)=>{
+    const done = ((assignments['math']||[]).find(x=>x.title===a.n+' (self-study)')||{}).done;
+    return `<div class="cf-row${done?' cf-done':''}">
+      <div class="cf-num">${i+1}</div>
+      <div class="cf-body">
+        <div class="cf-title">${a.n}${done?' <span class="cf-tick msi">check_circle</span>':''}</div>
+        <div class="cf-topic">${a.topic}</div>
+      </div>
+      <div class="cf-links">
+        <a class="cf-btn" href="${MOODLE}${a.q}" target="_blank" rel="noopener"><span class="msi ic">description</span>Questions</a>
+        <a class="cf-btn cf-alt" href="${MOODLE}${a.s}" target="_blank" rel="noopener"><span class="msi ic">lightbulb</span>Solutions</a>
+      </div>
+    </div>`;
+  }).join('');
+
+  const exams = MATH_EXAMS.map(e=>`<div class="cf-row">
+      <div class="cf-num"><span class="msi" style="font-size:16px">quiz</span></div>
+      <div class="cf-body"><div class="cf-title">${e.n}</div></div>
+      <div class="cf-links">
+        <a class="cf-btn" href="${MOODLE}${e.id}" target="_blank" rel="noopener"><span class="msi ic">description</span>Paper</a>
+        <a class="cf-btn cf-alt" href="${MOODLE}${e.s}" target="_blank" rel="noopener"><span class="msi ic">lightbulb</span>Solutions</a>
+      </div>
+    </div>`).join('');
+
+  const notes = MATH_NOTES.map(n=>`<a class="cf-note" href="${MOODLE}${n[1]}" target="_blank" rel="noopener"><span class="msi ic">article</span>${n[0]}</a>`).join('');
+
+  return icard('Course outline & support', outline)
+    + icard('Assignment bank — 9 sets with full solutions',
+        `<p style="color:var(--muted);margin-bottom:12px">Self-study only — not submitted, not graded. Links open in Moodle (sign in first).</p>${rows}`)
+    + icard('Practice exams', exams)
+    + icard('Lecture notes by section', `<div class="cf-notes">${notes}</div><p style="color:var(--muted);font-size:11.5px;margin-top:10px">Copyrighted course material — for your own study, not for distribution.</p>`)
+    + icard('How to use these','<ul><li>Read the course outline first — it has the grade breakdown and exam dates.</li><li>Do assignment questions cold, on paper, before opening the solutions.</li><li>Mark a set done in <strong>Assignments</strong> to track progress.</li><li>Stuck? Paste the question into <strong>AI Tutor</strong> — it knows the MATH 099 syllabus.</li></ul>');
+}
+
+/* give the AI tutor the real MATH 099 AS95 course facts */
+(function(){
+  const c=courses['math']; if(!c) return;
+  c.knowContext += `
+
+=== THIS STUDENT'S ACTUAL SECTION: MATH 099 AS95, Fall 2026, MacEwan University ===
+Instructor: Dr. Nataliya Zadorozhna, office 5-107B, zadorozhnan@macewan.ca. Office hours Tue & Thu 10am-noon; Thursdays 10-11am she is in the Math Learning Centre, room 6-313B. Students must email from their MacEwan address and put the course and section in the subject line.
+Format: fully online. Lecture videos are posted weekly on Google Drive (MacEwan account required).
+Textbook (recommended, not required): Stewart, Redlin & Watson, Precalculus: Mathematics for Calculus, 8th edition; any older edition is fine. WebAssign class key macewan.ab 8374 5665 — but NO coursework is done on WebAssign.
+Prerequisite: Mathematics 30-1 or 30-2.
+GRADE BREAKDOWN: Quiz 1 & 2 combined 30%; Term Exam 30%; Final Exam (cumulative) 40%. ASSIGNMENTS ARE NOT GRADED — they are self-study only. If one assessment is excused its weight moves to the final exam; missing a second assessment scores zero.
+EXAM DATES: Quiz 1,2 combined — October 21 (Wed), 7:30-8:30 pm, room 6-212, covering weeks 1-4. Term Exam — November 18 (Wed), 7:30-9:00 pm, room 6-212, covering weeks 5-9. Final Exam (cumulative) — date TBA.
+EXAM RULES: photo ID required; NO calculators, cell phones or other electronic devices; no hats; no food; may be refused entry after the exam has run 15 minutes; must stay at least 20 minutes.
+WEEKLY SCHEDULE: Wk1 Sep 2-4: 1.1, 1.2. Wk2 Sep 7-11: 1.3, 1.4, 1.5. Wk3 Sep 14-18: 1.7, 1.8, 1.9 (Assignment 1). Wk4 Sep 21-25: 1.10, 2.1, 2.2 (Assignment 2). Wk5 Sep 28-Oct 2: 2.3, 2.4 (Assignment 3). Wk6 Oct 5-9: 2.5, 2.6, 2.7 (Assignment 4, Ch 2.2-2.4). Wk7 Oct 12-16: 3.1, 3.3 (Assignment 5, Ch 2.5-2.7). Wk8 Oct 19-23: 6.1, 6.2, 6.3 (Quiz 1,2 on Oct 21; Assignment 6, Ch 3.1-3.3). Wk9 Oct 26-30: 5.1, 5.2 (Assignment 7, Ch 6.1-6.3). Wk10 Nov 2-6: 5.3, 5.4 (Assignment 8, Ch 5.1-5.2). Wk11 Nov 9-13: Reading Week, classes cancelled. Wk12 Nov 16-20: 7.1, 7.2 (Term Exam Nov 18). Wk13 Nov 23-27: 7.3, 7.4 (Assignment 9).
+Support: Math/Stats Learning Centre, room 6-313B, drop-in tutoring; schedule posted on mêskanâs (Moodle).
+When the student asks about dates, weights, what is on an exam, or what to study this week, answer from THIS section — it is their real syllabus.`;
+  c.suggestions = ["What's on the Term Exam?","How much is the final worth?","What sections are we on this week?","Can I use a calculator on the quiz?","Walk me through Assignment 5 Q13"];
+})();
+
+/* seed the tracker with the 9 self-study sets, once */
+function seedMathAssignments(){
+  if(localStorage.getItem('math_seed_v1')) return;
+  if(!assignments['math']) assignments['math']=[];
+  MATH_ASSIGNMENTS.forEach(a=>{
+    const t=a.n+' (self-study)';
+    if(!assignments['math'].some(x=>x.title===t))
+      assignments['math'].push({id:Date.now()+Math.random(),title:t,due:'',priority:'medium',done:false});
+  });
+  localStorage.setItem('math_seed_v1','1');
+  persist();
+}
+seedMathAssignments();
+
 
 /* ── study time tracking ── */
 const ST_KEY='study_time_v1';
@@ -1115,7 +1345,7 @@ function stRenderHome(){
 }
 
 /* keyboard shortcuts (Linear-style) */
-document.addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const tag=(e.target.tagName||'').toLowerCase();if(['input','textarea','select'].includes(tag)||e.target.isContentEditable)return;const map={'1':'today','2':'review','3':'tomorrow','4':'quiz','5':'flash','6':'exam','7':'drills','8':'iknow','9':'tutor','0':'work','q':'upload','w':'notes','e':'assign','r':'timer','t':'grades','y':'plan','u':'format','i':'agrade'};const k=e.key.toLowerCase();if(map[k]&&currentCourse){e.preventDefault();switchTool(map[k],document.getElementById('sb-'+map[k]));}});
+document.addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const tag=(e.target.tagName||'').toLowerCase();if(['input','textarea','select'].includes(tag)||e.target.isContentEditable)return;const map={'1':'today','2':'review','3':'tomorrow','4':'quiz','5':'flash','6':'exam','7':'drills','8':'iknow','9':'tutor','0':'work','q':'upload','w':'notes','e':'assign','r':'timer','t':'grades','y':'plan','u':'format','i':'agrade','f':'files','s':'syllabus'};const k=e.key.toLowerCase();if(map[k]&&currentCourse){e.preventDefault();switchTool(map[k],document.getElementById('sb-'+map[k]));}});
 /* ── navigation ── */
 function goHome(){
   currentCourse=null;stStop();stRenderHome();stRender();renderHomeCal();renderHomeGrades();renderHomeCards();
@@ -1175,6 +1405,8 @@ function renderTool(name,c){
   else if(name==='work')el.innerHTML=renderWorkReview(c);
   else if(name==='upload'){el.innerHTML=renderUpload(c);renderUploadHistory();}
   else if(name==='notes')el.innerHTML=renderNotes(c);
+  else if(name==='syllabus'){el.innerHTML=renderSyllabus(c);}
+  else if(name==='files'){el.innerHTML=renderFiles(c);}
   else if(name==='assign'){el.innerHTML=renderAssignHTML(c);renderAssignList();}
   else if(name==='timer')el.innerHTML=renderTimerHTML();
   else if(name==='agrade')el.innerHTML=renderAgrade(c);
