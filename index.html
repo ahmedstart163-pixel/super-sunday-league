@@ -8,40 +8,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Georgia&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --page:#f2f1ee;
-  --sidebar:#ffffff;
-  --card:#ffffff;
-  --border:#e8e5e0;
-  --border2:#dedad3;
-  --navy:#0f172a;
-  --blue:#1e40af;
-  --blue-light:#eff6ff;
-  --blue-border:#bfdbfe;
-  --text:#0f172a;
-  --text2:#334155;
-  --muted:#64748b;
-  --muted2:#94a3b8;
-  --green:#16a34a;
-  --green-light:#f0fdf4;
-  --red:#dc2626;
-  --red-light:#fef2f2;
-  --yellow:#d97706;
-  --yellow-light:#fffbeb;
-  --radius:10px;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 12px rgba(0,0,0,.07);
+  /* MacEwan: Maroon #9A253B (PMS 201C), white, black. Neutrals carry a faint warm-rose undertone so nothing clashes. */
+  --maroon:#9A253B;
+  --maroon-dark:#7A1C30;
+  --maroon-tint:#F7EEF0;
+  --maroon-border:#E9CDD3;
+  --page:#FCFCFD;
+  --sidebar:#F6F6F8;
+  --card:#FFFFFF;
+  --border:#E8E8EC;
+  --border2:#D9D9E0;
+  --navy:#241A1C;
+  --blue:#9A253B;
+  --blue-light:#F7EEF0;
+  --blue-border:#E9CDD3;
+  --text:#241A1C;
+  --text2:#4A3D40;
+  --muted:#7D6E71;
+  --muted2:#A99B9E;
+  --green:#3D6B52;
+  --green-light:#EEF3EF;
+  --red:#9A253B;
+  --red-light:#F7EEF0;
+  --yellow:#8A6A2E;
+  --yellow-light:#F6F1E7;
+  --radius:8px;
+  --shadow:0 1px 2px rgba(36,26,28,.04);
+  --shadow-md:0 4px 14px rgba(36,26,28,.07);
 }
 html,body{height:100%;overflow:hidden}
 body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);font-size:15px;display:flex;flex-direction:column}
 
 /* ── TOPBAR ── */
-.topbar{background:#fff;border-bottom:1px solid var(--border);height:52px;overflow:hidden;display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);z-index:50}
+.topbar{background:#FFFFFF;border-bottom:1px solid var(--border);height:52px;overflow:hidden;display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);z-index:50}
 .brand{font-family:'Georgia',serif;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-.4px}
-.brand span{color:var(--blue)}
+.brand span{color:var(--maroon)}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .topbar-date{font-size:11px;color:var(--muted2);letter-spacing:.4px}
-.key-btn{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--blue);font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.key-btn:hover{background:#dbeafe}
+.key-btn{background:#fff;border:1px solid var(--border2);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--muted);font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.key-btn:hover{border-color:var(--maroon);color:var(--maroon)}
 
 /* course nav */
 .course-nav{display:flex;gap:2px;margin-left:20px;overflow-x:auto;height:100%;align-items:stretch}
@@ -66,8 +71,8 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .sb-section{padding:16px 12px 4px}
 .sb-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;padding:0 4px}
 .sb-course{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:8px;cursor:pointer;margin-bottom:2px;transition:background .12s;border-left:2px solid transparent}
-.sb-course:hover{background:#f8f7f5}
-.sb-course.active{background:var(--blue-light);border-left-color:var(--blue)}
+.sb-course:hover{background:#EEEEF1}
+.sb-course.active{background:var(--maroon-tint);border-left-color:var(--maroon)}
 .sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .sb-course-info{}
 .sb-course-name{font-size:12px;font-weight:500;color:var(--muted);line-height:1.2}
@@ -75,9 +80,10 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .sb-course-code{font-size:10px;color:var(--muted2)}
 .sb-course.active .sb-course-code{color:var(--muted)}
 .sb-divider{height:1px;background:var(--border);margin:10px 12px}
-.sb-tool{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:8px;cursor:pointer;margin-bottom:1px;transition:background .12s}
-.sb-tool:hover{background:#f8f7f5}
-.sb-tool.active{background:var(--blue-light)}
+.sb-tool{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:6px;cursor:pointer;margin-bottom:1px;transition:background .12s;border:0.5px solid transparent}
+.sb-kbd{margin-left:auto;font-size:9px;color:var(--muted2);border:0.5px solid var(--border2);border-radius:4px;padding:0 4px;line-height:14px;font-family:'Inter',sans-serif}
+.sb-tool:hover{background:#EEEEF1}
+.sb-tool.active{background:#fff;box-shadow:var(--shadow);border:0.5px solid var(--border)}
 .sb-tool-icon{font-size:13px;width:20px;text-align:center;flex-shrink:0}
 .sb-tool-name{font-size:12px;color:var(--muted2);white-space:nowrap}
 .sb-tool.active .sb-tool-name{color:var(--navy);font-weight:600}
@@ -89,23 +95,23 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 
 /* ── HOME VIEW ── */
 .home-hero{margin-bottom:24px}
-.home-hero h1{font-family:'Georgia',serif;font-size:26px;font-weight:700;color:var(--navy);letter-spacing:-.5px;margin-bottom:6px}
-.home-hero h1 span{color:var(--blue)}
+.home-hero h1{font-family:'Inter',sans-serif;font-size:24px;font-weight:600;color:var(--navy);letter-spacing:-.6px;margin-bottom:6px}
+.home-hero h1 span{color:var(--maroon)}
 .home-hero p{font-size:13px;color:var(--muted);line-height:1.65;max-width:480px}
 .home-stats{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap}
-.home-stat{background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;box-shadow:var(--shadow)}
+.home-stat{background:var(--sidebar);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .home-stat strong{color:var(--navy);font-weight:600}
 .course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .course-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:var(--shadow)}
-.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.course-card:nth-child(1)::before{background:#6366f1}
-.course-card:nth-child(2)::before{background:#10b981}
-.course-card:nth-child(3)::before{background:#f59e0b}
-.course-card:nth-child(4)::before{background:#ef4444}
-.course-card:nth-child(5)::before{background:#8b5cf6}
-.course-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border2)}
+.course-card::before{content:none}
+.course-card:nth-child(1)::before{background:#5E1424}
+.course-card:nth-child(2)::before{background:#9A253B}
+.course-card:nth-child(3)::before{background:#BE5A6D}
+.course-card:nth-child(4)::before{background:#D68F9C}
+.course-card:nth-child(5)::before{background:#E9C4CB}
+.course-card:hover{border-color:var(--border2);background:#FAFAFB}
 .cc-code{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted2);text-transform:uppercase;margin-bottom:5px}
-.cc-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px;line-height:1.25;font-family:'Georgia',serif}
+.cc-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:6px;line-height:1.3;letter-spacing:-.2px}
 .cc-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .cc-footer{display:flex;align-items:center;justify-content:space-between}
 .cc-chip{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-border)}
@@ -114,42 +120,44 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 
 /* ── COURSE VIEW ── */
 .course-hdr{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.course-badge{background:var(--navy);color:#fff;border-radius:5px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;display:inline-block;margin-bottom:7px}
-.course-hdr-title{font-family:'Georgia',serif;font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.4px;line-height:1.2;margin-bottom:3px}
+.course-badge{background:var(--maroon);color:#fff;border-radius:5px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;display:inline-block;margin-bottom:7px}
+.course-hdr-title{font-family:'Inter',sans-serif;font-size:20px;font-weight:600;color:var(--navy);letter-spacing:-.4px;line-height:1.2;margin-bottom:3px}
 .course-hdr-sub{font-size:12px;color:var(--muted2)}
 
 /* stat strip */
 .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.stat{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;box-shadow:var(--shadow)}
-.stat-num{font-size:20px;font-weight:700;color:var(--navy);line-height:1;font-family:'Georgia',serif}
-.stat-lbl{font-size:9px;color:var(--muted2);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
+.stat{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:left;box-shadow:var(--shadow)}
+.stat .pb{height:3px;background:#EEEEF1;border-radius:2px;margin-top:8px;overflow:hidden}
+.stat .pb i{display:block;height:100%;background:var(--maroon);border-radius:2px}
+.stat-num{font-size:20px;font-weight:600;color:var(--navy);line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.stat-lbl{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:500}
 
 /* info cards */
 .icard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-.icard-label{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
-.icard-title{font-family:'Georgia',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.3}
+.icard-label{font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);margin-bottom:10px}
+.icard-title{font-family:'Inter',sans-serif;font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--navy);margin-bottom:12px;line-height:1.3}
 .icard ul{padding-left:16px}
 .icard li{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:4px}
 .icard p{font-size:13px;color:var(--text2);line-height:1.75}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .badge{display:inline-flex;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;margin:2px}
 .badge-b{background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-border)}
-.badge-g{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
+.badge-g{background:var(--green-light);color:var(--green);border:1px solid #CFDCD3}
 
 /* quiz */
 .qcard{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow)}
 .qnum{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
-.qtext{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;line-height:1.5;font-family:'Georgia',serif}
+.qtext{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;line-height:1.5;letter-spacing:-.1px}
 .opts{display:flex;flex-direction:column;gap:7px}
-.opt{display:flex;align-items:center;gap:10px;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;font-weight:500}
+.opt{display:flex;align-items:center;gap:10px;background:#F4F4F6;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;font-weight:500}
 .opt:hover{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
 .opt.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
 .opt.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
 .opt-l{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--muted)}
 .qfb{display:none;margin-top:10px;font-size:13px;padding:10px 14px;border-radius:8px;line-height:1.6;font-weight:500}
 .qfb.show{display:block}
-.qfb.good{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
-.qfb.bad{background:var(--red-light);color:var(--red);border:1px solid #fecaca}
+.qfb.good{background:var(--green-light);color:var(--green);border:1px solid #CFDCD3}
+.qfb.bad{background:var(--red-light);color:var(--red);border:1px solid var(--maroon-border)}
 
 /* flashcards */
 .fc-card{width:100%;max-width:520px;margin:0 auto 18px;height:200px;cursor:pointer;perspective:1000px}
@@ -172,9 +180,9 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .fc-rating{display:flex;justify-content:center;gap:10px}
 .fc-rate-btn{border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
 .fc-rate-btn:hover{transform:translateY(-1px)}
-.rate-easy{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0}
-.rate-hard{background:var(--red-light);color:var(--red);border:1px solid #fecaca}
-.rate-ok{background:var(--yellow-light);color:var(--yellow);border:1px solid #fde68a}
+.rate-easy{background:var(--green-light);color:var(--green);border:1px solid #CFDCD3}
+.rate-hard{background:var(--red-light);color:var(--red);border:1px solid var(--maroon-border)}
+.rate-ok{background:var(--yellow-light);color:var(--yellow);border:1px solid #E6D9BF}
 .fc-empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:13px;background:#fff;border:1px dashed var(--border2);border-radius:var(--radius)}
 .fc-empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:8px;font-weight:700;font-family:'Georgia',serif}
 
@@ -186,8 +194,8 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .know-ta:focus{border-color:var(--blue)}
 .know-ta::placeholder{color:var(--muted2)}
 .char-c{position:absolute;bottom:10px;right:14px;font-size:10px;color:var(--muted2)}
-.ai-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
-.ai-btn:hover{background:#1e293b;transform:translateY(-1px)}
+.ai-btn{background:var(--maroon);color:#fff;border:none;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.ai-btn:hover{background:var(--maroon-dark);transform:translateY(-1px)}
 .ai-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .ai-loading{display:none;margin-top:20px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;box-shadow:var(--shadow)}
 .ai-loading.show{display:block}
@@ -198,15 +206,15 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .ai-result{display:none;margin-top:20px}
 .ai-result.show{display:block}
 .score-banner{border-radius:var(--radius);padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)}
-.ga{background:var(--green-light);border:1px solid #bbf7d0}
+.ga{background:var(--green-light);border:1px solid #CFDCD3}
 .gb{background:var(--blue-light);border:1px solid var(--blue-border)}
-.gc{background:var(--yellow-light);border:1px solid #fde68a}
-.gd{background:var(--red-light);border:1px solid #fecaca}
+.gc{background:var(--yellow-light);border:1px solid #E6D9BF}
+.gd{background:var(--red-light);border:1px solid var(--maroon-border)}
 .score-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex-shrink:0;font-family:'Georgia',serif}
-.ga .score-circle{background:#dcfce7;color:var(--green)}
-.gb .score-circle{background:#dbeafe;color:var(--blue)}
-.gc .score-circle{background:#fef3c7;color:var(--yellow)}
-.gd .score-circle{background:#fee2e2;color:var(--red)}
+.ga .score-circle{background:#E2EBE4;color:var(--green)}
+.gb .score-circle{background:#F0DCE0;color:var(--blue)}
+.gc .score-circle{background:#EFE6D3;color:var(--yellow)}
+.gd .score-circle{background:#F0DCE0;color:var(--red)}
 .score-text h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:3px;font-family:'Georgia',serif}
 .score-text p{font-size:11px;color:var(--muted)}
 .rsec{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow)}
@@ -227,10 +235,10 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .chat-msgs::-webkit-scrollbar{width:3px}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{max-width:80%;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.65}
-.msg.ai{background:var(--page);border:1px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:4px 10px 10px 10px}
+.msg.ai{background:#F4F4F6;border:1px solid var(--border);color:var(--text2);align-self:flex-start;border-radius:4px 10px 10px 10px}
 .msg.ai strong{color:var(--blue);font-size:10px;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-.msg.user{background:var(--navy);color:#fff;align-self:flex-end;border-radius:10px 4px 10px 10px}
-.msg.typing{display:flex;gap:4px;align-items:center;padding:12px 14px;background:var(--page);border:1px solid var(--border);border-radius:4px 10px 10px 10px;align-self:flex-start;width:56px}
+.msg.user{background:var(--maroon);color:#fff;align-self:flex-end;border-radius:10px 4px 10px 10px}
+.msg.typing{display:flex;gap:4px;align-items:center;padding:12px 14px;background:#F4F4F6;border:1px solid var(--border);border-radius:4px 10px 10px 10px;align-self:flex-start;width:56px}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:blink 1.2s infinite}
 .dot:nth-child(2){animation-delay:.2s}
 .dot:nth-child(3){animation-delay:.4s}
@@ -239,11 +247,11 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .chat-sug{background:#fff;border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;font-weight:500}
 .chat-sug:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
 .chat-input-row{border-top:1px solid var(--border);padding:10px 12px;display:flex;gap:8px;background:#fff}
-.chat-input{flex:1;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.chat-input{flex:1;background:#F4F4F6;border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
 .chat-input:focus{border-color:var(--blue)}
 .chat-input::placeholder{color:var(--muted2)}
-.chat-send{background:var(--navy);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.chat-send:hover{background:#1e293b}
+.chat-send{background:var(--maroon);color:#fff;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.chat-send:hover{background:var(--maroon-dark)}
 .chat-send:disabled{opacity:.35;cursor:not-allowed}
 
 /* notes */
@@ -252,18 +260,18 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .notes-ta::placeholder{color:var(--muted2)}
 .notes-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .notes-bar span{font-size:12px;color:var(--muted);font-weight:500}
-.notes-save-btn{background:var(--green-light);color:var(--green);border:1px solid #bbf7d0;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
-.notes-save-btn:hover{background:#dcfce7}
+.notes-save-btn{background:var(--green-light);color:var(--green);border:1px solid #CFDCD3;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.notes-save-btn:hover{background:#E2EBE4}
 .notes-saved{font-size:12px;color:var(--green);margin-top:8px;display:none;font-weight:500}
 .notes-saved.show{display:block}
 
 /* assignments */
 .assign-add{display:flex;gap:8px;margin-bottom:16px;background:#fff;padding:14px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);flex-wrap:wrap}
-.assign-input{background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;flex:1;min-width:140px;transition:border-color .2s}
+.assign-input{background:#F4F4F6;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;flex:1;min-width:140px;transition:border-color .2s}
 .assign-input:focus{border-color:var(--blue)}
 .assign-input::placeholder{color:var(--muted2)}
-.assign-add-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
-.assign-add-btn:hover{background:#1e293b}
+.assign-add-btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.assign-add-btn:hover{background:var(--maroon-dark)}
 .assign-list{display:flex;flex-direction:column;gap:8px}
 .assign-item{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;transition:all .15s;box-shadow:var(--shadow)}
 .assign-item:hover{border-color:var(--border2)}
@@ -297,8 +305,8 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .pom-session{font-size:12px;color:var(--muted2);margin-top:10px;font-weight:500}
 .pom-btns{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
 .pom-btn{border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;border:none}
-.pom-start{background:var(--navy);color:#fff}
-.pom-start:hover{background:#1e293b;transform:translateY(-1px)}
+.pom-start{background:var(--maroon);color:#fff}
+.pom-start:hover{background:var(--maroon-dark);transform:translateY(-1px)}
 .pom-reset{background:#fff;border:1.5px solid var(--border);color:var(--muted)}
 .pom-reset:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
 .pom-modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -357,21 +365,21 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .hist-date{font-size:11px;color:var(--muted2)}
 
 /* study time */
-.st-live{display:flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid #bbf7d0;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--green);font-family:'Inter',sans-serif}
+.st-live{display:flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid #CFDCD3;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--green);font-family:'Inter',sans-serif}
 .st-live .st-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.st-sb{margin:6px 12px 0;padding:10px 12px;background:var(--page);border:1px solid var(--border);border-radius:8px}
+.st-sb{margin:6px 12px 0;padding:10px 12px;background:#F4F4F6;border:1px solid var(--border);border-radius:8px}
 .st-sb-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
 .st-sb-time{font-family:'Georgia',serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1}
 .st-sb-sub{font-size:10px;color:var(--muted);margin-top:3px}
 .st-sb-course{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500}
 .st-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .st-bar-name{font-size:12px;color:var(--text2);width:110px;flex-shrink:0;font-weight:500;display:flex;align-items:center;gap:6px}
-.st-bar-track{flex:1;height:10px;background:var(--page);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.st-bar-track{flex:1;height:10px;background:#F4F4F6;border:1px solid var(--border);border-radius:5px;overflow:hidden}
 .st-bar-fill{height:100%;border-radius:5px;transition:width .5s}
 .st-bar-val{font-size:12px;color:var(--navy);font-weight:600;width:58px;text-align:right;font-variant-numeric:tabular-nums}
 .st-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px}
-.st-day{text-align:center;padding:8px 4px;background:var(--page);border:1px solid var(--border);border-radius:8px}
+.st-day{text-align:center;padding:8px 4px;background:#F4F4F6;border:1px solid var(--border);border-radius:8px}
 .st-day.today{border-color:var(--blue);background:var(--blue-light)}
 .st-day-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
 .st-day-val{font-family:'Georgia',serif;font-size:14px;font-weight:700;color:var(--navy)}
@@ -381,26 +389,26 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .gr-row{display:grid;grid-template-columns:2fr 80px 80px 90px 32px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
 .gr-row:last-child{border-bottom:none}
 .gr-head{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted2)}
-.gr-in{background:var(--page);border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;width:100%}
+.gr-in{background:#F4F4F6;border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;width:100%}
 .gr-in:focus{border-color:var(--blue)}
-.gr-big{font-family:'Georgia',serif;font-size:42px;font-weight:700;line-height:1}
+.gr-big{font-size:40px;font-weight:600;line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
 .gr-need{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--text2);line-height:1.7}
 .gr-need strong{color:var(--navy)}
 .gr-scale{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
-.gr-scale span{font-size:10px;padding:2px 7px;border-radius:12px;background:var(--page);border:1px solid var(--border);color:var(--muted)}
+.gr-scale span{font-size:10px;padding:2px 7px;border-radius:12px;background:#F4F4F6;border:1px solid var(--border);color:var(--muted)}
 .gr-scale span.hit{background:var(--green-light);border-color:#bbf7d0;color:var(--green);font-weight:700}
 .ex-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.ex-timer{position:sticky;top:0;background:var(--navy);color:#fff;border-radius:var(--radius);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;z-index:5}
+.ex-timer{position:sticky;top:0;background:var(--maroon);color:#fff;border-radius:var(--radius);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;z-index:5}
 .ex-timer .t{font-family:'Georgia',serif;font-size:26px;font-weight:700;letter-spacing:-1px}
-.ex-timer.warn{background:var(--red)}
+.ex-timer.warn{background:#241A1C}
 .ex-q{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px}
 .ex-q .opt.sel{border-color:var(--navy);background:var(--blue-light);color:var(--navy)}
-.ex-ta{width:100%;min-height:80px;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:10px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;outline:none;resize:vertical}
+.ex-ta{width:100%;min-height:80px;background:#F4F4F6;border:1.5px solid var(--border);border-radius:8px;padding:10px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;outline:none;resize:vertical}
 .ex-ta:focus{border-color:var(--blue)}
 .ex-res-q{border-left:4px solid var(--border);padding:10px 14px;margin-bottom:10px;background:#fff;border-radius:0 8px 8px 0;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 .ex-res-q.ok{border-left-color:var(--green)}.ex-res-q.bad{border-left-color:var(--red)}.ex-res-q.part{border-left-color:var(--yellow)}
 .sp-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px}
-.sp-rank{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Georgia',serif}
+.sp-rank{width:26px;height:26px;border-radius:50%;background:var(--maroon);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Georgia',serif}
 .sp-topic{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px}
 .sp-why{font-size:12px;color:var(--muted);line-height:1.6}
 .sp-src{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;background:var(--red-light);color:var(--red);margin-left:6px;font-weight:600}
@@ -412,12 +420,12 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .cal-date .w{font-size:10px;color:var(--muted2);text-transform:uppercase}
 .cal-date.today .d{color:var(--blue)}
 .cal-items{flex:1}
-.cal-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;background:var(--page);margin-bottom:4px;font-size:13px}
+.cal-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;background:#F4F4F6;margin-bottom:4px;font-size:13px}
 .cal-item .ct{flex:1;color:var(--text)}
 .cal-item .cc{font-size:10px;font-weight:700;color:var(--muted)}
 .cal-item.done{opacity:.45;text-decoration:line-through}
 .dr-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px}
-.dr-code{background:#1e293b;color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;padding:14px 16px;border-radius:8px;white-space:pre;overflow-x:auto;margin:10px 0}
+.dr-code{background:#241A1C;color:#F5F2F1;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;padding:14px 16px;border-radius:8px;white-space:pre;overflow-x:auto;margin:10px 0}
 .dr-step{padding:10px 14px;border-left:3px solid var(--blue);background:var(--blue-light);margin-bottom:8px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.7;color:var(--text2)}
 .dr-step.hidden{filter:blur(6px);cursor:pointer;user-select:none}
 .dr-match{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -425,31 +433,31 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .dr-mi.sel{border-color:var(--navy);background:var(--blue-light)}
 .dr-mi.ok{border-color:var(--green);background:var(--green-light);pointer-events:none}
 .dr-mi.bad{border-color:var(--red);background:var(--red-light)}
-.sb-due{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;border-radius:10px;padding:1px 7px}
+.sb-due{margin-left:auto;font-size:10px;font-weight:700;background:var(--maroon);color:#fff;border-radius:10px;padding:1px 7px}
 
 /* api key banner */
-#api-key-banner{display:none;background:var(--yellow-light);border-bottom:2px solid #fde68a;padding:12px 24px;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
+#api-key-banner{display:none;background:#fff;border-bottom:2px solid var(--maroon-border);padding:12px 24px;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
 #api-key-banner.show{display:flex}
-.banner-title{font-size:14px;font-weight:700;color:#92400e;margin-bottom:2px}
-.banner-sub{font-size:12px;color:#a16207}
-.banner-input{flex:2;min-width:220px;padding:9px 13px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:#fff;color:var(--text)}
-.banner-input:focus{border-color:var(--yellow)}
-.banner-save{background:#92400e;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s}
-.banner-save:hover{background:#78350f}
-.banner-close{background:none;border:1.5px solid #fde68a;color:#a16207;border-radius:8px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.banner-close:hover{background:#fef3c7}
+.banner-title{font-size:14px;font-weight:700;color:var(--maroon);margin-bottom:2px}
+.banner-sub{font-size:12px;color:var(--muted)}
+.banner-input{flex:2;min-width:220px;padding:9px 13px;border:1.5px solid #E6D9BF;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:#fff;color:var(--text)}
+.banner-input:focus{border-color:var(--maroon)}
+.banner-save{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s}
+.banner-save:hover{background:var(--maroon-dark)}
+.banner-close{background:none;border:1.5px solid #E6D9BF;color:#a16207;border-radius:8px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.banner-close:hover{background:#EFE6D3}
 #api-key-saved{display:none;position:fixed;bottom:22px;right:22px;background:var(--green);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;box-shadow:var(--shadow-md);z-index:999;align-items:center;gap:8px}
 #api-key-saved.show{display:flex}
 
 /* progress bar */
 .pbar-wrap{margin-bottom:10px}
 .pbar-label{font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;font-weight:500}
-.pbar-track{height:6px;background:var(--page);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.pbar-track{height:6px;background:#EEEEF1;border-radius:3px;overflow:hidden;border:1px solid var(--border)}
 .pbar-fill{height:100%;border-radius:3px;transition:width .6s ease}
 
 /* fc gen btn */
-.fc-gen-btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
-.fc-gen-btn:hover{background:#1e293b;transform:translateY(-1px)}
+.fc-gen-btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.fc-gen-btn:hover{background:var(--maroon-dark);transform:translateY(-1px)}
 .fc-gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
 @media(max-width:680px){
@@ -476,12 +484,12 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 <div class="topbar">
   <div class="brand">Mac<span>Ewan</span> Study Pro</div>
   <nav class="course-nav">
-    <div class="cn-tab" id="sb-home" onclick="goHome()"><span class="sb-dot" style="background:#94a3b8"></span>All Courses</div>
-    <div class="cn-tab" id="sb-earth" onclick="openCourse('earth')"><span class="sb-dot" style="background:#6366f1"></span>Earth Science</div>
-    <div class="cn-tab" id="sb-english" onclick="openCourse('english')"><span class="sb-dot" style="background:#10b981"></span>English</div>
-    <div class="cn-tab" id="sb-comp" onclick="openCourse('comp')"><span class="sb-dot" style="background:#f59e0b"></span>Computing</div>
-    <div class="cn-tab" id="sb-math" onclick="openCourse('math')"><span class="sb-dot" style="background:#ef4444"></span>Math 099</div>
-    <div class="cn-tab" id="sb-anth" onclick="openCourse('anth')"><span class="sb-dot" style="background:#8b5cf6"></span>Anthropology</div>
+    <div class="cn-tab" id="sb-home" onclick="goHome()"><span class="sb-dot" style="background:#C9C4C2"></span>All Courses</div>
+    <div class="cn-tab" id="sb-earth" onclick="openCourse('earth')"><span class="sb-dot" style="background:#5E1424"></span>Earth Science</div>
+    <div class="cn-tab" id="sb-english" onclick="openCourse('english')"><span class="sb-dot" style="background:#9A253B"></span>English</div>
+    <div class="cn-tab" id="sb-comp" onclick="openCourse('comp')"><span class="sb-dot" style="background:#BE5A6D"></span>Computing</div>
+    <div class="cn-tab" id="sb-math" onclick="openCourse('math')"><span class="sb-dot" style="background:#D68F9C"></span>Math 099</div>
+    <div class="cn-tab" id="sb-anth" onclick="openCourse('anth')"><span class="sb-dot" style="background:#E9C4CB"></span>Anthropology</div>
   </nav>
   <div class="topbar-right">
     <div class="topbar-date" id="hdr-date"></div>
@@ -496,24 +504,24 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
   <div class="sidebar" id="sidebar">
     <div class="sb-section">
       <div class="sb-label">Tools</div>
-      <div class="sb-tool" id="sb-today"    onclick="switchTool('today',this)"><div class="sb-tool-icon">📖</div><div class="sb-tool-name">Today's Lesson</div></div>
-      <div class="sb-tool" id="sb-review"   onclick="switchTool('review',this)"><div class="sb-tool-icon">🔁</div><div class="sb-tool-name">Review</div></div>
-      <div class="sb-tool" id="sb-tomorrow" onclick="switchTool('tomorrow',this)"><div class="sb-tool-icon">🔮</div><div class="sb-tool-name">Tomorrow</div></div>
-      <div class="sb-tool" id="sb-quiz"     onclick="switchTool('quiz',this)"><div class="sb-tool-icon">❓</div><div class="sb-tool-name">Quiz</div></div>
-      <div class="sb-tool" id="sb-flash"    onclick="switchTool('flash',this)"><div class="sb-tool-icon">🎴</div><div class="sb-tool-name">Flashcards</div><span class="sb-due" id="sb-due-badge" style="display:none">0</span></div>
-      <div class="sb-tool" id="sb-exam"     onclick="switchTool('exam',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Exam Mode</div></div>
-      <div class="sb-tool" id="sb-drills"   onclick="switchTool('drills',this)"><div class="sb-tool-icon">🔬</div><div class="sb-tool-name">Drills</div></div>
-      <div class="sb-tool" id="sb-iknow"    onclick="switchTool('iknow',this)"><div class="sb-tool-icon">🧠</div><div class="sb-tool-name">What I Know</div></div>
-      <div class="sb-tool" id="sb-tutor"    onclick="switchTool('tutor',this)"><div class="sb-tool-icon">💬</div><div class="sb-tool-name">AI Tutor</div></div>
-      <div class="sb-tool" id="sb-work"     onclick="switchTool('work',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Review My Work</div></div>
-      <div class="sb-tool" id="sb-upload"   onclick="switchTool('upload',this)"><div class="sb-tool-icon">📎</div><div class="sb-tool-name">Upload Materials</div></div>
-      <div class="sb-tool" id="sb-notes"    onclick="switchTool('notes',this)"><div class="sb-tool-icon">✏️</div><div class="sb-tool-name">My Notes</div></div>
-      <div class="sb-tool" id="sb-assign"   onclick="switchTool('assign',this)"><div class="sb-tool-icon">📅</div><div class="sb-tool-name">Assignments</div></div>
-      <div class="sb-tool" id="sb-timer"    onclick="switchTool('timer',this)"><div class="sb-tool-icon">⏱</div><div class="sb-tool-name">Focus Timer</div></div>
-      <div class="sb-tool" id="sb-grades"   onclick="switchTool('grades',this)"><div class="sb-tool-icon">📊</div><div class="sb-tool-name">Grades</div></div>
-      <div class="sb-tool" id="sb-plan"     onclick="switchTool('plan',this)"><div class="sb-tool-icon">🎯</div><div class="sb-tool-name">Study Plan</div></div>
-      <div class="sb-tool" id="sb-format"   onclick="switchTool('format',this)"><div class="sb-tool-icon">⚙️</div><div class="sb-tool-name">Exam Format</div></div>
-      <div class="sb-tool" id="sb-agrade"   onclick="switchTool('agrade',this)"><div class="sb-tool-icon">🏆</div><div class="sb-tool-name">Get an A</div></div>
+      <div class="sb-tool" id="sb-today"    onclick="switchTool('today',this)"><div class="sb-tool-icon">📖</div><div class="sb-tool-name">Today's Lesson</div><span class="sb-kbd">1</span></div>
+      <div class="sb-tool" id="sb-review"   onclick="switchTool('review',this)"><div class="sb-tool-icon">🔁</div><div class="sb-tool-name">Review</div><span class="sb-kbd">2</span></div>
+      <div class="sb-tool" id="sb-tomorrow" onclick="switchTool('tomorrow',this)"><div class="sb-tool-icon">🔮</div><div class="sb-tool-name">Tomorrow</div><span class="sb-kbd">3</span></div>
+      <div class="sb-tool" id="sb-quiz"     onclick="switchTool('quiz',this)"><div class="sb-tool-icon">❓</div><div class="sb-tool-name">Quiz</div><span class="sb-kbd">4</span></div>
+      <div class="sb-tool" id="sb-flash"    onclick="switchTool('flash',this)"><div class="sb-tool-icon">🎴</div><div class="sb-tool-name">Flashcards</div><span class="sb-due" id="sb-due-badge" style="display:none">0</span><span class="sb-kbd">5</span></div>
+      <div class="sb-tool" id="sb-exam"     onclick="switchTool('exam',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Exam Mode</div><span class="sb-kbd">6</span></div>
+      <div class="sb-tool" id="sb-drills"   onclick="switchTool('drills',this)"><div class="sb-tool-icon">🔬</div><div class="sb-tool-name">Drills</div><span class="sb-kbd">7</span></div>
+      <div class="sb-tool" id="sb-iknow"    onclick="switchTool('iknow',this)"><div class="sb-tool-icon">🧠</div><div class="sb-tool-name">What I Know</div><span class="sb-kbd">8</span></div>
+      <div class="sb-tool" id="sb-tutor"    onclick="switchTool('tutor',this)"><div class="sb-tool-icon">💬</div><div class="sb-tool-name">AI Tutor</div><span class="sb-kbd">9</span></div>
+      <div class="sb-tool" id="sb-work"     onclick="switchTool('work',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Review My Work</div><span class="sb-kbd">0</span></div>
+      <div class="sb-tool" id="sb-upload"   onclick="switchTool('upload',this)"><div class="sb-tool-icon">📎</div><div class="sb-tool-name">Upload Materials</div><span class="sb-kbd">Q</span></div>
+      <div class="sb-tool" id="sb-notes"    onclick="switchTool('notes',this)"><div class="sb-tool-icon">✏️</div><div class="sb-tool-name">My Notes</div><span class="sb-kbd">W</span></div>
+      <div class="sb-tool" id="sb-assign"   onclick="switchTool('assign',this)"><div class="sb-tool-icon">📅</div><div class="sb-tool-name">Assignments</div><span class="sb-kbd">E</span></div>
+      <div class="sb-tool" id="sb-timer"    onclick="switchTool('timer',this)"><div class="sb-tool-icon">⏱</div><div class="sb-tool-name">Focus Timer</div><span class="sb-kbd">R</span></div>
+      <div class="sb-tool" id="sb-grades"   onclick="switchTool('grades',this)"><div class="sb-tool-icon">📊</div><div class="sb-tool-name">Grades</div><span class="sb-kbd">T</span></div>
+      <div class="sb-tool" id="sb-plan"     onclick="switchTool('plan',this)"><div class="sb-tool-icon">🎯</div><div class="sb-tool-name">Study Plan</div><span class="sb-kbd">Y</span></div>
+      <div class="sb-tool" id="sb-format"   onclick="switchTool('format',this)"><div class="sb-tool-icon">⚙️</div><div class="sb-tool-name">Exam Format</div><span class="sb-kbd">U</span></div>
+      <div class="sb-tool" id="sb-agrade"   onclick="switchTool('agrade',this)"><div class="sb-tool-icon">🏆</div><div class="sb-tool-name">Get an A</div><span class="sb-kbd">I</span></div>
     </div>
     <div class="st-sb" id="st-sb">
       <div class="st-sb-lbl">Studied today</div>
@@ -613,7 +621,7 @@ let pomSessions=0;
 
 /* ── course data ── */
 const courses={
-  earth:{code:'EASC 101',title:'EASC 101 — Intro to Physical Science',color:'#6366f1',
+  earth:{code:'EASC 101',title:'EASC 101 — Intro to Physical Science',color:'#5E1424',
     today:{topic:"Plate Tectonics & Earth's Dynamic Crust",points:["The lithosphere is divided into ~15 major tectonic plates floating on the semi-molten asthenosphere.","Plates move 2–10 cm per year driven by convection currents in the mantle.","Three boundary types: convergent (collision), divergent (spreading), transform (sliding).","Subduction: oceanic crust sinks beneath continental crust, forming trenches & volcanoes.","The Ring of Fire encircles the Pacific and accounts for ~90% of world earthquakes."],vocab:['Lithosphere','Asthenosphere','Subduction','Convection current','Fault line','Epicenter']},
     review:{last:"Earth's Interior Structure",recap:["Crust (0–70 km): thin outermost layer — oceanic (basalt) and continental (granite).","Mantle (70–2900 km): silicate rock, semi-solid; drives plate movement via convection.","Outer Core (2900–5150 km): liquid iron-nickel; generates Earth's magnetic field.","Inner Core (5150–6371 km): solid iron-nickel; extreme pressure keeps it solid at 5000°C."]},
     tomorrow:{topic:"Volcanoes & Volcanic Landforms",prep:["Read Ch. 7: shield, composite (stratovolcano), cinder cone volcanoes.","Know magma (underground) vs lava (above ground).","Understand how plate boundaries determine volcano locations.","Review the 1980 Mt. St. Helens eruption as a case study.","Key terms: pyroclastic flow, caldera, vent, crater."]},
@@ -645,7 +653,7 @@ COMMON STUDENT MISTAKES: confusing magma/lava, intrusive/extrusive; mixing up no
 
 EDMONTON/ALBERTA CONNECTIONS instructors love: Rocky Mountains fold-thrust belt, Alberta oil sands (Athabasca), Frank Slide, Drumheller badlands and dinosaurs, Alberta coal, Western Canada Sedimentary Basin, glacial features of Edmonton area, Royal Alberta Museum field trip.`,
     suggestions:["What's the difference between P-waves and S-waves?","Explain convergent vs divergent boundaries","How does subduction cause volcanoes?","What drives plate movement?","Explain the rock cycle step by step"]},
-  english:{code:'ENGL 102',title:'ENGL 102 — Analysis and Argument',color:'#10b981',
+  english:{code:'ENGL 102',title:'ENGL 102 — Analysis and Argument',color:'#9A253B',
     today:{topic:"Building a Strong Argumentative Thesis",points:["A thesis is a single, debatable claim your essay will prove with evidence.","Weak: 'Social media has effects.' Strong: 'Instagram's algorithm worsens teen anxiety by prioritizing engagement over wellbeing.'","Your thesis must answer: What? So what? How? (claim + significance + direction).","Place the thesis at the end of your introduction paragraph.","Every body paragraph's topic sentence must directly support the thesis."],vocab:['Thesis','Claim','Counterclaim','Warrant','Evidence','Concession','Rebuttal']},
     review:{last:"Introduction Paragraphs & Hooks",recap:["Hook options: startling statistic, anecdote, provocative question, bold statement.","Background narrows from broad context → specific issue → your thesis.","Never start with 'In this essay I will...' — show, don't announce.","The intro should be roughly 10% of total essay length."]},
     tomorrow:{topic:"Body Paragraphs — PIE Structure",prep:["PIE: Point (topic sentence) → Illustration (evidence) → Explanation (analysis).","Never drop a quote in without a signal phrase.","Signal phrases: 'According to...', 'As [Author] argues...'","MLA in-text citation: (Author last name page#).","Bring a paragraph you drafted to workshop."]},
@@ -677,7 +685,7 @@ COMMON STUDENT MISTAKES: summarizing instead of analyzing; thesis that's a fact 
 
 MACEWAN RESOURCES: Writing Centre (free one-on-one tutoring, book online), MacEwan Library research help, Peer Support Centre.`,
     suggestions:["What makes a thesis weak vs strong?","Explain the PIE method with an example","How do I integrate a quote properly in MLA?","What's the difference between a concession and rebuttal?","Show me a correct MLA Works Cited entry"]},
-  comp:{code:'CMPT 101',title:'CMPT 101 — Intro to Computing I',color:'#f59e0b',
+  comp:{code:'CMPT 101',title:'CMPT 101 — Intro to Computing I',color:'#BE5A6D',
     today:{topic:"Variables, Data Types & Conditional Logic",points:["A variable is a named container storing a value in memory (e.g., age = 20).","Core data types: Integer (whole numbers), Float (decimals), String (text), Boolean (True/False).","Assignment operator = assigns a value; == tests for equality.","if / elif / else lets programs make decisions based on conditions.","Python indentation is mandatory — 4 spaces define a code block.","if grade >= 90: print('A') elif grade >= 80: print('B') else: print('Study more!')"],vocab:['Variable','Data type','Integer','Float','Boolean','Conditional','Operator','Indentation']},
     review:{last:"Introduction to Algorithms & Pseudocode",recap:["An algorithm is a step-by-step procedure to solve a problem.","Pseudocode is plain-language algorithm writing before actual coding.","Three control structures: sequence, selection (if/else), repetition (loops).","Good algorithms are: correct, efficient, and unambiguous."]},
     tomorrow:{topic:"Loops — for and while",prep:["A for loop iterates over a sequence: for i in range(5): ...","A while loop runs as long as a condition is True — watch for infinite loops!","for = known iterations; while = unknown iterations.","Practice: write a loop that prints numbers 1–10 and their squares.","Nested loops: a loop inside a loop — used for grids and patterns."]},
@@ -707,7 +715,7 @@ WHAT INSTRUCTORS TEST: written exams heavy on TRACING code (what does this print
 
 COMMON STUDENT MISTAKES: = vs ==; forgetting int(input()); off-by-one with range (range(5) is 0-4); thinking return and print are the same; modifying a list while iterating over it; string immutability (s[0]='x' fails); integer division surprises; forgetting the colon after if/for/while/def; inconsistent indentation; using a variable before assignment; infinite while loop from not updating the condition variable; comparing strings to ints ('5' == 5 is False); aliasing lists accidentally; misunderstanding negative indexes; and/or precedence (not > and > or); two's complement sign errors; hex digits A-F = 10-15.`,
     suggestions:["What's the difference between = and == in Python?","Explain while loops with an example","What do int, float, str, bool mean?","Walk me through writing a basic function","What is a list and how do I index it?"]},
-  math:{code:'MATH 099',title:'MATH 099 — Precalculus Mathematics',color:'#ef4444',
+  math:{code:'MATH 099',title:'MATH 099 — Precalculus Mathematics',color:'#D68F9C',
     today:{topic:"Solving Linear Equations & Inequalities",points:["Goal: isolate the variable on one side using inverse operations.","Whatever you do to one side, do to the other (balance principle).","Steps: Distribute → Combine like terms → Move variables → Divide/Multiply.","Example: 3x + 5 = 20 → 3x = 15 → x = 5. Check: 3(5)+5=20 ✓","Inequalities work the same, BUT flip the sign when multiplying or dividing by a negative.","Number line: open circle for < >, closed circle for ≤ ≥."],vocab:['Variable','Coefficient','Like terms','Inverse operation','Inequality','Solution set']},
     review:{last:"Order of Operations & Algebraic Expressions",recap:["BEDMAS: Brackets → Exponents → Division/Multiplication → Addition/Subtraction.","A term has a coefficient and a variable: 4x (coefficient=4, variable=x).","Like terms share the same variable and exponent: 3x and 7x are like terms.","Distributive property: a(b + c) = ab + ac"]},
     tomorrow:{topic:"Graphing Linear Equations (Slope-Intercept Form)",prep:["Slope-intercept form: y = mx + b (m = slope, b = y-intercept).","Slope = rise/run = (y₂ - y₁)/(x₂ - x₁).","Positive slope: rises left to right. Negative slope: falls left to right.","To graph: plot b on y-axis, then use slope to find the next point.","Practice converting standard form Ax + By = C to slope-intercept."]},
@@ -737,7 +745,7 @@ COMMON STUDENT MISTAKES: forgetting to flip inequality with negatives; not check
 
 MACEWAN RESOURCES: Math Help Centre (drop-in tutoring), MATH 114 gateway exam alternative, instructors' office hours, Studocu/past exams from students.`,
     suggestions:["Walk me through solving 3x + 7 = 22 step by step","Why do you flip the inequality sign?","Explain slope-intercept form with an example","How do I factor a trinomial?","What is the quadratic formula and when do I use it?"]},
-  anth:{code:'ANTH 101',title:'ANTH 101 — Intro to Anthropology',color:'#8b5cf6',
+  anth:{code:'ANTH 101',title:'ANTH 101 — Intro to Anthropology',color:'#E9C4CB',
     today:{topic:"Culture, Ethnocentrism & Cultural Relativism",points:["Culture = shared beliefs, values, practices, symbols, and norms of a group.","All cultures have universal traits (family, language, ritual) and unique features.","Ethnocentrism: judging another culture by the standards of your own — leads to bias.","Cultural relativism: understanding a culture on its own terms, without judgment.","Anthropologists aim for cultural relativism but stay ethically grounded (not moral relativism).","Ruth Benedict's Patterns of Culture (1934) compared Zuni, Dobu, and Kwakiutl societies."],vocab:['Culture','Ethnocentrism','Cultural relativism','Enculturation','Norms','Values','Symbol','Subculture']},
     review:{last:"The Four Fields of Anthropology",recap:["Biological/Physical Anthropology: human evolution, genetics, primatology.","Archaeology: study of past societies through material remains.","Linguistic Anthropology: how language shapes and is shaped by culture.","Cultural Anthropology: study of living human cultures."]},
     tomorrow:{topic:"Fieldwork, Ethnography & Participant Observation",prep:["Ethnography = a written account of a culture based on firsthand fieldwork.","Participant observation: the anthropologist lives within the culture being studied.","Key challenge: going native vs maintaining analytical distance.","Read excerpt from Bronislaw Malinowski's Argonauts of the Western Pacific.","Key terms: interlocutor, field notes, thick description (Geertz)."]},
@@ -813,6 +821,8 @@ function stRenderHome(){
   document.getElementById('st-home-week-grid').innerHTML=weekDates().map(d=>{const k=todayKey(d);const s=Object.values(studyLog[k]||{}).reduce((a,b)=>a+b,0);return`<div class="st-day${k===t?' today':''}"><div class="st-day-lbl">${d.toLocaleDateString('en-CA',{weekday:'short'})}</div><div class="st-day-val">${fmtShort(s)}</div></div>`;}).join('');
 }
 
+/* keyboard shortcuts (Linear-style) */
+document.addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const tag=(e.target.tagName||'').toLowerCase();if(['input','textarea','select'].includes(tag)||e.target.isContentEditable)return;const map={'1':'today','2':'review','3':'tomorrow','4':'quiz','5':'flash','6':'exam','7':'drills','8':'iknow','9':'tutor','0':'work','q':'upload','w':'notes','e':'assign','r':'timer','t':'grades','y':'plan','u':'format','i':'agrade'};const k=e.key.toLowerCase();if(map[k]&&currentCourse){e.preventDefault();switchTool(map[k],document.getElementById('sb-'+map[k]));}});
 /* ── navigation ── */
 function goHome(){
   currentCourse=null;stStop();stRenderHome();stRender();renderHomeCal();renderHomeGrades();
@@ -1049,7 +1059,7 @@ function deleteAssign(i){assignments[currentCourse].splice(i,1);persist();render
 
 /* pomodoro */
 let pomTimer=null,pomSecondsLeft=25*60,pomTotalSeconds=25*60,pomRunning=false,pomMode='work';
-const pomModes={work:{label:'Focus Time',mins:25,color:'var(--blue)'},short:{label:'Short Break',mins:5,color:'var(--green)'},long:{label:'Long Break',mins:15,color:'var(--muted)'}};
+const pomModes={work:{label:'Focus Time',mins:25,color:'#9A253B'},short:{label:'Short Break',mins:5,color:'#3D6B52'},long:{label:'Long Break',mins:15,color:'#A99B9E'}};
 function renderTimerHTML(){
   return`<div class="pom-wrap"><div class="pom-modes" style="margin-bottom:16px"><button class="pom-mode-btn active" id="pmode-work" onclick="setPomMode('work')">🎯 Focus (25 min)</button><button class="pom-mode-btn" id="pmode-short" onclick="setPomMode('short')">☕ Break (5 min)</button><button class="pom-mode-btn" id="pmode-long" onclick="setPomMode('long')">🛋 Long Break (15 min)</button></div><div class="pom-display"><div class="pom-ring"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="pom-ring-track" cx="60" cy="60" r="52"/><circle class="pom-ring-fill" id="pom-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="${2*Math.PI*52}" stroke-dashoffset="0"/></svg></div><div class="pom-mode-lbl" id="pom-mode-label">Focus Time</div><div class="pom-time" id="pom-time">25:00</div><div class="pom-session" id="pom-sess-label">Session 1 · 0 completed today</div></div><div class="pom-btns"><button class="pom-btn pom-start" id="pom-start-btn" onclick="togglePom()">▶ Start</button><button class="pom-btn pom-reset" onclick="resetPom()">↺ Reset</button></div></div>`;
 }
@@ -1386,7 +1396,7 @@ function esc(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").repla
 function renderPlan(c){const w=(weakness[currentCourse]||[]).filter(x=>!x.done).sort((a,b)=>b.count-a.count||b.last-a.last);const done=(weakness[currentCourse]||[]).filter(x=>x.done);
   const g=gradeCalc(currentCourse);const ex=(examHistory[currentCourse]||[])[0];
   return`<div class="know-intro"><strong>Built from your own results.</strong> Everything you got wrong in Quiz, Exam Mode, What I Know, Drills, or rated Hard on a flashcard lands here — ranked by how often it's tripped you up. Study top-down.</div>
-  <div class="stat-strip"><div class="stat"><div class="stat-num">${w.length}</div><div class="stat-lbl">Weak topics</div></div><div class="stat"><div class="stat-num">${done.length}</div><div class="stat-lbl">Fixed</div></div><div class="stat"><div class="stat-num">${ex?ex.pct+'%':'—'}</div><div class="stat-lbl">Last exam</div></div><div class="stat"><div class="stat-num">${g.current!=null?g.current.toFixed(0)+'%':'—'}</div><div class="stat-lbl">Current grade</div></div></div>
+  <div class="stat-strip"><div class="stat"><div class="stat-lbl">Weak topics</div><div class="stat-num">${w.length}</div><div class="pb"><i style="width:${Math.min(100,w.length*10)}%"></i></div></div><div class="stat"><div class="stat-lbl">Fixed</div><div class="stat-num">${done.length}</div><div class="pb"><i style="width:${w.length+done.length?Math.round(done.length/(w.length+done.length)*100):0}%;background:var(--green)"></i></div></div><div class="stat"><div class="stat-lbl">Last exam</div><div class="stat-num">${ex?ex.pct+'%':'—'}</div><div class="pb"><i style="width:${ex?ex.pct:0}%"></i></div></div><div class="stat"><div class="stat-lbl">Current grade</div><div class="stat-num">${g.current!=null?g.current.toFixed(0)+'%':'—'}</div><div class="pb"><i style="width:${g.current!=null?Math.round(g.current):0}%"></i></div></div></div>
   ${w.length?w.map((x,i)=>`<div class="sp-item"><div class="sp-rank">${i+1}</div><div style="flex:1"><div class="sp-topic">${x.topic}<span class="sp-src">${x.src} ×${x.count}</span></div><div class="sp-why">Missed ${x.count} time${x.count>1?'s':''} · last ${new Date(x.last).toLocaleDateString('en-CA',{month:'short',day:'numeric'})}</div><div class="sp-act"><button class="retry-btn" onclick="planAsk('${esc(x.topic)}')">💬 Explain this to me</button><button class="retry-btn" onclick="planCards('${esc(x.topic)}',this)">🎴 5 flashcards</button><button class="retry-btn" onclick="planDone('${esc(x.topic)}')">✓ I've got it now</button></div></div></div>`).join(''):`<div class="fc-empty"><strong>No weak spots recorded yet</strong>Take a quiz, run Exam Mode, or use What I Know — misses show up here automatically.</div>`}
   <div class="icard" style="margin-top:14px"><div class="icard-label">This week's plan for ${c.code}</div><ul><li><strong>Mon/Wed/Fri:</strong> 20 min flashcards (due cards first) + 1 weak topic from the list above</li><li><strong>Tue/Thu:</strong> Read ahead for the next lecture, then What I Know on what you read</li><li><strong>Weekend:</strong> One timed Exam Mode run (20 q, 30 min). Anything under 80% → back to the list</li><li><strong>Every day:</strong> 10 min re-reading today's lecture notes before bed — retention doubles</li></ul></div>`;}
 function planAsk(t){switchTool('tutor',document.getElementById('sb-tutor'));setTimeout(()=>sendChatMsg(`I keep getting this wrong: "${t}". Explain it to me simply, then give me a quick check question.`),200);}
