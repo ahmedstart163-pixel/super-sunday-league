@@ -343,6 +343,77 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
 .hist-name{font-size:13px;font-weight:500;color:var(--navy);flex:1}
 .hist-date{font-size:11px;color:var(--muted2)}
 
+/* study time */
+.st-live{display:flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid #bbf7d0;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--green);font-family:'Inter',sans-serif}
+.st-live .st-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.st-sb{margin:6px 12px 0;padding:10px 12px;background:var(--page);border:1px solid var(--border);border-radius:8px}
+.st-sb-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
+.st-sb-time{font-family:'Georgia',serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1}
+.st-sb-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.st-sb-course{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500}
+.st-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.st-bar-name{font-size:12px;color:var(--text2);width:110px;flex-shrink:0;font-weight:500;display:flex;align-items:center;gap:6px}
+.st-bar-track{flex:1;height:10px;background:var(--page);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.st-bar-fill{height:100%;border-radius:5px;transition:width .5s}
+.st-bar-val{font-size:12px;color:var(--navy);font-weight:600;width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.st-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:6px}
+.st-day{text-align:center;padding:8px 4px;background:var(--page);border:1px solid var(--border);border-radius:8px}
+.st-day.today{border-color:var(--blue);background:var(--blue-light)}
+.st-day-lbl{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.st-day-val{font-family:'Georgia',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.st-day.today .st-day-val{color:var(--blue)}
+
+/* grades */
+.gr-row{display:grid;grid-template-columns:2fr 80px 80px 90px 32px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.gr-row:last-child{border-bottom:none}
+.gr-head{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted2)}
+.gr-in{background:var(--page);border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;width:100%}
+.gr-in:focus{border-color:var(--blue)}
+.gr-big{font-family:'Georgia',serif;font-size:42px;font-weight:700;line-height:1}
+.gr-need{background:var(--blue-light);border:1px solid var(--blue-border);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--text2);line-height:1.7}
+.gr-need strong{color:var(--navy)}
+.gr-scale{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.gr-scale span{font-size:10px;padding:2px 7px;border-radius:12px;background:var(--page);border:1px solid var(--border);color:var(--muted)}
+.gr-scale span.hit{background:var(--green-light);border-color:#bbf7d0;color:var(--green);font-weight:700}
+.ex-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.ex-timer{position:sticky;top:0;background:var(--navy);color:#fff;border-radius:var(--radius);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;z-index:5}
+.ex-timer .t{font-family:'Georgia',serif;font-size:26px;font-weight:700;letter-spacing:-1px}
+.ex-timer.warn{background:var(--red)}
+.ex-q{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px}
+.ex-q .opt.sel{border-color:var(--navy);background:var(--blue-light);color:var(--navy)}
+.ex-ta{width:100%;min-height:80px;background:var(--page);border:1.5px solid var(--border);border-radius:8px;padding:10px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;outline:none;resize:vertical}
+.ex-ta:focus{border-color:var(--blue)}
+.ex-res-q{border-left:4px solid var(--border);padding:10px 14px;margin-bottom:10px;background:#fff;border-radius:0 8px 8px 0;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ex-res-q.ok{border-left-color:var(--green)}.ex-res-q.bad{border-left-color:var(--red)}.ex-res-q.part{border-left-color:var(--yellow)}
+.sp-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px}
+.sp-rank{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Georgia',serif}
+.sp-topic{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.sp-why{font-size:12px;color:var(--muted);line-height:1.6}
+.sp-src{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;background:var(--red-light);color:var(--red);margin-left:6px;font-weight:600}
+.sp-act{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.sp-act button{font-size:11px;padding:5px 10px;margin:0}
+.cal-day-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.cal-date{width:60px;flex-shrink:0;text-align:center}
+.cal-date .d{font-family:'Georgia',serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1}
+.cal-date .w{font-size:10px;color:var(--muted2);text-transform:uppercase}
+.cal-date.today .d{color:var(--blue)}
+.cal-items{flex:1}
+.cal-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;background:var(--page);margin-bottom:4px;font-size:13px}
+.cal-item .ct{flex:1;color:var(--text)}
+.cal-item .cc{font-size:10px;font-weight:700;color:var(--muted)}
+.cal-item.done{opacity:.45;text-decoration:line-through}
+.dr-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px}
+.dr-code{background:#1e293b;color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;line-height:1.6;padding:14px 16px;border-radius:8px;white-space:pre;overflow-x:auto;margin:10px 0}
+.dr-step{padding:10px 14px;border-left:3px solid var(--blue);background:var(--blue-light);margin-bottom:8px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.7;color:var(--text2)}
+.dr-step.hidden{filter:blur(6px);cursor:pointer;user-select:none}
+.dr-match{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dr-mi{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--page);font-size:13px;cursor:pointer;transition:all .15s}
+.dr-mi.sel{border-color:var(--navy);background:var(--blue-light)}
+.dr-mi.ok{border-color:var(--green);background:var(--green-light);pointer-events:none}
+.dr-mi.bad{border-color:var(--red);background:var(--red-light)}
+.sb-due{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;border-radius:10px;padding:1px 7px}
+
 /* api key banner */
 #api-key-banner{display:none;background:var(--yellow-light);border-bottom:2px solid #fde68a;padding:12px 24px;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
 #api-key-banner.show{display:flex}
@@ -410,7 +481,7 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
       </div>
       <div class="sb-course" id="sb-earth" onclick="openCourse('earth')">
         <div class="sb-dot" style="background:#6366f1"></div>
-        <div><div class="sb-course-name">Earth Science</div><div class="sb-course-code">ERSC 101</div></div>
+        <div><div class="sb-course-name">Earth Science</div><div class="sb-course-code">EASC 101</div></div>
       </div>
       <div class="sb-course" id="sb-english" onclick="openCourse('english')">
         <div class="sb-dot" style="background:#10b981"></div>
@@ -418,7 +489,7 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
       </div>
       <div class="sb-course" id="sb-comp" onclick="openCourse('comp')">
         <div class="sb-dot" style="background:#f59e0b"></div>
-        <div><div class="sb-course-name">Computing</div><div class="sb-course-code">COMP 101</div></div>
+        <div><div class="sb-course-name">Computing</div><div class="sb-course-code">CMPT 101</div></div>
       </div>
       <div class="sb-course" id="sb-math" onclick="openCourse('math')">
         <div class="sb-dot" style="background:#ef4444"></div>
@@ -436,7 +507,9 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
       <div class="sb-tool" id="sb-review"   onclick="switchTool('review',this)"><div class="sb-tool-icon">🔁</div><div class="sb-tool-name">Review</div></div>
       <div class="sb-tool" id="sb-tomorrow" onclick="switchTool('tomorrow',this)"><div class="sb-tool-icon">🔮</div><div class="sb-tool-name">Tomorrow</div></div>
       <div class="sb-tool" id="sb-quiz"     onclick="switchTool('quiz',this)"><div class="sb-tool-icon">❓</div><div class="sb-tool-name">Quiz</div></div>
-      <div class="sb-tool" id="sb-flash"    onclick="switchTool('flash',this)"><div class="sb-tool-icon">🎴</div><div class="sb-tool-name">Flashcards</div></div>
+      <div class="sb-tool" id="sb-flash"    onclick="switchTool('flash',this)"><div class="sb-tool-icon">🎴</div><div class="sb-tool-name">Flashcards</div><span class="sb-due" id="sb-due-badge" style="display:none">0</span></div>
+      <div class="sb-tool" id="sb-exam"     onclick="switchTool('exam',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Exam Mode</div></div>
+      <div class="sb-tool" id="sb-drills"   onclick="switchTool('drills',this)"><div class="sb-tool-icon">🔬</div><div class="sb-tool-name">Drills</div></div>
       <div class="sb-tool" id="sb-iknow"    onclick="switchTool('iknow',this)"><div class="sb-tool-icon">🧠</div><div class="sb-tool-name">What I Know</div></div>
       <div class="sb-tool" id="sb-tutor"    onclick="switchTool('tutor',this)"><div class="sb-tool-icon">💬</div><div class="sb-tool-name">AI Tutor</div></div>
       <div class="sb-tool" id="sb-work"     onclick="switchTool('work',this)"><div class="sb-tool-icon">📝</div><div class="sb-tool-name">Review My Work</div></div>
@@ -444,8 +517,17 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
       <div class="sb-tool" id="sb-notes"    onclick="switchTool('notes',this)"><div class="sb-tool-icon">✏️</div><div class="sb-tool-name">My Notes</div></div>
       <div class="sb-tool" id="sb-assign"   onclick="switchTool('assign',this)"><div class="sb-tool-icon">📅</div><div class="sb-tool-name">Assignments</div></div>
       <div class="sb-tool" id="sb-timer"    onclick="switchTool('timer',this)"><div class="sb-tool-icon">⏱</div><div class="sb-tool-name">Focus Timer</div></div>
+      <div class="sb-tool" id="sb-grades"   onclick="switchTool('grades',this)"><div class="sb-tool-icon">📊</div><div class="sb-tool-name">Grades</div></div>
+      <div class="sb-tool" id="sb-plan"     onclick="switchTool('plan',this)"><div class="sb-tool-icon">🎯</div><div class="sb-tool-name">Study Plan</div></div>
+      <div class="sb-tool" id="sb-format"   onclick="switchTool('format',this)"><div class="sb-tool-icon">⚙️</div><div class="sb-tool-name">Exam Format</div></div>
       <div class="sb-tool" id="sb-agrade"   onclick="switchTool('agrade',this)"><div class="sb-tool-icon">🏆</div><div class="sb-tool-name">Get an A</div></div>
     </div>
+    <div class="st-sb" id="st-sb">
+      <div class="st-sb-lbl">Studied today</div>
+      <div class="st-sb-time" id="st-sb-time">0:00</div>
+      <div class="st-sb-course" id="st-sb-course">Open a course to start</div>
+    </div>
+    <div style="height:14px"></div>
   </div>
 
   <!-- MAIN -->
@@ -463,21 +545,40 @@ body{font-family:'Inter',sans-serif;background:var(--page);color:var(--text);fon
         <div class="home-stat">⏱ <strong id="pom-total-home">0</strong> focus sessions today</div>
         <div class="home-stat">✅ <strong id="assign-done-home">0</strong> tasks done</div>
       </div>
+      <div class="icard" style="margin-bottom:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <div class="icard-label" style="margin:0">⏱ Study Time — Today</div>
+          <div style="font-size:12px;color:var(--muted)"><strong id="st-home-total" style="color:var(--navy)">0m</strong> total today · <strong id="st-home-week" style="color:var(--navy)">0m</strong> this week</div>
+        </div>
+        <div id="st-home-bars"></div>
+        <div class="st-week" id="st-home-week-grid"></div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:10px">Tracks automatically while a course is open. Pauses after 5 minutes of no activity.</div>
+      </div>
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="icard" style="margin:0"><div class="icard-label">📅 Upcoming — All Courses (next 14 days)</div><div id="home-cal"></div></div>
+        <div class="icard" style="margin:0"><div class="icard-label">📊 Current Standing</div><div id="home-grades"></div><div style="font-size:11px;color:var(--muted2);margin-top:8px" id="home-due-fc"></div></div>
+      </div>
       <div class="course-grid">
-        <div class="course-card" onclick="openCourse('earth')"><div class="cc-code">ERSC 101</div><div class="cc-title">Earth Science 101</div><div class="cc-desc">Plate tectonics, Earth's layers, rock cycle, weather systems, geological time.</div><div class="cc-footer"><div class="cc-chip">🌍 Natural Sciences</div><div class="cc-arrow">→</div></div></div>
-        <div class="course-card" onclick="openCourse('english')"><div class="cc-code">ENGL 102</div><div class="cc-title">English 102</div><div class="cc-desc">Academic writing, argumentation, thesis construction, MLA citation, PIE structure.</div><div class="cc-footer"><div class="cc-chip">📝 Humanities</div><div class="cc-arrow">→</div></div></div>
-        <div class="course-card" onclick="openCourse('comp')"><div class="cc-code">COMP 101</div><div class="cc-title">Computing 101</div><div class="cc-desc">Programming logic, variables, data types, conditionals, loops, functions.</div><div class="cc-footer"><div class="cc-chip">💻 Technology</div><div class="cc-arrow">→</div></div></div>
-        <div class="course-card" onclick="openCourse('math')"><div class="cc-code">MATH 099</div><div class="cc-title">Math 099</div><div class="cc-desc">Pre-calculus algebra, linear equations, graphing, factoring, quadratics.</div><div class="cc-footer"><div class="cc-chip">🔢 Mathematics</div><div class="cc-arrow">→</div></div></div>
-        <div class="course-card" onclick="openCourse('anth')"><div class="cc-code">ANTH 101</div><div class="cc-title">Anthropology 101</div><div class="cc-desc">Human evolution, culture, ethnocentrism, ethnography, fieldwork methods.</div><div class="cc-footer"><div class="cc-chip">🏺 Social Sciences</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('earth')"><div class="cc-code">EASC 101</div><div class="cc-title">Intro to Physical Science</div><div class="cc-desc">Plate tectonics, Earth's layers, rock cycle, weather systems, geological time.</div><div class="cc-footer"><div class="cc-chip">🌍 Natural Sciences</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('english')"><div class="cc-code">ENGL 102</div><div class="cc-title">Analysis and Argument</div><div class="cc-desc">Academic writing, argumentation, thesis construction, MLA citation, PIE structure.</div><div class="cc-footer"><div class="cc-chip">📝 Humanities</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('comp')"><div class="cc-code">CMPT 101</div><div class="cc-title">Intro to Computing I</div><div class="cc-desc">Programming logic, variables, data types, conditionals, loops, functions.</div><div class="cc-footer"><div class="cc-chip">💻 Technology</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('math')"><div class="cc-code">MATH 099</div><div class="cc-title">Precalculus Mathematics</div><div class="cc-desc">Pre-calculus algebra, linear equations, graphing, factoring, quadratics.</div><div class="cc-footer"><div class="cc-chip">🔢 Mathematics</div><div class="cc-arrow">→</div></div></div>
+        <div class="course-card" onclick="openCourse('anth')"><div class="cc-code">ANTH 101</div><div class="cc-title">Intro to Anthropology</div><div class="cc-desc">Human evolution, culture, ethnocentrism, ethnography, fieldwork methods.</div><div class="cc-footer"><div class="cc-chip">🏺 Social Sciences</div><div class="cc-arrow">→</div></div></div>
       </div>
     </div>
 
     <!-- COURSE -->
     <div id="view-course" style="display:none">
-      <div class="course-hdr">
-        <div class="course-badge" id="cv-code"></div>
-        <div class="course-hdr-title" id="cv-title"></div>
-        <div class="course-hdr-sub">MacEwan University · Edmonton, Alberta</div>
+      <div class="course-hdr" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="course-badge" id="cv-code"></div>
+          <div class="course-hdr-title" id="cv-title"></div>
+          <div class="course-hdr-sub">MacEwan University · Edmonton, Alberta</div>
+        </div>
+        <div style="text-align:right">
+          <div class="st-live" id="st-live"><span class="st-dot"></span><span id="st-live-txt">0:00</span> today</div>
+          <div style="font-size:10px;color:var(--muted2);margin-top:5px" id="st-week-txt">0m this week</div>
+        </div>
       </div>
       <div id="tool-content"></div>
     </div>
@@ -499,56 +600,221 @@ if(!getKey()&&!localStorage.getItem('banner_dismissed'))document.getElementById(
 
 /* ── state ── */
 let currentCourse=null,currentTool='today';
-const flashcards={},chatHistory={},assignments={},notes={};
+const P=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const flashcards=P('fc_v1',{}),chatHistory={},assignments=P('as_v1',{}),notes=P('nt_v1',{});
+const grades=P('gr_v1',{}),examFormat=P('ef_v1',{}),weakness=P('wk_v1',{}),examHistory=P('eh_v1',{});
+function persist(){localStorage.setItem('fc_v1',JSON.stringify(flashcards));localStorage.setItem('as_v1',JSON.stringify(assignments));localStorage.setItem('nt_v1',JSON.stringify(notes));localStorage.setItem('gr_v1',JSON.stringify(grades));localStorage.setItem('ef_v1',JSON.stringify(examFormat));localStorage.setItem('wk_v1',JSON.stringify(weakness));localStorage.setItem('eh_v1',JSON.stringify(examHistory));}
+function addWeak(course,topic,src){if(!weakness[course])weakness[course]=[];const t=String(topic).trim();if(!t)return;const ex=weakness[course].find(w=>w.topic.toLowerCase()===t.toLowerCase());if(ex){ex.count++;ex.last=Date.now();ex.done=false;}else weakness[course].push({topic:t,src,count:1,last:Date.now(),done:false});persist();}
+async function ai(content,max=1500,system){const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:max,...(system?{system}:{}),messages:[{role:'user',content}]})});const data=await res.json();if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);if(!data.content?.length)throw new Error('Empty response.');return data.content.map(b=>b.text||'').join('');}
+function aiJSON(raw){return JSON.parse(raw.replace(/```json|```/g,'').trim());}
+function fmtCtx(c){const f=examFormat[currentCourse];return f?`\n\nINSTRUCTOR'S EXAM FORMAT (match this exactly): ${f.midterm?'Midterm: '+f.midterm+'. ':''}${f.final?'Final: '+f.final+'. ':''}${f.style?'Question style: '+f.style+'. ':''}${f.notes?'Notes: '+f.notes:''}`:'';}
 let pomSessions=0;
 
 /* ── course data ── */
 const courses={
-  earth:{code:'ERSC 101',title:'Earth Science 101',color:'#6366f1',
+  earth:{code:'EASC 101',title:'EASC 101 — Intro to Physical Science',color:'#6366f1',
     today:{topic:"Plate Tectonics & Earth's Dynamic Crust",points:["The lithosphere is divided into ~15 major tectonic plates floating on the semi-molten asthenosphere.","Plates move 2–10 cm per year driven by convection currents in the mantle.","Three boundary types: convergent (collision), divergent (spreading), transform (sliding).","Subduction: oceanic crust sinks beneath continental crust, forming trenches & volcanoes.","The Ring of Fire encircles the Pacific and accounts for ~90% of world earthquakes."],vocab:['Lithosphere','Asthenosphere','Subduction','Convection current','Fault line','Epicenter']},
     review:{last:"Earth's Interior Structure",recap:["Crust (0–70 km): thin outermost layer — oceanic (basalt) and continental (granite).","Mantle (70–2900 km): silicate rock, semi-solid; drives plate movement via convection.","Outer Core (2900–5150 km): liquid iron-nickel; generates Earth's magnetic field.","Inner Core (5150–6371 km): solid iron-nickel; extreme pressure keeps it solid at 5000°C."]},
     tomorrow:{topic:"Volcanoes & Volcanic Landforms",prep:["Read Ch. 7: shield, composite (stratovolcano), cinder cone volcanoes.","Know magma (underground) vs lava (above ground).","Understand how plate boundaries determine volcano locations.","Review the 1980 Mt. St. Helens eruption as a case study.","Key terms: pyroclastic flow, caldera, vent, crater."]},
     quiz:[{q:"Which Earth layer generates the magnetic field?",opts:["Crust","Mantle","Outer Core","Inner Core"],ans:2,exp:"The liquid iron-nickel Outer Core generates electric currents creating Earth's magnetic field."},{q:"The San Andreas Fault is what boundary type?",opts:["Convergent","Divergent","Transform","Subduction"],ans:2,exp:"Transform boundary — Pacific and North American plates slide horizontally past each other."},{q:"Oceanic crust is primarily composed of:",opts:["Granite","Basalt","Limestone","Marble"],ans:1,exp:"Oceanic crust is denser and made primarily of basalt."},{q:"The Ring of Fire surrounds which ocean?",opts:["Atlantic","Indian","Arctic","Pacific"],ans:3,exp:"The Ring of Fire surrounds the Pacific Ocean — Earth's most seismically active zone."}],
     agrade:[{icon:'🗓️',title:'Attend every lecture',tip:'Earth Science builds on itself — one missed class creates chain gaps.'},{icon:'🗺️',title:'Draw diagrams from memory',tip:"Redraw Earth's layers and plate boundaries without looking. Visual recall is powerful."},{icon:'📰',title:'Connect to current events',tip:'Follow earthquake and volcano news. Real events anchor abstract concepts.'},{icon:'🧪',title:'Lab reports matter',tip:'Labs can be 20–30% of your grade. Format correctly, include units.'},{icon:'📆',title:'Study 3 days before exams',tip:'Vocab Day 1, concept connections Day 2, practice questions Day 3.'},{icon:'🙋',title:'Use office hours',tip:'One targeted question per week shows engagement and closes gaps early.'}],
-    knowContext:"Course: Earth Science 101 (ERSC 101) at MacEwan University, Edmonton Alberta.\nKey topics: Earth's layers (crust, mantle, outer core, inner core), plate tectonics (convergent/divergent/transform boundaries), subduction, convection currents, lithosphere, asthenosphere, Ring of Fire, rock cycle (igneous/sedimentary/metamorphic), weathering, erosion, oceans, weather systems, geological time, fossils, earthquakes (Richter scale, P-waves, S-waves), volcanoes (shield, composite, cinder cone), magma vs lava, pyroclastic flow.",
+    knowContext:`COURSE: EASC 101 — Introduction to Physical (Earth) Science, MacEwan University, Edmonton, Alberta. 3 credits, lecture + weekly lab (3-3-0). Official description: how the Earth formed and evolved through time; how minerals and rocks form and change; what causes volcanoes and earthquakes; how faults and folds form; how plate tectonics affects it all. Lab: identifying minerals and rocks in hand specimen, interpreting topographic and geologic maps, geologic time, earthquakes. Textbook typically: Tarbuck & Lutgens 'Earth: An Introduction to Physical Geology' (Canadian edition) or Marshak 'Earth: Portrait of a Planet'. Course typically follows ~14 topics.
+
+FULL TOPIC BREAKDOWN:
+1. INTRODUCTION & EARTH'S ORIGIN: Big Bang (hydrogen/helium), nebular hypothesis, accretion, differentiation into layers by density, Earth ~4.6 billion years old, early bombardment, origin of the Moon (giant impact), scientific method, Earth systems (geosphere, hydrosphere, atmosphere, biosphere).
+2. EARTH'S INTERIOR: Crust (continental 35-70km granitic/felsic, density ~2.7; oceanic 5-10km basaltic/mafic, density ~3.0), Moho discontinuity, mantle (peridotite, upper/lower, transition zone at 410 & 660km), asthenosphere (weak, plastic, 100-350km), lithosphere (rigid, crust + uppermost mantle), outer core (liquid Fe-Ni, generates magnetic field via geodynamo), inner core (solid Fe-Ni due to pressure), how we know: seismic waves (P-waves travel through solids & liquids, S-waves only solids → S-wave shadow zone proves liquid outer core), density, meteorites.
+3. PLATE TECTONICS — DEVELOPMENT: Alfred Wegener 1912 continental drift (Pangaea), his evidence (jigsaw fit, fossil matching Mesosaurus/Glossopteris, matching rock types/mountain belts, paleoclimate glacial evidence), why rejected (no mechanism), Harry Hess seafloor spreading 1960s, paleomagnetism, magnetic stripes (Vine-Matthews), polar wandering, ocean drilling age evidence, hot spot tracks (Hawaiian chain), earthquake/volcano distribution.
+4. PLATE BOUNDARIES: ~12-15 major plates; divergent (mid-ocean ridges, rift valleys e.g. East African Rift, Iceland; new crust created, shallow earthquakes, basaltic volcanism); convergent (oceanic-continental → subduction, volcanic arc e.g. Andes/Cascades; oceanic-oceanic → island arc e.g. Japan/Aleutians; continental-continental → collision mountains e.g. Himalayas, no volcanoes); transform (San Andreas, plates slide past, shallow earthquakes, no volcanism, fracture zones offset ridges). Driving forces: slab pull (dominant), ridge push, mantle convection. Rates 2-10cm/yr. Wilson Cycle.
+5. MINERALS: definition (naturally occurring, inorganic, solid, definite chemical composition, ordered crystalline structure), atoms/ions/bonding (ionic, covalent, metallic), silicate tetrahedron (SiO4) and silicate structures (isolated/olivine, single chain/pyroxene, double chain/amphibole, sheet/mica & clay, framework/quartz & feldspar), Bowen's Reaction Series, non-silicates (carbonates calcite/dolomite, oxides hematite/magnetite, sulfides pyrite/galena, sulfates gypsum, halides halite, native elements). Physical properties for ID: luster, color, streak, hardness (Mohs scale 1 talc-10 diamond), cleavage vs fracture, crystal form, specific gravity, special (magnetism, reaction to HCl, taste, double refraction). Rock-forming minerals: quartz, feldspar (plagioclase, orthoclase), mica (muscovite, biotite), amphibole (hornblende), pyroxene (augite), olivine, calcite.
+6. IGNEOUS ROCKS: magma vs lava, intrusive/plutonic (slow cooling, coarse/phaneritic) vs extrusive/volcanic (fast, fine/aphanitic), textures (phaneritic, aphanitic, porphyritic, glassy, vesicular, pyroclastic, pegmatitic), composition (felsic/granitic high silica light, intermediate/andesitic, mafic/basaltic low silica dark, ultramafic), naming: granite/rhyolite, diorite/andesite, gabbro/basalt, peridotite; obsidian, pumice, scoria, tuff. How magma forms (decompression melting at ridges, flux melting with water at subduction, heat transfer), partial melting, magmatic differentiation, intrusive bodies (batholith, stock, dike, sill, laccolith).
+7. VOLCANOES & HAZARDS: viscosity controlled by silica content, temperature, gas content; effusive vs explosive; volcano types: shield (basaltic, gentle, Hawaii), composite/stratovolcano (andesitic, steep, explosive, Mt St Helens, Fuji), cinder cone (small, scoria, Paricutin), calderas (Yellowstone, Crater Lake), lava domes, fissure eruptions/flood basalts (Columbia River). Products: lava flows (pahoehoe, aa, pillow), pyroclastics (ash, lapilli, bombs, blocks), pyroclastic flows/nuée ardente, lahars, tephra, volcanic gases. VEI scale. Distribution tied to plate boundaries + hot spots. Case studies: Mt St Helens 1980, Vesuvius 79 AD, Krakatoa 1883, Pinatubo 1991.
+8. WEATHERING & SOIL: mechanical/physical (frost wedging, unloading/exfoliation, thermal expansion, biological, salt crystal growth), chemical (dissolution, hydrolysis → clay, oxidation → rust/hematite, carbonation), rates affected by climate, rock type, surface area, time; spheroidal weathering; soil horizons (O, A, E, B, C), soil types (pedalfer, pedocal, laterite), Canadian soil classification basics.
+9. SEDIMENTARY ROCKS: ~75% of continental surface; detrital/clastic classified by grain size (conglomerate/breccia, sandstone, siltstone, shale/mudstone; Wentworth scale), chemical (limestone, chert, evaporites rock salt/gypsum, travertine), biochemical/organic (coquina, chalk, coal). Lithification: compaction + cementation (calcite, silica, iron oxide). Sedimentary structures: bedding/strata, cross-bedding, graded bedding, ripple marks, mud cracks, fossils. Depositional environments (alluvial, fluvial, deltaic, beach, deep marine, glacial, eolian). Alberta's oil sands & coal.
+10. METAMORPHIC ROCKS: agents (heat, pressure confining/directed, chemically active fluids), contact vs regional vs hydrothermal vs burial vs dynamic; foliated (slate → phyllite → schist → gneiss with increasing grade; migmatite) vs non-foliated (marble from limestone, quartzite from sandstone, hornfels, anthracite). Index minerals and metamorphic grade, metamorphic facies, protolith.
+11. THE ROCK CYCLE: interconnections — igneous → weathering → sediment → sedimentary → metamorphic → melting → magma; any rock can become any other; driven by internal (plate tectonics) and external (sun/water) energy.
+12. GEOLOGIC TIME: relative dating principles (superposition, original horizontality, lateral continuity, cross-cutting relationships, inclusions, faunal succession), unconformities (angular, disconformity, nonconformity), correlation, index fossils. Absolute/numeric dating: radioactive decay, half-life, parent/daughter isotopes (U-238→Pb-206 4.5 Ga, K-40→Ar-40 1.3 Ga, C-14 5,730 yr for <50,000 yr), radiometric dating limits. Geologic time scale: Eons (Hadean, Archean, Proterozoic, Phanerozoic), Eras (Paleozoic, Mesozoic, Cenozoic), Periods (Cambrian → Quaternary), major events (Cambrian explosion, Permian extinction, K-Pg extinction 66 Ma), Precambrian = 88% of Earth history.
+13. CRUSTAL DEFORMATION — FOLDS & FAULTS: stress (compression, tension, shear) vs strain; elastic, brittle, ductile deformation; strike and dip; folds (anticline, syncline, monocline, dome, basin, plunging, overturned, recumbent); faults: dip-slip (normal = tension/hanging wall down, reverse = compression/hanging wall up, thrust = low angle reverse), strike-slip (right/left lateral; San Andreas), oblique; joints; horst and graben; mountain building (orogenesis), fault-block mountains, fold-and-thrust belts (Rocky Mountains near Edmonton!), isostasy, accretionary wedges, terranes.
+14. EARTHQUAKES: elastic rebound theory, focus/hypocenter vs epicenter, seismic waves (body: P primary/compressional fastest ~6 km/s, S secondary/shear ~3.5 km/s, doesn't pass through liquid; surface: Love, Rayleigh — slowest, most damage), seismographs/seismograms, locating epicenter (S-P time lag, triangulation with 3 stations), magnitude (Richter logarithmic, moment magnitude Mw preferred; each unit = 10x amplitude, ~32x energy), intensity (Modified Mercalli I-XII), Benioff/Wadati-Benioff zones, hazards (ground shaking, liquefaction, landslides, tsunamis, fire), prediction (precursors, seismic gaps, probabilistic forecasting), notable quakes (1964 Alaska, 2004 Sumatra, 2011 Tohoku, 1985 Mexico City).
+15. MASS WASTING (often included): driving forces (gravity) vs resisting (friction, cohesion), triggers (water, oversteepening, vegetation removal, earthquakes), types by material/motion/speed (rockfall, slide/slump, flow: debris flow, earthflow, mudflow, creep, lahar), Frank Slide 1903 Alberta.
+16. TOPOGRAPHIC & GEOLOGIC MAPS (lab): contour lines, contour interval, scale, relief, gradient, map symbols, strike/dip symbols, reading cross-sections, Rule of V's.
+
+WHAT INSTRUCTORS TEST: labs = mineral/rock identification (~30-40% of grade), lecture exams = mostly multiple choice + short answer on processes and terminology; heavily tested: plate boundary types and examples, rock cycle, mineral properties (hardness, cleavage), igneous classification chart, relative dating principles applied to diagrams, P vs S waves, fault types with hanging wall/footwall, volcano types linked to magma composition, radiometric dating half-life calculations.
+
+COMMON STUDENT MISTAKES: confusing magma/lava, intrusive/extrusive; mixing up normal vs reverse faults (remember: hanging wall is the block above the fault plane); assuming Richter units are linear; thinking S-waves pass through liquid; confusing cleavage (breaks along planes) with crystal faces; not knowing that continental-continental convergence has NO volcanoes; forgetting that convergent boundaries destroy crust while divergent create it; assuming all mountains are volcanoes.
+
+EDMONTON/ALBERTA CONNECTIONS instructors love: Rocky Mountains fold-thrust belt, Alberta oil sands (Athabasca), Frank Slide, Drumheller badlands and dinosaurs, Alberta coal, Western Canada Sedimentary Basin, glacial features of Edmonton area, Royal Alberta Museum field trip.`,
     suggestions:["What's the difference between P-waves and S-waves?","Explain convergent vs divergent boundaries","How does subduction cause volcanoes?","What drives plate movement?","Explain the rock cycle step by step"]},
-  english:{code:'ENGL 102',title:'English 102',color:'#10b981',
+  english:{code:'ENGL 102',title:'ENGL 102 — Analysis and Argument',color:'#10b981',
     today:{topic:"Building a Strong Argumentative Thesis",points:["A thesis is a single, debatable claim your essay will prove with evidence.","Weak: 'Social media has effects.' Strong: 'Instagram's algorithm worsens teen anxiety by prioritizing engagement over wellbeing.'","Your thesis must answer: What? So what? How? (claim + significance + direction).","Place the thesis at the end of your introduction paragraph.","Every body paragraph's topic sentence must directly support the thesis."],vocab:['Thesis','Claim','Counterclaim','Warrant','Evidence','Concession','Rebuttal']},
     review:{last:"Introduction Paragraphs & Hooks",recap:["Hook options: startling statistic, anecdote, provocative question, bold statement.","Background narrows from broad context → specific issue → your thesis.","Never start with 'In this essay I will...' — show, don't announce.","The intro should be roughly 10% of total essay length."]},
     tomorrow:{topic:"Body Paragraphs — PIE Structure",prep:["PIE: Point (topic sentence) → Illustration (evidence) → Explanation (analysis).","Never drop a quote in without a signal phrase.","Signal phrases: 'According to...', 'As [Author] argues...'","MLA in-text citation: (Author last name page#).","Bring a paragraph you drafted to workshop."]},
     quiz:[{q:"Which is the strongest thesis?",opts:["Climate change is bad.","This essay will discuss climate change.","Governments must implement carbon taxes because voluntary corporate action has consistently failed to reduce emissions.","Climate change affects many people."],ans:2,exp:"Strong thesis: specific, arguable, tells the reader what the essay will prove and how."},{q:"Where does the thesis belong?",opts:["First sentence","End of the introduction","First body paragraph","The conclusion"],ans:1,exp:"The thesis is the final sentence of the intro paragraph."},{q:"PIE stands for:",opts:["Purpose, Insight, Evidence","Point, Illustration, Explanation","Premise, Information, Example","Proof, Idea, Evaluation"],ans:1,exp:"PIE = Point (topic sentence) + Illustration (evidence) + Explanation (your analysis)."},{q:"Correct MLA in-text citation:",opts:["(Smith, 2020, p.45)","[Smith 45]","(Smith 45)","Smith (45)"],ans:2,exp:"MLA in-text uses author last name and page number with no comma: (Smith 45)."}],
     agrade:[{icon:'✍️',title:'Write every single day',tip:'Even 10 minutes of freewriting builds the writing muscle fast.'},{icon:'📚',title:'Read texts twice',tip:'First for content, second for how the author argues.'},{icon:'🔄',title:'Revise, not just proofread',tip:'Revision = rethinking your argument, not just fixing commas.'},{icon:'💬',title:'Go to the Writing Centre',tip:"MacEwan's Writing Centre gives free feedback on drafts before submission."},{icon:'📖',title:'Cite as you write',tip:'Add citations immediately when using a source.'},{icon:'⏰',title:'Submit 24 hours early',tip:'Fresh eyes catch formatting errors that last-minute writers miss.'}],
-    knowContext:"Course: English 102 (ENGL 102) at MacEwan University, Edmonton Alberta.\nKey topics: Academic writing, thesis construction (debatable, specific, arguable), essay structure (hook, background, thesis, body paragraphs, conclusion), PIE paragraph method (Point-Illustration-Explanation), types of evidence, integrating quotes with signal phrases, MLA citation format (in-text and Works Cited), counterargument and rebuttal, critical reading strategies, revision vs proofreading, argumentation, rhetorical modes, concession.",
+    knowContext:`COURSE: ENGL 102 — Analysis and Argument, MacEwan University, Edmonton, Alberta. 3 credits (3-0-0). This is MacEwan's required first-year academic writing course. Official focus: reading critically and writing analytical and argumentative essays at a university level, integrating and documenting sources. Required for nearly every degree at MacEwan. Textbook often: 'The Norton Field Guide to Writing' or 'Writing Analytically' (Rosenwasser & Stephen), 'They Say / I Say' (Graff & Birkenstein), plus a reader. Typically 3-4 major essays (analysis essay, argumentative essay, research essay ~1500-2500 words) + in-class writing + participation.
+
+FULL TOPIC BREAKDOWN:
+1. CRITICAL READING: annotation, active reading, identifying thesis/claims/evidence in others' work, summary vs paraphrase vs quotation, reading for rhetoric (ethos, pathos, logos, kairos), audience and purpose, genre awareness, distinguishing fact/inference/opinion, recognizing bias and assumptions, close reading of texts, 'reading against the grain'.
+2. THE WRITING PROCESS: prewriting (freewriting, brainstorming, clustering, outlining), drafting, revision (global: argument/structure/evidence vs local: sentences/word choice), editing, proofreading; recursive not linear; peer review.
+3. THESIS STATEMENTS: arguable claim (not fact, not question, not announcement), specific, focused, answers 'so what?', often includes 'because' reasoning or a roadmap; weak → strong revision; thesis placement (end of intro); thesis as a promise to the reader; working thesis vs final thesis; complex thesis with concession ('Although X, Y because Z').
+4. ESSAY STRUCTURE: introduction (hook/lead, context/background, narrowing, thesis), body paragraphs (unity, coherence, development), conclusion (synthesis not summary, implications, 'so what', avoid new arguments, avoid 'In conclusion'); alternatives to five-paragraph form; organizational patterns (chronological, spatial, order of importance, general-to-specific, problem-solution, compare/contrast point-by-point vs block).
+5. PARAGRAPH CONSTRUCTION: topic sentence, PIE (Point-Illustration-Explanation) or TEA (Topic-Evidence-Analysis) or MEAL (Main idea-Evidence-Analysis-Link), the 'quote sandwich' (introduce → quote → explain), transitions between and within paragraphs, coherence devices (repetition of key terms, pronouns, parallel structure), paragraph length and focus, one idea per paragraph.
+6. ANALYSIS vs SUMMARY: the central skill — summary tells what a text says; analysis explains how and why it works and what it means; asking 'so what?' repeatedly; interpretation; making the implicit explicit; moving from observation to inference to claim; 'the method' of noticing patterns, repetitions, anomalies, binaries; avoiding plot summary.
+7. ARGUMENT: classical/Aristotelian structure (introduction, narration, confirmation, refutation, conclusion), Toulmin model (claim, grounds/data, warrant, backing, qualifier, rebuttal), Rogerian argument (common ground, empathetic), types of claims (fact, value, policy, definition, cause), evidence types (facts, statistics, examples, expert testimony, anecdote — evaluating each), warrants/assumptions underlying arguments, qualifiers (some, many, often vs all, always).
+8. COUNTERARGUMENT & REBUTTAL: anticipating objections, concession ('Admittedly...', 'It is true that...'), refutation ('However...'), the 'naysayer' move (They Say/I Say templates), strawman avoidance, steelmanning, placement of counterargument (before conclusion or integrated).
+9. LOGICAL FALLACIES: ad hominem, straw man, false dilemma/either-or, slippery slope, hasty generalization, post hoc ergo propter hoc, circular reasoning/begging the question, appeal to authority, appeal to emotion, bandwagon, red herring, false analogy, non sequitur, equivocation.
+10. RHETORICAL ANALYSIS: analyzing how a text persuades — speaker/author, audience, purpose, context/exigence, appeals (ethos/pathos/logos), tone, diction, syntax, figurative language, structure, genre conventions; SOAPSTone; writing a rhetorical analysis essay of an essay, speech, ad, or op-ed.
+11. INTEGRATING SOURCES: when to quote vs paraphrase vs summarize, signal phrases ('According to Smith,' 'As Jones argues,' 'Smith contends that'), varying verbs (argues, claims, notes, observes, suggests, insists, acknowledges), introducing sources with credentials, block quotes (4+ lines MLA), ellipses and brackets for altering quotes, avoiding 'dropped'/'orphan' quotes, sandwiching, ratio of source to your own voice, 'They Say / I Say' templates.
+12. MLA DOCUMENTATION (9th edition): in-text citations (Author page) no comma e.g. (Smith 45), (Smith and Jones 12), (Smith et al. 8), no author → shortened title, no page → author only; Works Cited: hanging indent, alphabetical, core elements (Author. Title of Source. Title of Container, Other Contributors, Version, Number, Publisher, Publication Date, Location.); formats for book, journal article, website, chapter in anthology, film; formatting the paper (Times New Roman 12, double spaced, 1" margins, header with last name + page number, heading block, centered title, no title page). Some sections may use APA instead — know the difference (APA: (Author, Year, p. #), References page, title page, running head).
+13. RESEARCH SKILLS: MacEwan Library databases (Academic Search Complete, JSTOR, ProQuest), scholarly vs popular sources, peer review, evaluating sources (CRAAP test: Currency, Relevance, Authority, Accuracy, Purpose), primary vs secondary sources, developing a research question, keyword searching, annotated bibliography.
+14. ACADEMIC INTEGRITY: plagiarism (intentional and unintentional), patchwriting, common knowledge exception, self-plagiarism, MacEwan's Academic Integrity Policy, proper attribution, when AI tools are/aren't permitted.
+15. STYLE & GRAMMAR: concision (cut wordiness, nominalizations, 'there is/are', redundancy), active vs passive voice (when passive is appropriate), sentence variety (simple, compound, complex, compound-complex), parallelism, coordination and subordination, comma rules (introductory elements, coordinating conjunctions FANBOYS, nonrestrictive clauses, series/Oxford comma), semicolons and colons, apostrophes, pronoun-antecedent agreement, subject-verb agreement, dangling and misplaced modifiers, sentence fragments and run-ons/comma splices, formal academic register (avoid contractions, second person 'you', slang, rhetorical questions overuse), precise word choice, avoiding clichés, gender-neutral language.
+16. GENRES COVERED: summary, response/reflection, analysis (textual, rhetorical, literary), argument/persuasion, research essay, proposal, annotated bibliography, literacy narrative (some sections), review.
+
+WHAT INSTRUCTORS GRADE ON (typical rubric): Thesis (clear, arguable, sustained) 20%; Organization & structure 20%; Development & evidence (analysis depth, support) 25%; Use of sources & documentation (MLA accuracy, integration) 15%; Style, grammar, mechanics 20%. A-grade papers: original insight, complex thesis, sophisticated analysis beyond obvious, seamless source integration, precise prose, error-free MLA.
+
+COMMON STUDENT MISTAKES: summarizing instead of analyzing; thesis that's a fact or too broad; five-paragraph formula rigidity; dropped quotes without introduction or explanation; explaining the quote's content rather than its significance; 'In this essay I will'; conclusion that just restates intro; comma splices; using 'you'; citing Wikipedia; MLA errors (commas in citations, missing hanging indent, italics vs quotes for titles); over-quoting; not addressing counterarguments; weak transitions ('Also', 'Another thing'); passive voice overuse; wordiness; confusing 'it's/its', 'their/there/they're', 'affect/effect', 'then/than'.
+
+MACEWAN RESOURCES: Writing Centre (free one-on-one tutoring, book online), MacEwan Library research help, Peer Support Centre.`,
     suggestions:["What makes a thesis weak vs strong?","Explain the PIE method with an example","How do I integrate a quote properly in MLA?","What's the difference between a concession and rebuttal?","Show me a correct MLA Works Cited entry"]},
-  comp:{code:'COMP 101',title:'Computing 101',color:'#f59e0b',
+  comp:{code:'CMPT 101',title:'CMPT 101 — Intro to Computing I',color:'#f59e0b',
     today:{topic:"Variables, Data Types & Conditional Logic",points:["A variable is a named container storing a value in memory (e.g., age = 20).","Core data types: Integer (whole numbers), Float (decimals), String (text), Boolean (True/False).","Assignment operator = assigns a value; == tests for equality.","if / elif / else lets programs make decisions based on conditions.","Python indentation is mandatory — 4 spaces define a code block.","if grade >= 90: print('A') elif grade >= 80: print('B') else: print('Study more!')"],vocab:['Variable','Data type','Integer','Float','Boolean','Conditional','Operator','Indentation']},
     review:{last:"Introduction to Algorithms & Pseudocode",recap:["An algorithm is a step-by-step procedure to solve a problem.","Pseudocode is plain-language algorithm writing before actual coding.","Three control structures: sequence, selection (if/else), repetition (loops).","Good algorithms are: correct, efficient, and unambiguous."]},
     tomorrow:{topic:"Loops — for and while",prep:["A for loop iterates over a sequence: for i in range(5): ...","A while loop runs as long as a condition is True — watch for infinite loops!","for = known iterations; while = unknown iterations.","Practice: write a loop that prints numbers 1–10 and their squares.","Nested loops: a loop inside a loop — used for grids and patterns."]},
     quiz:[{q:"What data type is the value True?",opts:["Integer","String","Float","Boolean"],ans:3,exp:"Boolean is the True/False data type used in conditions."},{q:"What does == do in Python?",opts:["Assigns a value","Tests for equality","Multiplies values","Checks greater than"],ans:1,exp:"== compares two values and returns True or False. = is the assignment operator."},{q:"What does print(type(3.14)) output?",opts:["<class 'int'>","<class 'float'>","<class 'str'>","<class 'bool'>"],ans:1,exp:"3.14 is a float."},{q:"Correct Python if syntax:",opts:["if (x > 5) {","if x > 5:","IF x > 5 THEN","if x > 5 do"],ans:1,exp:"Python uses a colon, no curly braces, and indentation to define blocks."}],
     agrade:[{icon:'💻',title:'Code every day — even 20 min',tip:'Daily practice beats a 3-hour weekly session.'},{icon:'🐛',title:'Read error messages carefully',tip:'The last line of the traceback tells you exactly what went wrong.'},{icon:'🧩',title:'Break problems into steps',tip:'Write the steps in plain English before writing any code.'},{icon:'🔍',title:'Test with edge cases',tip:'What if the user enters 0? A negative? An empty string?'},{icon:'📓',title:'Keep a code notebook',tip:'Write down new patterns and solutions you discover.'},{icon:'🤝',title:'Pair program with classmates',tip:'Explaining code to someone else reveals your own gaps.'}],
-    knowContext:"Course: Computing 101 (COMP 101) at MacEwan University, Edmonton Alberta.\nKey topics: Algorithms, pseudocode, variables, data types (int, float, string, boolean), assignment vs comparison operators (= vs ==), conditional logic (if/elif/else), Python syntax and indentation, loops (for, while, nested loops), functions (def, parameters, return), lists, input/output, debugging, control structures.",
+    knowContext:`COURSE: CMPT 101 — Introduction to Computing I, MacEwan University, Edmonton, Alberta. 3 credits, lecture + lab (3-3-0). Official description: breadth-first introductory treatment of computing science for students with little or no programming background. Topics: data representation and machine architecture; algorithms and their properties; control constructs of sequence, selection, and repetition; functions; data types and operations in low-level and high-level languages. Students do introductory programming (Python) for a portion of the course. Leads to CMPT 103. Typical grading: labs/assignments ~30%, midterm(s) ~30%, final exam ~40%. Textbook often: 'Computer Science Illuminated' (Dale & Lewis) or 'Python Programming: An Introduction to Computer Science' (Zelle) or 'Think Python'.
+
+FULL TOPIC BREAKDOWN:
+1. WHAT IS COMPUTING SCIENCE: computing as problem-solving, algorithms vs programs, history (Babbage, Lovelace, Turing, ENIAC, von Neumann), hardware vs software, layers of abstraction, systems vs application software, the fetch-decode-execute cycle.
+2. DATA REPRESENTATION: binary (base 2), decimal (base 10), octal (base 8), hexadecimal (base 16) — converting between all of them; bits, bytes, nibbles, words; powers of two (2^10=1024, KB/MB/GB); representing integers (unsigned, signed: sign-magnitude, two's complement — how to negate, add, detect overflow), representing real numbers (floating point IEEE 754 basics: sign, exponent, mantissa; why 0.1+0.2≠0.3), representing text (ASCII 7-bit, extended ASCII, Unicode UTF-8), representing images (pixels, RGB, bit depth, resolution, raster vs vector, compression lossless PNG vs lossy JPEG), audio (sampling rate, bit depth, MP3), Boolean values.
+3. BOOLEAN LOGIC & GATES: AND, OR, NOT, NAND, NOR, XOR; truth tables; Boolean algebra laws (commutative, associative, distributive, De Morgan's laws, identity, complement); logic gates and circuits, combinational circuits (half adder, full adder, multiplexer), simplifying Boolean expressions.
+4. MACHINE ARCHITECTURE: von Neumann architecture (CPU, memory, I/O, bus), CPU components (ALU, control unit, registers, program counter, instruction register), memory hierarchy (registers → cache → RAM → secondary storage), RAM vs ROM, addresses, machine language vs assembly language vs high-level languages, compilers vs interpreters (Python is interpreted), the stored program concept, simple assembly examples (LOAD, STORE, ADD, JUMP).
+5. ALGORITHMS: definition and properties (finiteness, definiteness, effectiveness, input, output), pseudocode conventions, flowcharts, algorithm design strategies, tracing algorithms by hand (trace tables), efficiency intuition (linear vs quadratic; Big-O introduced lightly: O(1), O(n), O(n²), O(log n)), classic algorithms: linear search, binary search (requires sorted), bubble sort, selection sort, insertion sort, finding max/min, sum/average, swapping two variables, Euclid's GCD.
+6. PYTHON BASICS: the interpreter/IDLE/VS Code, print(), comments (#), variables and assignment (=), naming rules (snake_case, no starting with digit, case-sensitive, no keywords), data types int/float/str/bool, type() function, type conversion (int(), float(), str()), arithmetic operators (+ - * / // % **), operator precedence, integer division // vs true division /, modulo % uses (even/odd, digit extraction, wrapping), augmented assignment (+=, -=), input() always returns a string, string formatting (f-strings, .format(), % formatting), escape characters (\\n, \\t, \\\\).
+7. STRINGS: indexing (0-based, negative indexing), slicing [start:stop:step], len(), concatenation +, repetition *, immutability, methods (.upper() .lower() .strip() .split() .join() .find() .replace() .count() .startswith() .isdigit() .isalpha()), in operator, iterating over characters, string comparison (lexicographic), ord() and chr().
+8. SELECTION (CONDITIONALS): comparison operators (== != < > <= >=), logical operators (and, or, not) with short-circuit evaluation, if / if-else / if-elif-else, nested conditionals, block structure by indentation (4 spaces), truthiness (0, '', None, [] are False), common bug: = vs ==, chained comparisons (0 < x < 10).
+9. REPETITION (LOOPS): while loops (condition checked before each iteration, infinite loops, sentinel-controlled loops), for loops with range() (range(n), range(start,stop), range(start,stop,step)), for loops over sequences/strings/lists, loop variables, accumulator pattern (total = 0; total += x), counter pattern, nested loops (patterns, 2D), break and continue, else clause on loops, tracing loops by hand, off-by-one errors, choosing while vs for.
+10. FUNCTIONS: def, parameters vs arguments, return vs print (major confusion point), return None default, local vs global scope (LEGB), positional and keyword arguments, default parameter values, multiple return values (tuples), docstrings, why functions: abstraction, reuse, modularity, testing; built-in functions (abs, round, max, min, sum, len, sorted, input, print, range, type); the math module (math.sqrt, math.pi, math.floor, math.ceil), random module (random.randint, random.random, random.choice), importing modules.
+11. LISTS: creating, indexing, slicing, mutability (vs strings/tuples), methods (.append() .insert() .remove() .pop() .index() .count() .sort() .reverse() .extend()), len(), in, list comprehension basics, iterating with for and with index (range(len(lst))), aliasing vs copying (lst2 = lst vs lst2 = lst[:] or list(lst)), nested lists / 2D lists (matrices), list of lists indexing lst[i][j], tuples (immutable), basic dictionaries (key-value, dict[key], .keys() .values() .items(), in) may be introduced.
+12. FILE I/O (often): open(), read()/readline()/readlines(), write(), close(), with statement, modes 'r' 'w' 'a', processing text files line by line, .strip() on lines, CSV basics.
+13. TESTING & DEBUGGING: syntax errors vs runtime errors (exceptions: ZeroDivisionError, TypeError, ValueError, IndexError, NameError, KeyError) vs logic errors, reading tracebacks (last line first), print debugging, tracing by hand, test cases and edge cases (empty input, zero, negative, boundary values), try/except basics, defensive programming, input validation loops.
+14. PROBLEM SOLVING PROCESS: understand the problem → plan (pseudocode/decomposition) → implement → test → refine; top-down design and stepwise refinement; incremental development.
+15. LOW-LEVEL vs HIGH-LEVEL: machine code, assembly, high-level; how a variable is stored (address, value); pointers/references conceptually; static vs dynamic typing; strongly typed Python.
+16. BREADTH TOPICS (may be included): operating systems basics (processes, memory management, file systems), networks and the Internet (IP, packets, TCP/IP, DNS, HTTP, client-server), computer security basics (encryption, hashing, passwords, malware), ethics in computing, limits of computing (Halting problem intuition), artificial intelligence overview.
+
+WHAT INSTRUCTORS TEST: written exams heavy on TRACING code (what does this print?), writing short functions on paper, binary/hex conversion, two's complement, Boolean truth tables, identifying errors in code, converting between for/while, string slicing results, list mutation results, scope questions. Labs: writing working Python programs that pass test cases.
+
+COMMON STUDENT MISTAKES: = vs ==; forgetting int(input()); off-by-one with range (range(5) is 0-4); thinking return and print are the same; modifying a list while iterating over it; string immutability (s[0]='x' fails); integer division surprises; forgetting the colon after if/for/while/def; inconsistent indentation; using a variable before assignment; infinite while loop from not updating the condition variable; comparing strings to ints ('5' == 5 is False); aliasing lists accidentally; misunderstanding negative indexes; and/or precedence (not > and > or); two's complement sign errors; hex digits A-F = 10-15.`,
     suggestions:["What's the difference between = and == in Python?","Explain while loops with an example","What do int, float, str, bool mean?","Walk me through writing a basic function","What is a list and how do I index it?"]},
-  math:{code:'MATH 099',title:'Math 099',color:'#ef4444',
+  math:{code:'MATH 099',title:'MATH 099 — Precalculus Mathematics',color:'#ef4444',
     today:{topic:"Solving Linear Equations & Inequalities",points:["Goal: isolate the variable on one side using inverse operations.","Whatever you do to one side, do to the other (balance principle).","Steps: Distribute → Combine like terms → Move variables → Divide/Multiply.","Example: 3x + 5 = 20 → 3x = 15 → x = 5. Check: 3(5)+5=20 ✓","Inequalities work the same, BUT flip the sign when multiplying or dividing by a negative.","Number line: open circle for < >, closed circle for ≤ ≥."],vocab:['Variable','Coefficient','Like terms','Inverse operation','Inequality','Solution set']},
     review:{last:"Order of Operations & Algebraic Expressions",recap:["BEDMAS: Brackets → Exponents → Division/Multiplication → Addition/Subtraction.","A term has a coefficient and a variable: 4x (coefficient=4, variable=x).","Like terms share the same variable and exponent: 3x and 7x are like terms.","Distributive property: a(b + c) = ab + ac"]},
     tomorrow:{topic:"Graphing Linear Equations (Slope-Intercept Form)",prep:["Slope-intercept form: y = mx + b (m = slope, b = y-intercept).","Slope = rise/run = (y₂ - y₁)/(x₂ - x₁).","Positive slope: rises left to right. Negative slope: falls left to right.","To graph: plot b on y-axis, then use slope to find the next point.","Practice converting standard form Ax + By = C to slope-intercept."]},
     quiz:[{q:"Solve for x: 2x - 4 = 10",opts:["x = 3","x = 7","x = 5","x = 6"],ans:1,exp:"2x - 4 = 10 → 2x = 14 → x = 7. Check: 2(7)-4=10 ✓"},{q:"When do you flip the inequality sign?",opts:["Always","When adding a negative","When multiplying or dividing by a negative","When moving terms"],ans:2,exp:"The sign flips ONLY when multiplying or dividing both sides by a negative."},{q:"Simplify: 3x + 5 - x + 2",opts:["2x + 7","4x + 7","2x + 3","3x + 7"],ans:0,exp:"3x - x = 2x and 5 + 2 = 7, giving 2x + 7."},{q:"In BEDMAS, what comes after Brackets?",opts:["Division","Multiplication","Exponents","Addition"],ans:2,exp:"BEDMAS: Brackets, Exponents, Division/Multiplication, Addition/Subtraction."}],
     agrade:[{icon:'✏️',title:'Show every step',tip:'Marks are given for process, not just the final answer.'},{icon:'🔁',title:'Practice problems daily',tip:'Do 10 practice questions each night. Math lives in repetition.'},{icon:'❌',title:'Learn from wrong answers',tip:'Redo wrong problems from scratch without looking at the solution.'},{icon:'🧮',title:'Always check your answers',tip:'Substitute your answer back into the original equation to verify.'},{icon:'📐',title:'Use graph paper',tip:'Neat, accurate graphs earn full marks.'},{icon:'🆘',title:'Visit the Math Help Centre',tip:"MacEwan's Math Help Centre offers drop-in tutoring."}],
-    knowContext:"Course: Math 099 at MacEwan University, Edmonton Alberta.\nKey topics: BEDMAS, algebraic expressions, like terms, coefficients, distributive property, solving linear equations (one-step, multi-step, variables on both sides), inequalities (sign-flipping rules), number lines, slope-intercept form (y=mx+b), calculating slope, graphing linear equations, standard form, systems of equations (substitution, elimination), factoring (GCF, trinomials), polynomials, quadratic equations, quadratic formula, Pythagorean theorem, functions, domain and range.",
+    knowContext:`COURSE: MATH 099 — Precalculus Mathematics, MacEwan University, Edmonton, Alberta. 3 credits (3-0-0). Official description: reviews and extends the mathematical concepts needed to be successful in university-level calculus. Topics: graphing, equations of lines, inequalities, review of elementary algebra, functions, and trigonometry. Prerequisite: Math 30-1 or 30-2. A grade of C- or better satisfies the prerequisite for MATH 114 (Elementary Calculus I). Not for credit toward BA/BSc/BComm. Textbook typically: Stewart, Redlin & Watson 'Precalculus: Mathematics for Calculus' or Sullivan 'Precalculus' or Blitzer. Typical grading: assignments/quizzes ~20-30%, 2 midterms ~40%, final ~30-40%. Calculator policy varies — often non-graphing scientific only.
+
+FULL TOPIC BREAKDOWN:
+1. REAL NUMBERS & ALGEBRA REVIEW: number sets (natural, whole, integers, rational, irrational, real), number line, absolute value, interval notation [a,b] (a,b) (a,∞), properties (commutative, associative, distributive), order of operations BEDMAS/PEMDAS, exponent rules (product a^m·a^n=a^(m+n), quotient, power (a^m)^n, zero exponent, negative exponent a^-n=1/a^n, fractional/rational exponents a^(m/n)=ⁿ√(a^m)), scientific notation, radicals (simplifying √50=5√2, rationalizing denominators including conjugates, adding like radicals), polynomials (degree, leading coefficient, adding/subtracting/multiplying, FOIL, special products (a+b)², (a-b)², (a+b)(a-b)), factoring (GCF, grouping, trinomials ax²+bx+c by trial/AC-method, difference of squares a²-b², sum/difference of cubes a³±b³=(a±b)(a²∓ab+b²), perfect square trinomials), rational expressions (domain restrictions, simplifying, multiplying, dividing, adding/subtracting with LCD, complex fractions).
+2. EQUATIONS: linear equations (isolate variable, clearing fractions, literal equations/solving for a variable), quadratic equations (factoring, square root property, completing the square, quadratic formula x=(-b±√(b²-4ac))/2a, discriminant b²-4ac: >0 two real, =0 one real, <0 two complex), complex numbers (i=√-1, a+bi, adding, multiplying, conjugate, dividing), equations quadratic in form (u-substitution), radical equations (isolate radical, square both sides, CHECK for extraneous solutions), rational equations (multiply by LCD, check restrictions), absolute value equations |x|=a → x=±a, polynomial equations by factoring, applications/word problems (mixture, distance-rate-time d=rt, work, geometry, interest).
+3. INEQUALITIES: linear inequalities (flip sign when multiplying/dividing by negative), compound inequalities (and/or, -3<2x+1≤7), absolute value inequalities (|x|<a → -a<x<a; |x|>a → x<-a or x>a), polynomial/quadratic inequalities via sign chart/test points (factor, find zeros, test intervals), rational inequalities (include denominator zeros as boundary, never include them in solution), writing answers in interval notation and graphing on number line.
+4. COORDINATE GEOMETRY & LINES: Cartesian plane, quadrants, distance formula d=√((x₂-x₁)²+(y₂-y₁)²), midpoint ((x₁+x₂)/2,(y₁+y₂)/2), graphing by plotting points, intercepts, symmetry (x-axis, y-axis, origin tests), circles (x-h)²+(y-k)²=r², completing the square to find center/radius; LINES: slope m=(y₂-y₁)/(x₂-x₁) rise/run, positive/negative/zero/undefined, slope-intercept y=mx+b, point-slope y-y₁=m(x-x₁), standard/general Ax+By=C, horizontal y=k and vertical x=k, parallel (equal slopes) and perpendicular (negative reciprocals m₁·m₂=-1), finding equation from two points, applications (rate of change, linear models).
+5. FUNCTIONS: definition (each input exactly one output), function notation f(x), evaluating f(a), f(x+h), difference quotient (f(x+h)-f(x))/h (calculus prep!), domain (exclude division by zero, even roots of negatives; state in interval notation), range, vertical line test, piecewise functions, increasing/decreasing/constant intervals, relative max/min, even (f(-x)=f(x), y-axis symmetry) and odd (f(-x)=-f(x), origin symmetry) functions, average rate of change, the toolkit/parent functions and their graphs (constant, identity, x², x³, √x, ∛x, |x|, 1/x, greatest integer), transformations (vertical/horizontal shifts f(x)+k, f(x-h); reflections -f(x), f(-x); vertical stretch/compress af(x); horizontal stretch/compress f(bx); order of transformations), combining functions (f+g, f-g, fg, f/g with domain), composition (f∘g)(x)=f(g(x)) and its domain, decomposing functions, one-to-one functions and horizontal line test, inverse functions (swap x and y, solve; f(f⁻¹(x))=x; graph is reflection over y=x; domain/range swap; finding inverses algebraically), restricting domain to make invertible.
+6. POLYNOMIAL FUNCTIONS: quadratic functions (standard form, vertex form a(x-h)²+k, vertex at x=-b/2a, axis of symmetry, max/min, graphing, applications like max area/projectile), polynomial graphs (end behavior determined by leading term: degree even/odd and leading coefficient sign), zeros and multiplicity (odd crosses, even touches/bounces), turning points ≤ n-1, intermediate value theorem, sketching polynomials, polynomial division (long division, synthetic division), remainder theorem (f(c) = remainder when dividing by x-c), factor theorem (x-c is a factor iff f(c)=0), rational zero theorem (p/q), finding all zeros, Descartes' rule of signs (sometimes), fundamental theorem of algebra, writing polynomial from zeros, complex conjugate zeros.
+7. RATIONAL FUNCTIONS: domain, vertical asymptotes (zeros of denominator after simplifying), holes (common factors), horizontal asymptotes (compare degrees: n<m → y=0; n=m → y=ratio of leading coefficients; n>m → none), slant/oblique asymptotes (n=m+1, via long division), x-intercepts (zeros of numerator), y-intercept f(0), sketching rational functions, behavior near asymptotes.
+8. EXPONENTIAL & LOGARITHMIC FUNCTIONS: exponential f(x)=bˣ (b>0, b≠1), graphs (growth b>1, decay 0<b<1, horizontal asymptote y=0, passes (0,1)), the number e≈2.718 and f(x)=eˣ, transformations, compound interest A=P(1+r/n)^(nt), continuous compounding A=Pe^(rt), exponential growth/decay models A=A₀e^(kt); logarithms as inverses (y=log_b x ⟺ b^y=x), common log (base 10) and natural log ln (base e), evaluating logs, graphs of logs (vertical asymptote x=0, passes (1,0)), domain of log functions (argument >0), properties: log_b(MN)=log_b M+log_b N, log_b(M/N)=log_b M−log_b N, log_b(M^p)=p·log_b M, log_b b=1, log_b 1=0, change of base log_b x=ln x/ln b; expanding and condensing logs; solving exponential equations (same base, or take log of both sides), solving logarithmic equations (rewrite exponentially, check domain for extraneous), applications (half-life, doubling time, pH, decibels, Richter, Newton's law of cooling, population growth).
+9. TRIGONOMETRY — ANGLES & UNIT CIRCLE: degrees and radians (π rad = 180°; convert by multiplying by π/180 or 180/π), standard position, coterminal angles (±360° or ±2π), reference angles, arc length s=rθ, area of sector A=½r²θ, angular vs linear speed; the unit circle — memorize sin/cos/tan at 0, π/6 (30°), π/4 (45°), π/3 (60°), π/2 (90°) and all quadrant multiples; signs of trig functions by quadrant (ASTC: All Students Take Calculus); definitions of all six functions (sin, cos, tan, csc, sec, cot) on unit circle and right triangle (SOH-CAH-TOA); reciprocal and quotient identities; Pythagorean identities sin²θ+cos²θ=1, 1+tan²θ=sec²θ, 1+cot²θ=csc²θ; even/odd properties (cos even, sin/tan odd); fundamental identities; finding exact values.
+10. TRIG FUNCTION GRAPHS: y=sin x and y=cos x (period 2π, amplitude 1), y=A sin(Bx−C)+D: amplitude |A|, period 2π/|B|, phase shift C/B, vertical shift D; graphing one full period; y=tan x, cot x (period π, vertical asymptotes), y=sec x, csc x (from reciprocals); inverse trig functions arcsin, arccos, arctan (restricted domains [−π/2,π/2], [0,π], (−π/2,π/2)), evaluating inverse trig exact values, composition like sin(arccos(3/5)).
+11. TRIG IDENTITIES & EQUATIONS: verifying/proving identities (work one side, convert to sin/cos, factor, common denominators, multiply by conjugate), sum and difference formulas sin(A±B), cos(A±B), tan(A±B), double-angle sin2θ=2sinθcosθ, cos2θ=cos²θ−sin²θ=2cos²θ−1=1−2sin²θ, tan2θ, half-angle formulas, power-reducing, product-to-sum (sometimes); solving trig equations on [0,2π) and general solutions (+2πk), using identities to solve, quadratic-type trig equations, equations with multiple angles (sin 2x = ½).
+12. APPLICATIONS OF TRIG: right triangle problems (angle of elevation/depression), Law of Sines a/sinA=b/sinB=c/sinC (ASA, AAS, SSA ambiguous case — 0, 1, or 2 triangles), Law of Cosines c²=a²+b²−2ab cosC (SAS, SSS), area of triangle ½ab sinC and Heron's formula, bearings/navigation, vectors (sometimes: magnitude, direction, components, addition, dot product), polar coordinates (sometimes).
+13. SYSTEMS OF EQUATIONS (often included): two linear equations by substitution and elimination, consistent/inconsistent/dependent, nonlinear systems (line and parabola/circle), three-variable systems (sometimes), systems of inequalities graphing.
+14. SEQUENCES & SERIES (sometimes at end): arithmetic (aₙ=a₁+(n−1)d, Sₙ=n/2(a₁+aₙ)), geometric (aₙ=a₁r^(n−1), Sₙ=a₁(1−rⁿ)/(1−r), infinite sum a₁/(1−r) if |r|<1), sigma notation.
+
+WHAT INSTRUCTORS TEST: show-your-work written exams; exact values (leave √2, π, fractions — no decimals unless asked); domain in interval notation; graph sketching with labeled intercepts/asymptotes/vertex; verifying identities; solving equations with all solutions and checking extraneous roots; unit circle memorized cold; transformations of functions; log properties; word problems set up from scratch. Partial credit for correct method.
+
+COMMON STUDENT MISTAKES: forgetting to flip inequality with negatives; not checking extraneous solutions in radical/rational/log equations; (a+b)²=a²+b² (WRONG — it's a²+2ab+b²); √(a²+b²)≠a+b; canceling terms instead of factors in fractions; sign errors distributing negatives; domain errors (forgetting even root and denominator restrictions); confusing f(x+h) with f(x)+h; wrong order of transformations (horizontal shift inside, apply before stretch); log of a sum ≠ sum of logs (log(a+b) ≠ log a + log b); ln(x)² vs ln(x²); dropping the base; degrees vs radians mode on calculator; forgetting the ±2πk in general trig solutions; sin⁻¹ means arcsin not 1/sin; SSA ambiguous case missing second triangle; not simplifying radicals; arithmetic errors under time pressure — always check by substituting back.
+
+MACEWAN RESOURCES: Math Help Centre (drop-in tutoring), MATH 114 gateway exam alternative, instructors' office hours, Studocu/past exams from students.`,
     suggestions:["Walk me through solving 3x + 7 = 22 step by step","Why do you flip the inequality sign?","Explain slope-intercept form with an example","How do I factor a trinomial?","What is the quadratic formula and when do I use it?"]},
-  anth:{code:'ANTH 101',title:'Anthropology 101',color:'#8b5cf6',
+  anth:{code:'ANTH 101',title:'ANTH 101 — Intro to Anthropology',color:'#8b5cf6',
     today:{topic:"Culture, Ethnocentrism & Cultural Relativism",points:["Culture = shared beliefs, values, practices, symbols, and norms of a group.","All cultures have universal traits (family, language, ritual) and unique features.","Ethnocentrism: judging another culture by the standards of your own — leads to bias.","Cultural relativism: understanding a culture on its own terms, without judgment.","Anthropologists aim for cultural relativism but stay ethically grounded (not moral relativism).","Ruth Benedict's Patterns of Culture (1934) compared Zuni, Dobu, and Kwakiutl societies."],vocab:['Culture','Ethnocentrism','Cultural relativism','Enculturation','Norms','Values','Symbol','Subculture']},
     review:{last:"The Four Fields of Anthropology",recap:["Biological/Physical Anthropology: human evolution, genetics, primatology.","Archaeology: study of past societies through material remains.","Linguistic Anthropology: how language shapes and is shaped by culture.","Cultural Anthropology: study of living human cultures."]},
     tomorrow:{topic:"Fieldwork, Ethnography & Participant Observation",prep:["Ethnography = a written account of a culture based on firsthand fieldwork.","Participant observation: the anthropologist lives within the culture being studied.","Key challenge: going native vs maintaining analytical distance.","Read excerpt from Bronislaw Malinowski's Argonauts of the Western Pacific.","Key terms: interlocutor, field notes, thick description (Geertz)."]},
     quiz:[{q:"What is ethnocentrism?",opts:["Celebrating cultural differences","Judging other cultures by the standards of your own","A branch of anthropology","The study of ethnic minorities"],ans:1,exp:"Ethnocentrism is viewing one's own culture as normal or superior and judging others by that standard."},{q:"Which is NOT one of the four fields?",opts:["Biological Anthropology","Archaeology","Political Science","Linguistic Anthropology"],ans:2,exp:"The four fields: Biological/Physical, Archaeology, Linguistic, Cultural."},{q:"Cultural relativism means:",opts:["All cultures are morally equal","Understanding a culture on its own terms","Cultures should not be compared","Western culture is the standard"],ans:1,exp:"Cultural relativism: understanding cultures from within their own framework."},{q:"Enculturation refers to:",opts:["Moving between cultures","Learning one's own culture from birth","Comparing two cultures","Adopting a new culture"],ans:1,exp:"Enculturation: learning and internalizing the culture you grow up in."}],
     agrade:[{icon:'🌍',title:'Apply concepts to real life',tip:"When you see a cultural practice in the news, ask: how would an anthropologist analyze this?"},{icon:'📰',title:'Do the readings',tip:'Professors pull exam questions directly from assigned ethnography excerpts.'},{icon:'🗣️',title:'Participate in discussions',tip:'Anthropology often includes participation marks.'},{icon:'🃏',title:'Flashcard your key theorists',tip:'Know each theorist, their theory, and one famous work.'},{icon:'✍️',title:'Essay structure is everything',tip:'Thesis + ethnographic evidence + theoretical framing. Never just summarize.'},{icon:'🔗',title:'Connect all four fields',tip:'Drawing cross-discipline connections impresses instructors.'}],
-    knowContext:"Course: Anthropology 101 (ANTH 101) at MacEwan University, Edmonton Alberta.\nKey topics: The four fields (biological/physical, archaeology, linguistic, cultural), culture components (beliefs, values, norms, symbols, practices), ethnocentrism vs cultural relativism vs moral relativism, enculturation, ethnography, fieldwork, participant observation, emic vs etic perspectives, holism, key theorists (Ruth Benedict, Franz Boas, Bronislaw Malinowski, Clifford Geertz), human evolution, fossil record, kinship systems, religion, ritual, language, economic and political systems, subcultures.",
+    knowContext:`COURSE: ANTH 101 — Introduction to Anthropology (Social/Cultural Anthropology focus; at MacEwan ANTH 101 is typically 'Introduction to Anthropology' covering the four fields with emphasis on cultural), MacEwan University, Edmonton, Alberta. 3 credits (3-0-0). Introduces the anthropological perspective on human biological and cultural diversity across time and space. Textbook typically: Haviland et al. 'Cultural Anthropology: A Canadian Perspective' or Robbins & Larkin 'Cultural Anthropology: A Problem-Based Approach (Canadian ed.)' or Kottak 'Anthropology: Appreciating Human Diversity' or Ember & Ember; often with ethnographic readings. Grading typically: 2-3 exams (multiple choice + short answer/essay), ethnographic analysis or reflection paper, participation/tutorial.
+
+FULL TOPIC BREAKDOWN:
+1. WHAT IS ANTHROPOLOGY: study of humankind in all times and places; holistic, comparative, fieldwork-based, global; the four subfields — biological/physical (human evolution, primatology, human variation, forensic, bioarchaeology), archaeology (material remains, prehistoric & historic, CRM), linguistic (descriptive, historical, sociolinguistics, ethnolinguistics), sociocultural/cultural (living peoples, ethnography); applied anthropology as fifth; medical anthropology; anthropology vs sociology/psychology/history; the Canadian tradition (Boas' influence, Indigenous focus).
+2. CULTURE: E.B. Tylor's 1871 definition ('that complex whole which includes knowledge, belief, art, morals, law, custom...'); characteristics — culture is learned (enculturation/socialization), shared, symbolic (Geertz, Leslie White), integrated (functional interconnection of parts), dynamic/changes, adaptive (and sometimes maladaptive), based on symbols, all-encompassing; culture vs society; subcultures, countercultures, pluralistic societies; ideal vs real culture; cultural universals (Murdock); mental (norms, values, beliefs, worldview) vs material culture; norms (folkways, mores, taboos, laws), values, sanctions; cultural relativism (Boas) vs ethnocentrism; moral relativism critique and human rights debate; emic (insider) vs etic (outsider/analytical) perspectives; culture shock; agency vs structure.
+3. HISTORY & THEORY OF ANTHROPOLOGY: 19th c. unilineal evolutionism (Morgan: savagery-barbarism-civilization; Tylor; armchair anthropology), diffusionism, Franz Boas & historical particularism (cultural relativism, four-field approach, salvage ethnography, critique of racism; students Kroeber, Benedict, Mead, Sapir, Hurston), Bronislaw Malinowski & functionalism (Trobriand Islands, participant observation, needs), A.R. Radcliffe-Brown & structural-functionalism (social structure), Ruth Benedict 'Patterns of Culture' (1934; configurationalism; Zuni Apollonian, Kwakiutl Dionysian, Dobu), Margaret Mead ('Coming of Age in Samoa', nature vs nurture, Freeman controversy), Claude Lévi-Strauss & structuralism (binary oppositions, myth), Julian Steward & cultural ecology, Leslie White & neo-evolutionism (energy), Marvin Harris & cultural materialism (infrastructure/structure/superstructure; sacred cow), Clifford Geertz & interpretive/symbolic anthropology ('thick description', Balinese cockfight, culture as text), Victor Turner (ritual, liminality, communitas), Mary Douglas (purity and danger), feminist anthropology (Rosaldo, Ortner 'Is Female to Male as Nature Is to Culture?'), Marxist/political economy (Wolf, Mintz 'Sweetness and Power'), postmodern/reflexive turn (Writing Culture 1986, Clifford & Marcus; crisis of representation), practice theory (Bourdieu habitus, Ortner), globalization studies (Appadurai), Indigenous critiques & decolonizing anthropology (Vine Deloria Jr. 'Custer Died for Your Sins', Linda Tuhiwai Smith).
+4. FIELDWORK & METHODS: ethnography (the written product) vs ethnology (comparative), participant observation (Malinowski's innovation), key informants/interlocutors/consultants, rapport, field notes, interviews (structured/unstructured), genealogical method, life histories, surveys, the ethnographic present, reflexivity and positionality, insider/outsider, 'going native', multi-sited ethnography, longitudinal research, ethics (informed consent, do no harm, anonymity, AAA & CASCA codes; Darkness in El Dorado/Yanomami controversy; Human Terrain System), Human Relations Area Files (HRAF), collaborative & community-based research, Indigenous research protocols (OCAP in Canada).
+5. LANGUAGE & COMMUNICATION: human language features (Hockett's design features: displacement, productivity, arbitrariness, duality of patterning), descriptive linguistics (phonology/phonemes, morphology/morphemes, syntax, semantics), historical linguistics (language families, proto-languages, glottochronology), sociolinguistics (dialects, code-switching, diglossia, register, gendered speech — Tannen, Lakoff; AAVE), ethnolinguistics and Sapir-Whorf hypothesis (linguistic relativity vs determinism; Hopi time, color terms Berlin & Kay, Pirahã), language and thought, nonverbal communication (kinesics, proxemics — Hall), paralanguage, language loss/endangerment and revitalization (Indigenous languages in Canada, Cree, Blackfoot), origins of language, primate communication (Washoe, Koko, Kanzi), pidgins and creoles.
+6. SUBSISTENCE & ECONOMIC SYSTEMS: adaptive strategies (Cohen): foraging/hunting-gathering (Ju/'hoansi San, Inuit, Hadza; egalitarian, mobile, band, low population density, 'original affluent society' Sahlins), horticulture (slash-and-burn/swidden, Yanomami, Trobriand), pastoralism (nomadic vs transhumance; Nuer, Maasai, Basseri), agriculture (intensive, irrigation, plow, surplus, cities, stratification), industrialism/post-industrial; the Neolithic Revolution; carrying capacity; economic anthropology: production, distribution, consumption; modes of exchange (Polanyi): reciprocity (generalized, balanced, negative — Sahlins), redistribution (chiefly, potlatch of Northwest Coast Kwakiutl, big man Moka), market exchange (money, general vs special purpose); gift economies (Mauss 'The Gift', kula ring of Trobriands — Malinowski); division of labour by age and gender; formalist vs substantivist debate; consumption and globalization.
+7. POLITICAL ORGANIZATION & SOCIAL CONTROL: Service's typology — bands (egalitarian, informal leadership, foragers), tribes (segmentary lineages, big men, village heads, pantribal sodalities, age grades), chiefdoms (ranked, hereditary chief, redistribution, Polynesia), states (stratified, centralized government, monopoly on force, bureaucracy, taxation, laws, cities, writing); power vs authority (Weber), influence; social control: internalized controls (norms, values, shame/guilt), externalized (sanctions positive/negative, formal/informal), law, dispute resolution (mediation, moot, oaths, ordeals, courts), feud, raiding, warfare (causes, Yanomami 'fierce people' debate Chagnon vs Ferguson); nation vs state, nationalism, ethnicity and ethnic conflict, colonialism, postcolonial states, the Canadian state and Indigenous nations (Indian Act, treaties, residential schools, TRC).
+8. KINSHIP, DESCENT & MARRIAGE: kinship as the primary organizing principle in non-state societies; descent — unilineal (patrilineal, matrilineal — note matrilineal ≠ matriarchal; Trobriand, Navajo, Hopi, Iroquois), bilateral/cognatic (Western), ambilineal, double descent; descent groups (lineage, clan, phratry, moiety); kinship terminology systems (Eskimo/Inuit — Western, Hawaiian, Iroquois, Omaha, Crow, Sudanese) and kin diagrams (circle=female, triangle=male, = marriage, | descent, ego); fictive kinship; marriage: definition problems (Nayar), functions, incest taboo (universal; explanations: instinct/Westermarck, family disruption, alliance/Lévi-Strauss, inbreeding), exogamy/endogamy, monogamy, serial monogamy, polygamy (polygyny common, polyandry rare — Tibet/Nyinba fraternal), levirate & sororate, marriage transactions (bridewealth/brideprice — Nuer cattle, dowry, brideservice), arranged marriage, cousin marriage (cross vs parallel), same-sex marriage (Nuer woman-marriage, Native two-spirit), postmarital residence (patrilocal, matrilocal, neolocal, avunculocal, ambilocal), family types (nuclear, extended, joint, blended, matrifocal), divorce, contemporary changes.
+9. SEX, GENDER & SEXUALITY: sex (biological) vs gender (cultural construction) vs sexuality; gender roles, stereotypes, stratification; third/multiple genders (hijra of India, two-spirit/berdache, fa'afafine of Samoa, muxe of Mexico, sworn virgins of Albania); Margaret Mead 'Sex and Temperament in Three Primitive Societies' (Arapesh, Mundugumor, Tchambuli); gender and subsistence (foragers relatively egalitarian; agriculture increases stratification); patriarchy explanations; Ortner nature/culture; domestic vs public spheres (Rosaldo); feminist anthropology waves; masculinity studies; gender and language; sexual orientation cross-culturally (Etoro/Sambia ritualized homosexuality), gender-based violence, reproduction and body.
+10. RELIGION, RITUAL & WORLDVIEW: definitions (Tylor animism → minimal definition 'belief in spiritual beings'; Durkheim sacred/profane, collective effervescence, totemism; Geertz 'system of symbols'; Wallace); functions of religion (explanatory, emotional, social control/solidarity, revitalization, ecological — Rappaport pigs); supernatural beings (gods, spirits, ancestors, ghosts) and forces (mana, animatism); magic (Frazer: imitative/sympathetic & contagious; Malinowski Trobriand fishing magic — anxiety reduction; Evans-Pritchard Azande witchcraft, oracles, magic; witchcraft vs sorcery), religious specialists (shamans — part-time, altered states, healing; priests — full-time, hierarchical), ritual (rites of passage — van Gennep separation/liminality/incorporation; Turner communitas; rites of intensification; calendrical vs crisis rites), myth (Lévi-Strauss, Malinowski charter), taboo and pollution (Douglas), cargo cults & revitalization movements (Wallace; Ghost Dance, Handsome Lake), world religions vs Indigenous, syncretism (Vodou, Santería), secularization and fundamentalism, religion and change.
+11. ART, EXPRESSIVE CULTURE & MEDIA: anthropology of art (functions, cultural context, verbal arts/folklore/oral tradition, music/ethnomusicology, visual, body art/tattoo/scarification), art and identity, tourist art, appropriation, museums and repatriation (NAGPRA; Canadian repatriation), media anthropology, sport, play.
+12. RACE, ETHNICITY & HUMAN VARIATION: race as a social construct not biological (more variation within than between 'races' — Lewontin; clines not races; skin color adaptation to UV — vitamin D/folate), history of racial classification (Linnaeus, Blumenbach), scientific racism critiqued by Boas (head shape study), ethnicity (situational, ascribed/achieved, ethnic boundaries — Barth), assimilation, multiculturalism (Canadian policy 1971), racism (individual, institutional, systemic), genocide, Indigenous peoples of Canada (First Nations, Métis, Inuit; status), settler colonialism, whiteness.
+13. SOCIAL STRATIFICATION & INEQUALITY: egalitarian → rank → stratified societies (Fried); class (Marx, Weber class/status/power), caste (India; endogamous, hereditary, ritual purity, jajmani), slavery, apartheid, open vs closed systems, social mobility, poverty, culture of poverty debate (Lewis critiqued), gender and racial stratification intersectionality, global inequality, world systems theory (Wallerstein core/periphery), development anthropology, structural violence (Farmer).
+14. HUMAN EVOLUTION & PRIMATES (if four-field): evolutionary theory (Darwin natural selection, Mendel, modern synthesis, mutation/gene flow/drift/selection), primate characteristics and taxonomy (prosimians, monkeys, apes; hominoids), primate behaviour (Goodall chimps, Fossey gorillas, bonobos), hominin evolution (Sahelanthropus, Ardipithecus, Australopithecus afarensis 'Lucy' & bipedalism, Homo habilis & Oldowan tools, Homo erectus & fire/Acheulean/out of Africa, Neanderthals, Homo floresiensis, Denisovans, Homo sapiens — Out of Africa vs multiregional), human variation and adaptation (Bergmann's & Allen's rules, high altitude, lactase persistence, sickle cell/malaria balanced polymorphism).
+15. ARCHAEOLOGY BASICS (if four-field): material culture, sites, survey, excavation, stratigraphy, dating (relative: seriation, stratigraphy; absolute: radiocarbon, dendrochronology, potassium-argon, thermoluminescence), the Neolithic/agricultural revolution (Fertile Crescent, Childe), rise of civilizations/states (Mesopotamia, Egypt, Indus, China, Mesoamerica, Andes; theories: hydraulic Wittfogel, circumscription Carneiro, trade), Head-Smashed-In Buffalo Jump (Alberta), Wanuskewin, Indigenous archaeology and collaboration.
+16. GLOBALIZATION & CONTEMPORARY ISSUES: globalization definitions, transnationalism, migration/diaspora/refugees, world systems, neoliberalism, development critique (Escobar, Ferguson 'Anti-Politics Machine'), cultural imperialism vs hybridization/glocalization (Appadurai scapes), Indigenous rights movements and UNDRIP, environmental anthropology and climate change, medical anthropology (illness vs disease, biomedicine as culture, ethnomedicine, health inequities, COVID), urban anthropology, digital anthropology, applied anthropology careers, anthropology of the body, food anthropology.
+
+KEY ETHNOGRAPHIES/CASE STUDIES OFTEN ASSIGNED: Malinowski 'Argonauts of the Western Pacific' (Trobriand, kula), Evans-Pritchard 'The Nuer' (cattle, segmentary lineage, time) & 'Witchcraft, Oracles and Magic among the Azande', Chagnon 'Yanomamö: The Fierce People', Lee 'The Dobe Ju/'hoansi', Geertz 'Deep Play: Notes on the Balinese Cockfight', Miner 'Body Ritual among the Nacirema' (1956 — classic first reading; Nacirema = American backwards; teaches etic/ethnocentrism), Bohannan 'Shakespeare in the Bush' (Tiv interpret Hamlet — cultural relativism), Harris 'India's Sacred Cow', Rappaport 'Pigs for the Ancestors', Shostak 'Nisa', Scheper-Hughes 'Death Without Weeping', Bourgois 'In Search of Respect', Nanda 'Neither Man nor Woman: The Hijras of India', Ann Fadiman 'The Spirit Catches You and You Fall Down', Canadian: Brody 'Maps and Dreams', King 'The Inconvenient Indian', Vowel 'Indigenous Writes'.
+
+WHAT INSTRUCTORS TEST: definitions of key terms with examples; matching theorists to theories and ethnographies; applying concepts (cultural relativism, emic/etic) to scenarios; comparing subsistence strategies and their social correlates (e.g., why foragers are egalitarian); kinship diagrams and terminology; distinguishing similar terms (ethnography/ethnology, sex/gender, race/ethnicity, magic/religion, shaman/priest, bridewealth/dowry, exogamy/endogamy, matrilineal/matriarchal, band/tribe/chiefdom/state); short essays applying theory to a case; identifying ethnocentrism in a text (Nacirema).
+
+COMMON STUDENT MISTAKES: matrilineal ≠ matriarchal; ethnography (description) vs ethnology (comparison); cultural relativism ≠ moral relativism / 'anything goes'; race is not biological; confusing polygyny/polyandry; assuming foragers were 'primitive' or starving; thinking chiefdoms have laws/courts (that's states); confusing functionalism (Malinowski — individual needs) with structural-functionalism (Radcliffe-Brown — social structure); Geertz is interpretive not materialist; Boas ≠ evolutionist; thinking Sapir-Whorf strong version is accepted (weak version is); mixing up Frazer's imitative vs contagious magic; forgetting the anthropological definition of culture is learned, not genetic; writing 'tribe' loosely (it's a technical political type).`,
     suggestions:["What's the difference between cultural relativism and moral relativism?","Who is Ruth Benedict and what did she contribute?","Explain emic vs etic perspectives","What is participant observation and why does it matter?","How does language shape culture?"]}
 };
 
+/* ── study time tracking ── */
+const ST_KEY='study_time_v1';
+let studyLog=JSON.parse(localStorage.getItem(ST_KEY)||'{}'); // {date:{courseKey:seconds}}
+let stTicker=null,stLastActivity=Date.now(),stSessionStart=null;
+const ST_IDLE=5*60*1000;
+function todayKey(d=new Date()){return d.toLocaleDateString('en-CA');}
+function stGet(date,course){return (studyLog[date]&&studyLog[date][course])||0;}
+function stAdd(course,secs){const d=todayKey();if(!studyLog[d])studyLog[d]={};studyLog[d][course]=(studyLog[d][course]||0)+secs;localStorage.setItem(ST_KEY,JSON.stringify(studyLog));}
+function fmtTime(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);return h?`${h}:${String(m).padStart(2,'0')}`:`0:${String(m).padStart(2,'0')}`;}
+function fmtShort(s){const h=Math.floor(s/3600),m=Math.round((s%3600)/60);if(!s)return'0m';return h?`${h}h ${m}m`:`${m}m`;}
+function weekDates(){const out=[];const n=new Date();for(let i=6;i>=0;i--){const d=new Date(n);d.setDate(n.getDate()-i);out.push(d);}return out;}
+function stWeekTotal(course){return weekDates().reduce((a,d)=>a+(course?stGet(todayKey(d),course):Object.values(studyLog[todayKey(d)]||{}).reduce((x,y)=>x+y,0)),0);}
+function stStart(){stStop();stLastActivity=Date.now();stTicker=setInterval(()=>{if(!currentCourse)return;if(Date.now()-stLastActivity>ST_IDLE)return;stAdd(currentCourse,1);stRender();},1000);}
+function stStop(){if(stTicker){clearInterval(stTicker);stTicker=null;}}
+['mousemove','keydown','click','scroll','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{stLastActivity=Date.now();},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stLastActivity=0;else stLastActivity=Date.now();});
+function stRender(){
+  const t=todayKey();
+  const sbTime=document.getElementById('st-sb-time'),sbC=document.getElementById('st-sb-course');
+  if(currentCourse){
+    const s=stGet(t,currentCourse);
+    const live=document.getElementById('st-live-txt');if(live)live.textContent=fmtTime(s);
+    const wk=document.getElementById('st-week-txt');if(wk)wk.textContent=fmtShort(stWeekTotal(currentCourse))+' this week';
+    if(sbTime)sbTime.textContent=fmtTime(s);
+    if(sbC)sbC.textContent=courses[currentCourse].code+(Date.now()-stLastActivity>ST_IDLE?' · paused':' · tracking');
+  }else{
+    const tot=Object.values(studyLog[t]||{}).reduce((a,b)=>a+b,0);
+    if(sbTime)sbTime.textContent=fmtTime(tot);
+    if(sbC)sbC.textContent='All courses · '+fmtShort(stWeekTotal())+' this week';
+  }
+}
+function stRenderHome(){
+  const t=todayKey();
+  const tot=Object.values(studyLog[t]||{}).reduce((a,b)=>a+b,0);
+  document.getElementById('st-home-total').textContent=fmtShort(tot);
+  document.getElementById('st-home-week').textContent=fmtShort(stWeekTotal());
+  const keys=Object.keys(courses);
+  const max=Math.max(60,...keys.map(k=>stGet(t,k)));
+  document.getElementById('st-home-bars').innerHTML=keys.map(k=>{const s=stGet(t,k);return`<div class="st-bar-row"><div class="st-bar-name"><span class="sb-dot" style="background:${courses[k].color}"></span>${courses[k].code}</div><div class="st-bar-track"><div class="st-bar-fill" style="width:${Math.round(s/max*100)}%;background:${courses[k].color}"></div></div><div class="st-bar-val">${fmtShort(s)}</div></div>`;}).join('');
+  document.getElementById('st-home-week-grid').innerHTML=weekDates().map(d=>{const k=todayKey(d);const s=Object.values(studyLog[k]||{}).reduce((a,b)=>a+b,0);return`<div class="st-day${k===t?' today':''}"><div class="st-day-lbl">${d.toLocaleDateString('en-CA',{weekday:'short'})}</div><div class="st-day-val">${fmtShort(s)}</div></div>`;}).join('');
+}
+
 /* ── navigation ── */
 function goHome(){
-  currentCourse=null;
+  currentCourse=null;stStop();stRenderHome();stRender();renderHomeCal();renderHomeGrades();
   document.getElementById('view-home').style.display='block';
   document.getElementById('view-course').style.display='none';
   document.querySelectorAll('.sb-course').forEach(s=>s.classList.remove('active'));
@@ -574,6 +840,7 @@ function openCourse(key){
   document.getElementById('sb-'+key).classList.add('active');
   document.getElementById('sb-home').classList.remove('active');
   switchTool(currentTool,document.getElementById('sb-'+currentTool));
+  stStart();stRender();updateDueBadge();
 }
 
 function switchTool(name,btn){
@@ -590,6 +857,11 @@ function icard(label,body){return`<div class="icard"><div class="icard-label">${
 function renderTool(name,c){
   const el=document.getElementById('tool-content');
   if(name==='today')el.innerHTML=renderToday(c);
+  else if(name==='exam'){el.innerHTML=renderExamSetup(c);}
+  else if(name==='drills'){el.innerHTML=renderDrills(c);}
+  else if(name==='grades'){el.innerHTML=renderGrades(c);}
+  else if(name==='plan'){el.innerHTML=renderPlan(c);}
+  else if(name==='format'){el.innerHTML=renderFormat(c);}
   else if(name==='review')el.innerHTML=renderReview(c);
   else if(name==='tomorrow')el.innerHTML=renderTomorrow(c);
   else if(name==='quiz'){el.innerHTML=renderQuiz(c);}
@@ -636,6 +908,7 @@ function checkAnswer(qi,chosen,correct){
   opts.forEach(o=>o.style.pointerEvents='none');
   opts[chosen].classList.add(chosen===correct?'correct':'wrong');
   if(chosen!==correct)opts[correct].classList.add('correct');
+  if(chosen!==correct)addWeak(currentCourse,courses[currentCourse].quiz[qi].q.slice(0,90),'Quiz');
   fb.textContent=(chosen===correct?'✅ Correct! ':'❌ Not quite. ')+courses[currentCourse].quiz[qi].exp;
   fb.className='qfb show '+(chosen===correct?'good':'bad');
 }
@@ -643,19 +916,29 @@ function checkAnswer(qi,chosen,correct){
 /* flashcards */
 let fcIndex=0;
 function renderFlashHTML(c){
-  return`<div style="margin-bottom:18px;display:flex;align-items:center;gap:10px"><button class="fc-gen-btn" id="fc-gen-btn" onclick="generateFlashcards()">✨ Generate AI Flashcards</button><span style="font-size:13px;color:var(--muted);margin-left:auto" id="fc-count">${(flashcards[currentCourse]||[]).length} cards</span></div><div id="fc-loading" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:13px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"><div class="spinner"></div>Generating flashcards with AI...</div><div id="fc-area"></div>`;
+  fcDueMode=false;const due=dueCards().length;const all=(flashcards[currentCourse]||[]).length;
+  return`<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button class="fc-gen-btn" id="fc-gen-btn" onclick="generateFlashcards()">✨ Generate AI Flashcards</button>${due?`<button class="fc-gen-btn" style="background:var(--red)" onclick="startDue()">🔁 Review ${due} due today</button>`:''}<span style="font-size:13px;color:var(--muted);margin-left:auto" id="fc-count">${all} cards</span></div>
+  <div class="know-intro" style="padding:12px 16px;font-size:12px">Spaced repetition is on. Rate each card — <strong>Hard</strong> comes back tomorrow, <strong>Got it</strong> doubles the gap, <strong>Easy</strong> triples it. ${all?`<strong>${due}</strong> of ${all} cards are due today.`:''}</div><div id="fc-loading" style="display:none;text-align:center;padding:24px;color:var(--muted);font-size:13px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"><div class="spinner"></div>Generating flashcards with AI...</div><div id="fc-area"></div>`;
 }
 function renderFCArea(){
-  const cards=flashcards[currentCourse]||[];
+  const cards=fcDueMode?dueCards():(flashcards[currentCourse]||[]);updateDueBadge();
   const area=document.getElementById('fc-area');if(!area)return;
   if(!cards.length){area.innerHTML=`<div class="fc-empty"><strong>No flashcards yet</strong>Click "Generate AI Flashcards" to create a set instantly.</div>`;return;}
   if(fcIndex>=cards.length)fcIndex=0;
   const card=cards[fcIndex];
-  area.innerHTML=`<div class="fc-card" id="fc-card" onclick="flipCard()"><div class="fc-inner"><div class="fc-front"><div class="fc-lbl">Question</div><div class="fc-text">${card.q}</div><div class="fc-hint">Click to reveal answer</div></div><div class="fc-back"><div class="fc-lbl">Answer</div><div class="fc-text">${card.a}</div></div></div></div><div class="fc-nav"><button class="fc-nav-btn" onclick="fcNav(-1)" ${fcIndex===0?'disabled':''}>←</button><span class="fc-prog">${fcIndex+1} / ${cards.length}</span><button class="fc-nav-btn" onclick="fcNav(1)" ${fcIndex===cards.length-1?'disabled':''}>→</button></div><div class="fc-rating"><button class="fc-rate-btn rate-hard" onclick="rateCard('hard')">😓 Hard</button><button class="fc-rate-btn rate-ok" onclick="rateCard('ok')">🤔 Got it</button><button class="fc-rate-btn rate-easy" onclick="rateCard('easy')">✅ Easy</button></div>`;
+  area.innerHTML=`<div class="fc-card" id="fc-card" onclick="flipCard()"><div class="fc-inner"><div class="fc-front"><div class="fc-lbl">Question</div><div class="fc-text">${card.q}</div><div class="fc-hint">Click to reveal answer</div></div><div class="fc-back"><div class="fc-lbl">Answer</div><div class="fc-text">${card.a}</div></div></div></div><div class="fc-nav"><button class="fc-nav-btn" onclick="fcNav(-1)" ${fcIndex===0?'disabled':''}>←</button><span class="fc-prog">${fcDueMode?'Due · ':''}${fcIndex+1} / ${cards.length}</span><button class="fc-nav-btn" onclick="fcNav(1)" ${fcIndex===cards.length-1?'disabled':''}>→</button></div><div class="fc-rating"><button class="fc-rate-btn rate-hard" onclick="rateCard('hard')">😓 Hard</button><button class="fc-rate-btn rate-ok" onclick="rateCard('ok')">🤔 Got it</button><button class="fc-rate-btn rate-easy" onclick="rateCard('easy')">✅ Easy</button></div>`;
 }
 function flipCard(){document.getElementById('fc-card')?.classList.toggle('flipped')}
 function fcNav(dir){fcIndex+=dir;renderFCArea()}
-function rateCard(r){const cards=flashcards[currentCourse];if(cards&&cards[fcIndex])cards[fcIndex].rating=r;fcNav(1)}
+let fcDueMode=false;
+function dueCards(){return (flashcards[currentCourse]||[]).filter(c=>!c.due||c.due<=Date.now());}
+function startDue(){fcDueMode=true;fcIndex=0;renderFCArea();}
+function updateDueBadge(){const b=document.getElementById('sb-due-badge');if(!b||!currentCourse)return;const n=dueCards().length;b.style.display=n?'inline':'none';b.textContent=n;}
+function rateCard(r){const cards=fcDueMode?dueCards():(flashcards[currentCourse]||[]);if(!cards[fcIndex])return;const c=cards[fcIndex];c.rating=r;c.reps=(c.reps||0)+1;
+  const iv=r==='hard'?1:r==='ok'?Math.max(2,Math.round((c.iv||1)*2)):Math.max(4,Math.round((c.iv||1)*3));c.iv=iv;c.due=Date.now()+iv*86400000;
+  if(r==='hard')addWeak(currentCourse,c.q.slice(0,90),'Flashcard');persist();
+  if(fcDueMode){const rest=dueCards();if(!rest.length){document.getElementById('fc-area').innerHTML='<div class="fc-empty"><strong>🎉 All caught up</strong>No more cards due today. Come back tomorrow.</div>';fcDueMode=false;updateDueBadge();return;}fcIndex=0;renderFCArea();return;}
+  if(fcIndex<cards.length-1)fcNav(1);else renderFCArea();}
 async function generateFlashcards(){
   const c=courses[currentCourse];
   const btn=document.getElementById('fc-gen-btn');const loading=document.getElementById('fc-loading');
@@ -666,7 +949,7 @@ async function generateFlashcards(){
     const data=await res.json();
     if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
-    flashcards[currentCourse]=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null}));
+    flashcards[currentCourse]=[...(flashcards[currentCourse]||[]),...JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null,due:0}))];persist();
     fcIndex=0;document.getElementById('fc-count').textContent=flashcards[currentCourse].length+' cards';renderFCArea();
   }catch(e){document.getElementById('fc-area').innerHTML=`<div class="fc-empty"><strong>Error</strong>${e.message}</div>`;}
   finally{btn.disabled=false;loading.style.display='none';}
@@ -687,7 +970,7 @@ async function evaluateKnowledge(){
     const data=await res.json();
     if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
-    showResult(JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()),c);
+    const evr=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim());(evr.weaknesses||[]).concat(evr.missing||[]).forEach(w=>addWeak(currentCourse,String(w).slice(0,90),'What I Know'));showResult(evr,c);
   }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
   finally{btn.disabled=false;loading.classList.remove('show');}
 }
@@ -735,7 +1018,7 @@ async function sendChatMsg(msg){
 function renderNotes(c){
   return`<div class="notes-bar"><span>Your private notes for <strong>${c.title}</strong></span><button class="notes-save-btn" onclick="saveNotes()">💾 Save Notes</button></div><textarea class="notes-ta" id="notes-ta" placeholder="Write your own notes — key concepts, questions to ask, things to remember, connections you notice...">${notes[currentCourse]||''}</textarea><div class="notes-saved" id="notes-saved">✅ Notes saved</div>`;
 }
-function saveNotes(){notes[currentCourse]=document.getElementById('notes-ta').value;const m=document.getElementById('notes-saved');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);}
+function saveNotes(){notes[currentCourse]=document.getElementById('notes-ta').value;persist();const m=document.getElementById('notes-saved');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);}
 
 /* assignments */
 function renderAssignHTML(c){
@@ -744,7 +1027,7 @@ function renderAssignHTML(c){
 function addAssignment(){
   const title=document.getElementById('assign-title').value.trim();if(!title)return;
   assignments[currentCourse].push({id:Date.now(),title,due:document.getElementById('assign-due').value,priority:document.getElementById('assign-priority').value,done:false});
-  document.getElementById('assign-title').value='';document.getElementById('assign-due').value='';renderAssignList();
+  document.getElementById('assign-title').value='';document.getElementById('assign-due').value='';persist();renderAssignList();
 }
 function renderAssignList(){
   const list=document.getElementById('assign-list');if(!list)return;
@@ -760,8 +1043,8 @@ function renderAssignList(){
     return`<div class="assign-item${a.done?' done':''}"><div class="assign-cb${a.done?' checked':''}" onclick="toggleAssign(${i})">${a.done?'✓':''}</div><div class="assign-name">${a.title}</div><span class="assign-priority ${pc}">${pl}</span><div class="assign-due${overdue?' overdue':soon?' soon':''}">${dueStr}${overdue?' ⚠️':soon?' ⏰':''}</div><button class="assign-del" onclick="deleteAssign(${i})">×</button></div>`;
   }).join('');
 }
-function toggleAssign(i){assignments[currentCourse][i].done=!assignments[currentCourse][i].done;renderAssignList();}
-function deleteAssign(i){assignments[currentCourse].splice(i,1);renderAssignList();}
+function toggleAssign(i){assignments[currentCourse][i].done=!assignments[currentCourse][i].done;persist();renderAssignList();}
+function deleteAssign(i){assignments[currentCourse].splice(i,1);persist();renderAssignList();}
 
 /* pomodoro */
 let pomTimer=null,pomSecondsLeft=25*60,pomTotalSeconds=25*60,pomRunning=false,pomMode='work';
@@ -783,7 +1066,15 @@ function updatePomDisplay(){
 }
 
 /* work review */
-let workType='essay';
+let workType='essay',rubricFile=null,workFileObj=null;
+function handleRubricFile(f){if(!f)return;rubricFile=f;document.getElementById('rubric-chip').innerHTML=`<div class="file-chip">📋 ${f.name} <span class="rm" onclick="rubricFile=null;document.getElementById('rubric-chip').innerHTML='';document.getElementById('rubric-file').value=''">×</span></div>`;}
+function handleWorkFile(f){if(!f)return;workFileObj=f;document.getElementById('work-chip').innerHTML=`<div class="file-chip">📄 ${f.name} <span class="rm" onclick="workFileObj=null;document.getElementById('work-chip').innerHTML='';document.getElementById('work-file').value=''">×</span></div>`;}
+async function fileToBlock(f,label){
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(ext==='pdf')return {type:'document',source:{type:'base64',media_type:'application/pdf',data:await fileToBase64(f)}};
+  if(['png','jpg','jpeg'].includes(ext))return {type:'image',source:{type:'base64',media_type:ext==='png'?'image/png':'image/jpeg',data:await fileToBase64(f)}};
+  return {type:'text',text:`${label}:\n"""\n${await fileToText(f)}\n"""`};
+}
 function renderWorkReview(c){
   return`<div class="know-intro"><strong>Submit any work for a full professor-level review.</strong><br>Paste your essay, homework, lab report, code, or math solutions. The AI reviews it against <strong>${c.title}</strong> standards, gives you a realistic grade, and tells you exactly what to fix before you submit it for real.</div>
   <div class="work-type-row">
@@ -793,7 +1084,21 @@ function renderWorkReview(c){
     <button class="work-type-btn" onclick="setWorkType('code',this)">💻 Code</button>
     <button class="work-type-btn" onclick="setWorkType('notes',this)">📝 Study Notes</button>
   </div>
-  <input class="work-instr" id="work-instr" placeholder="Optional: paste the assignment instructions or rubric so the AI can grade against it exactly...">
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue)">📋 Teacher's Rubric / Instructions <span style="color:var(--muted2);font-weight:500;text-transform:none;letter-spacing:0">(recommended — makes the grade accurate)</span></div>
+      <button class="retry-btn" style="margin:0;padding:5px 12px;font-size:11px" onclick="document.getElementById('rubric-file').click()">📎 Upload rubric (PDF / image)</button>
+      <input type="file" id="rubric-file" accept=".pdf,.png,.jpg,.jpeg,.txt" style="display:none" onchange="handleRubricFile(this.files[0])">
+    </div>
+    <div id="rubric-chip"></div>
+    <textarea class="work-instr" id="work-instr" style="min-height:70px;resize:vertical;margin-bottom:0" placeholder="Or paste the rubric / assignment instructions here — e.g. 'Thesis 20%, Evidence 30%, Organization 20%, MLA 15%, Grammar 15%'"></textarea>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue)">📄 Your Work</div>
+    <button class="retry-btn" style="margin:0;padding:5px 12px;font-size:11px" onclick="document.getElementById('work-file').click()">📎 Upload file (PDF / DOCX text / image)</button>
+    <input type="file" id="work-file" accept=".pdf,.png,.jpg,.jpeg,.txt,.md,.py" style="display:none" onchange="handleWorkFile(this.files[0])">
+  </div>
+  <div id="work-chip"></div>
   <textarea class="work-ta" id="work-input" placeholder="Paste your work here..."></textarea>
   <button class="ai-btn" id="work-btn" onclick="submitWork()">🔍 Review My Work</button>
   <div class="ai-loading" id="work-loading"><div class="spinner"></div><div class="loading-txt"><strong>Reviewing your work...</strong>Reading carefully and checking against ${c.title} standards</div></div>
@@ -812,13 +1117,20 @@ async function submitWork(){
   const c=courses[currentCourse];
   const input=document.getElementById('work-input').value.trim();
   const instr=document.getElementById('work-instr').value.trim();
-  if(input.length<30){alert('Paste your work first — at least a few sentences.');return;}
+  if(!workFileObj&&input.length<30){alert('Paste or upload your work first.');return;}
   const btn=document.getElementById('work-btn');const loading=document.getElementById('work-loading');const result=document.getElementById('work-result');
   btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
   const typeLabel={essay:'essay or academic paper',homework:'homework or problem set',lab:'lab report',code:'code submission',notes:'study notes'}[workType];
+  const hasRubric=!!(rubricFile||instr);
   try{
     if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:`You are a rigorous but fair university professor at MacEwan University in Edmonton, Alberta, reviewing a student's ${typeLabel} for ${c.title}.\n\n${c.knowContext}\n\n${instr?`Assignment instructions / rubric:\n"""\n${instr}\n"""\n\n`:''}Student's work:\n"""\n${input}\n"""\n\nReview this thoroughly as a professor would. Be specific — quote or reference actual parts of their work. Be honest about the grade: don't inflate it. Respond ONLY with raw JSON (no markdown):\n{"grade":"A+"|"A"|"A-"|"B+"|"B"|"B-"|"C+"|"C"|"C-"|"D"|"F","score":0-100,"summary":"2-3 sentence overall assessment in a professor's voice","strengths":["specific thing done well 1","specific thing 2","specific thing 3"],"issues":["specific problem with location/quote 1","problem 2","problem 3","problem 4"],"fixes":["concrete action to fix issue 1","action 2","action 3","action 4"],"beforeSubmit":["final checklist item 1","item 2","item 3"]}`}]})});
+    const content=[];
+    if(rubricFile){content.push({type:'text',text:'=== TEACHER RUBRIC / ASSIGNMENT INSTRUCTIONS (file) ==='});content.push(await fileToBlock(rubricFile,'Rubric'));}
+    if(instr)content.push({type:'text',text:`=== TEACHER RUBRIC / ASSIGNMENT INSTRUCTIONS (pasted) ===\n${instr}`});
+    if(workFileObj){content.push({type:'text',text:"=== STUDENT'S WORK (file) ==="});content.push(await fileToBlock(workFileObj,"Student's work"));}
+    if(input)content.push({type:'text',text:`=== STUDENT'S WORK (pasted) ===\n${input}`});
+    content.push({type:'text',text:`You are a rigorous but fair university professor at MacEwan University in Edmonton, Alberta, grading a student's ${typeLabel} for ${c.title}.\n\nCOURSE KNOWLEDGE:\n${c.knowContext}\n\n${hasRubric?`A TEACHER RUBRIC WAS PROVIDED. You MUST grade strictly against it: extract every criterion and its weight/points from the rubric exactly as written, score the student on each criterion, and compute the total from those scores. Do not invent criteria that aren't in the rubric. If the rubric uses levels (e.g. Excellent/Good/Fair/Poor), state which level the work reaches for each criterion and why.`:`No rubric was provided. Use a standard university rubric for this type of work: create 4-6 sensible weighted criteria and grade against them, and say clearly they are assumed criteria.`}\n\nBe specific — quote or point to exact parts of the student's work as evidence for each score. Be honest: do not inflate. Respond ONLY with raw JSON (no markdown):\n{"grade":"A+"|"A"|"A-"|"B+"|"B"|"B-"|"C+"|"C"|"C-"|"D"|"F","score":0-100,"rubricUsed":true|false,"summary":"2-3 sentence overall assessment in a professor's voice","criteria":[{"name":"criterion name from rubric","weight":"e.g. 20% or 10 pts","earned":"e.g. 15% or 7/10","level":"e.g. Good","status":"strong"|"ok"|"weak","evidence":"specific reference to the student's work","toImprove":"exactly what would raise this criterion to full marks"}],"strengths":["specific thing done well 1","2","3"],"issues":["specific problem with location 1","2","3","4"],"fixes":["concrete action 1","2","3","4"],"beforeSubmit":["final checklist item 1","2","3"]}`});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,messages:[{role:'user',content}]})});
     const data=await res.json();
     if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
@@ -830,12 +1142,28 @@ function showWorkResult(r,c){
   const g=r.grade.charAt(0);
   const gcolor={A:'var(--green)',B:'var(--blue)',C:'var(--yellow)',D:'var(--red)',F:'var(--red)'}[g]||'var(--red)';
   const result=document.getElementById('work-result');
+  const stColor={strong:'var(--green)',ok:'var(--yellow)',weak:'var(--red)'};
+  const stBg={strong:'var(--green-light)',ok:'var(--yellow-light)',weak:'var(--red-light)'};
+  const stIcon={strong:'✓',ok:'~',weak:'✗'};
+  const crit=(r.criteria||[]).map(k=>`
+    <div style="border:1px solid var(--border);border-left:4px solid ${stColor[k.status]||'var(--muted2)'};border-radius:8px;padding:12px 14px;margin-bottom:8px;background:#fff">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <span style="width:22px;height:22px;border-radius:50%;background:${stBg[k.status]||'var(--page)'};color:${stColor[k.status]||'var(--muted)'};display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">${stIcon[k.status]||'•'}</span>
+        <strong style="font-size:14px;color:var(--navy);font-family:'Georgia',serif;flex:1">${k.name}</strong>
+        ${k.level?`<span class="badge badge-b">${k.level}</span>`:''}
+        <span style="font-size:13px;font-weight:700;color:${stColor[k.status]||'var(--navy)'}">${k.earned||''}${k.weight?` <span style="color:var(--muted2);font-weight:500">/ ${k.weight}</span>`:''}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:4px"><strong style="color:var(--navy)">Evidence:</strong> ${k.evidence||''}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.65"><strong style="color:var(--blue)">To get full marks:</strong> ${k.toImprove||''}</div>
+    </div>`).join('');
   result.innerHTML=`
     <div class="review-grade-row">
       <div class="review-grade-box"><div class="review-grade-num" style="color:${gcolor}">${r.grade}</div><div class="review-grade-lbl">Estimated Grade</div></div>
       <div class="review-grade-box"><div class="review-grade-num" style="color:var(--navy)">${r.score}</div><div class="review-grade-lbl">Score / 100</div></div>
+      <div class="review-grade-box"><div class="review-grade-num" style="color:${r.rubricUsed?'var(--green)':'var(--muted2)'};font-size:26px">${r.rubricUsed?'✓':'—'}</div><div class="review-grade-lbl">${r.rubricUsed?"Graded on teacher's rubric":'Standard rubric (none provided)'}</div></div>
     </div>
     <div class="review-summary">"${r.summary}"</div>
+    ${crit?`<div class="rsec rs-info"><h4>📋 Rubric Breakdown — Criterion by Criterion</h4>${crit}</div>`:''}
     <div class="two-col">
       <div class="rsec rs-good"><h4>✅ What's Working</h4>${r.strengths.map(s=>`<div class="review-item"><div class="review-item-ico">✓</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
       <div class="rsec rs-bad"><h4>❌ Problems Found</h4>${r.issues.map(s=>`<div class="review-item"><div class="review-item-ico">✗</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
@@ -844,6 +1172,131 @@ function showWorkResult(r,c){
     <div class="rsec rs-warn"><h4>📋 Before You Submit — Checklist</h4>${r.beforeSubmit.map(s=>`<div class="review-item"><div class="review-item-ico">☐</div><div class="review-item-txt">${s}</div></div>`).join('')}</div>
     <button class="retry-btn" onclick="document.getElementById('work-result').classList.remove('show');document.getElementById('work-input').focus()">↩ Revise & Resubmit</button>`;
   result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* upload materials */
+let uploadFile=null,uploadMode='summary';
+const uploadHistory={};
+function renderUpload(c){
+  if(!uploadHistory[currentCourse])uploadHistory[currentCourse]=[];
+  return`<div class="know-intro"><strong>Upload your slides, textbook chapter, or lecture notes.</strong><br>The AI reads the whole thing and pulls out exactly what you need to study for <strong>${c.title}</strong> — key points, must-know terms, likely exam questions, and what to focus on.</div>
+  <div class="mode-row">
+    <button class="work-type-btn active" onclick="setUploadMode('summary',this)">📋 Point-form summary</button>
+    <button class="work-type-btn" onclick="setUploadMode('exam',this)">🎯 Exam focus</button>
+    <button class="work-type-btn" onclick="setUploadMode('terms',this)">🔤 Key terms & definitions</button>
+    <button class="work-type-btn" onclick="setUploadMode('questions',this)">❓ Practice questions</button>
+  </div>
+  <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleDrop(event)">
+    <div class="drop-icon">📎</div>
+    <div class="drop-title">Drop your file here or click to browse</div>
+    <div class="drop-sub">PDF slides, textbook chapters, images of notes, or text files</div>
+    <div class="drop-formats"><span class="drop-fmt">PDF</span><span class="drop-fmt">PNG / JPG</span><span class="drop-fmt">TXT</span><span class="drop-fmt">up to 20MB</span></div>
+  </div>
+  <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg,.txt,.md" style="display:none" onchange="handleFile(this.files[0])">
+  <div id="file-chip-area"></div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:8px;text-align:center">— or paste text directly —</div>
+  <textarea class="paste-ta" id="paste-input" placeholder="Paste slide text, textbook paragraphs, or your lecture notes here..."></textarea>
+  <button class="ai-btn" id="upload-btn" onclick="processUpload()">✨ Generate Study Guide</button>
+  <div class="ai-loading" id="upload-loading"><div class="spinner"></div><div class="loading-txt"><strong>Reading your materials...</strong>Extracting what matters for ${c.title}</div></div>
+  <div class="ai-result" id="upload-result"></div>
+  <div id="upload-history" style="margin-top:24px"></div>`;
+}
+function setUploadMode(m,btn){uploadMode=m;document.querySelectorAll('.mode-row .work-type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function handleDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function handleFile(f){
+  if(!f)return;
+  if(f.size>20*1024*1024){alert('File too large — max 20MB.');return;}
+  uploadFile=f;
+  document.getElementById('file-chip-area').innerHTML=`<div class="file-chip">📄 ${f.name} <span style="color:var(--muted);font-size:11px">(${(f.size/1024).toFixed(0)} KB)</span><span class="rm" onclick="clearFile()">×</span></div>`;
+}
+function clearFile(){uploadFile=null;document.getElementById('file-chip-area').innerHTML='';document.getElementById('file-input').value='';}
+function fileToBase64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});}
+function fileToText(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsText(f);});}
+
+async function processUpload(){
+  const c=courses[currentCourse];
+  const pasted=document.getElementById('paste-input').value.trim();
+  if(!uploadFile&&pasted.length<30){alert('Upload a file or paste some text first.');return;}
+  const btn=document.getElementById('upload-btn');const loading=document.getElementById('upload-loading');const result=document.getElementById('upload-result');
+  btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
+
+  const modePrompts={
+    summary:`Create a comprehensive point-form study summary. Organize by topic/section. Every bullet should be a complete, standalone fact a student could memorize. Include all key concepts, processes, and relationships.`,
+    exam:`Identify what is MOST likely to appear on an exam. Prioritize: definitions professors love to test, processes with multiple steps, comparisons/contrasts, anything emphasized or repeated, formulas, dates, names. Rank by importance.`,
+    terms:`Extract every key term, concept, and vocabulary word with a clear, exam-ready definition. Include technical terms, named theories, people, and any bolded or emphasized words.`,
+    questions:`Generate practice questions that test understanding of this material — a mix of definition, application, and analysis questions. Include the answer for each.`
+  };
+
+  try{
+    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    let content=[];
+    let sourceName='Pasted text';
+    if(uploadFile){
+      sourceName=uploadFile.name;
+      const ext=uploadFile.name.split('.').pop().toLowerCase();
+      if(ext==='pdf'){
+        content.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:await fileToBase64(uploadFile)}});
+      }else if(['png','jpg','jpeg'].includes(ext)){
+        content.push({type:'image',source:{type:'base64',media_type:ext==='png'?'image/png':'image/jpeg',data:await fileToBase64(uploadFile)}});
+      }else{
+        const txt=await fileToText(uploadFile);
+        content.push({type:'text',text:`File contents:\n"""\n${txt}\n"""`});
+      }
+    }
+    if(pasted)content.push({type:'text',text:`Additional pasted text:\n"""\n${pasted}\n"""`});
+    content.push({type:'text',text:`You are helping a student at MacEwan University in Edmonton, Alberta study for ${c.title}.\n\n${c.knowContext}\n\nTask: ${modePrompts[uploadMode]}\n\nRespond ONLY with raw JSON (no markdown):\n{"title":"short title describing the material","sections":[{"heading":"section name","points":["point 1","point 2","point 3"]},...],"studyTip":"one specific tip for how to study this material"}\n\nBe thorough — include everything important. Use **bold** on key terms inside points.`});
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,messages:[{role:'user',content}]})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!data.content?.length)throw new Error('Empty response. Check your API key.');
+    const parsed=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim());
+    parsed.mode=uploadMode;parsed.source=sourceName;parsed.date=new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric'});
+    uploadHistory[currentCourse].unshift(parsed);
+    showUploadResult(parsed);renderUploadHistory();
+  }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
+  finally{btn.disabled=false;loading.classList.remove('show');}
+}
+
+function showUploadResult(p){
+  const modeLabel={summary:'📋 Study Summary',exam:'🎯 Exam Focus',terms:'🔤 Key Terms',questions:'❓ Practice Questions'}[p.mode];
+  const result=document.getElementById('upload-result');
+  const fmt=t=>t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  let n=0;
+  const sections=p.sections.map(s=>`<div class="rsec rs-info"><h4>${s.heading}</h4>${s.points.map(pt=>`<div class="summary-point"><div class="summary-num">${++n}</div><div class="summary-txt">${fmt(pt)}</div></div>`).join('')}</div>`).join('');
+  result.innerHTML=`
+    <div class="score-banner gb" style="margin-bottom:14px">
+      <div style="font-size:28px">📚</div>
+      <div class="score-text"><h3>${p.title}</h3><p>${modeLabel} · ${p.source} · ${p.date} · ${n} points</p></div>
+    </div>
+    ${sections}
+    <div class="rsec rs-good"><h4>💡 How to Study This</h4><p style="font-size:13px;color:var(--text2);line-height:1.7">${p.studyTip}</p></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="retry-btn" onclick="document.getElementById('upload-result').classList.remove('show');clearFile();document.getElementById('paste-input').value=''">↩ Upload Another</button>
+      <button class="retry-btn" onclick="sendToFlashcards(${uploadHistory[currentCourse].indexOf(p)})">🎴 Turn Into Flashcards</button>
+    </div>`;
+  result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderUploadHistory(){
+  const el=document.getElementById('upload-history');if(!el)return;
+  const hist=uploadHistory[currentCourse]||[];
+  if(!hist.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted2);margin-bottom:8px">Previous Summaries</div>`+hist.map((h,i)=>`<div class="hist-item" onclick="showUploadResult(uploadHistory['${currentCourse}'][${i}])"><span style="font-size:14px">${{summary:'📋',exam:'🎯',terms:'🔤',questions:'❓'}[h.mode]}</span><div class="hist-name">${h.title}</div><div class="hist-date">${h.source} · ${h.date}</div></div>`).join('');
+}
+
+async function sendToFlashcards(i){
+  const p=uploadHistory[currentCourse][i];
+  const allPoints=p.sections.flatMap(s=>s.points).map(pt=>pt.replace(/\*\*/g,''));
+  const btn=event.target;btn.disabled=true;btn.textContent='⏳ Creating...';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:`Turn these study points into flashcard Q&A pairs. Make questions specific and testable.\n\n${allPoints.join('\n')}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]`}]})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data?.error?.message||'API error');
+    const cards=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null}));
+    flashcards[currentCourse]=[...(flashcards[currentCourse]||[]),...cards.map(x=>({...x,due:0}))];persist();
+    btn.textContent=`✅ ${cards.length} cards added — go to Flashcards`;
+  }catch(e){btn.textContent='❌ '+e.message;btn.disabled=false;}
 }
 
 /* get an a */
