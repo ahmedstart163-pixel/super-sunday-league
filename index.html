@@ -11,13 +11,13 @@
   --bg:#0A0D14;--surface:#121620;--card:#141926;--card2:#181E2C;--hover:#1F273A;
   --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.14);
   --text:#F1F5F9;--text2:#CBD5E1;--muted:#94A3B8;--muted2:#64748B;
-  --accent:#D42A2A;--accent-glow:#E57373;--accent-tint:rgba(212,42,42,.15);--accent-border:rgba(212,42,42,.35);
-  --green:#34D399;--green-light:rgba(16,185,129,.12);--red:#E57373;--red-light:rgba(212,42,42,.12);--yellow:#FBBF24;--yellow-light:rgba(251,191,36,.12);--cyan:var(--accent-glow);--purple:var(--muted);
+  --accent:#3B6EA5;--accent-glow:#6A93C4;--accent-tint:rgba(59,110,165,.15);--accent-border:rgba(59,110,165,.35);
+  --green:#34D399;--green-light:rgba(16,185,129,.12);--red:#6A93C4;--red-light:rgba(59,110,165,.12);--yellow:#FBBF24;--yellow-light:rgba(251,191,36,.12);--cyan:var(--accent-glow);--purple:var(--muted);
   --page:var(--bg);--sidebar:var(--surface);--navy:var(--text);--blue:var(--accent-glow);--blue-light:var(--accent-tint);--blue-border:var(--accent-border);
-  --maroon:var(--accent);--maroon-dark:#7B1010;--maroon-tint:var(--accent-tint);--maroon-border:var(--accent-border);
+  --maroon:var(--accent);--maroon-dark:#2C5586;--maroon-tint:var(--accent-tint);--maroon-border:var(--accent-border);
   --radius:16px;--shadow:0 4px 20px -2px rgba(0,0,0,.45);--shadow-md:0 10px 30px -5px rgba(0,0,0,.6);
   --mono:'Space Grotesk',monospace;--sans:'Plus Jakarta Sans',sans-serif;
-  --c-earth:#E57373;--c-english:#E57373;--c-comp:#EF9A9A;--c-math:#FFCDD2;--c-anth:#FFCDD2;
+  --c-earth:#3B6EA5;--c-english:#5A86B8;--c-comp:#7FA3CB;--c-math:#A6C0DE;--c-anth:#C9DAEC;
   --cyan:var(--accent-glow);--purple:var(--accent-glow);
 }
 [data-theme="light"]{
@@ -81,7 +81,7 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 [data-theme="light"] .topbar{background:rgba(255,255,255,.82)}
 .tb-brand{display:flex;align-items:center;gap:12px}
 .tb-logo-wrap{position:relative}
-.tb-logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(to top right,#A61B1B,#D42A2A,#E57373);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:#fff;font-size:16px;box-shadow:0 8px 18px -4px rgba(212,42,42,.5)}
+.tb-logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(to top right,#2C5586,#3B6EA5,#6A93C4);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;color:#fff;font-size:16px;box-shadow:0 8px 18px -4px rgba(59,110,165,.5)}
 .tb-online{position:absolute;bottom:-2px;right:-2px;width:11px;height:11px;background:var(--green);border:2px solid var(--bg);border-radius:50%}
 .tb-name{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:-.3px;color:var(--text);line-height:1;display:flex;align-items:center;gap:6px}
 .tb-name span{color:var(--accent)}
@@ -102,13 +102,13 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .chip::before{display:none}
 #sb-home::before{display:none}
 .chip:hover{color:var(--text)}
-.chip.active{background:var(--sage-solid);color:#fff;border-color:var(--sage-solid);box-shadow:0 8px 18px -6px rgba(212,42,42,.6)}
+.chip.active{background:var(--sage-solid);color:#fff;border-color:var(--sage-solid);box-shadow:0 8px 18px -6px rgba(59,110,165,.6)}
 .chip.active::before{background:#fff}
 .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-bottom:22px}
 .bento-card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .bento-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent)}
 [data-theme="light"] .bento-card::before{display:none}
-.b-hero{grid-column:span 12;padding:18px;background:var(--card);border-color:var(--border2);box-shadow:0 0 30px -6px rgba(212,42,42,.28)}
+.b-hero{grid-column:span 12;padding:18px;background:var(--card);border-color:var(--border2);box-shadow:0 0 30px -6px rgba(59,110,165,.28)}
 [data-theme="light"] .b-hero{background:#fff;box-shadow:var(--shadow-md)}
 [data-theme="light"] .g-fg{filter:none}
 [data-theme="light"] .spark i:last-child{box-shadow:none}
@@ -138,7 +138,7 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .gauge{position:relative;width:96px;height:96px;flex-shrink:0}
 .gauge svg{width:96px;height:96px;transform:rotate(-90deg)}
 .g-bg{fill:none;stroke:rgba(148,163,184,.18);stroke-width:3.5}
-.g-fg{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;filter:drop-shadow(0 0 8px rgba(212,42,42,.8));transition:stroke-dasharray .8s}
+.g-fg{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;filter:drop-shadow(0 0 8px rgba(59,110,165,.8));transition:stroke-dasharray .8s}
 .g-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .g-txt b{font-family:var(--mono);font-size:19px;color:var(--text)}.g-txt b small{font-size:11px;color:var(--accent-glow)}
 .g-txt span{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-top:3px}
@@ -151,7 +151,7 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .b-mini p{font-size:11px;color:var(--muted);margin:3px 0 0;font-weight:500}
 .spark{display:flex;align-items:flex-end;gap:5px;height:28px;margin-top:10px}
 .spark i{flex:1;background:var(--cyan);border-radius:2px;display:block}
-.spark i:last-child{box-shadow:0 0 8px rgba(212,42,42,.5)}
+.spark i:last-child{box-shadow:0 0 8px rgba(59,110,165,.5)}
 .bm-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
 .bm-bar{width:100%;height:6px;background:rgba(148,163,184,.15);border-radius:3px;overflow:hidden;margin-top:4px}
 .bm-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
@@ -169,7 +169,7 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .tb-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:12px;background:var(--card);border:1px solid var(--border2);color:var(--text2);font-family:var(--sans);font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0}
 .tb-btn:hover{border-color:var(--accent-border);color:var(--text)}
 .tb-btn .msi{font-size:16px;color:var(--muted)}
-.tb-prime{border-color:var(--accent-border);color:var(--text);box-shadow:0 4px 12px -4px rgba(212,42,42,.4)}
+.tb-prime{border-color:var(--accent-border);color:var(--text);box-shadow:0 4px 12px -4px rgba(59,110,165,.4)}
 .zap{color:var(--accent-glow);font-family:var(--mono)}
 .ping{width:6px;height:6px;border-radius:50%;background:var(--accent-glow);animation:ping 1.4s infinite}
 @keyframes ping{0%{transform:scale(1);opacity:1}80%,100%{transform:scale(2.2);opacity:0}}
@@ -209,7 +209,7 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .dk i{width:4px;height:4px;border-radius:50%;background:transparent;display:block}
 .dk.active{color:var(--accent-glow)}.dk.active i{background:var(--accent-glow)}
 .dk-center{display:flex;flex-direction:column;align-items:center;margin-top:-22px;padding:0 4px}
-.dk-center button{width:48px;height:48px;border-radius:16px;padding:1px;background:linear-gradient(to top right,#D42A2A,#E57373);border:none;cursor:pointer;box-shadow:0 8px 18px -4px rgba(212,42,42,.6)}
+.dk-center button{width:48px;height:48px;border-radius:16px;padding:1px;background:linear-gradient(to top right,#3B6EA5,#6A93C4);border:none;cursor:pointer;box-shadow:0 8px 18px -4px rgba(59,110,165,.6)}
 .dk-center button div{width:100%;height:100%;border-radius:15px;background:#140A10;display:flex;align-items:center;justify-content:center;color:var(--accent-glow)}
 [data-theme="light"] .dk-center button div{background:#fff}
 .dk-center button .msi{font-size:24px;animation:pulse 2s infinite}
@@ -231,8 +231,8 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .st-sb-time{font-family:var(--mono)}
 .icard,.qcard,.rsec,.dr-card,.sp-item,.assign-item,.stat,.fc-front,.fc-back,.chat-wrap,.pom-display,.assign-add,.know-intro,.fc-empty,.assign-empty{border-radius:16px;box-shadow:var(--shadow)}
 .icard-label,.qnum,.stat-lbl,.rsec h4{font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;font-size:10px;font-weight:600;color:var(--muted)}
-.ai-btn,.assign-add-btn,.pom-start,.fc-gen-btn,.chat-send,.banner-save{background:linear-gradient(to right,#D42A2A,#A61B1B);border-radius:12px;box-shadow:0 8px 18px -6px rgba(212,42,42,.6);color:#fff}
-.ai-btn:hover,.assign-add-btn:hover,.pom-start:hover,.fc-gen-btn:hover,.chat-send:hover{background:linear-gradient(to right,#E53935,#D42A2A)}
+.ai-btn,.assign-add-btn,.pom-start,.fc-gen-btn,.chat-send,.banner-save{background:linear-gradient(to right,#3B6EA5,#2C5586);border-radius:12px;box-shadow:0 8px 18px -6px rgba(59,110,165,.6);color:#fff}
+.ai-btn:hover,.assign-add-btn:hover,.pom-start:hover,.fc-gen-btn:hover,.chat-send:hover{background:linear-gradient(to right,#6A93C4,#3B6EA5)}
 .retry-btn,.qa,.pom-mode-btn,.work-type-btn,.chat-sug,.fc-nav-btn{background:var(--card);border-color:var(--border2);color:var(--muted);border-radius:10px}
 .retry-btn:hover,.pom-mode-btn:hover,.work-type-btn:hover,.chat-sug:hover{border-color:var(--accent-border);color:var(--text);background:var(--hover)}
 .ch-title{font-family:var(--sans);font-size:22px;font-weight:800;letter-spacing:-.4px}
@@ -243,9 +243,9 @@ body{font-family:var(--sans);color:var(--text);font-size:14px;-webkit-tap-highli
 .opt{background:rgba(255,255,255,.03);border-color:var(--border2);color:var(--text2)}
 [data-theme="light"] .opt{background:var(--card2)}
 .opt:hover{border-color:var(--accent-border);color:var(--text);background:var(--accent-tint)}
-.msg.user{background:linear-gradient(to right,#D42A2A,#A61B1B)}
+.msg.user{background:linear-gradient(to right,#3B6EA5,#2C5586)}
 .msg.ai{background:var(--card2);border-color:var(--border)}
-.ex-timer{background:linear-gradient(to right,#7B1010,#D42A2A)}
+.ex-timer{background:linear-gradient(to right,#2C5586,#3B6EA5)}
 .chat-msgs::-webkit-scrollbar-thumb,.main::-webkit-scrollbar-thumb{background:var(--border2)}
 #api-key-banner{background:var(--surface);border-bottom:1px solid var(--accent-border)}
 .modal{background:var(--surface);border:1px solid var(--border2)}
@@ -761,19 +761,19 @@ select.gr-in option{background:var(--surface);color:var(--text)}
 :root[data-theme="dark"]{--blush:rgba(255,255,255,.05);--blush2:rgba(255,255,255,.09);--rose-line:rgba(255,255,255,.12)}
 .wk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--rose-line)}
 .wk-head .icard-label{color:var(--accent);margin-bottom:4px}
-.wk-prog{text-align:center;flex-shrink:0;padding:10px 18px;border-radius:14px;background:var(--accent);color:#fff;box-shadow:0 6px 18px -6px rgba(212,42,42,.55)}
+.wk-prog{text-align:center;flex-shrink:0;padding:10px 18px;border-radius:14px;background:var(--accent);color:#fff;box-shadow:0 6px 18px -6px rgba(59,110,165,.55)}
 .wk-prog-n{font-family:var(--mono);font-weight:700;font-size:22px;line-height:1;color:#fff}.wk-prog-l{font-size:10px;letter-spacing:.8px;text-transform:uppercase;opacity:.85;margin-top:3px}
 .wk-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .wk-tab{display:inline-flex;align-items:center;gap:3px;padding:7px 13px;border-radius:999px;border:1.5px solid var(--rose-line);background:var(--card);color:var(--accent);font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
 .wk-tab:hover{background:var(--blush);border-color:var(--accent)}
-.wk-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px -4px rgba(212,42,42,.6)}
+.wk-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px -4px rgba(59,110,165,.6)}
 .wk-tab.now:not(.active){border-color:var(--accent);background:var(--blush)}
 .wk-tab.done:not(.active){background:var(--blush2);border-color:transparent;color:var(--accent)}
 .wk-tab.done:not(.active) .msi{color:var(--accent)}
 .wk-tab.brk:not(.active){opacity:.45}
 .wk-tab .msi{font-size:14px}
 .wk-all{font-family:var(--sans);margin-left:auto}
-.wk-card{border:1px solid var(--rose-line);border-radius:18px;background:var(--card);padding:0;margin-bottom:14px;overflow:hidden;box-shadow:0 8px 24px -14px rgba(212,42,42,.25)}
+.wk-card{border:1px solid var(--rose-line);border-radius:18px;background:var(--card);padding:0;margin-bottom:14px;overflow:hidden;box-shadow:0 8px 24px -14px rgba(59,110,165,.25)}
 .wk-card.done{border-color:var(--accent)}
 .wk-card.brk{opacity:.85}
 .wk-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;background:var(--blush);border-bottom:1px solid var(--rose-line);margin:0}
@@ -800,7 +800,7 @@ select.gr-in option{background:var(--surface);color:var(--text)}
 .wk-actions .retry-btn .ic{color:inherit}
 /* Today strip in the same palette */
 .today-strip{gap:12px}
-.td-card{border-color:var(--rose-line);background:var(--card);box-shadow:0 8px 24px -16px rgba(212,42,42,.3)}
+.td-card{border-color:var(--rose-line);background:var(--card);box-shadow:0 8px 24px -16px rgba(59,110,165,.3)}
 .td-card::before{width:0}
 .td-lbl,.td-study .td-lbl,.td-review .td-lbl,.td-tip .td-lbl{color:var(--accent)}
 .td-study{background:var(--blush)}
@@ -871,7 +871,7 @@ body,.main{font-size:14.5px}
 .tb-btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:12px 12px;border-radius:12px;justify-content:flex-start;gap:8px;border:1px solid var(--border2);background:var(--card);color:var(--text)}
 .tb-btn .msi{color:var(--accent);font-size:18px}
 .tb-btn:hover{border-color:var(--accent-border);background:var(--blush)}
-.tb-prime{background:var(--accent);border-color:var(--accent);color:#fff;grid-column:1/-1;box-shadow:0 4px 14px -6px rgba(212,42,42,.5)}
+.tb-prime{background:var(--accent);border-color:var(--accent);color:#fff;grid-column:1/-1;box-shadow:0 4px 14px -6px rgba(59,110,165,.5)}
 .tb-prime .msi{color:#fff}.tb-prime:hover{background:var(--maroon-dark);border-color:var(--maroon-dark);box-shadow:0 6px 18px -6px rgba(166,27,27,.6)}
 .mini-badge{margin-left:auto}
 .hidden-hero{display:none}
@@ -881,23 +881,23 @@ body,.main{font-size:14.5px}
 
 
 /* ── True red palette (replaces rose/crimson) ── */
-[data-theme="light"],:root{--accent:#D42A2A;--accent-glow:#B71C1C;--accent-tint:#F5EAEA;--accent-border:#DEC8C8;--maroon:#D42A2A;--maroon-dark:#A61B1B;--maroon-tint:#F5EAEA;--maroon-border:#DEC8C8;--red:#D42A2A;--red-light:#F5EAEA;--blush:#F7F6F5;--blush2:#EDE9E8;--rose-line:#DDD7D5}
+[data-theme="light"],:root{--accent:#3B6EA5;--accent-glow:#2C5586;--accent-tint:#EAF1F8;--accent-border:#C3D6EA;--maroon:#3B6EA5;--maroon-dark:#2C5586;--maroon-tint:#EAF1F8;--maroon-border:#C3D6EA;--red:#B3261E;--red-light:#FBEFEE;--blush:#F3F7FB;--blush2:#E4EDF6;--rose-line:#C3D6EA}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:#EF4444;--accent-glow:#F87171;--accent-tint:rgba(239,68,68,.16);--accent-border:rgba(239,68,68,.4);--maroon:#EF4444;--maroon-dark:#B91C1C;--blush:rgba(239,68,68,.08);--blush2:rgba(239,68,68,.16);--rose-line:rgba(239,68,68,.3)}}
 :root[data-theme="dark"]{--accent:#EF4444;--accent-glow:#F87171;--accent-tint:rgba(239,68,68,.16);--accent-border:rgba(239,68,68,.4);--maroon:#EF4444;--maroon-dark:#B91C1C;--blush:rgba(239,68,68,.08);--blush2:rgba(239,68,68,.16);--rose-line:rgba(239,68,68,.3)}
-.badge-crimson,.dk-center button div{background:linear-gradient(135deg,#A61B1B 0%,#D42A2A 60%,#E53935 100%)!important}
+.badge-crimson,.dk-center button div{background:linear-gradient(135deg,#2C5586 0%,#3B6EA5 60%,#6A93C4 100%)!important}
 .sb-tool.active,.wk-tab.active,.wk-prog,.tb-prime,.hh-chip.hot,.tl-tag.hot,.td-due.hot,.wk-badge.now,.cf-btn{background:var(--accent)}
-.wk-card{box-shadow:0 8px 24px -14px rgba(212,42,42,.25)}
-.sb-tool.active{box-shadow:0 6px 14px -6px rgba(212,42,42,.55)}
-.wk-tab.active{box-shadow:0 4px 12px -4px rgba(212,42,42,.55)}
+.wk-card{box-shadow:0 8px 24px -14px rgba(59,110,165,.25)}
+.sb-tool.active{box-shadow:0 6px 14px -6px rgba(59,110,165,.55)}
+.wk-tab.active{box-shadow:0 4px 12px -4px rgba(59,110,165,.55)}
 
 /* ── Course chips: one quiet green ── */
-:root{--sage:#E9F1EA;--sage-line:#CBDDCF;--sage-ink:#2F5E3A;--sage-solid:#3E7A4C;--c-earth:#3E7A4C;--c-english:#3E7A4C;--c-comp:#3E7A4C;--c-math:#3E7A4C;--c-anth:#3E7A4C}
+:root{--sage:#EAF1F8;--sage-line:#C3D6EA;--sage-ink:#2C5586;--sage-solid:#3B6EA5;--c-earth:#3B6EA5;--c-english:#3B6EA5;--c-comp:#3B6EA5;--c-math:#3B6EA5;--c-anth:#3B6EA5}
 .chips .chip{border:1px solid var(--sage-line);background:var(--sage);color:var(--sage-ink);font-weight:700;padding:8px 14px;transition:all .15s}
 .chips .chip#sb-home{background:var(--card);border-color:var(--border2);color:var(--text)}
-.chips .chip:hover{background:#DDEAE0;transform:translateY(-1px)}
-.chips .chip.active{background:var(--sage-solid);border-color:var(--sage-solid);color:#fff;box-shadow:0 6px 14px -8px rgba(62,122,76,.6)}
-[data-theme="dark"] .chips .chip{background:rgba(62,122,76,.18);border-color:rgba(62,122,76,.35);color:#9CCBA8}
-[data-theme="dark"] .chips .chip.active{background:#3E7A4C;color:#fff}
+.chips .chip:hover{background:#E4EDF6;transform:translateY(-1px)}
+.chips .chip.active{background:var(--sage-solid);border-color:var(--sage-solid);color:#fff;box-shadow:0 6px 14px -8px rgba(59,110,165,.6)}
+[data-theme="dark"] .chips .chip{background:rgba(59,110,165,.18);border-color:rgba(59,110,165,.35);color:#9CCBA8}
+[data-theme="dark"] .chips .chip.active{background:#3B6EA5;color:#fff}
 
 /* ── Today list ── */
 .tl{background:var(--card);border:1px solid var(--border2);border-radius:16px;overflow:hidden}
@@ -928,7 +928,7 @@ body,.main{font-size:14.5px}
   .dk .msi{font-size:23px}
   .dk.active{color:var(--accent)}
   .dk-center{font-family:var(--sans);font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--accent);text-transform:uppercase}
-  .dk-center button div{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#A61B1B 0%,#D42A2A 60%,#E53935 100%);box-shadow:0 10px 22px -6px rgba(212,42,42,.55);border:3px solid var(--card);display:grid;place-items:center;color:#fff}
+  .dk-center button div{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#2C5586 0%,#3B6EA5 60%,#6A93C4 100%);box-shadow:0 10px 22px -6px rgba(59,110,165,.55);border:3px solid var(--card);display:grid;place-items:center;color:#fff}
   .dk-center button div .msi{font-size:24px;color:#fff}
   .hc{min-height:0}
 }
@@ -972,7 +972,7 @@ mark.kt{background:#FFF3B0;color:#3A2E00;padding:0 4px;border-radius:4px;font-we
   --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;--r-pill:999px;
   --fs-xs:12px;--fs-sm:13px;--fs-md:14.5px;--fs-lg:16px;--fs-xl:20px;--fs-2xl:26px;
   --sh-1:0 1px 2px rgba(20,16,18,.05);--sh-2:0 4px 12px -4px rgba(20,16,18,.10);--sh-3:0 12px 32px -12px rgba(20,16,18,.18);
-  --ring:0 0 0 3px rgba(212,42,42,.22);
+  --ring:0 0 0 3px rgba(59,110,165,.22);
   --radius:var(--r-lg);--shadow:var(--sh-2);--shadow-md:var(--sh-3);
   --border:#EBE7E6;--border2:#DCD6D4;
 }
@@ -988,7 +988,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* ── Top bar ── */
 .topbar{height:60px;padding:0 var(--sp-5);background:rgba(251,250,248,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 [data-theme="dark"] .topbar{background:rgba(10,13,20,.88)}
-.tb-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#B71C1C,#D42A2A);font-weight:800}
+.tb-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#B71C1C,#3B6EA5);font-weight:800}
 .tb-online,.tb-sub .pulse{animation:none}
 .tb-name{font-family:var(--sans);font-size:15.5px;font-weight:800;letter-spacing:-.2px}
 .tb-name em{font-size:9.5px;letter-spacing:.6px;padding:2px 6px;border-radius:5px}
@@ -1062,6 +1062,89 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 *::-webkit-scrollbar{width:8px;height:8px}*::-webkit-scrollbar-thumb{background:var(--border2);border-radius:8px}*::-webkit-scrollbar-track{background:transparent}
 /* ── Kill leftover neon/animated bits ── */
 .ping,.pulse{animation:none!important}
+
+.ai-pol{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:6px;border:1px solid}
+.ai-pol.prohibited{background:var(--red-light);color:var(--red);border-color:#EFC9C6}
+.ai-pol.permitted{background:var(--green-light);color:var(--green);border-color:rgba(52,211,153,.3)}
+.qa{--qc:var(--accent);width:auto;height:auto;padding:7px 11px;border-radius:10px;display:inline-flex;flex-direction:column;align-items:center;gap:2px;border:1px solid color-mix(in srgb,var(--qc) 35%,white);background:color-mix(in srgb,var(--qc) 9%,white);color:var(--qc);transition:all .15s}
+.qa .msi{font-size:21px;color:var(--qc)}
+.qa .qa-lbl{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--qc)}
+.qa:hover{background:var(--qc);color:#fff;border-color:var(--qc);transform:translateY(-1px)}
+.qa:hover .msi,.qa:hover .qa-lbl{color:#fff}
+.qa{--qc:#3B6EA5}
+@media(max-width:760px){.ch-actions{display:flex!important;border-left:none;padding-left:0;flex-wrap:wrap}}
+
+.tool-head{display:flex;align-items:flex-start;gap:14px;padding:4px 0 18px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.th-ico{width:42px;height:42px;border-radius:12px;background:var(--accent-tint);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.th-ico .msi{font-size:22px;color:var(--accent)}
+.th-title{font-size:22px;font-weight:700;color:var(--text);margin:0 0 3px;letter-spacing:-.3px;line-height:1.15}
+.th-sub{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+.th-right{margin-left:auto}
+.course-hdr{margin-bottom:14px!important;padding-bottom:12px!important}
+.ch-title{font-size:19px!important}
+.ch-code{font-size:10px!important}
+#cv-aipol .ai-pol{font-size:9px!important}
+#today-strip{margin-bottom:6px}
+#tool-content>.icard:first-of-type,#tool-content>.know-intro:first-of-type{margin-top:0}
+.icard,.qcard,.rsec,.dr-card,.sp-item{margin-bottom:12px}
+.icard-label{margin-bottom:8px}
+.know-intro{font-size:13px;line-height:1.6}
+.sec-title{display:none}
+
+/* card polish */
+.icard-label{color:var(--accent);display:flex;align-items:center;gap:6px}
+.icard-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.icard-title{color:var(--text)}
+.icard ul{padding-left:20px}
+.icard li{position:relative;padding-left:2px}
+.icard li::marker{color:var(--accent)}
+.icard:has(> .icard-label:first-child) .icard-label{margin-top:2px}
+.icard>.icard-label+.icard-title{padding-bottom:12px;margin-bottom:14px;border-bottom:2px solid var(--accent-border)}
+.icard>.icard-label:first-child:last-of-type~ul,.icard>.icard-label:first-child+p,.icard>.icard-label:first-child+ul,.icard>.icard-label:first-child+div:not(.icard-title){border-top:2px solid var(--accent-border);padding-top:12px;margin-top:10px}
+.icard-label{margin-bottom:6px}
+.badge-b{background:var(--accent-tint)!important;color:var(--accent)!important;border:1px solid var(--accent-border)!important;font-weight:600!important;padding:5px 12px!important;border-radius:20px!important}
+.badge-b.term{cursor:pointer;transition:all .15s}
+.badge-b.term:hover{background:var(--accent)!important;color:#fff!important}
+.icard-label+.icard-title{margin-top:2px}
+
+/* ═══ status colours: green = done, red = pending/missing ═══ */
+:root,[data-theme="light"]{--ok:#2E8B57;--ok-light:#E8F5EC;--ok-border:#BFE3CB;--bad:#C62828;--bad-light:#FDECEC;--bad-border:#F3BFBF}
+[data-theme="dark"]{--ok:#4ADE80;--ok-light:rgba(74,222,128,.14);--ok-border:rgba(74,222,128,.35);--bad:#F87171;--bad-light:rgba(248,113,113,.14);--bad-border:rgba(248,113,113,.35)}
+/* pending / due */
+.hh-chip.hot{background:var(--bad)!important;border-color:var(--bad)!important;color:#fff!important}
+.tl-tag.hot{background:var(--bad)!important;color:#fff!important}
+.tl-tag.warm{background:var(--bad-light)!important;color:var(--bad)!important}
+.td-due.hot,.hc-due.hot,.assign-due.overdue,.assign-due.soon,.hu-row.warm .hu-when b,.hu-row.hot .hu-when b{color:var(--bad)!important}
+.td-due.hot{background:var(--bad-light)!important}
+.sb-due,.mini-badge{background:var(--bad)!important;color:#fff!important}
+.p-high{background:var(--bad-light)!important;color:var(--bad)!important}
+.assign-item:not(.done) .assign-cb{border-color:var(--bad-border)}
+/* done / complete */
+.hh-chip.ok{background:var(--ok-light)!important;color:var(--ok)!important;border-color:var(--ok-border)!important}
+.tl-row.done .tl-check,.assign-cb.checked,.wk-card.done .wk-check{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important}
+.tl-row.done .tl-title,.assign-item.done .assign-name{color:var(--ok)!important;text-decoration:line-through;opacity:.8}
+.tl-row.done,.assign-item.done{opacity:1!important;background:var(--ok-light)!important;border-color:var(--ok-border)!important}
+.wk-tab.done:not(.active){background:var(--ok-light)!important;color:var(--ok)!important;border:1px solid var(--ok-border)!important}
+.wk-card.done{border-color:var(--ok)!important;background:var(--ok-light)!important}
+.opt.correct{border-color:var(--ok)!important;background:var(--ok-light)!important;color:var(--ok)!important}
+.opt.wrong{border-color:var(--bad)!important;background:var(--bad-light)!important;color:var(--bad)!important}
+.qfb.good{background:var(--ok-light)!important;color:var(--ok)!important;border-color:var(--ok-border)!important}
+.qfb.bad{background:var(--bad-light)!important;color:var(--bad)!important;border-color:var(--bad-border)!important}
+.rsec.rs-good h4,.pill-ok{color:var(--ok)!important}
+.rsec.rs-bad h4,.pill-bad{color:var(--bad)!important}
+/* this week = progress = green */
+.wk-prog,.wk-tab.active{background:var(--ok)!important;border-color:var(--ok)!important;box-shadow:0 6px 18px -6px rgba(46,139,87,.5)!important;color:#fff!important}
+.st-sb{background:var(--ok)!important;border-color:var(--ok)!important}
+.st-sb .st-sb-lbl,.st-sb .st-sb-time,.st-sb .st-sb-course{color:#fff!important}
+.st-bar-fill{background:var(--ok)!important}
+.st-day.today{border-color:var(--ok)!important;background:var(--ok-light)!important}
+.st-day.today .st-day-val{color:var(--ok)!important}
+.pbar-fill,.bm-bar i,.spark i,.stat .pb i,.hero-bar div{background:var(--ok)!important}
+.g-fg,.r-fg{stroke:var(--ok)!important}
+.gr-scale span.hit{background:var(--ok-light)!important;border-color:var(--ok-border)!important;color:var(--ok)!important}
+.notes-save-btn,.pom-start{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important}
+.ai-pol.permitted{background:var(--ok-light)!important;color:var(--ok)!important;border-color:var(--ok-border)!important}
+.ai-pol.prohibited{background:var(--bad-light)!important;color:var(--bad)!important;border-color:var(--bad-border)!important}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
@@ -1126,6 +1209,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   <div class="sidebar" id="sidebar">
     <div class="sb-section"><div class="sb-label">Learn</div>
       <div class="sb-tool" id="sb-today" onclick="switchTool('today',this)"><span class="msi">menu_book</span><span class="sb-tool-name">Lesson</span></div>
+      <div class="sb-tool" id="sb-lectures" onclick="switchTool('lectures',this)"><span class="msi">slideshow</span><span class="sb-tool-name">Lectures</span></div>
       <div class="sb-tool" id="sb-review" onclick="switchTool('review',this)"><span class="msi">history</span><span class="sb-tool-name">Review</span></div>
       <div class="sb-tool" id="sb-tomorrow" onclick="switchTool('tomorrow',this)"><span class="msi">arrow_forward</span><span class="sb-tool-name">Tomorrow</span></div>
     </div>
@@ -1226,11 +1310,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
         <div class="ch-right">
           <div class="ch-time" id="st-live"><span class="msi">schedule</span><span id="st-live-txt">0:00</span><span class="ch-time-sub" id="st-week-txt">0m this week</span></div>
           <div class="ch-actions">
-            <button class="qa" title="Tutor" onclick="switchTool('tutor',document.getElementById('sb-tutor'))"><span class="msi">chat</span></button>
-            <button class="qa" title="Flashcards" onclick="switchTool('flash',document.getElementById('sb-flash'))"><span class="msi">style</span></button>
-            <button class="qa" title="Exam mode" onclick="switchTool('exam',document.getElementById('sb-exam'))"><span class="msi">assignment</span></button>
-            <button class="qa" title="Review my work" onclick="switchTool('work',document.getElementById('sb-work'))"><span class="msi">task</span></button>
-            <button class="qa" title="Upload" onclick="switchTool('upload',document.getElementById('sb-upload'))"><span class="msi">attach_file</span></button>
+            <button class="qa" title="Tutor" onclick="switchTool('tutor',document.getElementById('sb-tutor'))"><span class="msi">chat</span><span class="qa-lbl">Tutor</span></button>
+            <button class="qa" title="Flashcards" onclick="switchTool('flash',document.getElementById('sb-flash'))"><span class="msi">style</span><span class="qa-lbl">Cards</span></button>
+            <button class="qa" title="Exam mode" onclick="switchTool('exam',document.getElementById('sb-exam'))"><span class="msi">assignment</span><span class="qa-lbl">Exam</span></button>
+            <button class="qa" title="Review my work" onclick="switchTool('work',document.getElementById('sb-work'))"><span class="msi">task</span><span class="qa-lbl">Review</span></button>
+            <button class="qa" title="Upload" onclick="switchTool('upload',document.getElementById('sb-upload'))"><span class="msi">attach_file</span><span class="qa-lbl">Upload</span></button>
           </div>
         </div>
       </div>
@@ -1244,8 +1328,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 <div class="dock-wrap"><nav class="dock" id="bnav">
   <a class="dk" id="bn-home" onclick="goHome()"><span class="msi">dashboard</span><span>Home</span><i></i></a>
   <a class="dk" id="bn-courses" onclick="goHome();setTimeout(()=>document.getElementById('ccards').scrollIntoView({behavior:'smooth'}),50)"><span class="msi">menu_book</span><span>Courses</span><i></i></a>
-  <div class="dk-center"><button onclick="mobTool('tutor')"><div><span class="msi">auto_awesome</span></div></button><span>AI Tutor</span></div>
-  <a class="dk" id="bn-cards" onclick="mobTool('flash')"><span class="msi">style</span><span>Decks</span><i></i></a>
+  <div class="dk-center"><button onclick="mobTool('tutor')" aria-label="AI Tutor"><div><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6L12 2zm7 11l.9 2.6L22.5 16.5l-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM5 14l.7 2 2 .7-2 .7L5 19.5l-.7-2.1-2-.7 2-.7L5 14z"/></svg></div></button><span>AI Tutor</span></div>
+  <a class="dk" id="bn-cards" onclick="mobTool('flash')"><span class="msi">style</span><span>Cards</span><i></i></a>
   <a class="dk" onclick="openSheet()"><span class="msi">grid_view</span><span>More</span><i></i></a>
 </nav></div>
 <div class="sheet-bg" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="sheet"><div class="sheet-handle"></div><div id="sheet-body"></div></div></div>
@@ -2420,6 +2504,660 @@ const weekLog=P('wl_v1',{});   // weekLog[course][weekNo] = {notes, done, weak}
 function wlGet(key,n){if(!weekLog[key])weekLog[key]={};if(!weekLog[key][n])weekLog[key][n]={notes:'',done:false,weak:''};return weekLog[key][n];}
 function wlSave(){localStorage.setItem('wl_v1',JSON.stringify(weekLog));cloudPush();}
 let wkSel={};
+/* ═══════ LECTURES — study packages built from uploaded lecture slides ═══════ */
+const LECTURES={
+earth:[
+{n:1,title:'Introduction',date:'Sep 3',slides:'1_Introduction.pdf',
+ summary:'Course orientation for EASC 101 with Roy Coulthard. Sets out how the course is graded (two 50-minute non-cumulative term exams, 8 labs, a 170-minute practical lab exam, and a 3-hour cumulative final), the hard rules (labs due 7 days after your lab, no late labs, you must score ≥50% on the lab component to pass, AI tools prohibited), what to bring to lab, and a tour of every topic the term will cover — from Earth\'s place in the solar system down through minerals, the three rock families, geologic time, maps, structures, earthquakes and mass wasting.',
+ notes:[
+  ['Course logistics',[
+   'Lecture TR 08:00–09:20 in 6-214. Labs in 6-261 in your assigned section; lab coordinator M. Hanlon.',
+   'Office 5-138C. Email coulthardr@macewan.ca for an appointment; usually in the office Tue 09:30–10:50 for drop-ins.',
+   'Everything lives on mêskanâs: announcements, course outline, lecture slides, lab documents, Smartwork.',
+   'Textbook: Marshak & Rauber, Earth Science 3rd ed. (Norton). Register for Smartwork with your MacEwan email — Student Set ID 2058439. Smartwork = up to 2% bonus.',
+   'Buy the EASC 101 Lab Manual (Fall 2026 revision) in hard copy for lab. Do NOT buy the rock & mineral kit — provided in lab.']],
+  ['How you are graded',[
+   'Term Exam I — 15% — Tue 6 Oct, 08:00, room 6-214. In-class, 50 min, non-cumulative, multiple choice + written answer.',
+   'Term Exam II — 15% — Thu 5 Nov, 08:00, room 6-214. Same format.',
+   'Lab Assignments — 24% — 8 labs × 3%. Due 7 days after your lab session. Late labs are NOT accepted.',
+   'Lab Exam — 16% — 170 minutes, practical questions on Labs 2–5 (minerals & rocks), week of 26 Oct in your lab section.',
+   'Final Exam — 30% — 3 hours, in person, MC + written, covers the ENTIRE course. Date via myStudentSystem (9–18 Dec).',
+   'You must score ≥50% on the lab component to pass the course, regardless of exam marks.']],
+  ['Missed exams',[
+   'Term exams: inform the instructor beforehand if possible, and within 48 hours if you miss one; tell him if you are ill during a test.',
+   'Lab exam: treated like a missed term exam — inform the lab coordinator AND lab instructor within 48 hours.',
+   'Final: apply for a deferred exam within 48 hours through Exam Services. You are responsible for confirming date, time, duration and location.']],
+  ['Labs',[
+   'Lab 1 (week of 7 Sep) is online only. In-person labs start week of 14 Sep (Labs 2–9).',
+   'Bring: lab manual, closed-toed shoes, calculator, pencil & eraser. Optional: lab coat and safety glasses (Labs 2–5). Geometry kit helps for Labs 6–9. Laptop if you have one for submitting.',
+   'Read the lab manual BEFORE the lab, not during.',
+   'Schedule: L1 Intro to Canadian Geology · L2 Minerals · L3 Igneous · (no lab 28 Sep — Truth & Reconciliation) · L4 Sedimentary · (no lab 12 Oct — Thanksgiving) · L5 Metamorphic · Lab Exam 26 Oct · L6 Geologic Time · (no lab 9 Nov — Reading Week) · L7 Topographic Maps & GIS · L8 Geological Structures · L9 Earthquakes.']],
+  ['Academic integrity',[
+   'Ignorance of policy is not an excuse. Most problems are plagiarism from not knowing the rules — ask if unsure.',
+   'You may be asked to sign: "I certify that this submission represents entirely my own work."',
+   'Use of AI tools is prohibited on assessments. "Don\'t be a meat proxy" — don\'t submit AI output as your own.']],
+  ['Course topic map (what the term covers)',[
+   'Planetary geology — the Earth in space (lecture only, no lab).',
+   'Internal structure of the Earth (lecture only): crust 0–100 km → mantle to ~2,900 km → liquid outer core to ~5,100 km → solid inner core; radius ≈ 6,378 km. Lithosphere = crust + uppermost mantle; asthenosphere is the weak layer beneath it.',
+   'Plate tectonics (lecture): convergent, divergent and transform boundaries; continental rift zones (e.g., East African Rift) are young plate boundaries; hot spots.',
+   'Mineralogy (lecture + Lab 2) — e.g., sphalerite + fluorite + galena assemblages.',
+   'Magma and igneous rocks (lecture + Lab 3) — magma is underground, lava is at the surface; basalt (fine, dark) vs granite (coarse, light).',
+   'Sedimentary rocks & depositional environments (lecture + Lab 4) — modern wave ripples (Joggins, Bay of Fundy) preserved as rock (Grande Cache, AB dinosaur tracks).',
+   'Metamorphic rocks (lecture + Lab 5) — increasing grade: slate → phyllite → schist → gneiss.',
+   'Geologic time (lecture + Lab 6) — dating rock units using the overlapping age ranges of fossil groups.',
+   'Topographic maps & GIS (Lab 7 only).',
+   'Structural geology & earthquakes (lecture + Labs 8 & 9).',
+   'Geomorphology: mass wasting (lecture only).']],
+  ['Instructor\'s recipe for success',[
+   'Attend lectures. Take your own notes, preferably by hand.',
+   'Read the textbook and do the Smartwork exercises.',
+   'Read the lab manual before each lab.',
+   'Complete and submit every lab — the 50% lab threshold is a hard gate.',
+   'Study before exams, including the lab exam.']],
+  ['Next lecture',[
+   'Nebular hypothesis of Earth\'s formation; tour of the solar system; planets, dwarf planets, asteroids, comets.',
+   'Readings: textbook Introduction, Chapter 1, Chapter 21.']]],
+ terms:[
+  ['Lithosphere','The rigid outer shell of Earth: the crust plus the uppermost mantle. It is what tectonic plates are made of.'],
+  ['Asthenosphere','The weak, slowly flowing layer of the upper mantle beneath the lithosphere that plates move over.'],
+  ['Crust','Earth\'s thin outermost layer, roughly 0–100 km thick (oceanic is thinner and denser; continental thicker and lighter).'],
+  ['Mantle','The thick silicate layer from the base of the crust to ~2,900 km depth.'],
+  ['Outer core','Liquid iron–nickel layer from ~2,900 to ~5,100 km. Its motion generates Earth\'s magnetic field.'],
+  ['Inner core','Solid iron–nickel sphere at Earth\'s centre, below ~5,100 km; solid because of immense pressure.'],
+  ['Convergent boundary','Plates move toward each other; produces subduction zones, trenches, island arcs and stratovolcanoes.'],
+  ['Divergent boundary','Plates move apart; new oceanic crust forms at spreading ridges; continental rifts are young divergent boundaries.'],
+  ['Transform boundary','Plates slide horizontally past each other; earthquakes but no volcanism.'],
+  ['Hot spot','A stationary plume of hot mantle that builds volcanoes (e.g., shield volcanoes) independent of plate boundaries.'],
+  ['Magma vs lava','Magma is molten rock below the surface; lava is the same material once it erupts at the surface.'],
+  ['Igneous / sedimentary / metamorphic','The three rock families: cooled from melt; deposited and cemented sediment; existing rock changed by heat and pressure.'],
+  ['Slate → phyllite → schist → gneiss','The sequence of increasing metamorphic grade for a shale protolith.'],
+  ['Wave ripples','Sedimentary structures formed by water motion; preserved ripples in rock record the ancient environment.'],
+  ['Fossil age range','The span of geologic time a fossil group existed; overlapping ranges bracket the age of a rock unit.'],
+  ['Mass wasting','Downslope movement of rock and soil under gravity (landslides, slumps, flows).'],
+  ['Smartwork','Norton\'s online practice questions tied to the e-textbook; optional, worth up to 2% bonus.'],
+  ['mêskanâs','MacEwan\'s online course portal (Moodle) where slides, labs and announcements are posted.']],
+ questions:[
+  ['What are the five graded components of EASC 101 and their weights?','Term Exam I 15%, Term Exam II 15%, Lab Assignments 24% (8 × 3%), Lab Exam 16%, Final Exam 30%.'],
+  ['When and where are the two term exams, and what format are they?','Term Exam I: Tue 6 Oct 08:00, room 6-214. Term Exam II: Thu 5 Nov 08:00, room 6-214. Both in-class, 50 minutes, non-cumulative, multiple choice + written answer.'],
+  ['What is the lab-component rule for passing the course?','You must achieve at least 50% on the lab component (labs + lab exam) or you fail the course regardless of your exam marks.'],
+  ['When are labs due, and what is the late policy?','Seven days after your lab session. Late labs are not accepted — zero.'],
+  ['What does the lab exam cover, how long is it, and when?','Practical questions based on Labs 2–5 (minerals, igneous, sedimentary, metamorphic rocks); 170 minutes; week of 26 Oct in your scheduled lab section.'],
+  ['If you miss a term exam, what must you do and by when?','Notify the instructor beforehand if possible, otherwise within 48 hours, with a valid reason. For the lab exam, notify the lab coordinator and lab instructor within 48 hours.'],
+  ['List Earth\'s layers from surface to centre with approximate depths.','Crust (0–100 km) → mantle (to ~2,900 km) → liquid outer core (to ~5,100 km) → solid inner core (to the centre at ~6,378 km).'],
+  ['What is the difference between the lithosphere and the crust?','The crust is only the outermost rock layer. The lithosphere is the rigid crust PLUS the uppermost mantle, and it is the lithosphere — not just the crust — that forms tectonic plates.'],
+  ['Name the three plate-boundary types and one feature of each.','Convergent — subduction, trenches, island arcs/stratovolcanoes. Divergent — spreading ridges, new oceanic crust, rift zones. Transform — plates slide past; earthquakes, no volcanoes.'],
+  ['Why is the East African Rift shown in the plate-tectonics overview?','It is a continental rift zone — a young divergent plate boundary where a continent is beginning to split apart.'],
+  ['Distinguish magma from lava.','Same molten rock; magma is below ground, lava has reached the surface.'],
+  ['Put these in order of increasing metamorphic grade: schist, slate, gneiss, phyllite.','Slate → phyllite → schist → gneiss.'],
+  ['Which course topics have NO lab component?','Planetary geology (Earth in space), internal structure of the Earth, and geomorphology/mass wasting are lecture-only.'],
+  ['How can the age ranges of fossil groups date a rock unit?','Each fossil group lived over a known interval; a rock containing several groups must be younger than the youngest first appearance and older than the earliest disappearance — the overlap brackets its age.'],
+  ['What should you bring to every in-person lab?','Lab manual, closed-toed shoes, calculator, pencil and eraser; optionally lab coat and safety glasses (Labs 2–5); a geometry kit for Labs 6–9; a laptop if you have one.'],
+  ['What is the reading for the next lecture, and what is the topic?','Textbook Introduction, Chapter 1 and Chapter 21. Topic: the nebular hypothesis of Earth\'s formation and a tour of the solar system.']],
+ quiz:[
+  {q:'The lab component of EASC 101 is worth what share of the final grade in total?',opts:['24%','16%','40%','30%'],ans:2,exp:'Lab assignments 24% + lab exam 16% = 40%.'},
+  {q:'A lab session is on Tuesday. When is the assignment due?',opts:['The next lab session','Seven days later','End of the week','Before the term exam'],ans:1,exp:'Labs are due 7 days after the lab session; late labs are not accepted.'},
+  {q:'Which layer is liquid?',opts:['Inner core','Outer core','Lower mantle','Asthenosphere'],ans:1,exp:'The outer core is liquid iron–nickel; the inner core is solid because of pressure. The asthenosphere is weak and plastic but still solid rock.'},
+  {q:'Tectonic plates are made of the:',opts:['Crust only','Asthenosphere','Lithosphere','Mantle only'],ans:2,exp:'Plates are lithosphere: crust plus the uppermost rigid mantle.'},
+  {q:'Which boundary type creates new oceanic crust?',opts:['Convergent','Divergent','Transform','Hot spot'],ans:1,exp:'Divergent boundaries (mid-ocean ridges) generate new crust as plates separate.'},
+  {q:'The highest-grade rock in this list is:',opts:['Phyllite','Slate','Gneiss','Schist'],ans:2,exp:'Slate → phyllite → schist → gneiss with increasing temperature and pressure.'},
+  {q:'Which topic is lecture-only, with no lab?',opts:['Mineralogy','Geologic time','Mass wasting','Sedimentary rocks'],ans:2,exp:'Geomorphology / mass wasting, planetary geology, and Earth\'s internal structure have no lab component.'},
+  {q:'Term exams in this course are:',opts:['Cumulative, 3 hours','Non-cumulative, 50 minutes, in class','Take-home','Online, open book'],ans:1,exp:'Both term exams are 50-minute in-class, non-cumulative, MC + written answer. Only the final is cumulative.'},
+  {q:'To pass EASC 101 you must:',opts:['Attend every lab','Score ≥50% on the final','Score ≥50% on the lab component','Complete Smartwork'],ans:2,exp:'The syllabus and slides both state a ≥50% lab-component score is required to pass.'},
+  {q:'Where do you register for Smartwork, and with what email?',opts:['mêskanâs, any email','Norton site, MacEwan email, Student Set ID 2058439','Bookstore, personal email','myStudentSystem'],ans:1,exp:'Register through Norton using your MacEwan email and the Student Set ID 2058439 shown on the slide.'}],
+ examTips:[
+  'The instructor tests terms and definitions heavily — every bolded word in the slides is fair game.',
+  'Know the layer depths (100 / 2,900 / 5,100 / 6,378 km) and which layers are solid vs liquid — a classic Term Exam I question.',
+  'Be able to label the plate-boundary diagram: trench, island arc, stratovolcano, shield volcano, spreading ridge, hot spot, subducting plate, continental rift.',
+  'The metamorphic sequence (slate → phyllite → schist → gneiss) appears again in Lab 5 and the lab exam — memorize it now.',
+  'Put every date from this lecture in your calendar today: 6 Oct, 26 Oct week, 5 Nov, final 9–18 Dec.']},
+{n:2,title:'Tour of the Solar System',date:'Sep 8',slides:'2_Tour_of_the_Solar_System.pdf',
+ summary:'Chapters 1 & 21. Three learning outcomes drive this lecture: explain the Nebular Theory, explain how planets grow by accretion, and explain why inner and outer planets differ in composition (the frost line). The Sun and planets formed together ~5 billion years ago from a rotating cloud of hydrogen, helium and dust compressed by a nearby supernova; the cloud flattened into a protoplanetary disc, fusion ignited the Sun, chondrules condensed (4.56–4.57 Ga), and planetesimals grew by collision into planets, ending in the Late Heavy Bombardment (3.8–4.1 Ga). Impact craters record that history — older surfaces have more of them — and the Moon formed from debris of a Mars-sized impactor (Theia). The lecture then tours the four terrestrial planets, the two gas giants and two ice giants, and the small bodies: asteroids, meteoroids/meteors/meteorites, comets, dwarf planets, the Kuiper Belt and the Oort Cloud.',
+ notes:[
+  ['Learning outcomes (the three things you must be able to explain)',[
+   'Explain the Nebular Theory of solar-system formation.',
+   'Explain how planets form by accretion.',
+   'Explain why the inner (terrestrial) and outer (Jovian) planets have different compositions — the frost line.']],
+  ['Big picture: galaxies and our place',[
+   'A galaxy is a massive, gravitationally bound system of stars and stellar remnants, an interstellar medium of gas and dust, and dark matter (Fig. 1.2).',
+   'Hubble Deep Field, spiral galaxies NGC 1300 and NGC 1672, and our own Milky Way; our solar system sits in one of the Milky Way\'s outer arms.',
+   'All planets orbit within the ecliptic — the disc-shaped plane inherited from the original protoplanetary disc (Fig. 21.3).']],
+  ['Nebular Theory — the sequence (Fig. 1.7, 1.9a)',[
+   'Sun, Earth and all planets formed at the same time from the same primordial material: a giant rotating molecular cloud (mostly H and He gas + dust) that collapsed ~5 billion years ago.',
+   '(a) Dust + gas compressed by the shock wave from a nearby supernova. Stars ~100× the Sun\'s mass die violently; the core collapses at ~70,000 km/s, then rebounds, releasing elements heavier than oxygen.',
+   '(b) The cloud contracts and rotates faster (conservation of angular momentum), flattening into a protoplanetary disc with a protostar at the centre.',
+   '(c) Most mass collects at the centre; when it is hot and dense enough, nuclear fusion begins — a star (the Sun) is born.',
+   '(d) The remaining disc cools; molten droplets condense and crystallize as chondrules. Found in chondrite meteorites, dated 4.56–4.57 Ga — the age of the solar system.',
+   '(e) Solid particles keep condensing and grow by accretion (collisions). Critical diameter ≈ 1 km — big enough for mutual gravity to pull bodies together → planetesimals → planets.',
+   'The end of accretion is marked by the Late Heavy Bombardment, ~3.8–4.1 Ga.',
+   '"How do we know?" evidence: the Orion Nebula (a stellar nursery 1,500 light-years away where ~2,300 stars are forming), the Crab Nebula supernova remnant, chondrules in meteorites.']],
+  ['Impact craters as a record',[
+   'Five-stage crater formation; craters are markers of collision events and occur on all solid surfaces in the solar system.',
+   'Collision rates were far higher early in solar-system history, so older surfaces have more craters — a relative dating tool.',
+   'The Moon: heavily cratered highlands are older; smooth volcanic plains (maria) are younger, 3.0–3.5 billion years old. Apollo and Luna samples plus lunar meteorites let us date them.',
+   'Earth has only ~190 known impact structures, none from the first 2 billion years — plate tectonics, erosion and burial erase them. Examples: Manicouagan, Quebec (214 Ma, 100 km across); Whitecourt, Alberta (<1,400 years old, 36 m).']],
+  ['Formation of the Moon — Giant Impact Hypothesis (Fig. 21.8)',[
+   '~4.5 Ga a Mars-sized body, Theia, struck the semi-molten early Earth.',
+   'Intense heat; debris from both bodies was thrown into orbit.',
+   'The debris coalesced in orbit and formed the Moon.']],
+  ['Definitions you must know',[
+   'Planet: orbits a star, massive enough to be rounded by its own gravity, NOT massive enough for fusion, and has cleared its neighbouring region of planetesimals.',
+   'Moon: a natural body orbiting a planet or smaller body.',
+   'Dwarf planet: rounded by its own gravity, orbits the Sun, has NOT cleared its neighbourhood, and is not a satellite. Examples: Ceres (asteroid belt — the only dwarf planet there) and Pluto (Kuiper Belt).',
+   'Planetesimals: leftover material from planet formation — asteroids and comets.',
+   'Asteroid / meteoroid: rock + metal fragments similar in composition to terrestrial planets; meteoroid < 1 m, asteroid > 1 m.',
+   'Meteor: a meteoroid burning up in Earth\'s atmosphere. Meteorite: the fragment that survives to the ground. 99.8% of the ~45,000 meteorites come from the asteroid belt; 0.2% from the Moon and Mars.',
+   'Comet: mostly ices (water, ammonia, methane, CO2) plus rock and dust. Structure: nucleus, coma and tail — coma and tail only develop near the Sun; the tail always points away from the Sun. Elliptical orbits, often out of the planetary plane.']],
+  ['Two families of planets',[
+   'Thick vs. thin atmospheres are explained mainly by two factors: surface temperature and size (gravity).',
+   'Terrestrial (inner, rocky): Mercury, Venus, Earth, Mars — small, dense, rock + metal, few or no moons (Fig. 21.9).',
+   'Jovian (outer, giant): Jupiter and Saturn = gas giants (H, He); Uranus and Neptune = ice giants (methane gives the blue colour). Large, low density, many moons, ring systems (Fig. 21.20).']],
+  ['Terrestrial planets — facts to memorize',[
+   'Mercury: innermost, smallest; orbits in 88 days; one day-night cycle = 176 Earth days; extremes −173 °C to 427 °C; no atmosphere but has a magnetic field; smooth dark plains like lunar maria; lobate scarps >1.6 km high formed as the crust cooled and contracted.',
+   'Venus: thick CO2 atmosphere → runaway greenhouse, 450 °C surface; 225-day orbit; retrograde rotation; one Venus day ≈ 244 Earth days; no moons; Magellan radar shows 2,000–3,000 craters and lava flows over 80% of the surface.',
+   'Mars: the red planet (iron-oxide dust); −140 °C to 20 °C; thin atmosphere (1% of Earth\'s density, 95% CO2); heavily cratered southern highlands, smooth northern lowlands, huge shield volcanoes (Olympus Mons); stream-like channels and fluidized ejecta suggest past water; present-day ice found by Phoenix (2008) and at the poles.']],
+  ['Jovian planets — facts to memorize',[
+   'Jupiter: largest (D = 143,884 km); banded clouds; Great Red Spot = giant storm; −150 to −100 °C; fastest rotation (10 h) → polar flattening 10.4% (Earth 0.3%); 67+ moons; Galilean moons Io, Europa, Ganymede, Callisto. Io is the most volcanically active body in the solar system — plumes reach 100 km.',
+   'Saturn: 29-year orbit; composition like Jupiter; −191 to −130 °C; rings seen by Galileo in 1610 — A ring (outer) and B ring (inner) separated by the Cassini division, plus the Encke gap; 62 moons; Titan (largest; atmosphere 98% N2, 2% CH4; Huygens landed 2005) and Enceladus (tectonically active, erupting).',
+   'Uranus: ice giant, D = 51,118 km; 27 moons; −214 to −205 °C; faint rings; blue from methane; rotation axis tilted >90° — attributed to an impact.',
+   'Neptune: ice giant, D = 49,572 km; blue from methane; −223 to −220 °C; 13 moons (Triton); dark oval storm; windiest planet — >1,000 km/h, record 2,400 km/h.']],
+  ['The frost line — why the planets differ',[
+   'Everything formed from the same cloud, so composition differences come from temperature in the disc.',
+   'Inside the frost line (near the Sun) only rock and metal could condense → small, dense terrestrial planets.',
+   'Beyond the frost line ices (H2O, CH4, NH3) could also condense, giving far more solid material; those cores grew large enough to capture H and He gas → gas and ice giants.']],
+  ['Small-body regions',[
+   'Asteroid belt: ~4.56 Ga low-density "rubble piles" that never accreted (Jupiter\'s gravity prevents it); 1.1–1.7 million asteroids >1 km; frequent collisions. Ceres and Vesta mapped by NASA\'s Dawn mission.',
+   'Kuiper Belt: beyond Neptune — short-period comets, asteroids and dwarf planets (Pluto).',
+   'Oort Cloud: theoretical shell (not a plane) at ~50,000 AU, almost 1 light-year out; source of long-period comets; its outer edge is the gravitational boundary of the solar system.']],
+  ['Next lecture',[
+   'Earth\'s internal structure — core, mantle, crust. Reading: Chapter 1.']]],
+ terms:[
+  ['Nebular Theory','The Sun and planets formed together ~5 Ga from the collapse of a single rotating molecular cloud of gas and dust.'],
+  ['Molecular cloud','An interstellar cloud of mostly hydrogen and helium gas plus dust from which stars form; e.g., the Orion Nebula.'],
+  ['Supernova','The violent death of a massive star; its shock wave can compress a nearby cloud and it seeds space with elements heavier than oxygen.'],
+  ['Protoplanetary disc','The flattened rotating disc of gas and dust around a protostar in which planets form.'],
+  ['Protostar','The dense central mass of a collapsing cloud before nuclear fusion begins.'],
+  ['Chondrule','A tiny (≈0.5 mm) once-molten droplet that condensed from the cooling disc; found in chondrite meteorites; 4.56–4.57 Ga.'],
+  ['Accretion','Growth of bodies by collisions; once ~1 km across their mutual gravity pulls them together.'],
+  ['Planetesimal','A km-scale body formed by accretion; the building block of planets. Asteroids and comets are leftover planetesimals.'],
+  ['Late Heavy Bombardment','A period of intense impacts ~3.8–4.1 Ga at the end of planet formation.'],
+  ['Giant Impact Hypothesis','The Moon formed ~4.5 Ga from debris thrown into orbit when Mars-sized Theia struck the semi-molten Earth.'],
+  ['Lunar maria','The smooth, dark, younger (3.0–3.5 Ga) volcanic plains on the Moon; the cratered highlands are older.'],
+  ['Ecliptic','The plane in which the planets orbit, inherited from the protoplanetary disc.'],
+  ['Planet','Orbits a star, rounded by its own gravity, no fusion, and has cleared its orbital neighbourhood of planetesimals.'],
+  ['Dwarf planet','Rounded by its own gravity and orbits the Sun but has NOT cleared its neighbourhood and is not a satellite (Ceres, Pluto).'],
+  ['Terrestrial planets','Mercury, Venus, Earth, Mars — small, dense, rocky inner planets.'],
+  ['Jovian planets','Jupiter, Saturn (gas giants) and Uranus, Neptune (ice giants) — large, low-density outer planets.'],
+  ['Frost line','The distance from the Sun beyond which ices could condense in the disc; explains rocky inner vs. giant outer planets.'],
+  ['Galilean moons','Jupiter\'s four largest moons: Io, Europa, Ganymede, Callisto.'],
+  ['Meteoroid / meteor / meteorite','Small body (<1 m) in space / the streak as it burns in the atmosphere / the fragment that reaches the ground.'],
+  ['Asteroid','Rock + metal body >1 m, mostly in the belt between Mars and Jupiter; the source of 99.8% of meteorites.'],
+  ['Comet','Icy planetesimal (water, ammonia, methane, CO2 ices + rock); nucleus, coma and tail; tail points away from the Sun.'],
+  ['Kuiper Belt','Region beyond Neptune hosting short-period comets, asteroids and dwarf planets such as Pluto.'],
+  ['Oort Cloud','Theoretical spherical shell of icy bodies at ~50,000 AU; source of long-period comets; the outer gravitational edge of the solar system.'],
+  ['Retrograde rotation','Spinning opposite to the direction of orbit, as Venus does.'],
+  ['Lobate scarp','A cliff on Mercury (>1.6 km high) formed when the planet cooled and its crust contracted.']],
+ questions:[
+  ['State the Nebular Theory in one sentence.','The Sun, Earth and all the planets formed at the same time, from the same primordial material, by the gravitational collapse of a giant rotating molecular cloud about 5 billion years ago.'],
+  ['List the five stages of the Nebular Theory in order.','(1) Gas + dust compressed by a nearby supernova shock wave; (2) the cloud contracts and spins faster, flattening into a disc; (3) fusion ignites in the dense centre — a star; (4) the first solids condense as chondrules; (5) planetesimals grow by accretion (collisions) into planets.'],
+  ['What role does a supernova play, and why does it matter for elements heavier than oxygen?','Its shock wave compresses the molecular cloud, triggering collapse. The core collapse and rebound of a massive star also creates and scatters elements heavier than oxygen — the raw material for rocky planets.'],
+  ['What are chondrules, where are they found, and why is their age important?','Tiny molten droplets that condensed and crystallized as the protoplanetary disc cooled; found in chondrite meteorites; dated 4.56–4.57 Ga, which gives the age of the solar system.'],
+  ['Explain accretion and the significance of the 1 km "critical diameter".','Accretion is growth by collision. Once bodies reach about 1 km across, their mutual gravity is strong enough to pull them together, so growth accelerates from planetesimals to planets.'],
+  ['When was the Late Heavy Bombardment and what does it mark?','About 3.8–4.1 Ga; the final period of intense impacts at the end of planet formation.'],
+  ['Why do older planetary surfaces have more craters?','Collision rates were much higher early in the solar system\'s history, so a surface that has been exposed longer has accumulated more impacts — crater density is a relative-age tool.'],
+  ['Why has Earth preserved no craters from its first 2 billion years?','Earth\'s surface is constantly recycled and reshaped by plate tectonics, erosion, weathering and burial, which erase old craters; the Moon, with none of these, keeps them.'],
+  ['Describe the Giant Impact Hypothesis for the Moon.','~4.5 Ga a Mars-sized body (Theia) hit the semi-molten Earth; the impact heated both and threw debris into orbit; the debris coalesced to form the Moon.'],
+  ['Give the three criteria that make a body a planet, and the one that a dwarf planet fails.','Orbits a star; massive enough to be rounded by its own gravity; not massive enough for fusion; AND has cleared its neighbourhood of planetesimals. A dwarf planet meets the first three but has not cleared its neighbourhood.'],
+  ['Name the terrestrial and the Jovian planets and give two ways they differ.','Terrestrial: Mercury, Venus, Earth, Mars. Jovian: Jupiter, Saturn, Uranus, Neptune. Terrestrial planets are small, dense and rocky with few moons; Jovian planets are large, low-density, H/He or ice-rich, with many moons and rings.'],
+  ['Explain the frost line and how it answers "why are the planets so different?"','Inside the frost line the disc was too hot for ices to condense, so only rock and metal formed small dense planets. Beyond it, ices also condensed, giving far more solid material; those large cores captured H and He gas and became giants.'],
+  ['Which two factors mainly explain whether a body has a thick atmosphere or none?','Surface temperature and size (gravity).'],
+  ['Why is Venus hotter than Mercury even though it is farther from the Sun?','Venus has a thick CO2-rich atmosphere that causes a runaway greenhouse effect, holding the surface at ~450 °C, while Mercury has no atmosphere to trap heat.'],
+  ['List three lines of evidence for water on Mars.','Earth-like stream channels; fluidized ejecta blankets around craters; ice at the poles and ice exposed by the Phoenix lander in 2008.'],
+  ['Which body is the most volcanically active in the solar system, and what planet does it orbit?','Io, one of Jupiter\'s Galilean moons; plumes rise 100 km above its surface.'],
+  ['What makes Uranus and Neptune "ice giants" and why are they blue?','They are rich in ices (water, methane, ammonia) rather than mostly H/He; methane in their atmospheres absorbs red light, so they appear blue.'],
+  ['What is unusual about Uranus\'s rotation and what is the likely cause?','Its rotation axis is tilted more than 90° — essentially on its side — attributed to a giant impact.'],
+  ['Distinguish meteoroid, meteor and meteorite.','Meteoroid: a small body (<1 m) in space. Meteor: the streak of light as it burns entering the atmosphere. Meteorite: the fragment that survives to reach the ground.'],
+  ['Why hasn\'t the asteroid belt formed a planet?','Jupiter\'s gravity stirs the belt, preventing the 1.1–1.7 million >1 km bodies from coalescing; collisions keep breaking them up.'],
+  ['Describe the structure of a comet and where its tail points.','A nucleus of ices (water, ammonia, methane, CO2) plus rock and dust; near the Sun it develops a coma and a tail. The tail always points away from the Sun, whichever way the comet is moving.'],
+  ['Compare the Kuiper Belt and the Oort Cloud.','Kuiper Belt: a disc beyond Neptune with short-period comets, asteroids and dwarf planets like Pluto. Oort Cloud: a theoretical spherical shell at ~50,000 AU (almost 1 light-year) that supplies long-period comets and marks the gravitational edge of the solar system.'],
+  ['Where do most meteorites come from?','99.8% from the asteroid belt; only 0.2% from the Moon and Mars.']],
+ quiz:[
+  {q:'According to the Nebular Theory, the Sun and planets formed:',opts:['At different times from different clouds','Together, from the same rotating molecular cloud','After the Moon','From a supernova remnant only'],ans:1,exp:'The core idea: same time, same primordial material, one collapsing rotating cloud ~5 Ga.'},
+  {q:'What triggered the collapse of the molecular cloud?',opts:['Solar wind','A shock wave from a nearby supernova','Jupiter\'s gravity','The Late Heavy Bombardment'],ans:1,exp:'The supernova shock wave compressed the cloud and started the collapse.'},
+  {q:'Chondrules give the age of the solar system as about:',opts:['3.8–4.1 Ga','4.5 Ga','4.56–4.57 Ga','5.5 Ga'],ans:2,exp:'Chondrules in chondrite meteorites date to 4.56–4.57 Ga.'},
+  {q:'The "critical diameter" at which bodies begin attracting each other by gravity is about:',opts:['1 m','100 m','1 km','1,000 km'],ans:2,exp:'At ~1 km mutual gravity takes over and accretion accelerates.'},
+  {q:'A surface with many impact craters is, relative to a smooth one:',opts:['Younger','Older','The same age','Volcanically active'],ans:1,exp:'Early collision rates were high; more craters = longer exposure = older.'},
+  {q:'The Moon formed from:',opts:['Capture of a passing asteroid','Debris from a Mars-sized body hitting the early Earth','A piece of the Sun','Accretion in the Kuiper Belt'],ans:1,exp:'The Giant Impact Hypothesis: Theia struck Earth ~4.5 Ga.'},
+  {q:'Which criterion separates a dwarf planet from a planet?',opts:['Being round','Orbiting the Sun','Clearing its orbital neighbourhood','Having a moon'],ans:2,exp:'Dwarf planets are round and orbit the Sun but have not cleared their neighbourhood of planetesimals.'},
+  {q:'The frost line explains why:',opts:['Venus is hot','Inner planets are rocky and outer planets are giants','Comets have tails','Mercury has no atmosphere'],ans:1,exp:'Beyond the frost line ices condensed, giving big cores that captured gas.'},
+  {q:'Which planet rotates retrograde and has a 450 °C surface?',opts:['Mercury','Mars','Venus','Neptune'],ans:2,exp:'Venus: thick CO2 greenhouse atmosphere, retrograde spin, 1 day ≈ 244 Earth days.'},
+  {q:'The most volcanically active body in the solar system is:',opts:['Mars','Venus','Io','Enceladus'],ans:2,exp:'Io, Jupiter\'s moon, has plumes 100 km high.'},
+  {q:'Uranus and Neptune look blue because of:',opts:['Water oceans','Methane in their atmospheres','Ice rings','Reflected sunlight'],ans:1,exp:'Methane absorbs red light.'},
+  {q:'A meteorite is:',opts:['A small body in space','A streak of light in the sky','A fragment that reached the ground','An icy body with a tail'],ans:2,exp:'Meteoroid (space) → meteor (burning in atmosphere) → meteorite (on the ground).'},
+  {q:'Long-period comets come mainly from the:',opts:['Asteroid belt','Kuiper Belt','Oort Cloud','Ecliptic'],ans:2,exp:'Oort Cloud at ~50,000 AU; the Kuiper Belt supplies short-period comets.'},
+  {q:'Which two factors mainly decide whether a body has a thick atmosphere?',opts:['Distance and colour','Surface temperature and size','Number of moons and rings','Rotation speed and tilt'],ans:1,exp:'Slide 34: surface temperature and size (gravity).'},
+  {q:'Earth preserves no impact craters from its first 2 billion years because:',opts:['None hit Earth then','Plate tectonics and erosion erased them','They are under the oceans only','The Moon shielded Earth'],ans:1,exp:'Earth\'s active surface processes recycle and erase old craters.'}],
+ examTips:[
+  'The three learning outcomes on slide 2 ARE the exam: be able to write out the Nebular Theory sequence, explain accretion, and explain the frost line in a paragraph each.',
+  'Memorize the number chain: cloud collapse ~5 Ga → chondrules 4.56–4.57 Ga → Moon-forming impact ~4.5 Ga → Late Heavy Bombardment 3.8–4.1 Ga → lunar maria 3.0–3.5 Ga.',
+  'Definitions are worth easy marks: planet vs. dwarf planet (the "cleared its neighbourhood" clause), meteoroid/meteor/meteorite, asteroid vs. comet, Kuiper Belt vs. Oort Cloud.',
+  'Every "How do we know?" slide is a likely written-answer question: Orion Nebula, Crab Nebula, chondrules, crater counting, Apollo samples.',
+  'Know one distinctive fact per planet (Mercury scarps, Venus greenhouse/retrograde, Mars water evidence, Jupiter/Io, Saturn rings/Titan/Enceladus, Uranus tilt, Neptune winds).']},
+{n:3,title:"Earth's Internal Structure",date:'Sep 10',slides:'3_Earths_Internal_Structure.pdf',
+ summary:"Chapter 1. Three outcomes: describe Earth's interior using BOTH the chemical divisions (crust, mantle, core) and the physical divisions (lithosphere, asthenosphere, transition zone, lower mantle/mesosphere, outer core, inner core); explain the difference between crust and lithosphere; and explain the difference between asthenosphere and mantle. The layering formed by planetary differentiation during the Hadean (4.55–4.0 Ga) as a hot, partly molten Earth — heated by accretion, gravitational compression and radioactive decay of U, Th and K — sorted itself by density: iron-nickel sank to the core, light oxygen-seeking elements rose to form crust. We know the interior from seismic waves (the Moho, S-wave shadow zone, P-wave reflections off the inner core), mantle xenoliths, meteorites from differentiated asteroids, and ophiolites.",
+ notes:[
+  ['Learning outcomes',[
+   'Describe the internal structure using chemical divisions AND physical divisions.',
+   'Explain the difference between the crust and the lithosphere.',
+   'Explain the difference between the asthenosphere and the mantle.']],
+  ['Planetary differentiation (Fig. 1.10)',[
+   'Hadean Earth: 4.55–4.0 Ga, largely molten.',
+   'Differentiation = separating the constituents of a planetary body according to their physical/chemical behaviour → compositionally distinct layers, densest at the bottom, lightest on top.',
+   'Three heat sources for early Earth: (1) accretion — impact collisions cause local heating; (2) gravitational pressure — P and T high enough to melt; (3) radioactive decay of unstable isotopes, chiefly U, Th and K.',
+   'In melted zones dense material sinks and light material rises. Iron-nickel diapirs (blobs) sank to form the core, carrying siderophile ("iron-loving") elements; lighter oxygen-seeking elements rose and solidified as crust.']],
+  ['Atoms and radioactive decay (Box 1.2)',[
+   'Atom: small massive nucleus (protons +, neutrons neutral) with a thin cloud of electrons (−).',
+   'Atomic number Z = number of protons. Atomic mass = protons + neutrons.',
+   'Isotopes: same element (same protons), different neutrons → different mass.',
+   'Some isotopes have unstable nuclei that spontaneously break apart, releasing energy as particles or radiation = radioactive decay.']],
+  ['Chemical subdivision — defined by composition/density (Fig. 1.22, 1.23)',[
+   'Crust — Continental: average 40 km thick (20 km to ~70 km under mountains), FELSIC (granodiorite) silicate rock, density 2.7 g/cm³. Oceanic: average 7 km thick, MAFIC (basalt) silicate rock, density 3.0 g/cm³.',
+   'Mantle — from ≤40 km down to ~2,890 km; ULTRAMAFIC silicate rock (peridotite). The crust/mantle boundary is chemical (felsic or mafic above, ultramafic below). The lower mantle cannot melt because the solidus (temperature at which melting begins) rises with pressure.',
+   'Core — Fe-Ni metal with a little O, S and others; density 11 g/cm³. Split physically into outer and inner core.']],
+  ['Physical subdivision — defined by state (solid/liquid) and strength',[
+   'Lithosphere: cool, rigid, brittle outer shell = crust + mantle lithosphere; average thickness ~100 km (up to ~200 km). It is the plate. Bends or breaks under stress.',
+   'Asthenosphere: directly beneath; hotter, softer, weaker; up to a few % molten; rock behaves plastically (flows slowly). The lithosphere moves independently over it — that is plate tectonics.',
+   'Transition zone: ~410–660 km; density steps up as olivine converts to denser minerals.',
+   'Upper mantle = mantle lithosphere + asthenosphere + transition zone, from the Moho to 660 km — it does NOT include the crust.',
+   'Lower mantle (mesosphere): ~660 to ~2,900 km (about 2,300 km thick, 56% of Earth\'s volume, silicate perovskite); hot, solid, ductile, strengthens with depth.',
+   'D″ layer: 2,890–2,900 km, at the base of the lower mantle / top of the outer core; weak with highly variable properties.',
+   'Outer core: molten Fe + Ni; its circulation generates Earth\'s magnetic field; denser than the overlying mantle so it does not rise.',
+   'Inner core: solid Fe + Ni; immense pressure keeps it solid despite the temperature.']],
+  ['The two key distinctions (guaranteed exam questions)',[
+   'Crust vs lithosphere: the crust is a chemical layer (felsic/mafic rock above the Moho). The lithosphere is a physical layer — crust PLUS the rigid uppermost mantle — defined by strength, not composition. Plates are lithosphere.',
+   'Asthenosphere vs mantle: the mantle is the whole chemical layer of ultramafic rock from the Moho to 2,890 km. The asthenosphere is only the weak, plastic, partly molten physical zone in the upper mantle just below the lithosphere.']],
+  ['How do we know? (deepest drill hole: only 12.3 km)',[
+   'Seismic waves: waves of force from the abrupt release of stored energy (earthquakes). Denser rock → faster waves. Waves reflect and refract (bend) at boundaries between rocks of different density.',
+   'Body waves: P-waves are compression waves (slinky) that push/pull in the direction of travel, and pass through solids and liquids. S-waves are shear waves (rope) that shake particles at right angles, and travel through solids only, NOT liquids.',
+   'The Moho (Mohorovičić discontinuity) = chemical crust/mantle boundary. P-waves jump from 6 km/s in the crust to 8 km/s in the ultramafic mantle. Depth: 25–75 km under continents, 5–10 km under the ocean floor. Discovered because P-waves that dipped into the mantle arrived first at distant stations — denser material at depth.',
+   'S-wave shadow zone: S-waves cannot cross the liquid outer core, proving it is liquid. P-waves refract at the outer and inner core, creating a P-wave shadow zone; P-waves reflecting off the solid inner core confirmed its existence.',
+   'Mantle xenoliths: chunks of mantle rock carried up by volcanism — the same mechanism that brings diamonds up from ~100 km.',
+   'Meteorites: most asteroids never got big enough to differentiate, but some ≥1,000 km across did, forming an Fe-Ni core and silicate mantle. At least one such asteroid broke up, giving us direct samples of a planetary core (iron meteorites).',
+   'Ophiolites: slices of oceanic crust and upper mantle thrust up onto continental crust — e.g., Gros Morne National Park, Newfoundland.']],
+  ['Mantle structure summary (this slide returns in Topic 4)',[
+   '1. Lithospheric mantle: ~5–200 km; with the crust forms the rigid lithosphere.',
+   '2. Asthenosphere: weak, warm layer beneath.',
+   '3. Transition zone: 410–660 km; olivine → denser minerals.',
+   '4. Lower mantle (mesosphere): 660–2,900 km; 56% of planet volume; silicate perovskite; D″ at its base.']],
+  ['Next lecture',['Plate tectonics — Chapter 2.']]],
+ terms:[
+  ['Planetary differentiation','The sorting of a partly molten planet into compositionally distinct layers by density — dense Fe-Ni to the centre, light silicates to the surface.'],
+  ['Hadean','Earth\'s earliest eon, 4.55–4.0 Ga, when the planet was largely molten and differentiated.'],
+  ['Siderophile','"Iron-loving" elements that sank with the iron-nickel to the core during differentiation.'],
+  ['Isotope','Atoms of the same element (same protons) with different numbers of neutrons, hence different mass.'],
+  ['Radioactive decay','Spontaneous breakdown of unstable nuclei, releasing particles or radiation and heat; U, Th and K heated the early Earth.'],
+  ['Crust (continental)','Felsic (granodiorite) rock, avg 40 km (20–70 km), density 2.7 g/cm³.'],
+  ['Crust (oceanic)','Mafic (basalt) rock, avg 7 km, density 3.0 g/cm³.'],
+  ['Mantle','Ultramafic silicate rock (peridotite) from the Moho to ~2,890 km; the largest chemical layer.'],
+  ['Core','Fe-Ni metal with minor O and S; density 11 g/cm³; liquid outer core and solid inner core.'],
+  ['Felsic / mafic / ultramafic','Silicate rock compositions with decreasing silica and increasing Fe-Mg: continental crust / oceanic crust / mantle.'],
+  ['Lithosphere','Cool, rigid, brittle outer shell — crust + mantle lithosphere — ~100 km (≤200 km) thick; the tectonic plate.'],
+  ['Asthenosphere','Hot, weak, plastically flowing zone of the upper mantle beneath the lithosphere; up to a few % molten.'],
+  ['Transition zone','410–660 km depth where olivine converts to denser mineral structures and density steps up.'],
+  ['Lower mantle (mesosphere)','660–2,900 km; hot, solid, ductile; 56% of Earth\'s volume; silicate perovskite.'],
+  ['D″ layer','Thin, weak, highly variable zone at 2,890–2,900 km between lower mantle and outer core.'],
+  ['Outer core','Liquid Fe-Ni; its circulation generates Earth\'s magnetic field.'],
+  ['Inner core','Solid Fe-Ni, kept solid by immense pressure.'],
+  ['Solidus','The temperature at which melting begins; it rises with pressure, which is why the lower mantle stays solid.'],
+  ['Seismic waves','Waves of force from the sudden release of stored energy (earthquakes) that travel through Earth and reveal its structure.'],
+  ['P-wave','Primary/compression body wave; pushes and pulls in its direction of travel; passes through solids and liquids; fastest.'],
+  ['S-wave','Secondary/shear body wave; shakes particles at right angles to travel; passes through solids only.'],
+  ['Moho (Mohorovičić discontinuity)','Chemical crust/mantle boundary where P-wave speed jumps from 6 to 8 km/s; 25–75 km under continents, 5–10 km under oceans.'],
+  ['S-wave shadow zone','Region on the far side of Earth that receives no S-waves because they cannot pass through the liquid outer core.'],
+  ['Mantle xenolith','A fragment of mantle rock carried to the surface by volcanism.'],
+  ['Ophiolite','A slice of oceanic crust and upper mantle uplifted onto a continent (e.g., Gros Morne, NL).']],
+ questions:[
+  ['List the chemical layers and the physical layers of Earth.','Chemical: crust, mantle, core. Physical: lithosphere, asthenosphere, transition zone, lower mantle (mesosphere), outer core, inner core.'],
+  ['What is the difference between the crust and the lithosphere?','The crust is a chemical layer defined by composition (felsic or mafic rock above the Moho). The lithosphere is a physical layer defined by strength — the crust plus the rigid uppermost mantle, ~100 km thick. Plates are made of lithosphere, not just crust.'],
+  ['What is the difference between the asthenosphere and the mantle?','The mantle is the entire chemical layer of ultramafic rock from the Moho to ~2,890 km. The asthenosphere is only a physical zone within the upper mantle, just below the lithosphere, that is hot, weak and plastic (a few % molten).'],
+  ['Define planetary differentiation and its result.','The process that separates the constituents of a planetary body according to their physical and chemical behaviour; the result is compositionally distinct layers with the densest material (iron) at the centre and the least dense outside.'],
+  ['What were the three sources of heat in the early Earth?','Accretion (impact heating), gravitational pressure (compression raising P and T to melting), and radioactive decay of unstable isotopes — mainly U, Th and K.'],
+  ['During differentiation, what sank and what rose?','Dense iron-nickel diapirs sank to form the core, taking siderophile (iron-loving) elements with them; lighter oxygen-seeking elements rose and solidified to form the crust.'],
+  ['Compare continental and oceanic crust (thickness, composition, density).','Continental: avg 40 km (20–70 km), felsic granodiorite, 2.7 g/cm³. Oceanic: avg 7 km, mafic basalt, 3.0 g/cm³.'],
+  ['What is the composition and density of the core?','Iron-nickel metal with small amounts of oxygen and sulfur; density about 11 g/cm³.'],
+  ['Why doesn\'t the lower mantle melt even though it is very hot?','Because the solidus — the temperature at which melting begins — increases with pressure, and pressure in the lower mantle is enormous.'],
+  ['What is in the upper mantle, and what is NOT?','Mantle lithosphere, asthenosphere and transition zone (Moho to 660 km). The crust is NOT part of the upper mantle.'],
+  ['Describe the transition zone.','About 410–660 km deep; density increases stepwise as olivine transforms to denser mineral structures.'],
+  ['Give the depth range, thickness, and share of Earth\'s volume of the lower mantle.','About 660 to 2,900 km; ~2,300 km thick; 56% of the planet\'s volume; solid but ductile silicate perovskite.'],
+  ['Why does the outer core stay below the mantle, and what does it generate?','It is denser than the overlying mantle so it does not rise; its circulation generates Earth\'s magnetic field.'],
+  ['Why is the inner core solid?','Immense pressure keeps the iron-nickel solid despite the very high temperature.'],
+  ['How deep is the deepest drill hole, and what four methods do we use instead?','12.3 km. Seismic waves, mantle xenoliths, meteorites, and ophiolites.'],
+  ['Contrast P-waves and S-waves.','P-waves are compression waves that push and pull in the direction of travel and pass through solids and liquids. S-waves are shear waves that shake at right angles and pass through solids only.'],
+  ['What is the Moho and how is it detected?','The chemical boundary between crust and mantle lithosphere. P-wave speed jumps from ~6 km/s in crust to ~8 km/s in the denser ultramafic mantle; waves refracted through the mantle arrive first at distant stations.'],
+  ['How deep is the Moho under continents and under oceans?','25–75 km beneath continents; 5–10 km beneath the ocean floor.'],
+  ['How do seismic waves prove the outer core is liquid and the inner core is solid?','S-waves cannot cross the outer core, producing an S-wave shadow zone — so it is liquid. P-waves refract at the core boundaries (P-wave shadow zone) and reflect off the inner core, confirming a solid inner core.'],
+  ['How do meteorites tell us about Earth\'s core?','Some asteroids ≥1,000 km across differentiated into Fe-Ni cores and silicate mantles; at least one broke up, and its iron meteorites are direct samples of a planetary core.'],
+  ['What is an ophiolite? Give a Canadian example.','A section of oceanic crust and upper mantle uplifted onto continental crust; Gros Morne National Park, Newfoundland.'],
+  ['What is the D″ layer?','A weak layer with highly variable properties at 2,890–2,900 km, the boundary between the lower mantle and the outer core.']],
+ quiz:[
+  {q:'The chemical layers of Earth are:',opts:['Lithosphere, asthenosphere, core','Crust, mantle, core','Crust, lithosphere, mantle','Upper mantle, lower mantle, core'],ans:1,exp:'Chemical = crust, mantle, core. Lithosphere/asthenosphere are physical divisions.'},
+  {q:'Which statement about the lithosphere is correct?',opts:['It is the same as the crust','It is crust plus the rigid uppermost mantle','It is the weak layer plates slide on','It is entirely molten'],ans:1,exp:'Lithosphere = crust + mantle lithosphere; rigid; ~100 km; forms plates.'},
+  {q:'The asthenosphere is:',opts:['Liquid','A rigid part of the crust','A weak, plastic zone of the upper mantle','The core-mantle boundary'],ans:2,exp:'Hot, weak, up to a few % molten, flows slowly — but still solid rock.'},
+  {q:'Continental crust density and composition:',opts:['3.0 g/cm³, mafic','2.7 g/cm³, felsic','11 g/cm³, Fe-Ni','3.3 g/cm³, ultramafic'],ans:1,exp:'Continental crust: felsic granodiorite, 2.7 g/cm³; oceanic: mafic basalt, 3.0 g/cm³.'},
+  {q:'The most important radioactive elements that heated the early Earth were:',opts:['C, N, O','Fe, Ni, S','U, Th, K','Si, Al, Mg'],ans:2,exp:'Uranium, thorium and potassium.'},
+  {q:'Which layer occupies 56% of Earth\'s volume?',opts:['Crust','Lower mantle','Outer core','Asthenosphere'],ans:1,exp:'The lower mantle (mesosphere), 660–2,900 km.'},
+  {q:'S-waves cannot travel through:',opts:['Solids','Liquids','The crust','The lithosphere'],ans:1,exp:'Shear waves need a solid; this creates the S-wave shadow zone and proves the outer core is liquid.'},
+  {q:'At the Moho, P-wave speed changes from about:',opts:['8 to 6 km/s','6 to 8 km/s','3 to 6 km/s','8 to 11 km/s'],ans:1,exp:'6 km/s in crust → 8 km/s in denser ultramafic mantle.'},
+  {q:'The transition zone (410–660 km) is where:',opts:['The core begins','Olivine converts to denser minerals','Rock melts completely','The crust ends'],ans:1,exp:'Density steps up as olivine changes structure.'},
+  {q:'Earth\'s magnetic field is generated by:',opts:['The solid inner core','Circulation of the liquid outer core','Mantle convection','Magnetite in the crust'],ans:1,exp:'Convection in the molten Fe-Ni outer core.'},
+  {q:'The deepest drill hole reaches about:',opts:['1.2 km','12.3 km','123 km','1,230 km'],ans:1,exp:'12.3 km — nowhere near the mantle; hence seismic waves, xenoliths, meteorites, ophiolites.'},
+  {q:'An ophiolite is:',opts:['A mantle-derived diamond','Oceanic crust + upper mantle thrust onto a continent','An iron meteorite','A volcanic xenolith'],ans:1,exp:'E.g., Gros Morne, Newfoundland.'}],
+ examTips:[
+  'The two "difference between" questions on slide 2 (crust vs lithosphere; asthenosphere vs mantle) are near-certain written-answer questions on Term Exam I — practise writing each in 2–3 sentences.',
+  'Memorize the number ladder: crust 40 km cont. / 7 km oceanic → Moho → transition zone 410–660 → lower mantle 660–2,900 → D″ 2,890–2,900 → outer core → inner core. Densities 2.7 / 3.0 / 11 g/cm³.',
+  'Be able to explain the S-wave shadow zone in one sentence — it is the classic "how do we know the outer core is liquid" question.',
+  'Chemical = composition (crust/mantle/core). Physical = state and strength (lithosphere/asthenosphere/…). Say which system you are using in any answer.',
+  'Know the four "how do we know" methods and one fact about each.']},
+{n:4,title:'Plate Tectonics',date:'Sep 15',slides:'4_Plate_Tectonics.pdf',
+ summary:"Chapter 2. Four outcomes: explain why Wegener's continental drift was rejected, explain the evidence for plate tectonics, identify the three plate-boundary types, and diagram the plate-tectonic cycle. Wegener (1915) had four good lines of evidence — fit of continents, Mesosaurus fossils, matching rock belts, and ancient climates — but no mechanism, so the idea sat until the 1960s. Ocean drilling (no sediment at ridges, thicker away), hot-spot tracks dated by radiometric ages (Hawaii → Midway 27 Ma → Suiko 65 Ma), paleomagnetism (apparent polar wander and magnetic-reversal stripes recorded in ridge basalts), earthquake depths (to 750 km along subduction zones) and the age of ocean crust (nothing older than ~180 Ma) all confirmed that rigid lithosphere moves over the weak asthenosphere. Plates are driven by mantle convection, ridge push and slab pull. Divergent margins (ridges ~5 cm/yr, continental rifts) create lithosphere; convergent margins (ocean-continent, ocean-ocean, continent-continent) destroy it; transform faults (San Andreas) conserve it.",
+ notes:[
+  ['Learning outcomes',[
+   'Explain why Wegener\'s theory of continental drift was rejected.',
+   'Explain the evidence supporting plate tectonics.',
+   'Identify the three types of plate boundaries.',
+   'Diagram and explain the plate-tectonic cycle.']],
+  ['Early ideas that failed',[
+   'Legends (Hercules and Gibraltar) and the expanding/contracting Earth: continents spread apart when Earth expanded, mountains formed when it contracted.',
+   'Problems: little mass is being added; Earth is cooling, not heating, and shrinking slightly; paleomagnetic data show the radius 400 Ma was 102 ± 2.8% of today\'s; moment-of-inertia studies show no change in radius in 620 Ma.']],
+  ['Wegener\'s continental drift (1915) — four lines of evidence (Fig. 2.1–2.6)',[
+   '1. Fit of continents — coastlines match roughly; the true fit is at the seaward edge of the continental shelf, which wasn\'t mapped until the 1960s (Marie Tharp & Bruce Heezen, 1948–83).',
+   '2. Fossils — Mesosaurus, a freshwater Permian reptile (~250 Ma), occurs only in black shales of eastern South America and southern Africa. If it could swim oceans it would be widespread; it couldn\'t.',
+   '3. Rock types and structures — mountain belts on separate continents match in age, rock type and fossils.',
+   '4. Ancient climates — Devonian (390 Ma) coral reefs in Alberta (Leduc No. 1, Rockies); glacial deposits in southern Africa, South America, India and Australia. "Tropical ice sheets" rejected because same-age fossils elsewhere show warm conditions.',
+   'Why rejected until the 1960s: no mechanism. Moon/Sun gravity was refuted (forces that strong would stop Earth\'s rotation); "icebreaker" continents refuted (no evidence the ocean floor was weak enough).']],
+  ['Plate tectonics defined',[
+   'The theory describes the large-scale motion of the lithosphere, which moves independently of the asthenosphere (Fig. 2.12 major plates).',
+   'Plate tectonics is the primary mechanism by which Earth loses heat.']],
+  ['New evidence that confirmed the theory (1960s onward)',[
+   '1. Ocean Drilling Program — first oceanic-crust samples 1961. Sediment is absent at the ridge and thickens with distance from it (Fig. 2.17).',
+   '2. Mantle hot spots — intraplate volcanism; a hot spot is a region of anomalous magmatism, the surface expression of a mantle plume (Fig. 2.28). The Hawaiian–Emperor chain: >129 volcanoes, ~6,000 km long; radiometric ages increase away from Hawaii (Hawaii 1 Ma–present, Midway 27 Ma, Suiko 65 Ma) — the plate is moving over a fixed plume (Fig. 2.29). Iceland = mantle plume superimposed on the Mid-Atlantic Ridge divergent margin. Aside: Olympus Mons on Mars (27 km high, 500 km across) is huge because Mars has no plate motion to carry the volcano off its plume.',
+   '3. Paleomagnetism — Earth behaves like a bar magnet. Magnetite in cooling rock locks in "remnant magnetism", a fossil compass (Fig. 2.33). Dated rocks give apparent polar wander paths; North America and Eurasia give DIFFERENT paths — impossible if the pole moved, so the continents moved (Fig. 2.34). The field also flips: normal vs reverse polarity (magnetic reversals), recorded in basalt lava flows (Fig. 2.35). New ridge basalt is magnetized by the field at the time, acting as a tape recorder — symmetric stripes of high-intensity (normal) and low-intensity (reverse) magnetization on either side of ridges (Fig. 2.36–2.37).',
+   '4. Global earthquake depths — deepest recorded 750 km; deep quakes trace subducting slabs (Fig. 2.21).',
+   '5. Age of oceanic crust — youngest at ridges, oldest (~180 Ma) at margins (Fig. 2.17).',
+   'Plate motion is now measured directly with GPS/satellites (Figs. 2.31–2.32).']],
+  ['What drives plates? (Fig. 2.30)',[
+   'Three mechanisms: (1) mantle convection, (2) ridge push, (3) slab pull.',
+   'Convection = heat transfer by mass movement. The mantle is solid but hot and therefore weak enough to flow. Heat comes from: heat loss from the core, radioactive decay within, and cooling from the top.',
+   'Simple convection cells tied to plate boundaries are NOT supported by modern seismic data; the 410–660 km olivine transition (density contrast) may act as a partial barrier to convection.']],
+  ['Partial melting in the asthenosphere',[
+   'Most igneous rocks melt only a few % by mass; because minerals melt at different temperatures, rocks melt over a range of a few hundred degrees.',
+   'If the liquid is squeezed out early, the melt is richer in silica (more felsic) than the source rock.',
+   'Upper mantle = ultramafic peridotite (olivine + pyroxene). Partial melting of peridotite in the asthenosphere produces mafic (basaltic) magma.']],
+  ['Three plate-boundary types (Fig. 2.13, 1.16)',[
+   'Divergent — plates move apart; new lithosphere created (constructive margin).',
+   'Convergent — plates move together; lithosphere destroyed (destructive margin).',
+   'Transform fault — plates slide past; lithosphere neither created nor destroyed (conservative margin).']],
+  ['Divergent boundaries',[
+   'Oceanic ridges: elevated seafloor, ~70,000 km long, 20% of Earth\'s surface. Spread ~5 cm/yr (range 2–15). New crust is hot (larger volume) so the ridge stands 2–3 km above the ocean floor; lithosphere cools, contracts and gets denser as it moves away (~80 million years), accumulating sediment. Submarine volcanoes, pillow basalt, earthquakes.',
+   'Continental rifting: a divergent boundary developing inside a continent — the landmass splits (break-up of Pangaea). Modern example: East African Rift valleys (Kilimanjaro, Mount Kenya) (Fig. 2.25–2.26).']],
+  ['Convergent boundaries — three kinds',[
+   'Oceanic–continental: oceanic plate subducts beneath continent. Example: Juan de Fuca plate under western North America → Cascade volcanic arc (Mount St. Helens, Rainier; Garibaldi and Silverthrone in Canada). Why volcanoes: water squeezed from the subducting slab lowers the melting temperature of the overlying mantle, which partially melts; the magma is less dense than rock and rises (Fig. 2.20).',
+   'Accreted terranes: ocean basins are not flat — seamounts, sediment, volcanic arcs get scraped off at the subduction zone and accreted onto the continental margin.',
+   'Oceanic–oceanic: the older, thicker, denser plate subducts. Examples: Aleutian Islands, Japan, Antilles. Produces a volcanic (island) arc.',
+   'Volcanic arc = a chain of volcanoes marking a subduction zone. The angle of subduction varies with distance from the spreading ridge, so the arc\'s distance from the trench varies too.',
+   'Continental–continental (collisional): neither subducts easily; crust thickens into mountains. Examples: Himalayas (India into Asia, Fig. 2.24), Alps, Appalachians, Urals.']],
+  ['Transform fault boundaries',[
+   'Plates slide horizontally past one another (conservative). Most occur in ocean basins as offsets along mid-ocean ridges (Fig. 2.22).',
+   'Continental example: the San Andreas Fault, 1,300 km along the California coast, Pacific–North American plate boundary, ~10,000 earthquakes per year (Fig. 2.23).']],
+  ['Next lecture',['Minerals — Chapter 2 (mineral chapter).']]],
+ terms:[
+  ['Continental drift','Wegener\'s 1915 hypothesis that continents were once a single landmass and have since moved apart.'],
+  ['Mesosaurus','A Permian freshwater reptile whose fossils occur only in South America and Africa — evidence the continents were joined.'],
+  ['Paleoclimate','Ancient climate; Devonian reefs in Alberta and glacial deposits across the southern continents show continents have moved through climate zones.'],
+  ['Plate tectonics','Theory describing the large-scale motion of rigid lithosphere over the weak asthenosphere; Earth\'s main heat-loss mechanism.'],
+  ['Hot spot','A region of anomalous magmatism — the surface expression of a mantle plume — that produces intraplate volcanoes.'],
+  ['Mantle plume','A column of hot rock rising through the mantle from depth, fixed relative to the moving plates.'],
+  ['Hot-spot track','A line of progressively older volcanoes (Hawaii → Midway 27 Ma → Suiko 65 Ma) recording plate motion over a plume.'],
+  ['Remnant magnetism','Magnetization locked into magnetite when a rock forms; a "fossil compass".'],
+  ['Apparent polar wander','The path the magnetic pole appears to have taken when plotted from rocks of one continent; differing paths for different continents prove the continents moved.'],
+  ['Magnetic reversal','A flip of Earth\'s north and south magnetic poles; recorded as normal vs reverse polarity in basalt.'],
+  ['Seafloor spreading','Creation of new oceanic crust at ridges; magnetic stripes symmetric about the ridge record reversals like a tape recorder.'],
+  ['Mantle convection','Heat transfer by mass movement of solid but weak, hot mantle rock.'],
+  ['Ridge push','Gravity sliding of elevated, young lithosphere away from a ridge.'],
+  ['Slab pull','The weight of a dense subducting slab dragging the rest of the plate along.'],
+  ['Partial melting','Melting of only a few % of a rock; produces a melt more silica-rich than the source. Peridotite → basaltic magma.'],
+  ['Peridotite','Ultramafic upper-mantle rock (olivine + pyroxene).'],
+  ['Divergent boundary','Plates separate; new lithosphere is created (constructive margin) — ocean ridges, continental rifts.'],
+  ['Convergent boundary','Plates collide; lithosphere is destroyed (destructive margin) — subduction zones and collisional mountains.'],
+  ['Transform fault boundary','Plates slide past each other; lithosphere is neither made nor destroyed (conservative margin).'],
+  ['Subduction','Descent of one plate beneath another into the mantle.'],
+  ['Volcanic arc','A chain of volcanoes marking a subduction zone (continental arc such as the Cascades, or island arc such as the Aleutians).'],
+  ['Accreted terrane','Seamounts, arcs or sediment scraped off subducting ocean crust and welded onto a continental margin.'],
+  ['Continental rift','A divergent boundary forming within a continent — e.g., the East African Rift.'],
+  ['Pillow basalt','Bulbous lava formed by underwater eruptions at mid-ocean ridges.'],
+  ['San Andreas Fault','A 1,300 km continental transform fault between the Pacific and North American plates; ~10,000 earthquakes per year.']],
+ questions:[
+  ['Why was the expanding/contracting Earth idea rejected?','Little mass is being added; Earth is cooling (and shrinking slightly), not heating; paleomagnetism shows the radius 400 Ma was 102 ± 2.8% of today\'s; moment-of-inertia studies show no radius change in 620 Ma.'],
+  ['List Wegener\'s four lines of evidence for continental drift.','(1) Fit of the continents; (2) matching fossils such as Mesosaurus; (3) matching rock types and mountain belts; (4) ancient climates — reefs in Alberta, glacial deposits across the southern continents.'],
+  ['Why is Mesosaurus such strong evidence?','It was a freshwater reptile found only in Permian black shales of eastern South America and southern Africa. It could not have swum across an ocean, and if it could, its fossils would be widespread — so the continents must have been joined.'],
+  ['Why did the coastlines not fit perfectly, and what fits better?','Coastlines are modified by sea level and erosion; the true edge of the continent is the seaward edge of the continental shelf, which fits much better — but shelves were not mapped until the 1960s (Marie Tharp and Bruce Heezen).'],
+  ['Why was Wegener\'s hypothesis rejected for ~50 years?','He had no plausible mechanism. Tidal forces from the Moon and Sun strong enough to move continents would stop Earth\'s rotation; continents plowing through the ocean floor like icebreakers required a weak seafloor for which there was no evidence.'],
+  ['What did the Ocean Drilling Program show about sediment thickness?','Sediment is absent at the ridge crest and gets thicker with distance from the ridge — the crust is youngest at the ridge and ages outward.'],
+  ['Explain how the Hawaiian–Emperor chain supports plate tectonics.','It is a ~6,000 km chain of >129 volcanoes whose radiometric ages increase with distance from Hawaii (Hawaii 1 Ma–present, Midway 27 Ma, Suiko 65 Ma). A fixed mantle plume beneath a moving plate produces exactly this track.'],
+  ['Why is Olympus Mons on Mars so large?','Mars has no plate tectonics, so the crust does not move off the plume; all the magma piles up in one place — 27 km high, 500 km across.'],
+  ['What is special about Iceland?','A mantle plume sits directly on the Mid-Atlantic Ridge, so a hot spot is superimposed on a divergent margin and the ridge is exposed above sea level.'],
+  ['How do apparent polar wander paths prove continents move?','Each continent\'s dated rocks give a path of apparent pole positions. North America and Eurasia give different paths, which is impossible if only the pole moved — but the paths merge when the continents are restored to their pre-drift positions.'],
+  ['Explain how magnetic stripes on the seafloor form.','New basalt at a ridge is magnetized by the field at the time it cools. As the field reverses (normal ↔ reverse polarity), the spreading crust records each reversal as a stripe, symmetric on both sides of the ridge — like a tape recorder.'],
+  ['What is the deepest earthquake recorded, and why are deep earthquakes important evidence?','750 km. Deep earthquakes occur only along inclined zones beneath trenches, tracing cold, brittle slabs subducting into the mantle.'],
+  ['Name the three mechanisms that drive plate motion.','Mantle convection, ridge push and slab pull.'],
+  ['What are the three sources of heat for mantle convection?','Heat loss from the core, heating from within by radioactive decay, and cooling from the top.'],
+  ['What is partial melting, and what does it produce from peridotite?','Melting only a few % of a rock over a range of temperatures because minerals melt at different temperatures; the early melt is more silica-rich than the source. Partial melting of ultramafic peridotite in the asthenosphere yields mafic (basaltic) magma.'],
+  ['Name the three plate-boundary types and what happens to lithosphere at each.','Divergent — created (constructive). Convergent — destroyed (destructive). Transform — neither created nor destroyed (conservative).'],
+  ['Give key facts about mid-ocean ridges.','About 70,000 km long, 20% of Earth\'s surface, stand 2–3 km above the ocean floor because young crust is hot and expanded; spread ~5 cm/yr (2–15); sites of submarine volcanoes, pillow basalt and earthquakes; crust cools, contracts and sinks over ~80 Myr.'],
+  ['Why do volcanoes form at oceanic–continental convergent margins?','Water squeezed out of the subducting oceanic plate lowers the melting temperature of the overlying mantle, which partially melts; the magma is less dense than the surrounding rock and rises to feed a volcanic arc such as the Cascades.'],
+  ['At an oceanic–oceanic convergence, which plate subducts and what forms?','The older, thicker and denser plate subducts; a volcanic island arc forms (Aleutians, Japan, Antilles).'],
+  ['What is a volcanic arc and what controls its distance from the trench?','A chain of volcanoes marking a subduction zone. The angle of subduction, which depends on how far the slab is from its spreading ridge (age/density), sets how far inland the arc sits.'],
+  ['Give examples of continental–continental collisions and explain why they build mountains.','Himalayas, Alps, Appalachians, Urals. Continental crust is too buoyant to subduct, so the crust crumples and thickens into high mountains.'],
+  ['What is an accreted terrane?','Seamounts, sediment, volcanic arcs or other topographic features on the ocean floor that are scraped off at a subduction zone and welded onto the edge of the continent.'],
+  ['Describe the San Andreas Fault.','A 1,300 km continental transform fault along the California coast forming the boundary between the Pacific and North American plates; ~10,000 earthquakes per year; lithosphere is neither created nor destroyed.']],
+ quiz:[
+  {q:'Wegener\'s hypothesis was not accepted for decades mainly because:',opts:['The fossil evidence was wrong','He proposed no workable mechanism','The continents do not fit','Paleomagnetism disproved it'],ans:1,exp:'The evidence was compelling; the missing piece was a mechanism.'},
+  {q:'Mesosaurus supports continental drift because it:',opts:['Lived in the deep ocean','Was a freshwater reptile found only in S. America and Africa','Is found on every continent','Could fly'],ans:1,exp:'A freshwater animal could not cross an ocean; the continents were joined.'},
+  {q:'At a mid-ocean ridge, sediment thickness is:',opts:['Greatest','Absent','Uniform','Unrelated to age'],ans:1,exp:'Drilling showed no sediment at the ridge and increasing thickness outward.'},
+  {q:'Along the Hawaiian chain, volcano age:',opts:['Decreases away from Hawaii','Increases away from Hawaii','Is the same everywhere','Is random'],ans:1,exp:'Midway 27 Ma, Suiko 65 Ma — the plate moves over a fixed plume.'},
+  {q:'Different apparent polar wander paths for North America and Eurasia show that:',opts:['The pole moved twice','The continents moved','Earth had two poles','The data are wrong'],ans:1,exp:'One pole cannot follow two paths; the continents drifted.'},
+  {q:'Magnetic stripes on the seafloor are symmetric about ridges because:',opts:['Sediment covers them','New basalt records each field reversal as it spreads both ways','Ridges are magnetic','Convection cells are symmetric'],ans:1,exp:'The "tape recorder" model of seafloor spreading.'},
+  {q:'The deepest earthquakes (to 750 km) occur:',opts:['At mid-ocean ridges','Along subduction zones','At transform faults','Under hot spots'],ans:1,exp:'Only cold, brittle subducting slabs can generate quakes that deep.'},
+  {q:'Which is NOT a driver of plate motion?',opts:['Slab pull','Ridge push','Mantle convection','Tidal pull of the Moon'],ans:3,exp:'Tidal forces were Wegener\'s refuted mechanism.'},
+  {q:'Partial melting of peridotite in the asthenosphere produces:',opts:['Felsic magma','Mafic (basaltic) magma','Ultramafic magma','No magma'],ans:1,exp:'The melt is more silica-rich than the ultramafic source — i.e., mafic basalt.'},
+  {q:'Lithosphere is created at:',opts:['Convergent boundaries','Transform boundaries','Divergent boundaries','Hot spots only'],ans:2,exp:'Divergent = constructive margins.'},
+  {q:'Mid-ocean ridges spread on average about:',opts:['5 mm/yr','5 cm/yr','50 cm/yr','5 m/yr'],ans:1,exp:'~5 cm/yr, range 2–15 cm/yr.'},
+  {q:'Volcanoes form above subduction zones because:',opts:['Friction melts the slab','Water from the slab lowers the melting point of the overlying mantle','The slab is made of magma','The trench is a volcano'],ans:1,exp:'Flux melting: water lowers the mantle solidus → partial melting → buoyant magma rises.'},
+  {q:'In oceanic–oceanic convergence, the plate that subducts is the:',opts:['Younger, hotter one','Older, thicker, denser one','One nearest the ridge','One with more sediment'],ans:1,exp:'Older lithosphere is colder and denser and sinks.'},
+  {q:'The Himalayas formed at a:',opts:['Divergent boundary','Oceanic–continental convergence','Continental–continental collision','Transform boundary'],ans:2,exp:'India collided with Asia; buoyant continental crust thickened into mountains.'},
+  {q:'The San Andreas Fault is a:',opts:['Divergent boundary','Subduction zone','Continental transform fault','Continental rift'],ans:2,exp:'Pacific and North American plates slide past each other; ~10,000 quakes/yr.'},
+  {q:'The East African Rift is an example of:',opts:['A hot-spot track','Continental rifting (divergent)','Oceanic–oceanic convergence','An accreted terrane'],ans:1,exp:'A divergent boundary developing inside a continent.'}],
+ examTips:[
+  'Outcome 1 is a written answer: "Wegener\'s evidence was good but he had no mechanism; tidal forces and icebreaker continents were refuted." Add the four evidence lines for full marks.',
+  'For each of the five modern evidence lines, be able to state the observation AND what it proves (e.g., "sediment absent at ridge → crust youngest at ridge").',
+  'Draw the plate-tectonic cycle: ridge (divergent, new lithosphere) → plate cools/thickens → trench (subduction, arc volcanism) → back into mantle. Label lithosphere and asthenosphere.',
+  'Know one real example per boundary type: Mid-Atlantic Ridge / East African Rift; Cascades (Juan de Fuca), Aleutians/Japan, Himalayas; San Andreas.',
+  'Numbers that get asked: 5 cm/yr, 70,000 km of ridges, 750 km deepest quake, Midway 27 Ma / Suiko 65 Ma, San Andreas 1,300 km.',
+  'The "why volcanoes at subduction zones" mechanism (water lowers the melting point) links straight into the Minerals/Igneous lectures — learn it now.']},
+{n:5,title:'Minerals',date:'Sep 17',slides:'5_Minerals.pdf',
+ summary:"Chapter 2 (mineral chapter). This is the lecture Lab 2 and the lab exam are built on. A mineral is naturally occurring, inorganic, solid, has an orderly crystalline structure and a definite (but not fixed) chemical composition — ice is a mineral, water and obsidian are not. You identify minerals in hand specimen by combining physical properties: lustre, colour, streak, habit, hardness (Mohs, with fingernail 2.5, penny 3.5, nail 5, glass 5.5, streak plate 6.5), cleavage vs fracture, tenacity, specific gravity/heft, and special tests (HCl fizz for carbonates, magnetism, double refraction, taste, striations). Atoms bond covalently (strongest; diamond), ionically (halite), metallically (native metals) or by weak van der Waals forces (graphite) — polymorphs like diamond/graphite share a formula but not a structure. Minerals form by precipitation from fluids, crystallization from magma, or biological processes. The crust is mostly O and Si, so silicates dominate: the (SiO4)4− tetrahedron polymerizes into isolated (olivine, garnet), single-chain (pyroxene, 2 cleavages ~90°), double-chain (amphibole, 60°/120°), sheet (micas, clays, 1 perfect cleavage) and framework (feldspars 2 @ 90°, quartz none) structures. Non-silicate classes are defined by their anion: carbonates, halides, oxides, sulfates, phosphates, sulfides and native elements.",
+ notes:[
+  ['Learning outcomes',[
+   'Determine whether or not something is a mineral.',
+   'Explain how minerals are classified.',
+   'Define the characteristics used to describe minerals.',
+   'Explain the four types of atomic bonds relevant to minerals.',
+   'Identify whether a mineral is silicate or non-silicate.',
+   'Identify silicate mineral structures.']],
+  ['What is a mineral? — five criteria (Fig. 2.2)',[
+   '1. Naturally occurring — formed by a natural process (crystallization from magma, precipitation from a fluid). Synthetic gemstones are NOT minerals.',
+   '2. Inorganic — formed by inorganic processes (generally). Biominerals are the caveat: CaCO3 in mollusc shells and pearls, SiO2 in diatoms and sponge spicules, struvite bladder stones, kidney stones. Gallstones (cholesterol) are organic — not minerals.',
+   '3. Solid — excludes gases, plasmas and liquids. Glacier ice is a mineral; liquid water and water vapour are not.',
+   '4. Orderly crystalline structure — atoms in a regular repeating geometric pattern. Solids without order are amorphous — obsidian (volcanic glass) is not a mineral.',
+   '5. Definite but not fixed composition — expressed by a formula. Quartz SiO2 (Si:O = 1:2). Dolomite CaMg(CO3)2 allows Fe and Mn to replace some Mg: Ca(Mg,Fe,Mn)(CO3)2.',
+   'Minerals are the building blocks of rocks; a rock is made of one or more minerals.']],
+  ['Optical properties',[
+   'Lustre — how the surface reflects light: metallic (pyrite), submetallic (sphalerite), non-metallic (quartz). Non-metallic sub-types: vitreous/glassy (quartz), resinous, pearly (talc), greasy, silky, dull (kaolinite), adamantine (diamond).',
+   'Ability to transmit light: transparent → translucent → opaque.',
+   'Colour — diagnostic for only a few minerals (rhodochrosite MnCO3 pink, malachite Cu2(CO3)(OH)2 green). For most it is NOT reliable: trace impurities change it — Fe2+ makes quartz purple (amethyst); heating amethyst gives yellow-brown citrine.',
+   'Streak — colour of the powdered mineral on a porcelain streak plate (H 6.5–7). Often more useful than colour and diagnostic (e.g., hematite always gives a red-brown streak).',
+   'Crystal habit — external shape: equant, fibrous, tabular, prismatic, platy, blocky, banded, bladed, acicular. Only seen in well-formed crystals, which are rare. Kyanite = bladed.']],
+  ['Mineral strength',[
+   'Hardness — "scratchability": the ease with which one mineral scratches another (Mohs scale 1–10). Field tools: fingernail 2.5, penny 3.5, iron nail 5, glass 5.5, streak plate 6.5. Complications: tiny or valuable samples, poor kits, aggregates of many grains (dunite), altered surfaces, direction-dependent hardness (kyanite).',
+   'Cleavage — the tendency to break along planes of atomic weakness (weak bonds). Regular, repeating, parallel, penetrative fractures; "stair-step" patterns and flat vitreous faces. Halite: 3 directions at 90° (cubic). Feldspar: 2 at 90°.',
+   'Fracture — how a mineral breaks when it does not cleave: conchoidal (smooth curved, shell-like — quartz), fibrous/splintery, uneven/irregular. ALL minerals can fracture irregularly; only some have cleavage.',
+   'Tenacity — toughness/resistance to breaking, controlled by bonding: brittle (halite, ionic), malleable (copper, metallic), elastic (mica, van der Waals between sheets).',
+   'Density ρ (g/cm³) usually 2–8 for minerals. Specific gravity G = mass of mineral ÷ mass of an equal volume of water. Borax 1.8, quartz 2.65, galena 7.6, gold 17.2. In lab estimate G by heft (light / average / heavy in the hand).']],
+  ['Special properties',[
+   'Acid reaction — dilute HCl makes carbonates effervesce: calcite CaCO3 fizzes strongly; dolomite CaMg(CO3)2 only when powdered. CaCO3 + 2H+ → Ca2+ + CO2↑ + H2O. Never test minerals with metallic lustre.',
+   'Magnetism — ferromagnetic magnetite Fe3O4 (FeO·Fe2O3).',
+   'Radioactivity — zircon ZrSiO4 carries trace U/Th; decay damages surrounding biotite (dark halos).',
+   'Striations — parallel lines on a crystal face formed during growth (plagioclase, pyrite, quartz prisms, tourmaline). NOT penetrative — do not confuse with cleavage.',
+   'Habit vs cleavage — pyrite cubes are blocky habit with no cleavage; halite cubes are cubic cleavage (3 @ 90°).',
+   'Double refraction — calcite (Iceland spar) shows two images.',
+   'Odour, taste (halite), fluorescence. Tarnish/alteration can disguise minerals (pyrite → chalcopyrite look-alikes).',
+   'Rule: you MUST use multiple properties; follow the lab manual flow charts; lean on diagnostic properties that separate look-alikes.']],
+  ['Atoms and bonds',[
+   'Atom: small massive nucleus (protons + neutrons) with an electron cloud; Z = protons; mass = protons + neutrons; outer electrons = valence electrons.',
+   'Chemical bond = transfer or sharing of electrons so each atom gets a full valence shell. Strength varies.',
+   'Covalent — electrons SHARED; strongest bonds; N2, O2, Cl2; diamond = 100% covalent carbon.',
+   'Ionic — electrons TRANSFERRED; Na gives one electron → Na+ cation; Cl gains one → Cl− anion; halite NaCl (Fig. 3.4). Strong.',
+   'Metallic — many atoms share a "sea" of mobile valence electrons → good conductors of heat and electricity; 100% metallic = native elements (copper, gold).',
+   'Van der Waals — weakest; no valence electrons involved; weak electrostatic forces from uneven charge distribution; holds graphite sheets together.',
+   'Polymorphs — same composition, different structure: diamond (covalent 3-D) vs graphite (sheets with van der Waals); also calcite/aragonite.']],
+  ['How minerals form (Fig. 3.5–3.6)',[
+   'Precipitation from a fluid — evaporites (halite as water evaporates); geodes (amethyst).',
+   'Crystallization from molten rock — granite; crystals are euhedral (well-formed) until they interfere with neighbours.',
+   'Biological deposition — biominerals; chert is cryptocrystalline quartz often from diatoms/sponges.']],
+  ['Crustal abundance and classification (Fig. 1.17)',[
+   'Eight most abundant crustal elements: O, Si, Al, Fe, Ca, Na, K, Mg (plus minor Ti, Cr…). O and Si dominate → silicates are the most important class.',
+   'Classes are defined by anion / anionic complex: silicates (SiO4)4− quartz SiO2; halides Cl−/F−/Br−/I− halite NaCl; oxides O2− corundum Al2O3; carbonates (CO3)2− calcite CaCO3; sulfates (SO4)2− gypsum CaSO4·2H2O; phosphates (PO4)3− apatite Ca5(PO4)3(OH,F,Cl); native elements — copper Cu; sulfides S2− pyrite FeS2.']],
+  ['Silicate structures — polymerization of the SiO4 tetrahedron (Fig. 3.8)',[
+   'The (SiO4)4− tetrahedron is the basic building block; tetrahedra link (polymerize) by sharing oxygens; leftover charge is balanced by cations. Subclasses are named by how tetrahedra link.',
+   'Isolated tetrahedra — olivine (Mg,Fe)2SiO4, garnet; NO cleavage (equant, conchoidal fracture).',
+   'Single chains — pyroxene group (Ca,Mg,Fe)2Si2O6 (augite); 2 cleavages at ~90°.',
+   'Double chains — amphibole group Ca2(Fe,Mg)5Si8O22(OH)2 (hornblende); 2 cleavages at 60° and 120°. The chain width is what sets the cleavage angles — the classic pyroxene vs amphibole test.',
+   'Sheets — mica group: biotite K(Mg,Fe)3AlSi3O10(OH)2 (dark), muscovite KAl2(AlSi3O10)(OH)2 (light); 1 direction of perfect cleavage. Clay minerals (kaolinite Al2Si2O5(OH)4) are sheet silicates formed by chemical weathering of feldspar; fine-grained.',
+   'Frameworks — feldspar group: potassium feldspar/orthoclase KAlSi3O8 and plagioclase NaAlSi3O8–CaAl2Si2O8 (a solid-solution series); 2 cleavages at 90°. Quartz SiO2: no cleavage, conchoidal fracture.',
+   'Bowen\'s Reaction Series (Box 4.1b) previews Igneous: olivine → pyroxene → amphibole → biotite (discontinuous) and Ca→Na plagioclase (continuous) → K-feldspar, muscovite, quartz.']],
+  ['Important non-silicates to recognise (Lab 2)',[
+   'Carbonates: calcite CaCO3, dolomite CaMg(CO3)2 — cement, lime.',
+   'Halides: halite NaCl (salt), sylvite KCl (fertilizer), fluorite CaF2 (steel making).',
+   'Oxides: hematite Fe2O3 (iron ore/pigment, red streak), magnetite Fe3O4 (iron ore, magnetic), corundum Al2O3 (gem/abrasive, H 9).',
+   'Sulfates: gypsum CaSO4·2H2O (plaster, H 2), barite BaSO4 (drilling mud, heavy).',
+   'Phosphates: apatite Ca5(PO4)3(OH,F,Cl) (U-Th dating, H 5).',
+   'Native elements: copper, gold, diamond, sulfur, graphite, silver, platinum.',
+   'Sulfides: pyrite FeS2 (sulfuric acid, "fool\'s gold"), galena PbS (lead ore, cubic cleavage, very heavy), sphalerite ZnS (zinc ore, resinous), chalcopyrite CuFeS2 (copper ore), cinnabar HgS (mercury ore).']]],
+ terms:[
+  ['Mineral','A naturally occurring, inorganic solid with an orderly crystalline structure and a definite (but not fixed) chemical composition.'],
+  ['Rock','An aggregate of one or more minerals.'],
+  ['Amorphous','A solid lacking ordered atomic structure — e.g., obsidian (volcanic glass); not a mineral.'],
+  ['Biomineral','A mineral produced by an organism (shell CaCO3, diatom SiO2); the exception to "inorganic".'],
+  ['Lustre','The way a mineral surface reflects light: metallic, submetallic, or non-metallic (vitreous, resinous, pearly, greasy, silky, dull, adamantine).'],
+  ['Streak','Colour of a mineral\'s powder on a porcelain plate (H 6.5–7); more reliable than colour.'],
+  ['Crystal habit','The external shape of a well-formed crystal (equant, prismatic, tabular, platy, fibrous, bladed, acicular, blocky, banded).'],
+  ['Hardness','Resistance to scratching, on Mohs\' scale 1 (talc) to 10 (diamond); fingernail 2.5, penny 3.5, nail 5, glass 5.5, streak plate 6.5.'],
+  ['Cleavage','Tendency to break along planes of atomic weakness, giving flat, repeating, parallel, penetrative surfaces.'],
+  ['Fracture','Breakage not along cleavage: conchoidal (curved, shell-like), fibrous/splintery, uneven.'],
+  ['Tenacity','Resistance to breaking or deforming: brittle, malleable, elastic — set by bond type.'],
+  ['Specific gravity (G)','Mass of a mineral divided by the mass of an equal volume of water; estimated by heft in lab. Quartz 2.65, galena 7.6, gold 17.2.'],
+  ['Effervescence','Fizzing of a carbonate in dilute HCl as CO2 is released; strong in calcite, only when powdered in dolomite.'],
+  ['Striations','Fine parallel growth lines on a crystal face (plagioclase, pyrite); not penetrative, unlike cleavage.'],
+  ['Double refraction','Splitting of light into two images, seen through calcite (Iceland spar).'],
+  ['Valence electrons','Outer-shell electrons involved in bonding.'],
+  ['Covalent bond','Electrons shared between atoms; the strongest bond (diamond).'],
+  ['Ionic bond','Electrons transferred, creating cations and anions that attract (halite NaCl).'],
+  ['Metallic bond','Valence electrons shared by many atoms as a mobile "sea"; native metals; conductors.'],
+  ['Van der Waals bond','Weak electrostatic attraction from uneven charge distribution; holds graphite sheets together.'],
+  ['Polymorph','Minerals with the same chemical composition but different crystal structures (diamond/graphite).'],
+  ['Silicate','A mineral built from (SiO4)4− tetrahedra; the dominant class because O and Si are the most abundant crustal elements.'],
+  ['Silicon–oxygen tetrahedron','One Si surrounded by four O; the (SiO4)4− building block of all silicates.'],
+  ['Polymerization','Linking of tetrahedra by shared oxygens into isolated, chain, double-chain, sheet or framework structures.'],
+  ['Olivine','(Mg,Fe)2SiO4; isolated tetrahedra; no cleavage; green; main mineral of peridotite.'],
+  ['Pyroxene (augite)','Single-chain silicate (Ca,Mg,Fe)2Si2O6; two cleavages at ~90°.'],
+  ['Amphibole (hornblende)','Double-chain silicate Ca2(Fe,Mg)5Si8O22(OH)2; two cleavages at 60° and 120°.'],
+  ['Mica (biotite, muscovite)','Sheet silicates with one perfect cleavage; biotite dark (Fe, Mg), muscovite light.'],
+  ['Clay minerals','Fine-grained sheet silicates (kaolinite) formed by chemical weathering of feldspar.'],
+  ['Feldspar','Framework silicates — orthoclase KAlSi3O8 and plagioclase NaAlSi3O8–CaAl2Si2O8; two cleavages at 90°; the most abundant crustal mineral group.'],
+  ['Quartz','SiO2 framework silicate; H 7; no cleavage; conchoidal fracture; vitreous.'],
+  ['Carbonate','Mineral class with (CO3)2−: calcite CaCO3, dolomite CaMg(CO3)2; reacts with HCl.'],
+  ['Sulfide','Mineral class with S2−: pyrite FeS2, galena PbS, sphalerite ZnS, chalcopyrite CuFeS2, cinnabar HgS — mostly metal ores.'],
+  ['Native element','A mineral made of a single element: gold, copper, sulfur, diamond, graphite.']],
+ questions:[
+  ['State the five criteria for a mineral and give one thing that fails each.','Naturally occurring (synthetic gems fail); inorganic (gallstones fail); solid (liquid water fails); orderly crystalline structure (obsidian fails); definite but not fixed composition (a random mixture fails).'],
+  ['Is glacier ice a mineral? Is liquid water? Is obsidian? Explain.','Ice: yes — natural, inorganic, solid, crystalline, H2O. Liquid water: no — not solid. Obsidian: no — it is amorphous glass with no ordered structure.'],
+  ['Explain "definite but not fixed composition" using dolomite.','Dolomite has the formula CaMg(CO3)2 but Fe and Mn can substitute for some Mg, so the real composition is Ca(Mg,Fe,Mn)(CO3)2 — a fixed structure with allowed variation.'],
+  ['Why is colour usually a poor diagnostic property, and what is used instead?','Trace impurities change colour — Fe2+ turns quartz into purple amethyst; heating gives citrine. Streak (the powder colour) is far more consistent and diagnostic.'],
+  ['List the field hardness tools and their Mohs values.','Fingernail 2.5; penny 3.5; iron nail 5; glass 5.5; streak plate 6.5.'],
+  ['Distinguish cleavage from fracture, and cleavage from crystal habit.','Cleavage is breakage along planes of weak bonding — flat, repeating, penetrative. Fracture is any other breakage (conchoidal, splintery, uneven). Habit is the external growth shape: pyrite cubes are blocky habit without cleavage; halite cubes are cubic cleavage.'],
+  ['What are striations and why can they be confused with cleavage?','Fine parallel lines on a crystal face formed during growth (plagioclase, pyrite, tourmaline). They look like cleavage traces but are only on the surface, not penetrative.'],
+  ['How does bonding control tenacity? Give three examples.','Ionic halite is brittle; metallic copper is malleable; mica held by van der Waals between sheets is elastic.'],
+  ['Define specific gravity and explain heft.','G = mass of the mineral divided by the mass of an equal volume of water (no units). Heft is the lab shortcut: judge low, moderate or high G by feel — quartz 2.65 feels average, galena 7.6 heavy.'],
+  ['Describe the HCl test and how it separates calcite from dolomite.','Carbonates effervesce as CaCO3 + 2H+ → Ca2+ + CO2↑ + H2O. Calcite fizzes immediately on the solid; dolomite fizzes only when powdered. Never test metallic-lustre minerals.'],
+  ['Describe the four bond types with a mineral example of each.','Covalent — electrons shared, strongest — diamond. Ionic — electrons transferred, cation + anion — halite. Metallic — shared sea of electrons, conductive — native copper. Van der Waals — weak electrostatic, no valence electrons — between graphite sheets.'],
+  ['What are polymorphs? Give the classic pair.','Minerals with identical composition but different crystal structures — diamond and graphite (both carbon).'],
+  ['Name the three ways minerals form with an example each.','Precipitation from a fluid (halite evaporite, amethyst geode); crystallization from magma (granite); biological deposition (shell carbonate, chert from diatoms).'],
+  ['List the eight most abundant crustal elements and explain why silicates dominate.','O, Si, Al, Fe, Ca, Na, K, Mg. Oxygen and silicon are by far the most abundant, so most minerals are built from SiO4 tetrahedra.'],
+  ['How are mineral classes defined? Give the anion and an example for six classes.','By the anion or anionic complex: silicates (SiO4)4− quartz; carbonates (CO3)2− calcite; halides Cl− halite; oxides O2− hematite; sulfates (SO4)2− gypsum; sulfides S2− pyrite; phosphates (PO4)3− apatite; native elements (none) gold.'],
+  ['Describe the silicon–oxygen tetrahedron and polymerization.','One Si4+ surrounded by four O2− gives (SiO4)4−. Tetrahedra link by sharing oxygens (polymerize) into isolated units, single chains, double chains, sheets and 3-D frameworks; cations balance the leftover charge.'],
+  ['Match each silicate structure to its mineral group and cleavage.','Isolated — olivine, garnet — no cleavage. Single chain — pyroxene — 2 @ ~90°. Double chain — amphibole — 2 @ 60°/120°. Sheet — micas, clays — 1 perfect. Framework — feldspars 2 @ 90°; quartz none.'],
+  ['How do you tell pyroxene from amphibole in hand specimen?','Both are dark chain silicates with two cleavages, but pyroxene\'s single chains give cleavages at ~90° while amphibole\'s double chains give 60° and 120°.'],
+  ['What is the difference between orthoclase and plagioclase?','Both are framework feldspars with 2 cleavages at 90°. Orthoclase is KAlSi3O8 (often pink/salmon). Plagioclase is the NaAlSi3O8–CaAl2Si2O8 solid-solution series (white to grey) and commonly shows striations.'],
+  ['Where do clay minerals come from?','They are sheet silicates (e.g., kaolinite) formed by chemical weathering of other silicates, especially feldspar; usually too fine to identify without a microscope.'],
+  ['Which mineral is magnetic, and which two oxides are iron ores?','Magnetite Fe3O4 is ferromagnetic; magnetite and hematite Fe2O3 are the iron ores.'],
+  ['Give the ore mineral for lead, zinc, copper and mercury.','Galena PbS; sphalerite ZnS; chalcopyrite CuFeS2; cinnabar HgS.'],
+  ['Why must you use multiple properties to identify a mineral?','Any single property is shared by many minerals or can be altered; combining lustre, hardness, cleavage, streak, G and special tests, following the lab manual flow chart, isolates one identity.']],
+ quiz:[
+  {q:'Which is NOT a mineral?',opts:['Glacier ice','Halite','Obsidian','Quartz'],ans:2,exp:'Obsidian is amorphous volcanic glass — no ordered crystalline structure.'},
+  {q:'Streak is:',opts:['The colour of the whole crystal','The colour of the powdered mineral on porcelain','A type of cleavage','The lustre of a fresh surface'],ans:1,exp:'Powder colour on a streak plate; more diagnostic than colour.'},
+  {q:'A mineral scratches glass but is scratched by a streak plate. Its hardness is about:',opts:['3','4.5','6','8'],ans:2,exp:'Glass 5.5 < H < streak plate 6.5.'},
+  {q:'Halite has cleavage in:',opts:['1 direction','2 directions at 90°','3 directions at 90°','No cleavage'],ans:2,exp:'Cubic cleavage — three directions at right angles.'},
+  {q:'Conchoidal fracture is typical of:',opts:['Mica','Quartz','Halite','Feldspar'],ans:1,exp:'Quartz has no cleavage and breaks with smooth curved surfaces.'},
+  {q:'The strongest bond type is:',opts:['Ionic','Metallic','Covalent','Van der Waals'],ans:2,exp:'Covalent (shared electrons) — diamond.'},
+  {q:'Diamond and graphite are:',opts:['Isotopes','Polymorphs','Allotropes of silicon','Silicates'],ans:1,exp:'Same composition (C), different structure.'},
+  {q:'Calcite fizzes in HCl because it is a:',opts:['Silicate','Sulfide','Carbonate','Halide'],ans:2,exp:'CaCO3 + 2H+ → CO2 gas.'},
+  {q:'Two cleavages at 60° and 120° identify:',opts:['Pyroxene','Amphibole','Feldspar','Mica'],ans:1,exp:'Double chains → 60°/120°; pyroxene single chains → ~90°.'},
+  {q:'One direction of perfect cleavage is characteristic of:',opts:['Olivine','Quartz','Mica','Garnet'],ans:2,exp:'Sheet silicates peel into thin flakes.'},
+  {q:'Olivine has:',opts:['Isolated tetrahedra and no cleavage','Sheets and one cleavage','Framework and two cleavages','Chains and two cleavages'],ans:0,exp:'Isolated (SiO4) tetrahedra; breaks by fracture.'},
+  {q:'The two most abundant elements in the crust are:',opts:['Fe and Mg','O and Si','Ca and Na','Al and K'],ans:1,exp:'Hence silicates dominate.'},
+  {q:'Magnetite\'s formula is:',opts:['Fe2O3','FeS2','Fe3O4','FeCO3'],ans:2,exp:'Fe3O4 (FeO·Fe2O3), ferromagnetic.'},
+  {q:'Galena is the ore of:',opts:['Zinc','Copper','Lead','Mercury'],ans:2,exp:'PbS — very heavy, metallic, cubic cleavage.'},
+  {q:'Specific gravity is:',opts:['Mass per cm³','Ratio of mineral mass to mass of equal volume of water','Hardness per unit mass','Weight in the hand'],ans:1,exp:'A unitless ratio; heft is the lab estimate.'},
+  {q:'Plagioclase feldspar is:',opts:['KAlSi3O8','A solid solution from NaAlSi3O8 to CaAl2Si2O8','SiO2','(Mg,Fe)2SiO4'],ans:1,exp:'Framework silicate, 2 cleavages at 90°, often striated.'}],
+ examTips:[
+  'This lecture IS Lab 2 and 16% of the course (lab exam). Learn the property table cold and practise with the flow chart in the lab manual.',
+  'Definition question is guaranteed: write the five criteria and know the exceptions (ice yes, water no, obsidian no, synthetic gems no, biominerals the caveat).',
+  'Cleavage angles are the #1 ID trick: halite 3@90°, feldspar 2@90°, pyroxene 2@~90°, amphibole 2@60°/120°, mica 1 perfect, quartz/olivine/garnet none.',
+  'Memorize the hardness tools (2.5 / 3.5 / 5 / 5.5 / 6.5) and Mohs anchors: talc 1, gypsum 2, calcite 3, fluorite 4, apatite 5, orthoclase 6, quartz 7, corundum 9, diamond 10.',
+  'Be able to draw the silicate structures from isolated tetrahedron to framework and name one mineral per structure.',
+  'Formulas that get asked: SiO2, NaCl, CaCO3, CaMg(CO3)2, FeS2, PbS, ZnS, Fe3O4, Fe2O3, CaSO4·2H2O, (Mg,Fe)2SiO4, KAlSi3O8.',
+  'Four bond types with one mineral each — a classic short-answer.']}
+]};
+
+/* ── Lectures tool ── */
+let lecSel={},lecTab={};
+function renderLectures(c){const list=LECTURES[currentCourse]||[];
+  if(!list.length)return`<div class="know-intro"><strong>No lecture packages for ${c.code} yet.</strong> Paste or upload a lecture's slides in the chat and a full study package (summary, notes, key terms, study questions, self-check quiz) gets added here.</div>`;
+  const sel=lecSel[currentCourse]??list[list.length-1].n;const L=list.find(x=>x.n===sel)||list[0];const tab=lecTab[currentCourse]||'summary';
+  const tabs=[['summary','Summary'],['notes','Notes'],['terms','Key terms'],['questions','Study questions'],['quiz','Self-check'],['tips','Exam tips']];
+  const nav=`<div class="chips" style="margin-bottom:12px">${list.map(x=>`<button class="chip ${x.n===L.n?'active':''}" onclick="lecSel['${currentCourse}']=${x.n};renderTool('lectures',courses['${currentCourse}'])">${x.n}. ${x.title}</button>`).join('')}</div>`;
+  const tabbar=`<div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto">${tabs.map(([k,l])=>`<button class="retry-btn" style="margin:0;border:none;border-bottom:2px solid ${k===tab?'var(--accent)':'transparent'};border-radius:0;padding:8px 12px;font-size:13px;color:${k===tab?'var(--text)':'var(--muted)'};font-weight:${k===tab?600:500}" onclick="lecTab['${currentCourse}']='${k}';renderTool('lectures',courses['${currentCourse}'])">${l}</button>`).join('')}</div>`;
+  const head=`<div class="icard" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="icard-label">Lecture ${L.n} · ${L.date}${L.slides?' · '+L.slides:''}</div><div class="icard-title" style="margin:0">${L.title}</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="retry-btn" style="margin:0" onclick="lecToCards(${L.n},this)"><span class="msi ic">style</span>Add ${L.terms.length+L.questions.length} flashcards</button><button class="retry-btn" style="margin:0" onclick="switchTool('tutor',document.getElementById('sb-tutor'));setTimeout(()=>sendChatMsg('Quiz me on Lecture ${L.n} (${esc(L.title)}) for ${courses[currentCourse].code}. Ask one question at a time and grade my answers.'),200)"><span class="msi ic">chat</span>Tutor: quiz me</button></div></div>`;
+  let body='';
+  if(tab==='summary')body=`<div class="icard"><p style="font-size:14px;line-height:1.8">${L.summary}</p></div>`;
+  else if(tab==='notes')body=L.notes.map(([h,pts])=>`<div class="icard"><div class="icard-label">${h}</div><ul>${pts.map(p=>`<li>${p}</li>`).join('')}</ul></div>`).join('');
+  else if(tab==='terms')body=`<div class="icard">${L.terms.map(([t,d])=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><strong style="font-size:14px;color:var(--text)">${t}</strong><div style="font-size:13px;color:var(--text2);line-height:1.6;margin-top:3px">${d}</div></div>`).join('')}</div>`;
+  else if(tab==='questions')body=`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Try to answer out loud first, then reveal.</div>`+L.questions.map(([q,a],i)=>`<div class="icard" style="padding:14px 18px"><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px">${i+1}. ${q}</div><div class="dr-step hidden" onclick="this.classList.remove('hidden')">${a}</div></div>`).join('');
+  else if(tab==='quiz')body=L.quiz.map((q,qi)=>`<div class="qcard"><div class="qnum">Question ${qi+1} of ${L.quiz.length}</div><div class="qtext">${q.q}</div><div class="opts" id="lq-${qi}">${q.opts.map((o,oi)=>`<div class="opt" onclick="lecAnswer(${L.n},${qi},${oi})"><span class="opt-l">${'ABCD'[oi]}</span>${o}</div>`).join('')}</div><div class="qfb" id="lqfb-${qi}"></div></div>`).join('');
+  else if(tab==='tips')body=`<div class="icard"><ul>${L.examTips.map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
+  return nav+head+tabbar+body;}
+function lecAnswer(n,qi,oi){const L=(LECTURES[currentCourse]||[]).find(x=>x.n===n);const q=L.quiz[qi];const opts=document.querySelectorAll(`#lq-${qi} .opt`);const fb=document.getElementById(`lqfb-${qi}`);opts.forEach(o=>o.style.pointerEvents='none');opts[oi].classList.add(oi===q.ans?'correct':'wrong');if(oi!==q.ans){opts[q.ans].classList.add('correct');addWeak(currentCourse,`Lec ${n}: ${q.q.slice(0,80)}`,'Lecture quiz');}fb.textContent=(oi===q.ans?'Correct. ':'Not quite. ')+q.exp;fb.className='qfb show '+(oi===q.ans?'good':'bad');}
+function lecToCards(n,btn){const L=(LECTURES[currentCourse]||[]).find(x=>x.n===n);const cards=[...L.terms.map(([t,d])=>({q:`Define: ${t}`,a:d})),...L.questions.map(([q,a])=>({q,a}))].map(x=>({...x,rating:null,due:0,src:`Lec ${n}`}));const ex=flashcards[currentCourse]||[];const fresh=cards.filter(c=>!ex.some(e=>e.q===c.q));flashcards[currentCourse]=[...ex,...fresh];persist();if(typeof updateDueBadge==='function')updateDueBadge();btn.textContent=fresh.length?`Added ${fresh.length} cards`:'Already added';btn.disabled=true;}
+
 function renderWeeks(c){
   const key=currentCourse, S=SYLLABI[key]; if(!S||!S.weeks) return icard('Week by week','<p>No weekly schedule loaded for this course yet.</p>');
   const today=new Date();today.setHours(0,0,0,0);
@@ -2524,7 +3262,7 @@ function stRenderHome(){
   document.getElementById('st-home-week').textContent=fmtShort(stWeekTotal());
   const keys=Object.keys(courses);
   const max=Math.max(60,...keys.map(k=>stGet(t,k)));
-  document.getElementById('st-home-bars').innerHTML=keys.map(k=>{const s=stGet(t,k);return`<div class="st-bar-row"><div class="st-bar-name"><span class="sb-dot" style="background:${courses[k].color}"></span>${courses[k].code}</div><div class="st-bar-track"><div class="st-bar-fill" style="width:${Math.round(s/max*100)}%;background:${courses[k].color}"></div></div><div class="st-bar-val">${fmtShort(s)}</div></div>`;}).join('');
+  document.getElementById('st-home-bars').innerHTML=keys.map(k=>{const s=stGet(t,k);return`<div class="st-bar-row"><div class="st-bar-name"><span class="sb-dot" style="background:${courses[k].color}"></span>${courses[k].code}</div><div class="st-bar-track"><div class="st-bar-fill" style="width:${Math.round(s/max*100)}%;background:var(--ok)"></div></div><div class="st-bar-val">${fmtShort(s)}</div></div>`;}).join('');
   document.getElementById('st-home-week-grid').innerHTML=weekDates().map(d=>{const k=todayKey(d);const s=Object.values(studyLog[k]||{}).reduce((a,b)=>a+b,0);return`<div class="st-day${k===t?' today':''}"><div class="st-day-lbl">${d.toLocaleDateString('en-CA',{weekday:'short'})}</div><div class="st-day-val">${fmtShort(s)}</div></div>`;}).join('');
 }
 
@@ -2552,6 +3290,7 @@ function openCourse(key){
   if(!notes[key])notes[key]='';
   document.getElementById('cv-code').textContent=c.code;
   document.getElementById('cv-title').textContent=c.title;
+  {const a=AI_POLICY[key];let b=document.getElementById('cv-aipol');if(!b){b=document.createElement('div');b.id='cv-aipol';b.style.marginTop='6px';document.getElementById('cv-title').after(b);}b.innerHTML=a?`<span class="ai-pol ${a.p}">${a.p==='prohibited'?'AI prohibited on assessments':'AI allowed with acknowledgment'}</span>`:'';}
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-course').style.display='block';
   document.querySelectorAll('.chip').forEach(s=>s.classList.remove('active'));
@@ -2591,6 +3330,7 @@ function renderTool(name,c){
   else if(name==='upload'){el.innerHTML=renderUpload(c);renderUploadHistory();}
   else if(name==='notes')el.innerHTML=renderNotes(c);
   else if(name==='weeks'){el.innerHTML=renderWeeks(c);}
+  else if(name==='lectures'){el.innerHTML=renderLectures(c);}
   else if(name==='syllabus'){el.innerHTML=renderSyllabus(c);}
   else if(name==='files'){el.innerHTML=renderFiles(c);}
   else if(name==='bank'){el.innerHTML=renderBank(c);}
@@ -2599,13 +3339,41 @@ function renderTool(name,c){
   else if(name==='agrade')el.innerHTML=renderAgrade(c);
   // re-bind pomodoro after render
   if(name==='timer')updatePomDisplay();
+  // consistent page header for every tool
+  const meta=TOOL_META[name];const strip=document.getElementById('today-strip');if(strip)strip.style.display=name==='today'?'':'none';
+  if(meta&&name!=='today'){el.insertAdjacentHTML('afterbegin',`<div class="tool-head"><div class="th-ico"><span class="msi">${meta[0]}</span></div><div><h2 class="th-title">${meta[1]}</h2><p class="th-sub">${meta[2]}</p></div>${meta[3]?`<div class="th-right">${meta[3]}</div>`:''}</div>`);}
+  el.scrollIntoView&&document.getElementById('main-panel')&&document.getElementById('main-panel').scrollTo({top:0});
 }
+const TOOL_META={
+ lectures:['slideshow','Lectures','Study packages built from your lecture slides — notes, key terms, questions and a self-check for each.'],
+ review:['history','Review','What was covered last time. Recall it from memory before reading.'],
+ tomorrow:['arrow_forward','Tomorrow','What is coming next and how to prepare tonight.'],
+ quiz:['help','Quiz','Quick check with instant feedback. Misses go to your Study Plan.'],
+ flash:['style','Flashcards','Spaced repetition. Rate each card — Hard returns tomorrow, Easy in a few days.'],
+ exam:['assignment','Exam mode','Timed practice in your instructor\'s format. No feedback until you submit.'],
+ drills:['target','Drills','Targeted practice for the question types this course actually tests.'],
+ iknow:['psychology','What I know','Write what you know from memory; the AI grades it and shows the gaps.'],
+ tutor:['chat','AI Tutor','Ask anything about this course. It knows the syllabus and lectures.'],
+ work:['task','Review my work','Get professor-style feedback on a draft, graded against a rubric.'],
+ upload:['attach_file','Upload materials','Turn slides, chapters or notes into a study guide.'],
+ notes:['edit','Notes','Your own notes for this course. Saved automatically.'],
+ weeks:['view_week','Week by week','Every week of the term: what to study, what is due, your notes.'],
+ syllabus:['menu_book','Syllabus','Instructor, grading, deadlines and policies from the course outline.'],
+ files:['folder_open','Course files','Links to the lecture slides, labs and readings on mêskanâs.'],
+ bank:['functions','Problem bank','Worked problems by chapter. Mark them done as you go.'],
+ assign:['calendar_month','Assignments','Everything due for this course. Seeded from the syllabus; add your own.'],
+ timer:['schedule','Focus timer','25-minute focus blocks. Study time is logged automatically.'],
+ grades:['bar_chart','Grades','Enter marks as you get them and see what you need on the rest.'],
+ plan:['route','Study plan','Ranked from your own misses in quizzes, exams and flashcards.'],
+ format:['settings','Exam format','How this instructor tests — used by Exam mode and drills.'],
+ agrade:['emoji_events','Get an A','Course-specific strategies plus the habits that always work.']};
 
 function renderToday(c){
   const t=c.today;
-  const vocab=t.vocab.map(v=>`<span class="badge badge-b">${v}</span>`).join(' ');
+  const vocab=t.vocab.map(v=>`<span class="badge badge-b term" title="Ask the tutor to define this" onclick="switchTool('tutor',document.getElementById('sb-tutor'));setTimeout(()=>sendChatMsg('Define ${v.replace(/'/g,"")} for ${courses[currentCourse].code} in 2–3 sentences, then give one exam-style question about it.'),200)">${v}</span>`).join(' ');
   const pts='<ul>'+t.points.map(p=>`<li>${p}</li>`).join('')+'</ul>';
-  return`<div class="icard"><div class="icard-label">Today's lesson</div><div class="icard-title" style="font-size:18px;margin-bottom:14px">${t.topic}</div>${pts}<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)"><div class="icard-label" style="margin-bottom:6px">Key terms</div>${vocab}</div></div>`;
+  const lecs=LECTURES[currentCourse]||[];const lecCard=lecs.length?`<div class="icard"><div class="icard-label">Latest lecture package</div><div class="icard-title" style="margin-bottom:6px">Lecture ${lecs[lecs.length-1].n}: ${lecs[lecs.length-1].title}</div><p style="font-size:13px">${lecs[lecs.length-1].summary.slice(0,180)}…</p><button class="retry-btn" style="margin-top:10px" onclick="switchTool('lectures',document.getElementById('sb-lectures'))">Open notes, questions & quiz</button></div>`:'';
+  return lecCard+`<div class="icard"><div class="icard-label">Today's lesson</div><div class="icard-title" style="font-size:18px;margin-bottom:14px">${t.topic}</div>${pts}<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)"><div class="icard-label" style="margin-bottom:6px">Key terms</div>${vocab}</div></div>`;
 }
 function renderReview(c){
   const r=c.review;
@@ -2771,7 +3539,7 @@ function deleteAssign(i){assignments[currentCourse].splice(i,1);persist();render
 
 /* pomodoro */
 let pomTimer=null,pomSecondsLeft=25*60,pomTotalSeconds=25*60,pomRunning=false,pomMode='work';
-const pomModes={work:{label:'Focus Time',mins:25,color:'#9A253B'},short:{label:'Short Break',mins:5,color:'#3D6B52'},long:{label:'Long Break',mins:15,color:'#A99B9E'}};
+const pomModes={work:{label:'Focus Time',mins:25,color:'#2E8B57'},short:{label:'Short Break',mins:5,color:'#3D6B52'},long:{label:'Long Break',mins:15,color:'#9DB9D9'}};
 function renderTimerHTML(){
   return`<div class="pom-wrap"><div class="pom-modes" style="margin-bottom:16px"><button class="pom-mode-btn active" id="pmode-work" onclick="setPomMode('work')"><span class="msi ic">target</span>Focus (25 min)</button><button class="pom-mode-btn" id="pmode-short" onclick="setPomMode('short')">☕ Break (5 min)</button><button class="pom-mode-btn" id="pmode-long" onclick="setPomMode('long')">🛋 Long Break (15 min)</button></div><div class="pom-display"><div class="pom-ring"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="pom-ring-track" cx="60" cy="60" r="52"/><circle class="pom-ring-fill" id="pom-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="${2*Math.PI*52}" stroke-dashoffset="0"/></svg></div><div class="pom-mode-lbl" id="pom-mode-label">Focus Time</div><div class="pom-time" id="pom-time">25:00</div><div class="pom-session" id="pom-sess-label">Session 1 · 0 completed today</div></div><div class="pom-btns"><button class="pom-btn pom-start" id="pom-start-btn" onclick="togglePom()">▶ Start</button><button class="pom-btn pom-reset" onclick="resetPom()">↺ Reset</button></div></div>`;
 }
@@ -2799,7 +3567,7 @@ async function fileToBlock(f,label){
   return {type:'text',text:`${label}:\n"""\n${await fileToText(f)}\n"""`};
 }
 function renderWorkReview(c){
-  return`<div class="know-intro"><strong>Submit any work for a full professor-level review.</strong><br>Paste your essay, homework, lab report, code, or math solutions. The AI reviews it against <strong>${c.title}</strong> standards, gives you a realistic grade, and tells you exactly what to fix before you submit it for real.</div>
+  return aiGuard(currentCourse)+`<div class="know-intro"><strong>Submit any work for a full professor-level review.</strong><br>Paste your essay, homework, lab report, code, or math solutions. The AI reviews it against <strong>${c.title}</strong> standards, gives you a realistic grade, and tells you exactly what to fix before you submit it for real.</div>
   <div class="work-type-row">
     <button class="work-type-btn active" onclick="setWorkType('essay',this)"><span class="msi ic">description</span>Essay / Paper</button>
     <button class="work-type-btn" onclick="setWorkType('homework',this)"><span class="msi ic">assignment</span>Homework / Problems</button>
@@ -3024,7 +3792,11 @@ async function sendToFlashcards(i){
 
 /* ═══════ GRADES ═══════ */
 const GRADE_SCALE=[['A+',90],['A',85],['A-',80],['B+',77],['B',73],['B-',70],['C+',67],['C',63],['C-',60],['D+',55],['D',50],['F',0]];
-function letterFor(p){for(const [l,m] of GRADE_SCALE)if(p>=m)return l;return 'F';}
+const COURSE_SCALES={english:[['A+',94],['A',88],['A-',83],['B+',79],['B',75],['B-',72],['C+',68],['C',64],['C-',60],['D+',57],['D',50],['F',0]],anth:[['A+',95],['A',90],['A-',85],['B+',80],['B',77],['B-',74],['C+',70],['C',67],['C-',60],['D+',57],['D',50],['F',0]],earth:[['A+',95],['A',90],['A-',85],['B+',80],['B',75],['B-',70],['C+',66],['C',62],['C-',58],['D+',54],['D',50],['F',0]],math:[['A+',95],['A',90],['A-',85],['B+',80],['B',75],['B-',70],['C+',65],['C',60],['C-',55],['D+',50],['D',45],['F',0]]};
+const AI_POLICY={english:{p:'prohibited',t:'Students are prohibited from using generative artificial intelligence tools, such as ChatGPT, DALL·E 2, Grammarly AI, and Copilot, on their assessments in this course.'},earth:{p:'prohibited',t:'Students are prohibited from using generative AI tools, including but not limited to ChatGPT, DALL·E 2, Grammarly AI, and Copilot, on their assessments in this course.'},math:{p:'prohibited',t:'Students are prohibited from using generative artificial intelligence tools, such as ChatGPT, DALL·E 2, Grammarly AI, and Copilot, on their assessments in this course.'},anth:{p:'permitted',t:'Permitted with acknowledgment: include a statement in any assessment that uses AI explaining what you used the tool for and what prompts you used. Verify all information.'}};
+function scaleFor(k){return COURSE_SCALES[k||currentCourse]||GRADE_SCALE;}
+function letterFor(p,k){for(const [l,m] of scaleFor(k||currentCourse))if(p>=m)return l;return 'F';}
+function aiGuard(k){const a=AI_POLICY[k];if(!a)return'';if(a.p==='permitted')return`<div class="know-intro" style="border-color:rgba(52,211,153,.35)"><strong>${courses[k].code} allows AI with acknowledgment.</strong> If you use this feedback, add the required statement to your submission (what you used it for + your prompts).</div>`;return`<div class="know-intro" style="border-color:var(--accent-border);background:var(--accent-tint)"><strong style="color:var(--accent)">⚠ ${courses[k].code} prohibits generative AI on assessments.</strong> Your syllabus: “${a.t}” Using this tool on work you will submit could be academic misconduct. Use it on <em>practice</em> writing, past assignments, or to learn — not on the graded piece itself.</div>`;}
 function gradeCalc(course){const items=grades[course]||[];let wDone=0,earned=0,wTotal=0;items.forEach(i=>{const w=parseFloat(i.weight)||0;wTotal+=w;const mk=parseFloat(i.mark);if(i.mark!==''&&i.mark!=null&&!isNaN(mk)){wDone+=w;earned+=w*mk/100;}});return{items,wDone,earned,wTotal,current:wDone?earned/wDone*100:null,remaining:wTotal-wDone};}
 function renderGrades(c){
   if(!grades[currentCourse])grades[currentCourse]=[{name:'Midterm',weight:30,mark:''},{name:'Final Exam',weight:40,mark:''},{name:'Assignments',weight:20,mark:''},{name:'Participation',weight:10,mark:''}];
@@ -3032,16 +3804,16 @@ function renderGrades(c){
   const rows=g.items.map((i,idx)=>`<div class="gr-row"><input class="gr-in" value="${i.name}" onchange="grUpd(${idx},'name',this.value)"><input class="gr-in" type="number" value="${i.weight}" placeholder="%" onchange="grUpd(${idx},'weight',this.value)"><input class="gr-in" type="number" value="${i.mark}" placeholder="—" onchange="grUpd(${idx},'mark',this.value)"><span style="font-size:12px;color:var(--muted)">${i.mark!==''&&!isNaN(parseFloat(i.mark))?letterFor(parseFloat(i.mark)):'not yet'}</span><button class="assign-del" onclick="grDel(${idx})">×</button></div>`).join('');
   const cur=g.current;
   return`<div class="two-col">
-    <div class="icard"><div class="icard-label">Current grade (on ${g.wDone}% of the course)</div><div class="gr-big" style="color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(1)+'%'}</div><div style="font-size:13px;color:var(--muted);margin-top:4px">${cur==null?'Enter a mark to see your standing':letterFor(cur)+' so far · '+g.remaining+'% still to be graded'}</div><div class="gr-scale">${GRADE_SCALE.slice(0,6).map(([l,m])=>`<span class="${cur!=null&&cur>=m?'hit':''}">${l} ≥${m}</span>`).join('')}</div></div>
+    <div class="icard"><div class="icard-label">Current grade (on ${g.wDone}% of the course)</div><div class="gr-big" style="color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(1)+'%'}</div><div style="font-size:13px;color:var(--muted);margin-top:4px">${cur==null?'Enter a mark to see your standing':letterFor(cur)+' so far · '+g.remaining+'% still to be graded'}</div><div class="gr-scale">${scaleFor(currentCourse).slice(0,6).map(([l,m])=>`<span class="${cur!=null&&cur>=m?'hit':''}">${l} ≥${m}</span>`).join('')}</div></div>
     <div class="icard"><div class="icard-label">What you need on the rest</div><div class="gr-need">${needFor(g)}</div></div>
   </div>
   <div class="icard"><div class="icard-label">Assessments <span style="text-transform:none;letter-spacing:0;color:var(--muted2);font-weight:500">— weights add to ${g.wTotal}${g.wTotal!==100?' ⚠️ (should be 100)':' ✓'}</span></div>
   <div class="gr-row gr-head"><span>Assessment</span><span>Weight %</span><span>Your mark %</span><span>Letter</span><span></span></div>${rows}
   <button class="retry-btn" style="margin-top:10px" onclick="grades['${currentCourse}'].push({name:'New item',weight:0,mark:''});persist();renderTool('grades',courses['${currentCourse}'])">+ Add assessment</button></div>
-  <div class="know-intro" style="font-size:12px">Letter scale: A+ 90, A 85, A- 80, B+ 77, B 73, B- 70, C+ 67, C 63, C- 60, D+ 55, D 50. Your instructor's syllabus overrides this — adjust if theirs differs.</div>`;
+  <div class="know-intro" style="font-size:12px">${COURSE_SCALES[currentCourse]?`Using <strong>${c.code}'s own scale from the syllabus</strong>: `+scaleFor(currentCourse).slice(0,11).map(([l,m])=>l+" "+m).join(" · "):"Default MacEwan-style scale (CMPT outline has no table)."}</div>`;
 }
 function needFor(g){if(!g.remaining||g.remaining<=0)return g.current==null?'Enter your marks above.':`Course complete. Final: <strong>${g.current.toFixed(1)}% (${letterFor(g.current)})</strong>.`;
-  return [['A+',90],['A',85],['A-',80],['B+',77],['B',73]].map(([l,t])=>{const need=(t*g.wTotal-g.earned*100)/g.remaining;return`<div>For <strong>${l}</strong>: average <strong>${need<=0?'anything (locked in)':need>100?'impossible (>100%)':need.toFixed(1)+'%'}</strong> on the remaining ${g.remaining}%</div>`;}).join('');}
+  return scaleFor(currentCourse).slice(0,5).map(([l,t])=>{const need=(t*g.wTotal-g.earned*100)/g.remaining;return`<div>For <strong>${l}</strong>: average <strong>${need<=0?'anything (locked in)':need>100?'impossible (>100%)':need.toFixed(1)+'%'}</strong> on the remaining ${g.remaining}%</div>`;}).join('');}
 function grUpd(i,k,v){grades[currentCourse][i][k]=k==='name'?v:(v===''?'':parseFloat(v));persist();renderTool('grades',courses[currentCourse]);}
 function grDel(i){grades[currentCourse].splice(i,1);persist();renderTool('grades',courses[currentCourse]);}
 function streakDays(){let n=0;const d=new Date();d.setHours(0,0,0,0);const has=x=>Object.values(studyLog[todayKey(x)]||{}).reduce((a,b)=>a+b,0)>=60;if(!has(d)){d.setDate(d.getDate()-1);if(!has(d))return 0;}while(has(d)){n++;d.setDate(d.getDate()-1);}return n;}
@@ -3059,7 +3831,7 @@ function renderHomeCards(){const el=document.getElementById('ccards');if(!el)ret
   document.getElementById('hero-next').textContent=nxt?`${Math.round((new Date(nxt.due+'T00:00:00')-t0)/864e5)} days to next due`:'';
   const st=document.getElementById('hero-status');if(over){st.className='pill-bad';st.innerHTML='<span class="msi">warning</span>'+over+' overdue';}else if(dueAll>10){st.className='pill-warn';st.innerHTML='<span class="msi">style</span>'+dueAll+' cards due';}else{st.className='pill-ok';st.innerHTML='<span class="msi">trending_up</span>On track';}
   document.getElementById('hero-msg').innerHTML=`<strong>5 courses tracked.</strong> ${wk?fmtShort(wk)+' of focus this week':'Open a course to start tracking'}${avg!=null?` · averaging ${avg.toFixed(0)}%`:''}.`;}
-function renderHomeGrades(){const el=document.getElementById('home-grades');if(!el)return;el.innerHTML=Object.keys(courses).map(k=>{const g=gradeCalc(k);const cur=g.current;return`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)"><span class="sb-dot" style="background:${courses[k].color}"></span><span style="flex:1;font-size:13px;color:var(--text2)">${courses[k].code}</span><strong style="font-family:var(--mono);font-size:16px;color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(0)+'%'}</strong><span style="font-size:11px;color:var(--muted2);width:26px">${cur==null?'':letterFor(cur)}</span></div>`;}).join('');
+function renderHomeGrades(){const el=document.getElementById('home-grades');if(!el)return;el.innerHTML=Object.keys(courses).map(k=>{const g=gradeCalc(k);const cur=g.current;return`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)"><span class="sb-dot" style="background:${courses[k].color}"></span><span style="flex:1;font-size:13px;color:var(--text2)">${courses[k].code}</span><strong style="font-family:var(--mono);font-size:16px;color:${cur==null?'var(--muted2)':cur>=85?'var(--green)':cur>=70?'var(--blue)':'var(--red)'}">${cur==null?'—':cur.toFixed(0)+'%'}</strong><span style="font-size:11px;color:var(--muted2);width:26px">${cur==null?'':letterFor(cur,k)}</span></div>`;}).join('');
   const due=Object.keys(courses).reduce((a,k)=>a+(flashcards[k]||[]).filter(c=>!c.due||c.due<=Date.now()).length,0);const f=document.getElementById('home-due-fc');if(f)f.textContent=due?`${due} flashcards due for review today`:'';}
 
 /* ═══════ UNIFIED CALENDAR ═══════ */
@@ -3169,9 +3941,9 @@ function checkBin(){const v=document.getElementById('dr-ans').value.trim().toUpp
   document.getElementById('dr-rev').innerHTML=`<div class="dr-step" style="border-color:${ok?'var(--green);background:var(--green-light)':'var(--red);background:var(--red-light)'}"><strong>${ok?'Correct':'❌ Wrong'}</strong> — answer: <span style="font-family:'Courier New',monospace">${binQ.a}</span></div><button class="retry-btn" style="margin-top:6px" onclick="nextBin()">Next →</button>`;document.getElementById('bin-score').textContent=`${binScore.ok}/${binScore.n}`;}
 
 // ENGL
-function drillThesis(){drillBox('Thesis workshop',`<textarea class="ex-ta" id="dr-in" placeholder="Paste your thesis statement (1-2 sentences). Optionally add the essay prompt on a new line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runThesis()">Rate my thesis</button><div id="drill-out" style="margin-top:12px"></div>`);}
+function drillThesis(){drillBox('Thesis workshop',aiGuard(currentCourse)+`<textarea class="ex-ta" id="dr-in" placeholder="Paste your thesis statement (1-2 sentences). Optionally add the essay prompt on a new line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runThesis()">Rate my thesis</button><div id="drill-out" style="margin-top:12px"></div>`);}
 async function runThesis(){const p=document.getElementById('dr-in').value.trim();if(!p)return;drillLoad('Evaluating...');try{const raw=await ai(`ENGL 102 (MacEwan) instructor. Evaluate this thesis statement against: arguable (not fact/question/announcement), specific, focused, answers "so what", signals structure/reasoning. Respond ONLY with raw JSON: {"rating":"weak"|"ok"|"strong","score":0-10,"problems":["..."],"rewrite":"a stronger version keeping the student's idea","why":"why the rewrite is better in 2 sentences","test":"one question the student should ask themselves about their thesis"}\n\nTHESIS: ${p}`,900);const r=aiJSON(raw);if(r.rating!=='strong')addWeak(currentCourse,'Thesis statements: '+(r.problems[0]||'').slice(0,60),'Drill');const col={weak:'var(--red)',ok:'var(--yellow)',strong:'var(--green)'}[r.rating];document.getElementById('drill-out').innerHTML=`<div class="score-banner" style="background:var(--card);border:1px solid var(--border)"><div class="score-circle" style="background:var(--page);color:${col};font-size:18px">${r.score}/10</div><div class="score-text"><h3 style="color:${col};text-transform:uppercase;letter-spacing:.5px;font-size:13px">${r.rating}</h3><p>${r.problems.join(' · ')}</p></div></div><div class="dr-step" style="border-color:var(--green);background:var(--green-light)"><strong>Stronger rewrite:</strong><br>${r.rewrite}<br><span style="color:var(--muted)">${r.why}</span></div><div class="dr-step"><span class="msi ic">explore</span>Ask yourself: ${r.test}</div>`;}catch(e){drillErr(e);}}
-function drillMLA(){drillBox('MLA citation checker',`<textarea class="ex-ta" id="dr-in" style="min-height:140px" placeholder="Paste Works Cited entries and/or in-text citations. One per line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runMLA()">Check citations</button><div id="drill-out" style="margin-top:12px"></div>`);}
+function drillMLA(){drillBox('MLA citation checker',aiGuard(currentCourse)+`<textarea class="ex-ta" id="dr-in" style="min-height:140px" placeholder="Paste Works Cited entries and/or in-text citations. One per line."></textarea><button class="ai-btn" style="margin-top:8px" onclick="runMLA()">Check citations</button><div id="drill-out" style="margin-top:12px"></div>`);}
 async function runMLA(){const p=document.getElementById('dr-in').value.trim();if(!p)return;drillLoad('Checking against MLA 9...');try{const raw=await ai(`MLA 9th edition expert. Check each citation. Respond ONLY with raw JSON: {"items":[{"original":"...","ok":true|false,"errors":["specific error"],"fixed":"corrected citation (mark italics as *Title*)"}],"general":"one tip"}\n\n${p}`,1500);const r=aiJSON(raw);if(r.items.some(x=>!x.ok))addWeak(currentCourse,'MLA formatting','Drill');document.getElementById('drill-out').innerHTML=r.items.map(x=>`<div class="dr-step" style="border-color:${x.ok?'var(--green);background:var(--green-light)':'var(--red);background:var(--red-light)'}"><strong>${x.ok?'Correct':'❌ '+x.errors.join('; ')}</strong><br><span style="color:var(--muted)">${x.original}</span>${x.ok?'':'<br><strong>Fixed:</strong> '+x.fixed.replace(/\*(.*?)\*/g,'<em>$1</em>')}</div>`).join('')+`<div class="dr-step"><span class="msi ic">lightbulb</span>${r.general}</div>`;}catch(e){drillErr(e);}}
 
 // EASC
