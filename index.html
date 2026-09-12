@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MacEwan Study Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:['selector','[data-theme="dark"]'],corePlugins:{preflight:false},theme:{extend:{colors:{primary:'#3B6EA5',primaryDark:'#2C5586',ink:'#0F172A',muted:'#64748B',easc:'#10B981',engl:'#B4304A',cmpt:'#4F46E5',math:'#F59E0B',anth:'#8B5CF6',gap:'#D97706'},fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],mono:['Space Grotesk','monospace']},borderRadius:{bento:'18px'},boxShadow:{bento:'0 4px 20px -2px rgba(15,23,42,0.06), 0 2px 6px -1px rgba(15,23,42,0.03)'}}}}</script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1594,6 +1596,48 @@ mark.kw:hover{background:var(--gap-light)}
 .task-horizon-card .tl-row .tl-body{flex:1;min-width:0}
 .hu-row .hu-when{font-family:var(--font-mono);font-size:10.5px;font-weight:800}
 
+/* ══ ORGANIZER UPGRADE ══ */
+[data-theme="light"]{
+  --bg:#F6F7FC;--surface:#FFFFFF;--card-subtle:#F7F8FC;--border:#E4E7F0;--border-light:#EEF0F5;
+  --text:#172033;--text-secondary:#4D5870;--muted:#758097;--primary:#5B4FE9;--primary-tint:#EFEEFF;--primary-border:#D9D5FF;
+  --c-easc:#009B78;--c-easc-light:#E6F8F3;--c-easc-border:#A8E4D5;--c-engl:#E14B73;--c-engl-light:#FFF0F4;--c-engl-border:#F8C3D1;
+  --c-cmpt:#3D6DEB;--c-cmpt-light:#EDF2FF;--c-cmpt-border:#BFCFFF;--c-math:#E58A00;--c-math-light:#FFF7E6;--c-math-border:#FFD89A;
+  --c-anth:#8B52D6;--c-anth-light:#F6EEFF;--c-anth-border:#DCC2F8;--shadow-bento:0 8px 24px rgba(37,45,75,.07);--shadow-nav:0 16px 40px rgba(37,45,75,.16)
+}
+.app-container{background:radial-gradient(circle at 85% 0,rgba(91,79,233,.08),transparent 30%),var(--bg)}
+.avatar-badge{background:linear-gradient(135deg,#6C5CE7,#3D6DEB)}
+.organizer-panel{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.7fr);gap:12px;margin-bottom:16px}
+.quick-capture,.week-pulse{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:15px 16px;box-shadow:var(--shadow-bento)}
+.org-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:11px}.org-kicker{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--primary)}.org-title{font-size:15px;font-weight:800;color:var(--text);margin-top:2px}.org-help{font-size:10.5px;color:var(--muted);margin-top:2px}
+.capture-row{display:grid;grid-template-columns:1.6fr .85fr .85fr .7fr auto;gap:7px}.capture-field{min-width:0;border:1px solid var(--border);background:var(--card-subtle);color:var(--text);border-radius:11px;padding:9px 10px;font:600 11.5px var(--font-sans);outline:none}.capture-field:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-tint)}.capture-add{border:0;border-radius:11px;background:linear-gradient(135deg,#6C5CE7,#3D6DEB);color:#fff;padding:9px 13px;font:800 12px var(--font-sans);cursor:pointer;white-space:nowrap}.capture-add:active{transform:scale(.97)}
+.pulse-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.pulse-stat{background:var(--card-subtle);border:1px solid var(--border-light);border-radius:12px;padding:9px}.pulse-stat b{display:block;font:800 18px var(--font-mono);color:var(--text)}.pulse-stat span{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase}.pulse-stat.danger b{color:#DC3D5D}.pulse-stat.good b{color:#009B78}.org-tip{margin-top:9px;font-size:10.5px;line-height:1.45;color:var(--muted)}.org-tip strong{color:var(--text)}
+.task-horizon-card .tl-row.due{background:linear-gradient(90deg,rgba(225,75,115,.055),transparent)!important}.task-horizon-card .tl-row.study{background:linear-gradient(90deg,rgba(61,109,235,.045),transparent)!important}
+.horizon-card:hover,.ribbon-btn:hover,.bento-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(37,45,75,.11)}
+@media(max-width:820px){.organizer-panel{grid-template-columns:1fr}.capture-row{grid-template-columns:1fr 1fr}.capture-row .capture-title{grid-column:1/-1}.capture-add{grid-column:1/-1}.week-pulse{display:none}}
+@media(max-width:520px){.capture-row{grid-template-columns:1fr}.capture-row .capture-title,.capture-add{grid-column:auto}.quick-capture{padding:14px}.org-help{display:none}}
+/* restrained colour pass: keep colour contained to accents */
+[data-theme="light"]{
+  --c-easc:#087F68;--c-easc-light:#F4F9F7;--c-easc-border:#CFE4DD;
+  --c-engl:#B94764;--c-engl-light:#FCF6F7;--c-engl-border:#EACFD6;
+  --c-cmpt:#4264BC;--c-cmpt-light:#F5F7FC;--c-cmpt-border:#D2DAEF;
+  --c-math:#B87510;--c-math-light:#FCF8F1;--c-math-border:#EAD9BA;
+  --c-anth:#7952A6;--c-anth-light:#F8F5FB;--c-anth-border:#DED2EA;
+  --shadow-bento:0 5px 16px rgba(37,45,75,.055);--shadow-nav:0 14px 34px rgba(37,45,75,.13)
+}
+.app-container{background:var(--bg)}
+.avatar-badge,.capture-add{background:#5549C7}
+.tile-deck,.sn-card{background:var(--surface)!important}
+.task-horizon-card .tl-row.due,.task-horizon-card .tl-row.study{background:transparent!important}
+.horizon-card,.course-chip:not(.active),.ribbon-btn,.bento-card,.quick-capture,.week-pulse,.task-horizon-card{background-color:var(--surface)}
+/* urgent states use warm amber instead of harsh red */
+[data-theme="light"]{--red:#A96812;--red-light:#FFF8EB;--bad:#A96812;--bad-light:#FFF8EB;--bad-border:#E8D2AB}
+.pulse-stat.danger b{color:#A96812}
+.task-horizon-card .tl-tag.hot,.hu-row.hot .hu-when b,.hc-due.hot,.pill-bad,.assign-due.overdue{
+  background:#FFF8EB!important;color:#9A6216!important;border-color:#E8D2AB!important
+}
+.hu-row.hot,.assign-item:has(.assign-due.overdue){border-left-color:#C28A38!important}
+.ai-pol.prohibited{background:#FFF8EB!important;color:#8A5A18!important;border-color:#E8D2AB!important}
+.rb-exam{background:#F7F4FA!important;color:#74528F!important}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
@@ -1717,6 +1761,23 @@ mark.kw:hover{background:var(--gap-light)}
     <!-- HOME -->
     <div id="view-home">
       <section class="study-now" id="study-now"></section>
+      <section class="organizer-panel" aria-label="Quick organization tools">
+        <div class="quick-capture">
+          <div class="org-head"><div><div class="org-kicker">Brain dump</div><div class="org-title">Capture it before you forget it</div><div class="org-help">Add a task in seconds. You can organize the details later.</div></div><span class="msi" style="color:var(--primary)">bolt</span></div>
+          <div class="capture-row">
+            <input class="capture-field capture-title" id="quick-task-title" placeholder="What do you need to do?" onkeydown="if(event.key==='Enter')quickAddTask()">
+            <select class="capture-field" id="quick-task-course"><option value="earth">EASC 101</option><option value="english">ENGL 102</option><option value="comp">CMPT 101</option><option value="math">MATH 099</option><option value="anth">ANTH 101</option></select>
+            <input class="capture-field" id="quick-task-due" type="date" aria-label="Due date">
+            <select class="capture-field" id="quick-task-priority" aria-label="Priority"><option value="high">High</option><option value="med" selected>Medium</option><option value="low">Low</option></select>
+            <button class="capture-add" onclick="quickAddTask()">+ Add task</button>
+          </div>
+        </div>
+        <div class="week-pulse">
+          <div class="org-kicker">This week</div><div class="org-title" style="margin-bottom:10px">Your workload at a glance</div>
+          <div class="pulse-stats"><div class="pulse-stat danger"><b id="org-overdue">0</b><span>Overdue</span></div><div class="pulse-stat"><b id="org-weekdue">0</b><span>Due soon</span></div><div class="pulse-stat good"><b id="org-done">0</b><span>Finished</span></div></div>
+          <div class="org-tip" id="org-tip"><strong>Keep it realistic:</strong> choose one must-do task before anything else.</div>
+        </div>
+      </section>
       <section class="bento-grid">
         <article class="bento-card bento-wide tile-deck" id="tile-deck" style="--tc:var(--c-easc);--tc-light:var(--c-easc-light);--tc-border:var(--c-easc-border)">
           <div class="deck-top"><span class="deck-course-tag" id="deck-tag">EASC 101</span><span class="deck-count"><span class="msi" style="font-size:14px;color:var(--tc)">style</span> <span id="deck-due">0 due</span></span></div>
@@ -5550,7 +5611,8 @@ function tdItems(){
   const fc=Object.keys(courses).reduce((n,k)=>n+(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,0);
   if(fc)items.push({id:'fc',k:null,kind:'fc',title:`Review ${fc} flashcard${fc>1?'s':''} due`,sub:'Spaced repetition — 10 minutes',tool:'flash'});
   Object.keys(courses).forEach(k=>{const S=SYLLABI[k];if(!S)return;const i=currentWeekIdx(S.weeks,t0);if(i<0)return;const w=S.weeks[i];if(/Reading Week|no class/i.test(w[2]+w[3]))return;let topic=stripTags(w[2]);if(k==='math')topic=expandMath(topic);items.push({id:'wk:'+k+':'+w[0],k,kind:'study',title:topic,sub:courses[k].code+' · Week '+w[0],tool:'today'});});
-  return items;
+  const rank={due:0,fc:1,study:2};
+  return items.sort((a,b)=>(rank[a.kind]-rank[b.kind])||((a.d??99)-(b.d??99))).slice(0,8);
 }
 function renderTodayList(){
   const el=document.getElementById('home-today');if(!el)return;
@@ -5705,6 +5767,23 @@ weekCard=function(key,S,i,cur,compact){
 /* tutor: include uploaded lesson content for the current course */
 function lessonContextFor(key){const S=SYLLABI[key];if(!S)return '';return S.weeks.map(w=>{const L=(weekLog[key]||{})[w[0]];return L&&L.lesson?`--- WEEK ${w[0]} (${w[1]}) LESSON CONTENT ---\n${L.lesson.slice(0,12000)}`:'';}).filter(Boolean).join('\n\n');}
 
+/* fast capture + weekly workload for students who need a simple next step */
+function quickAddTask(){
+  const title=document.getElementById('quick-task-title').value.trim();
+  if(!title){document.getElementById('quick-task-title').focus();syncToast('Write the task first');return;}
+  const k=document.getElementById('quick-task-course').value,due=document.getElementById('quick-task-due').value,priority=document.getElementById('quick-task-priority').value;
+  if(!assignments[k])assignments[k]=[];
+  assignments[k].push({id:Date.now(),title,due,priority,done:false,createdAt:Date.now()});
+  document.getElementById('quick-task-title').value='';persist();renderHomeCards();renderOrganizer();syncToast('Task added to '+courses[k].code);
+}
+function renderOrganizer(){
+  const over=document.getElementById('org-overdue');if(!over)return;
+  const t0=new Date();t0.setHours(0,0,0,0);let overdue=0,week=0,done=0;
+  Object.keys(courses).forEach(k=>(assignments[k]||[]).forEach(a=>{const d=a.due?Math.round((new Date(a.due+'T00:00:00')-t0)/864e5):null;if(a.done){done++;return;}if(d!==null&&d<0)overdue++;else if(d!==null&&d<=7)week++;}));
+  over.textContent=overdue;document.getElementById('org-weekdue').textContent=week;document.getElementById('org-done').textContent=done;
+  document.getElementById('org-tip').innerHTML=overdue?'<strong>Start with one late task.</strong> Open it, work for 10 minutes, then decide the next step.':week>5?'<strong>Busy week:</strong> pick 1 must-do, 3 should-do, and 5 quick tasks.':'<strong>Keep it realistic:</strong> choose one must-do task before anything else.';
+}
+
 /* init */
 goHome();
 
@@ -5733,7 +5812,7 @@ function renderBento(){renderStudyNow();const hr=new Date().getHours();document.
   const sk=streakDays();document.getElementById('streak-count').textContent=sk+'d';document.getElementById('streak-sub').textContent=sk?'Keep momentum alive!':'Study today to start a streak';
   const days=weekDates();const vals=days.map(d=>Object.values(studyLog[todayKey(d)]||{}).reduce((a,b)=>a+b,0));const mx=Math.max(600,...vals);const tk=todayKey();
   document.getElementById('week-bars').innerHTML=days.map((d,i)=>`<div class="bar-col${vals[i]>=60?' active':''}${todayKey(d)===tk?' today':''}"><div class="bar-stick" style="height:${Math.max(8,Math.round(vals[i]/mx*32))}px"></div><span class="bar-day">${d.toLocaleDateString('en-CA',{weekday:'narrow'})}</span></div>`).join('');
-  bentoPomDisplay();}
+  bentoPomDisplay();renderOrganizer();}
 function bentoPomDisplay(){const rt=document.getElementById('rail-timer');if(rt)rt.textContent=`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`;const d=document.getElementById('bento-timer-display');if(!d)return;const m=Math.ceil(pomSecondsLeft/60);d.textContent=pomRunning?`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`:m+'m';document.getElementById('bento-timer-lbl').textContent=pomRunning?'Pause':'Start';document.getElementById('bento-timer-icon').textContent=pomRunning?'pause':'play_arrow';document.getElementById('timer-svg-circle').style.strokeDashoffset=198*(1-pomSecondsLeft/pomTotalSeconds);}
 function bentoPom(){if(!currentCourse){/* focus without a course still logs to none — open the last course */}togglePom();bentoPomDisplay();}
 const _updatePomDisplay=updatePomDisplay;updatePomDisplay=function(){_updatePomDisplay();bentoPomDisplay();};
