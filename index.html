@@ -1343,6 +1343,34 @@ body{color:var(--text)}
 .ai-pol.permitted{background:var(--c-easc-light)!important;color:var(--c-easc)!important;border-color:var(--c-easc-border)!important}
 .msi{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:18px;line-height:1;display:inline-block;vertical-align:middle}
 .bento-hidden{display:none!important}
+/* study now */
+.study-btn{display:none;align-items:center;gap:6px;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:0 16px;height:36px;font-family:var(--font-sans);font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(142,20,40,.3)}
+.study-btn .msi{font-size:18px}
+@media(min-width:720px){.study-btn{display:inline-flex}}
+.study-now{margin-bottom:14px}
+.sn-card{background:linear-gradient(135deg,var(--surface) 55%,var(--cl));border:1px solid var(--border);border-left:5px solid var(--c);border-radius:var(--radius-bento);padding:18px 20px;box-shadow:var(--shadow-bento);display:flex;gap:18px;align-items:stretch}
+.sn-left{flex:1;min-width:0}
+.sn-kicker{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sn-kicker .msi{font-size:15px;color:var(--c)}.sn-kicker b{color:var(--text)}
+.sn-title{font-size:19px;font-weight:800;letter-spacing:-.3px;color:var(--text);line-height:1.2}
+.sn-meta{font-size:12.5px;color:var(--muted);margin:4px 0 12px}.sn-meta b{color:var(--text)}
+.sn-actions{display:flex;gap:8px;flex-wrap:wrap}
+.sn-go{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:11px 18px;font-family:var(--font-sans);font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:0 5px 14px rgba(142,20,40,.3)}
+.sn-go .msi{font-size:20px}
+.sn-alt{display:inline-flex;align-items:center;gap:5px;background:var(--surface);color:var(--text-secondary);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-family:var(--font-sans);font-size:12.5px;font-weight:700;cursor:pointer}
+.sn-alt .msi{font-size:17px}
+.sn-right{border-left:1px solid var(--border);padding-left:18px;display:flex;flex-direction:column;gap:6px;min-width:150px}
+.sn-rlabel{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.sn-mini{display:flex;flex-direction:column;align-items:flex-start;background:var(--card-subtle);border:1px solid var(--border);border-left:3px solid var(--c);border-radius:10px;padding:7px 10px;font-family:var(--font-mono);font-size:11.5px;font-weight:800;color:var(--text);cursor:pointer;text-align:left}
+.sn-mini small{font-family:var(--font-sans);font-size:10.5px;font-weight:600;color:var(--muted)}
+@media(max-width:719px){.sn-card{flex-direction:column}.sn-right{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:10px;flex-direction:row;flex-wrap:wrap}.sn-rlabel{width:100%}}
+/* grouped rail */
+.st-group{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted-light);padding:8px 10px 4px}
+.st-btn{display:inline-flex;align-items:center;gap:8px}
+.st-btn .msi{font-size:17px;opacity:.8}
+.st-badge{font-style:normal;margin-left:auto;background:var(--primary-tint);color:var(--primary);border:1px solid var(--primary-border);border-radius:10px;font-size:10px;font-weight:800;padding:1px 7px}
+.st-btn.active .st-badge{background:rgba(255,255,255,.2);color:#fff;border-color:transparent}
+@media(max-width:719px){.st-group{display:none}.subtabs-scroll .st-btn .msi{display:none}}
 /* ══ DESKTOP LAYOUT (≥ 900px) ══ */
 @media(min-width:720px){
   html,body{background:var(--bg)}
@@ -1443,6 +1471,7 @@ body{color:var(--text)}
     </div>
   </div>
   <div class="header-actions">
+    <button class="study-btn" onclick="studyNow()"><span class="msi">play_arrow</span> Study now</button>
     <button class="icon-btn" id="theme-btn" title="Toggle dark mode" onclick="toggleTheme()"><span class="msi">dark_mode</span></button>
     <button class="icon-btn" id="sync-btn" title="Sync" onclick="openSync()"><span class="msi">cloud</span></button>
     <button class="icon-btn" title="API key" onclick="showKeySetup()"><span class="msi">key</span></button>
@@ -1513,6 +1542,7 @@ body{color:var(--text)}
 
     <!-- HOME -->
     <div id="view-home">
+      <section class="study-now" id="study-now"></section>
       <section class="bento-grid">
         <article class="bento-card bento-wide tile-deck" id="tile-deck" style="--tc:var(--c-easc);--tc-light:var(--c-easc-light);--tc-border:var(--c-easc-border)">
           <div class="deck-top"><span class="deck-course-tag" id="deck-tag">EASC 101</span><span class="deck-count"><span class="msi" style="font-size:14px;color:var(--tc)">style</span> <span id="deck-due">0 due</span></span></div>
@@ -4557,8 +4587,8 @@ function renderTimerHTML(){
   return`<div class="pom-wrap"><div class="pom-modes" style="margin-bottom:16px"><button class="pom-mode-btn active" id="pmode-work" onclick="setPomMode('work')"><span class="msi ic">target</span>Focus (25 min)</button><button class="pom-mode-btn" id="pmode-short" onclick="setPomMode('short')">☕ Break (5 min)</button><button class="pom-mode-btn" id="pmode-long" onclick="setPomMode('long')">🛋 Long Break (15 min)</button></div><div class="pom-display"><div class="pom-ring"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="pom-ring-track" cx="60" cy="60" r="52"/><circle class="pom-ring-fill" id="pom-ring-fill" cx="60" cy="60" r="52" stroke-dasharray="${2*Math.PI*52}" stroke-dashoffset="0"/></svg></div><div class="pom-mode-lbl" id="pom-mode-label">Focus Time</div><div class="pom-time" id="pom-time">25:00</div><div class="pom-session" id="pom-sess-label">Session 1 · 0 completed today</div></div><div class="pom-btns"><button class="pom-btn pom-start" id="pom-start-btn" onclick="togglePom()">▶ Start</button><button class="pom-btn pom-reset" onclick="resetPom()">↺ Reset</button></div></div>`;
 }
 function setPomMode(mode){pomMode=mode;resetPom();document.querySelectorAll('.pom-mode-btn').forEach(b=>b.classList.remove('active'));document.getElementById('pmode-'+mode)?.classList.add('active');}
-function togglePom(){pomRunning=!pomRunning;document.getElementById('pom-start-btn').textContent=pomRunning?'⏸ Pause':'▶ Start';if(pomRunning)pomTimer=setInterval(pomTick,1000);else clearInterval(pomTimer);}
-function pomTick(){pomSecondsLeft--;if(pomSecondsLeft<=0){clearInterval(pomTimer);pomRunning=false;if(pomMode==='work')pomSessions++;document.getElementById('pom-start-btn').textContent='▶ Start';pomSecondsLeft=0;updatePomDisplay();setTimeout(()=>alert(pomMode==='work'?`Focus session done! ${pomSessions} sessions today. Take a break.`:'☕ Break over — back to work!'),100);return;}updatePomDisplay();}
+function togglePom(){pomRunning=!pomRunning;const b=document.getElementById('pom-start-btn');if(b)b.textContent=pomRunning?'⏸ Pause':'▶ Start';if(pomRunning)pomTimer=setInterval(pomTick,1000);else clearInterval(pomTimer);}
+function pomTick(){pomSecondsLeft--;if(pomSecondsLeft<=0){clearInterval(pomTimer);pomRunning=false;if(pomMode==='work')pomSessions++;{const b=document.getElementById('pom-start-btn');if(b)b.textContent='▶ Start';}pomSecondsLeft=0;updatePomDisplay();setTimeout(()=>alert(pomMode==='work'?`Focus session done! ${pomSessions} sessions today. Take a break.`:'☕ Break over — back to work!'),100);return;}updatePomDisplay();}
 function resetPom(){clearInterval(pomTimer);pomRunning=false;pomSecondsLeft=pomModes[pomMode].mins*60;pomTotalSeconds=pomModes[pomMode].mins*60;const btn=document.getElementById('pom-start-btn');if(btn)btn.textContent='▶ Start';updatePomDisplay();}
 function updatePomDisplay(){
   const m=Math.floor(pomSecondsLeft/60),s=pomSecondsLeft%60;
@@ -5197,13 +5227,19 @@ function lessonContextFor(key){const S=SYLLABI[key];if(!S)return '';return S.wee
 goHome();
 
 /* ══ Bento shell glue ══ */
-const SUBTABS=[['today','Lesson'],['lectures','Lectures'],['flash','Flashcards'],['tutor','AI Tutor'],['quiz','Quiz'],['exam','Exam'],['drills','Drills'],['bank','Problems'],['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['plan','Study plan'],['iknow','What I know'],['work','Review work'],['upload','Upload'],['review','Review'],['tomorrow','Tomorrow'],['timer','Timer'],['format','Exam format'],['agrade','Get an A']];
+const SUBGROUPS=[['Study',[['lectures','Lectures'],['flash','Flashcards'],['quiz','Quiz'],['exam','Exam mode'],['drills','Drills'],['bank','Problems'],['plan','Study plan'],['iknow','What I know']]],['AI',[['tutor','AI Tutor'],['work','Review work'],['upload','Upload']]],['Plan',[['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['timer','Timer'],['today','Lesson'],['review','Review'],['tomorrow','Tomorrow'],['format','Exam format'],['agrade','Get an A']]]];
+const SUBTABS=SUBGROUPS.flatMap(g=>g[1]);
 const CCLR={earth:'easc',english:'engl',comp:'cmpt',math:'math',anth:'anth'};
-function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;bar.innerHTML=SUBTABS.map(([k,l])=>`<button class="st-btn${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)">${l}</button>`).join('');const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
+function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;const due=(flashcards[currentCourse]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const n=(LECTURES[currentCourse]||[]).length;const badge={lectures:n?n+'':'',flash:due?due+'':''};bar.innerHTML=SUBGROUPS.map(([g,items])=>`<div class="st-group">${g}</div>`+items.map(([k,l])=>`<button class="st-btn${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span>${l}${badge[k]?`<em class="st-badge">${badge[k]}</em>`:''}</button>`).join('')).join('');const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
 const _switchTool=switchTool;switchTool=function(name,btn){_switchTool(name,btn);document.querySelectorAll('.st-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===name));const on=document.querySelector('.st-btn.active');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById(name==='flash'?'tab-cards':'tab-courses').classList.add('active');};
-const _openCourse=openCourse;openCourse=function(key){_openCourse(key);document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-'+key));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-courses').classList.add('active');const c=courses[key],cc=CCLR[key];const b=document.getElementById('cd-badge');b.textContent=c.code;b.style.cssText=`background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)`;document.getElementById('cd-topic').textContent='Active module: '+c.today.topic;document.getElementById('detail-hero').style.borderLeft=`4px solid var(--c-${cc})`;renderSubtabs();document.getElementById('main-panel').scrollTo({top:0});};
+const _openCourse=openCourse;openCourse=function(key){_openCourse(key);document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-'+key));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-courses').classList.add('active');const c=courses[key],cc=CCLR[key];const b=document.getElementById('cd-badge');b.textContent=c.code;b.style.cssText=`background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)`;document.getElementById('cd-topic').textContent='Active module: '+c.today.topic;document.getElementById('detail-hero').style.borderLeft=`4px solid var(--c-${cc})`;if((LECTURES[key]||[]).length&&currentTool==='today')switchTool('lectures',null);renderSubtabs();document.getElementById('main-panel').scrollTo({top:0});};
 const _goHome=goHome;goHome=function(){_goHome();document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-home'));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-home').classList.add('active');renderBento();document.getElementById('main-panel').scrollTo({top:0});};
-function renderBento(){const hr=new Date().getHours();document.getElementById('bento-greet').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+'!';
+function nextExam(){const t0=new Date();t0.setHours(0,0,0,0);let best=null;Object.keys(courses).forEach(k=>(assignments[k]||[]).forEach(a=>{if(!a.due||a.done)return;if(!/exam|midterm|quiz 1,2|term exam|final/i.test(a.title))return;const d=Math.round((new Date(a.due+'T00:00:00')-t0)/864e5);if(d<0)return;if(!best||d<best.d)best={k,d,a};}));return best;}
+function studyNow(k){const nx=nextExam();k=k||(nx?nx.k:Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth');const lecs=LECTURES[k]||[];openCourse(k);if(lecs.length){lecSel[k]=lecs[lecs.length-1].n;lecTab[k]='questions';switchTool('lectures',null);}else{switchTool('quiz',null);}if(!pomRunning){pomMode='work';pomSecondsLeft=pomTotalSeconds=25*60;togglePom();bentoPomDisplay();}}
+function renderStudyNow(){const el=document.getElementById('study-now');if(!el)return;const nx=nextExam();const k=nx?nx.k:Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth';const c=courses[k],cc=CCLR[k];const lecs=(LECTURES[k]||[]).length;const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const weak=(weakness[k]||[]).filter(w=>!w.done).length;
+  const others=Object.keys(courses).filter(x=>x!==k&&(LECTURES[x]||[]).length).map(x=>`<button class="sn-mini" style="--c:var(--c-${CCLR[x]})" onclick="studyNow('${x}')">${courses[x].code}<small>${(LECTURES[x]||[]).length} lectures</small></button>`).join('');
+  el.innerHTML=`<div class="sn-card" style="--c:var(--c-${cc});--cl:var(--c-${cc}-light)"><div class="sn-left"><div class="sn-kicker">${nx?`<span class="msi">event</span> ${nx.a.title.split('·')[0].trim()} in <b>${nx.d} day${nx.d===1?'':'s'}</b>`:'<span class="msi">school</span> Next up'}</div><div class="sn-title">${c.code} — ${c.title.split(' — ')[1]}</div><div class="sn-meta">${lecs} lecture package${lecs===1?'':'s'} to review${due?` · <b>${due} cards due</b>`:''}${weak?` · ${weak} weak topic${weak===1?'':'s'}`:''}</div><div class="sn-actions"><button class="sn-go" onclick="studyNow('${k}')"><span class="msi">play_arrow</span> Start 25-min session</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('flash',null)"><span class="msi">style</span> Cards</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('exam',null)"><span class="msi">assignment</span> Practice exam</button></div></div>${others?`<div class="sn-right"><div class="sn-rlabel">Other courses</div>${others}</div>`:''}</div>`;}
+function renderBento(){renderStudyNow();const hr=new Date().getHours();document.getElementById('bento-greet').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+'!';
   /* deck tile: course with most due cards, else latest lecture package */
   let best=null;Object.keys(courses).forEach(k=>{const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,total=(flashcards[k]||[]).length;if(!best||due>best.due)best={k,due,total};});
   const k=best&&best.due?best.k:(Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth');const c=courses[k],cc=CCLR[k];const lec=(LECTURES[k]||[]).slice(-1)[0];const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,total=(flashcards[k]||[]).length;
