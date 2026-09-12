@@ -625,7 +625,7 @@ select.gr-in option{background:var(--surface);color:var(--text)}
 .sync-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:20px;margin-bottom:12px}
 .sync-status.on{background:var(--green-light);color:var(--green);border:1px solid rgba(52,211,153,.3)}
 .sync-status.off{background:var(--card2);color:var(--muted);border:1px solid var(--border)}
-.sync-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:10px 16px;border-radius:12px;font-size:13px;z-index:999;display:none;box-shadow:var(--shadow-md)}
+.sync-toast{position:fixed;bottom:90px;z-index:1000;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:10px 16px;border-radius:12px;font-size:13px;z-index:999;display:none;box-shadow:var(--shadow-md)}
 .sync-toast.show{display:block}
 
 
@@ -1450,7 +1450,7 @@ body{color:var(--text)}
 <!-- API KEY BANNER -->
 <div id="api-key-banner">
   <div style="flex:1;min-width:200px"><div class="banner-title"><span class="msi ic">key</span>API Key Required</div><div class="banner-sub">Get a free key at <strong>console.anthropic.com</strong> → API Keys → Create Key</div></div>
-  <input id="api-key-input" class="banner-input" type="password" placeholder="Paste your sk-ant-... key here">
+  <input id="api-key-input-old" class="banner-input" type="password" placeholder="Paste your sk-ant-... key here">
   <button class="banner-save" onclick="saveKey()">Save Key</button>
   <button class="banner-close" onclick="dismissBanner()">✕</button>
 </div>
@@ -1624,6 +1624,13 @@ body{color:var(--text)}
   <button class="f-tab" id="tab-cards" onclick="mobTool('flash')"><span class="msi">style</span><span>Cards</span></button>
   <button class="f-tab" id="tab-more" onclick="openSheet()"><span class="msi">grid_view</span><span>More</span></button>
 </nav></div>
+<div class="modal-mask" id="key-modal" onclick="if(event.target===this)closeKey()"><div class="modal-body">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="st-ico g-study" style="width:36px;height:36px;border-radius:11px"><span class="msi" style="font-size:20px">key</span></div><h3 style="font-size:16px;font-weight:800;margin:0">Anthropic API key</h3></div>
+  <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;line-height:1.55">Powers the AI tools — tutor, flashcard generation, exam mode, review. The key is stored only in this browser and never synced. Get one at <b>console.anthropic.com</b> → API keys.</p>
+  <div id="key-status" style="font-size:12px;margin-bottom:10px"></div>
+  <input id="api-key-input" type="password" placeholder="sk-ant-…" autocomplete="off" style="width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;background:var(--card-subtle);color:var(--text);outline:none;font-family:var(--font-mono);font-size:13px" onkeydown="if(event.key==='Enter')saveKey()">
+  <div style="display:flex;gap:8px"><button onclick="saveKey()" style="flex:1;background:var(--primary);color:#fff;border:none;border-radius:10px;padding:10px;font-weight:800;cursor:pointer;font-family:var(--font-sans)">Save key</button><button id="key-clear" onclick="clearKey()" style="display:none;background:var(--card-subtle);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;font-family:var(--font-sans)">Remove</button><button onclick="closeKey()" style="background:var(--card-subtle);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;font-family:var(--font-sans)">Close</button></div>
+</div></div>
 <div class="modal-mask" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="modal-body"><h3 style="font-size:16px;font-weight:800;margin-bottom:10px">All tools</h3><div class="more-grid" id="sheet-body"></div></div></div>
 </div><!-- /app-container -->
 </div>
@@ -1641,8 +1648,10 @@ tick();setInterval(tick,30000);
 
 /* ── API key ── */
 function getKey(){return localStorage.getItem('anthropic_key')||'';}
-function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k.startsWith('sk-ant-')){alert('Key should start with sk-ant-');return;}localStorage.setItem('anthropic_key',k);document.getElementById('api-key-banner').classList.remove('show');const t=document.getElementById('api-key-saved');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-function showKeySetup(){document.getElementById('api-key-banner').classList.add('show');document.getElementById('api-key-input').focus();}
+function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k.startsWith('sk-ant-')){alert('Key should start with sk-ant-');return;}localStorage.setItem('anthropic_key',k);closeKey();syncToast('✅ API key saved — AI tools are on');if(currentCourse)renderTool(currentTool,courses[currentCourse]);}
+function showKeySetup(){const m=document.getElementById('key-modal');const k=getKey();const s=document.getElementById('key-status');s.innerHTML=k?`<span style="color:var(--c-easc);font-weight:700">● Key saved</span> <span style="color:var(--muted)">(${k.slice(0,10)}…${k.slice(-4)})</span> — paste a new one to replace it.`:'<span style="color:var(--muted)">No key saved yet.</span>';document.getElementById('key-clear').style.display=k?'inline-block':'none';m.classList.add('active');setTimeout(()=>document.getElementById('api-key-input').focus(),50);}
+function closeKey(){document.getElementById('key-modal').classList.remove('active');document.getElementById('api-key-input').value='';}
+function clearKey(){if(confirm('Remove the saved API key from this browser?')){localStorage.removeItem('anthropic_key');showKeySetup();}}
 function dismissBanner(){document.getElementById('api-key-banner').classList.remove('show');localStorage.setItem('banner_dismissed','1');}
 if(!getKey()&&!localStorage.getItem('banner_dismissed'))document.getElementById('api-key-banner').classList.add('show');
 
@@ -4498,7 +4507,7 @@ async function generateFlashcards(){
   const btn=document.getElementById('fc-gen-btn');const loading=document.getElementById('fc-loading');
   btn.disabled=true;loading.style.display='block';
   try{
-    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Generate 10 flashcard question-answer pairs for a university student studying ${c.title} at MacEwan University in Edmonton, Alberta.\n\n${c.knowContext}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]\n\nMake questions specific and testable. Answers concise but complete.`}]})});
     const data=await res.json();
     if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
@@ -4519,7 +4528,7 @@ async function evaluateKnowledge(){
   const btn=document.getElementById('know-btn');const loading=document.getElementById('ai-loading');const result=document.getElementById('ai-result');
   btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
   try{
-    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`You are a strict university professor evaluating a student's self-reported knowledge for ${c.title} at MacEwan University, Edmonton, Alberta.\n\n${c.knowContext}\n\nThe student wrote:\n"""\n${input}\n"""\n\nEvaluate rigorously and directly. Respond ONLY with raw JSON:\n{"grade":"A"|"B"|"C"|"D","score":0-100,"headline":"one blunt sentence","strengths":["..."],"weaknesses":["specific gap 1","specific gap 2","specific gap 3"],"missing":["important topic not mentioned 1","topic 2","topic 3"],"improve":["specific action 1","action 2","action 3","action 4"]}`}]})});
     const data=await res.json();
     if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
@@ -4558,7 +4567,7 @@ async function sendChatMsg(msg){
   msgs.innerHTML+='<div class="msg typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
   msgs.scrollTop=msgs.scrollHeight;
   try{
-    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const history=chatHistory[currentCourse].slice(-10).filter(h=>h.role==='user'||h.role==='assistant');
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`You are an expert tutor for ${c.title} at MacEwan University in Edmonton, Alberta. ${c.knowContext}${window.__tutorHint||''}${(typeof lessonContextFor==='function'&&lessonContextFor(currentCourse))?'\n\n=== THE INSTRUCTOR\'S ACTUAL LESSON CONTENT (uploaded by the student — prefer this over general knowledge) ===\n'+lessonContextFor(currentCourse):''}\n\nBe clear, specific, encouraging. Use examples. Break things into small steps when a student is struggling. Keep responses to 2–4 paragraphs max.`,messages:history.map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}))})});
     const data=await res.json();
@@ -4677,7 +4686,7 @@ async function submitWork(){
   const typeLabel={essay:'essay or academic paper',homework:'homework or problem set',lab:'lab report',code:'code submission',notes:'study notes'}[workType];
   const hasRubric=!!(rubricFile||instr);
   try{
-    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const content=[];
     if(rubricFile){content.push({type:'text',text:'=== TEACHER RUBRIC / ASSIGNMENT INSTRUCTIONS (file) ==='});content.push(await fileToBlock(rubricFile,'Rubric'));}
     if(instr)content.push({type:'text',text:`=== TEACHER RUBRIC / ASSIGNMENT INSTRUCTIONS (pasted) ===\n${instr}`});
@@ -4782,7 +4791,7 @@ async function processUpload(){
   };
 
   try{
-    if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+    if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     let content=[];
     let sourceName='Pasted text';
     if(uploadFile){
@@ -4928,7 +4937,7 @@ function renderExamSetup(c){clearInterval(exTimer);const hist=examHistory[curren
   ${hist.length?`<div class="icard"><div class="icard-label">Past exams</div>${hist.slice(0,8).map(x=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text2)">${x.date} · ${x.n} q · ${x.type}</span><strong style="color:${x.pct>=85?'var(--green)':x.pct>=70?'var(--blue)':'var(--red)'}">${x.pct}% (${letterFor(x.pct)})</strong></div>`).join('')}</div>`:''}`;}
 async function startExam(){const c=courses[currentCourse];const n=+document.getElementById('ex-n').value,t=+document.getElementById('ex-t').value,type=document.getElementById('ex-type').value,scope=document.getElementById('ex-scope').value;
   document.getElementById('ex-start').disabled=true;document.getElementById('ex-loading').classList.add('show');
-  try{if(!getKey())throw new Error('No API key. Click 🔑 API Key at the top.');
+  try{if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const weak=(weakness[currentCourse]||[]).filter(w=>!w.done).map(w=>w.topic).join('; ');
     const scopeTxt=scope==='weak'?`Focus ONLY on these weak topics: ${weak||'(none recorded — use whole course)'}`:scope==='recent'?`Focus on: ${c.today.topic}; ${c.review.last}; ${c.tomorrow.topic}`:'Cover the whole course proportionally to how a real exam would.';
     const typeTxt={mixed:'about 70% multiple choice (4 options) and 30% short answer',mc:'all multiple choice with 4 options',short:'all short-answer (2-4 sentence answers expected)',problems:'all worked problems requiring a full solution (math/code/calculation)'}[type];
