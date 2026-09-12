@@ -1364,6 +1364,49 @@ body{color:var(--text)}
 .sn-mini{display:flex;flex-direction:column;align-items:flex-start;background:var(--card-subtle);border:1px solid var(--border);border-left:3px solid var(--c);border-radius:10px;padding:7px 10px;font-family:var(--font-mono);font-size:11.5px;font-weight:800;color:var(--text);cursor:pointer;text-align:left}
 .sn-mini small{font-family:var(--font-sans);font-size:10.5px;font-weight:600;color:var(--muted)}
 @media(max-width:719px){.sn-card{flex-direction:column}.sn-right{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:10px;flex-direction:row;flex-wrap:wrap}.sn-rlabel{width:100%}}
+/* what am I missing */
+.know-hero{display:flex;gap:16px;align-items:stretch;background:linear-gradient(135deg,var(--primary-tint),var(--surface) 70%);border:1px solid var(--primary-border);border-radius:var(--radius-bento);padding:18px 20px;margin-bottom:14px}
+.kh-l{flex:1}.kh-kicker{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--primary)}
+.kh-kicker .msi{font-size:16px}.kh-title{font-size:24px;font-weight:800;letter-spacing:-.4px;color:var(--text);margin:4px 0 6px}
+.know-hero p{font-size:13px;color:var(--text-secondary);line-height:1.55;margin:0;max-width:560px}
+.kh-r{border-left:1px solid var(--primary-border);padding-left:16px;min-width:170px;display:flex;flex-direction:column;justify-content:center}
+.kh-r-lbl{font-family:var(--font-mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.kh-r-title{font-size:13.5px;font-weight:800;color:var(--text);margin:2px 0}.kh-r-sub{font-size:12px;color:var(--muted)}.kh-r-sub b{color:var(--primary)}
+.cov-head{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-bento);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow-bento)}
+.cov-ring{width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--col) calc(var(--p)*1%),var(--border-light) 0);display:grid;place-items:center;flex-shrink:0}
+.cov-ring span{width:56px;height:56px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-family:var(--font-mono);font-size:15px;font-weight:800;color:var(--text)}
+.cov-title{font-size:16px;font-weight:800;color:var(--text);line-height:1.3}.cov-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.cov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.cov-col{background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--cc);border-radius:var(--radius-bento);padding:14px;box-shadow:var(--shadow-bento)}
+.cov-col.ok{--cc:var(--c-easc)}.cov-col.warn{--cc:var(--c-math)}.cov-col.bad{--cc:var(--c-engl)}
+.cov-lbl{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--cc);margin-bottom:10px}
+.cov-lbl .msi{font-size:17px}
+.cov-item{padding:9px 0;border-bottom:1px solid var(--border-light);display:flex;flex-direction:column;gap:3px}
+.cov-item:last-child{border-bottom:none}
+.cov-item b{font-size:13px;color:var(--text)}.cov-item span{font-size:12px;color:var(--text-secondary);line-height:1.45}.cov-item em{font-size:12px;color:var(--cc);font-style:normal;font-weight:600}
+.cov-acts{display:flex;gap:6px;margin-top:6px}
+.cov-acts button{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;border:1px solid var(--border);background:var(--card-subtle);color:var(--text-secondary);cursor:pointer;font-family:var(--font-sans)}
+.cov-acts button .msi{font-size:14px}
+.cov-acts button:hover{border-color:var(--primary);color:var(--primary)}
+.sn-alt-hi{border-color:var(--primary-border)!important;color:var(--primary)!important;background:var(--primary-tint)!important}
+@media(max-width:900px){.cov-grid{grid-template-columns:1fr}.know-hero{flex-direction:column}.kh-r{border-left:none;padding-left:0;border-top:1px solid var(--primary-border);padding-top:10px}}
+/* Gap Check accent (amber) */
+:root{--gap:#D97706;--gap-light:#FFF7E6;--gap-border:#FDE68A;--gap-dark:#B45309}
+[data-theme="dark"]{--gap:#FBBF24;--gap-light:rgba(245,158,11,.16);--gap-border:rgba(245,158,11,.4);--gap-dark:#F59E0B}
+.st-btn.st-gap{--gc:var(--gap);--gt:var(--gap-light);--gb:var(--gap-border);background:var(--gap-light);border-color:var(--gap-border)}
+.st-btn.st-gap .st-lbl{color:var(--gap-dark);font-weight:800}
+.st-btn.st-gap.active{background:linear-gradient(135deg,var(--gap),var(--gap-dark))!important;border-color:var(--gap)!important;box-shadow:0 4px 12px rgba(217,119,6,.35)!important}
+.st-btn.st-gap.active .st-lbl{color:#fff}
+.rb-gap{background:linear-gradient(135deg,#FDE68A,#F59E0B);color:#fff;box-shadow:0 4px 12px rgba(245,158,11,.35)}
+.rb-gapwrap{border-color:var(--gap-border);background:linear-gradient(180deg,var(--surface),var(--gap-light))}
+.rb-gapwrap .ribbon-lbl{color:var(--gap-dark)}
+.sn-gap{background:var(--gap)!important;color:#fff!important;border-color:var(--gap)!important;box-shadow:0 4px 12px rgba(217,119,6,.3)}
+.know-hero{background:linear-gradient(135deg,var(--gap-light),var(--surface) 70%)!important;border-color:var(--gap-border)!important}
+.kh-kicker{color:var(--gap-dark)!important}.kh-r{border-left-color:var(--gap-border)!important}.kh-r-sub b{color:var(--gap-dark)!important}
+#tool-content .know-hero~.icard .icard-label{color:var(--gap-dark)!important}
+#tool-content .know-hero~.icard .icard-label::before{background:var(--gap)!important}
+#know-btn{background:linear-gradient(135deg,var(--gap),var(--gap-dark))!important;box-shadow:0 6px 16px rgba(217,119,6,.35)!important;border-color:var(--gap)!important}
+.th-gap .th-ico{background:var(--gap-light)!important;border-color:var(--gap-border)!important}.th-gap .th-ico .msi{color:var(--gap)!important}
 /* grouped rail */
 .st-group{display:flex;align-items:center;gap:6px}
 .st-group i{width:3px;height:10px;border-radius:2px;background:var(--gc)}
@@ -1494,7 +1537,7 @@ body{color:var(--text)}
     <button class="study-btn" onclick="studyNow()"><span class="msi">play_arrow</span> Study now</button>
     <button class="icon-btn" id="theme-btn" title="Toggle dark mode" onclick="toggleTheme()"><span class="msi">dark_mode</span></button>
     <button class="icon-btn" id="sync-btn" title="Sync" onclick="openSync()"><span class="msi">cloud</span></button>
-    <button class="icon-btn" title="API key" onclick="showKeySetup()"><span class="msi">key</span></button>
+    <button class="icon-btn" id="key-btn" title="API key" onclick="showKeySetup()"><span class="msi">key</span></button>
   </div>
 </header>
 <main class="scroll-viewport" id="main-panel">
@@ -1583,7 +1626,7 @@ body{color:var(--text)}
         </article>
       </section>
       <section class="ribbon-grid">
-        <div class="ribbon-btn" onclick="mobTool('tutor')"><div class="ribbon-icon-box rb-tutor"><span class="msi">psychology</span></div><span class="ribbon-lbl">AI Tutor</span></div>
+        <div class="ribbon-btn rb-gapwrap" onclick="mobTool('iknow')"><div class="ribbon-icon-box rb-gap"><span class="msi">psychology</span></div><span class="ribbon-lbl">Study Gap Check</span></div>
         <div class="ribbon-btn" onclick="openCourse('math');switchTool('bank',null)"><div class="ribbon-icon-box rb-bank"><span class="msi">functions</span></div><span class="ribbon-lbl">Problem Bank</span></div>
         <div class="ribbon-btn" onclick="mobTool('lectures')"><div class="ribbon-icon-box rb-syllabus"><span class="msi">slideshow</span></div><span class="ribbon-lbl">Lectures</span></div>
         <div class="ribbon-btn" onclick="mobTool('exam')"><div class="ribbon-icon-box rb-exam"><span class="msi">assignment</span></div><span class="ribbon-lbl">Exam Mode</span></div>
@@ -1647,7 +1690,13 @@ window.addEventListener('DOMContentLoaded',()=>{if(document.documentElement.data
 tick();setInterval(tick,30000);
 
 /* ── API key ── */
-function getKey(){return localStorage.getItem('anthropic_key')||'';}
+/* ══ AI endpoint ══
+   Set AI_PROXY to your Cloudflare Worker URL and students never need a key.
+   Leave it '' to use a personal key pasted into the app (developer mode). */
+const AI_PROXY='';  // e.g. 'https://studypro-ai.YOURNAME.workers.dev'
+function aiHeaders(){const h={'Content-Type':'application/json'};if(!AI_PROXY){h['x-api-key']=getKey();h['anthropic-version']='2023-06-01';h['anthropic-dangerous-direct-browser-access']='true';}return h;}
+function aiURL(){return AI_PROXY?AI_PROXY.replace(/\/$/,'')+'/v1/messages':'https://api.anthropic.com/v1/messages';}
+function getKey(){return AI_PROXY?'proxy':(localStorage.getItem('anthropic_key')||'');}
 function saveKey(){const k=document.getElementById('api-key-input').value.trim();if(!k.startsWith('sk-ant-')){alert('Key should start with sk-ant-');return;}localStorage.setItem('anthropic_key',k);closeKey();syncToast('✅ API key saved — AI tools are on');if(currentCourse)renderTool(currentTool,courses[currentCourse]);}
 function showKeySetup(){const m=document.getElementById('key-modal');const k=getKey();const s=document.getElementById('key-status');s.innerHTML=k?`<span style="color:var(--c-easc);font-weight:700">● Key saved</span> <span style="color:var(--muted)">(${k.slice(0,10)}…${k.slice(-4)})</span> — paste a new one to replace it.`:'<span style="color:var(--muted)">No key saved yet.</span>';document.getElementById('key-clear').style.display=k?'inline-block':'none';m.classList.add('active');setTimeout(()=>document.getElementById('api-key-input').focus(),50);}
 function closeKey(){document.getElementById('key-modal').classList.remove('active');document.getElementById('api-key-input').value='';}
@@ -1691,7 +1740,7 @@ window.addEventListener('load',()=>{syncUI();if(syncId){cloudPull(true).then(clo
 window.addEventListener('beforeunload',()=>{if(syncId&&syncPushTimer){clearTimeout(syncPushTimer);navigator.sendBeacon&&fetch(`${SYNC_DB}/studypro/${syncId}.json`,{method:'PUT',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({updated:Date.now(),data:snapshot()})});}});
 
 function addWeak(course,topic,src){if(!weakness[course])weakness[course]=[];const t=String(topic).trim();if(!t)return;const ex=weakness[course].find(w=>w.topic.toLowerCase()===t.toLowerCase());if(ex){ex.count++;ex.last=Date.now();ex.done=false;}else weakness[course].push({topic:t,src,count:1,last:Date.now(),done:false});persist();}
-async function ai(content,max=1500,system){const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:max,...(system?{system}:{}),messages:[{role:'user',content}]})});const data=await res.json();if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);if(!data.content?.length)throw new Error('Empty response.');return data.content.map(b=>b.text||'').join('');}
+async function ai(content,max=1500,system){const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:max,...(system?{system}:{}),messages:[{role:'user',content}]})});const data=await res.json();if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);if(!data.content?.length)throw new Error('Empty response.');return data.content.map(b=>b.text||'').join('');}
 function aiJSON(raw){return JSON.parse(raw.replace(/```json|```/g,'').trim());}
 function fmtCtx(c){const f=examFormat[currentCourse];return f?`\n\nINSTRUCTOR'S EXAM FORMAT (match this exactly): ${f.midterm?'Midterm: '+f.midterm+'. ':''}${f.final?'Final: '+f.final+'. ':''}${f.style?'Question style: '+f.style+'. ':''}${f.notes?'Notes: '+f.notes:''}`:'';}
 let pomSessions=0;
@@ -4412,7 +4461,7 @@ function renderTool(name,c){
   if(name==='timer')updatePomDisplay();
   // consistent page header for every tool
   const meta=TOOL_META[name];const strip=document.getElementById('today-strip');if(strip)strip.style.display=name==='today'?'':'none';
-  if(meta){el.insertAdjacentHTML('afterbegin',`<div class="tool-head"><div class="th-ico"><span class="msi">${meta[0]}</span></div><div><h2 class="th-title">${meta[1]}</h2><p class="th-sub">${meta[2]}</p></div>${meta[3]?`<div class="th-right">${meta[3]}</div>`:''}</div>`);}
+  if(meta){el.insertAdjacentHTML('afterbegin',`<div class="tool-head${name==='iknow'?' th-gap':''}"><div class="th-ico"><span class="msi">${meta[0]}</span></div><div><h2 class="th-title">${meta[1]}</h2><p class="th-sub">${meta[2]}</p></div>${meta[3]?`<div class="th-right">${meta[3]}</div>`:''}</div>`);}
   el.scrollIntoView&&document.getElementById('main-panel')&&document.getElementById('main-panel').scrollTo({top:0});
 }
 const TOOL_META={
@@ -4424,7 +4473,7 @@ const TOOL_META={
  flash:['style','Flashcards','Spaced repetition. Rate each card — Hard returns tomorrow, Easy in a few days.'],
  exam:['assignment','Exam mode','Timed practice in your instructor\'s format. No feedback until you submit.'],
  drills:['target','Drills','Targeted practice for the question types this course actually tests.'],
- iknow:['psychology','What I know','Write what you know from memory; the AI grades it and shows the gaps.'],
+ iknow:['psychology','Study Gap Check','Say what the quiz covers, write what you know, get a coverage map: covered · shaky · missing.'],
  tutor:['chat','AI Tutor','Ask anything about this course. It knows the syllabus and lectures.'],
  work:['task','Review my work','Get professor-style feedback on a draft, graded against a rubric.'],
  upload:['attach_file','Upload materials','Turn slides, chapters or notes into a study guide.'],
@@ -4508,9 +4557,9 @@ async function generateFlashcards(){
   btn.disabled=true;loading.style.display='block';
   try{
     if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Generate 10 flashcard question-answer pairs for a university student studying ${c.title} at MacEwan University in Edmonton, Alberta.\n\n${c.knowContext}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]\n\nMake questions specific and testable. Answers concise but complete.`}]})});
+    const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Generate 10 flashcard question-answer pairs for a university student studying ${c.title} at MacEwan University in Edmonton, Alberta.\n\n${c.knowContext}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]\n\nMake questions specific and testable. Answers concise but complete.`}]})});
     const data=await res.json();
-    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
     flashcards[currentCourse]=[...(flashcards[currentCourse]||[]),...JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null,due:0}))];persist();
     fcIndex=0;document.getElementById('fc-count').textContent=flashcards[currentCourse].length+' cards';renderFCArea();
@@ -4519,33 +4568,61 @@ async function generateFlashcards(){
 }
 
 /* what i know */
-function renderIKnow(c){
-  return`<div class="know-intro"><strong>Be honest — the AI won't sugarcoat it.</strong><br>Write everything you know about <strong>${c.title}</strong> from memory. No notes. The AI grades your understanding, exposes your exact blind spots, and gives you a targeted plan to fix them.</div><div class="know-ta-wrap"><textarea class="know-ta" id="know-input" placeholder="Write everything you know about ${c.title} from memory..." oninput="document.getElementById('char-c').textContent=this.value.length+' / 3000'" maxlength="3000"></textarea><span class="char-c" id="char-c">0 / 3000</span></div><button class="ai-btn" id="know-btn" onclick="evaluateKnowledge()"><span class="msi ic">search</span>Evaluate My Knowledge</button><div class="ai-loading" id="ai-loading"><div class="spinner"></div><div class="loading-txt"><strong>Evaluating your knowledge...</strong>Comparing against the full ${c.title} curriculum</div></div><div class="ai-result" id="ai-result"></div>`;
-}
+async function genTopicCards(topic){const c=courses[currentCourse];try{syncToast('Making 5 cards on '+topic+'…');const raw=await ai(`Create 5 flashcards for ${c.title} on: ${topic}. ${c.knowContext.slice(0,1500)}\nRespond ONLY with raw JSON: [{"q":"question","a":"answer"}]`,900);const cards=aiJSON(raw).map(x=>({...x,rating:null,due:0,src:topic}));flashcards[currentCourse]=[...(flashcards[currentCourse]||[]),...cards];persist();if(typeof updateDueBadge==='function')updateDueBadge();syncToast('✅ 5 cards added to '+c.code);}catch(e){syncToast('⚠️ '+e.message);}}
+function nextAssessFor(k){const t0=new Date();t0.setHours(0,0,0,0);return (assignments[k]||[]).filter(a=>a.due&&!a.done&&/exam|quiz|midterm|test|summary|analysis|lab exam/i.test(a.title)).map(a=>({...a,d:Math.round((new Date(a.due+'T00:00:00')-t0)/864e5)})).filter(a=>a.d>=0).sort((a,b)=>a.d-b.d)[0];}
+function renderIKnow(c){const nx=nextAssessFor(currentCourse);const lecs=(LECTURES[currentCourse]||[]);const topicDefault=nx?nx.title.split('·')[0].replace(/\(.*?\)/g,'').trim():'';
+  const chips=lecs.map(l=>`<button class="chip" style="padding:5px 10px;font-size:11px" onclick="const t=document.getElementById('know-topic');t.value=(t.value?t.value+', ':'')+'${l.title.replace(/'/g,"\\'")}'">${l.n}. ${l.title}</button>`).join('');
+  return`<div class="know-hero"><div class="kh-l"><div class="kh-kicker"><span class="msi">psychology</span>Gap Check · quiz prep</div><div class="kh-title">What am I missing?</div><p>Tell it what the test covers, then write what you know from memory — no notes. It maps what you've covered against what the course actually tests and tells you exactly what to study next.</p></div>${nx?`<div class="kh-r"><div class="kh-r-lbl">Next assessment</div><div class="kh-r-title">${nx.title.split('·')[0].trim()}</div><div class="kh-r-sub">in <b>${nx.d}</b> day${nx.d===1?'':'s'}</div></div>`:''}</div>
+  <div class="icard"><div class="icard-label">1 · The quiz / test is on…</div><input class="gr-in" id="know-topic" style="width:100%" placeholder="e.g. Minerals and plate tectonics, Term Exam I (weeks 1–4)" value="${topicDefault.replace(/"/g,'&quot;')}">${lecs.length?`<div style="font-size:11px;color:var(--muted);margin:8px 0 4px">Tap to add a lecture:</div><div style="display:flex;gap:6px;flex-wrap:wrap">${chips}</div>`:''}</div>
+  <div class="icard"><div class="icard-label">2 · What I know (from memory)</div><div class="know-ta-wrap"><textarea class="know-ta" id="know-input" placeholder="Write it the way you'd explain it to a friend. Definitions, steps, examples, numbers — everything you can recall. Bullet points are fine." oninput="document.getElementById('char-c').textContent=this.value.length+' / 4000'" maxlength="4000"></textarea><span class="char-c" id="char-c">0 / 4000</span></div></div>
+  <button class="ai-btn" id="know-btn" onclick="evaluateKnowledge()" style="font-size:15px;padding:13px 22px"><span class="msi ic">search</span>What am I missing?</button>
+  <div class="ai-loading" id="ai-loading"><div class="spinner"></div><div class="loading-txt"><strong>Checking your coverage…</strong>Comparing against the syllabus and lecture packages</div></div><div class="ai-result" id="ai-result"></div>`;}
 async function evaluateKnowledge(){
-  const c=courses[currentCourse];const input=document.getElementById('know-input').value.trim();
-  if(input.length<20){alert('Write at least a few sentences before evaluating.');return;}
+  const c=courses[currentCourse];const input=document.getElementById('know-input').value.trim();const topic=document.getElementById('know-topic').value.trim();
+  if(!topic){alert('Say what the quiz or test is on first.');document.getElementById('know-topic').focus();return;}
+  if(input.length<20){alert('Write at least a few sentences of what you know.');return;}
   const btn=document.getElementById('know-btn');const loading=document.getElementById('ai-loading');const result=document.getElementById('ai-result');
   btn.disabled=true;loading.classList.add('show');result.classList.remove('show');result.innerHTML='';
   try{
     if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`You are a strict university professor evaluating a student's self-reported knowledge for ${c.title} at MacEwan University, Edmonton, Alberta.\n\n${c.knowContext}\n\nThe student wrote:\n"""\n${input}\n"""\n\nEvaluate rigorously and directly. Respond ONLY with raw JSON:\n{"grade":"A"|"B"|"C"|"D","score":0-100,"headline":"one blunt sentence","strengths":["..."],"weaknesses":["specific gap 1","specific gap 2","specific gap 3"],"missing":["important topic not mentioned 1","topic 2","topic 3"],"improve":["specific action 1","action 2","action 3","action 4"]}`}]})});
-    const data=await res.json();
-    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
-    if(!data.content?.length)throw new Error('Empty response. Check your API key.');
-    const evr=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim());(evr.weaknesses||[]).concat(evr.missing||[]).forEach(w=>addWeak(currentCourse,String(w).slice(0,90),'What I Know'));showResult(evr,c);
+    const lecs=(LECTURES[currentCourse]||[]);const lecCtx=lecs.map(l=>`Lecture ${l.n} "${l.title}": key terms — ${l.terms.map(t=>t[0]).join(', ')}. Exam tips — ${l.examTips.join(' ')}`).join('\n');
+    const raw=await ai(`You are a tough, kind university professor for ${c.title} at MacEwan University. A student is preparing for an assessment and wants to know what they are missing.
+
+ASSESSMENT TOPIC (what the test covers): ${topic}
+
+COURSE CONTEXT:
+${c.knowContext}
+
+LECTURE PACKAGES AVAILABLE:
+${lecCtx||'(none yet)'}
+
+WHAT THE STUDENT WROTE FROM MEMORY:
+"""
+${input}
+"""
+
+Build a coverage map for THIS assessment topic only. Be specific — name the actual concepts, numbers, definitions, and question types that matter. Respond ONLY with raw JSON:
+{"readiness":0-100,"headline":"one direct sentence on how ready they are",
+ "covered":[{"topic":"concept they clearly know","note":"what they got right"}],
+ "shaky":[{"topic":"concept mentioned but wrong or incomplete","fix":"the precise correction or missing piece"}],
+ "missing":[{"topic":"important concept not mentioned at all","why":"why it is likely to be tested","study":"where/how to learn it (lecture number, section, or method)"}],
+ "likely_questions":["a realistic exam question on this topic","...","..."],
+ "plan":["ordered study step 1","step 2","step 3"]}`,1800);
+    const ev=aiJSON(raw);(ev.shaky||[]).concat(ev.missing||[]).forEach(w=>addWeak(currentCourse,String(w.topic).slice(0,90),'What am I missing'));showResult(ev,c,topic);
   }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
   finally{btn.disabled=false;loading.classList.remove('show');}
 }
-function showResult(ev,c){
-  const gc={A:'ga',B:'gb',C:'gc',D:'gd'}[ev.grade]||'gd';
-  const result=document.getElementById('ai-result');
-  const str=ev.strengths?.length?'<ul>'+ev.strengths.map(s=>`<li><span class="hl">${s}</span></li>`).join('')+'</ul>':'<p style="font-size:13px;color:var(--text2)">No clear strengths identified — keep studying.</p>';
-  result.innerHTML=`<div class="score-banner ${gc}"><div class="score-circle">${ev.grade}</div><div class="score-text"><h3>${ev.score}/100 — ${ev.headline}</h3><p>${c.title} · ${new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}</p></div></div><div class="two-col"><div class="rsec rs-good"><h4><span class="msi ic">check</span>What You Got Right</h4>${str}</div><div class="rsec rs-bad"><h4>❌ Your Weaknesses</h4><ul>${ev.weaknesses.map(w=>`<li>${w}</li>`).join('')}</ul></div></div><div class="rsec rs-warn"><h4><span class="msi ic">block</span>Topics You Didn't Mention</h4><ul>${ev.missing.map(m=>`<li>${m}</li>`).join('')}</ul></div><div class="rsec rs-info"><h4><span class="msi ic">trending_up</span>How to Improve — Specifically</h4><ul>${ev.improve.map(i=>`<li>${i}</li>`).join('')}</ul></div><button class="retry-btn" onclick="document.getElementById('know-input').value='';document.getElementById('char-c').textContent='0 / 3000';document.getElementById('ai-result').classList.remove('show')">↩ Try Again</button>`;
-  result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-/* ai tutor */
+function showResult(ev,c,topic){const result=document.getElementById('ai-result');const r=ev.readiness??0;const col=r>=80?'var(--c-easc)':r>=55?'var(--c-math)':'var(--c-engl)';
+  const li=(arr,cls,f)=>arr&&arr.length?arr.map(f).join(''):`<p style="font-size:13px;color:var(--muted)">Nothing here.</p>`;
+  result.innerHTML=`<div class="cov-head"><div class="cov-ring" style="--p:${r};--col:${col}"><span>${r}%</span></div><div><div class="cov-title">${ev.headline||''}</div><div class="cov-sub">${topic} · ${c.code}</div></div></div>
+  <div class="cov-grid">
+    <div class="cov-col ok"><div class="cov-lbl"><span class="msi">check_circle</span>Covered (${(ev.covered||[]).length})</div>${li(ev.covered,'',x=>`<div class="cov-item"><b>${x.topic}</b><span>${x.note||''}</span></div>`)}</div>
+    <div class="cov-col warn"><div class="cov-lbl"><span class="msi">error</span>Shaky (${(ev.shaky||[]).length})</div>${li(ev.shaky,'',x=>`<div class="cov-item"><b>${x.topic}</b><span>${x.fix||''}</span></div>`)}</div>
+    <div class="cov-col bad"><div class="cov-lbl"><span class="msi">cancel</span>Missing (${(ev.missing||[]).length})</div>${li(ev.missing,'',x=>`<div class="cov-item"><b>${x.topic}</b><span>${x.why||''}</span><em>→ ${x.study||''}</em><div class="cov-acts"><button onclick="switchTool('tutor',null);setTimeout(()=>sendChatMsg('Teach me ${esc(String(x.topic)).replace(/'/g,'')} for ${c.code} — it is on my test (${esc(topic).replace(/'/g,'')}). Start with the core idea, then one example, then one exam-style question.'),200)"><span class="msi">chat</span>Teach me</button><button onclick="genTopicCards('${esc(String(x.topic)).replace(/'/g,'')}')"><span class="msi">style</span>5 cards</button></div></div>`)}</div>
+  </div>
+  <div class="icard"><div class="icard-label">Questions you'll probably see</div><ol style="padding-left:20px">${(ev.likely_questions||[]).map(q=>`<li style="margin-bottom:6px">${q}</li>`).join('')}</ol></div>
+  <div class="icard"><div class="icard-label">Your plan for the next session</div><ol style="padding-left:20px">${(ev.plan||[]).map(q=>`<li style="margin-bottom:6px">${q}</li>`).join('')}</ol><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="retry-btn" style="margin:0" onclick="switchTool('plan',null)"><span class="msi ic">route</span>Open Study plan (gaps added)</button><button class="retry-btn" style="margin:0" onclick="switchTool('exam',null)"><span class="msi ic">assignment</span>Practice exam on this</button></div></div>`;
+  result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});}
 function renderTutorHTML(c){
   if(!chatHistory[currentCourse].length)chatHistory[currentCourse]=[{role:'assistant',content:`Hi! I'm your AI tutor for **${c.title}** at MacEwan University. Ask me anything — concepts, homework, exam prep, or anything you're confused about.`}];
   return`<div class="chat-wrap"><div class="chat-msgs" id="chat-msgs"></div><div class="chat-sugs" id="chat-sugs"></div><div class="chat-input-row"><input class="chat-input" id="chat-input" placeholder="Ask anything about ${c.title}..." onkeydown="if(event.key==='Enter')sendChat()"><button class="chat-send" id="chat-send" onclick="sendChat()">↑</button></div></div>`;
@@ -4569,9 +4646,9 @@ async function sendChatMsg(msg){
   try{
     if(!getKey())throw new Error('No API key yet. Click the key button (top right) to add one.');
     const history=chatHistory[currentCourse].slice(-10).filter(h=>h.role==='user'||h.role==='assistant');
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`You are an expert tutor for ${c.title} at MacEwan University in Edmonton, Alberta. ${c.knowContext}${window.__tutorHint||''}${(typeof lessonContextFor==='function'&&lessonContextFor(currentCourse))?'\n\n=== THE INSTRUCTOR\'S ACTUAL LESSON CONTENT (uploaded by the student — prefer this over general knowledge) ===\n'+lessonContextFor(currentCourse):''}\n\nBe clear, specific, encouraging. Use examples. Break things into small steps when a student is struggling. Keep responses to 2–4 paragraphs max.`,messages:history.map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}))})});
+    const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:`You are an expert tutor for ${c.title} at MacEwan University in Edmonton, Alberta. ${c.knowContext}${window.__tutorHint||''}${(typeof lessonContextFor==='function'&&lessonContextFor(currentCourse))?'\n\n=== THE INSTRUCTOR\'S ACTUAL LESSON CONTENT (uploaded by the student — prefer this over general knowledge) ===\n'+lessonContextFor(currentCourse):''}\n\nBe clear, specific, encouraging. Use examples. Break things into small steps when a student is struggling. Keep responses to 2–4 paragraphs max.`,messages:history.map(h=>({role:h.role==='assistant'?'assistant':'user',content:h.content}))})});
     const data=await res.json();
-    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);
     chatHistory[currentCourse].push({role:'assistant',content:data.content.map(b=>b.text||'').join('')});
   }catch(e){chatHistory[currentCourse].push({role:'assistant',content:`Sorry, I couldn't connect. (${e.message})`});}
   finally{document.getElementById('chat-send').disabled=false;renderChatMsgs();renderChatSugs();}
@@ -4693,9 +4770,9 @@ async function submitWork(){
     if(workFileObj){content.push({type:'text',text:"=== STUDENT'S WORK (file) ==="});content.push(await fileToBlock(workFileObj,"Student's work"));}
     if(input)content.push({type:'text',text:`=== STUDENT'S WORK (pasted) ===\n${input}`});
     content.push({type:'text',text:`You are a rigorous but fair university professor at MacEwan University in Edmonton, Alberta, grading a student's ${typeLabel} for ${c.title}.\n\nCOURSE KNOWLEDGE:\n${c.knowContext}\n\n${hasRubric?`A TEACHER RUBRIC WAS PROVIDED. You MUST grade strictly against it: extract every criterion and its weight/points from the rubric exactly as written, score the student on each criterion, and compute the total from those scores. Do not invent criteria that aren't in the rubric. If the rubric uses levels (e.g. Excellent/Good/Fair/Poor), state which level the work reaches for each criterion and why.`:`No rubric was provided. Use a standard university rubric for this type of work: create 4-6 sensible weighted criteria and grade against them, and say clearly they are assumed criteria.`}\n\nBe specific — quote or point to exact parts of the student's work as evidence for each score. Be honest: do not inflate. Respond ONLY with raw JSON (no markdown):\n{"grade":"A+"|"A"|"A-"|"B+"|"B"|"B-"|"C+"|"C"|"C-"|"D"|"F","score":0-100,"rubricUsed":true|false,"summary":"2-3 sentence overall assessment in a professor's voice","criteria":[{"name":"criterion name from rubric","weight":"e.g. 20% or 10 pts","earned":"e.g. 15% or 7/10","level":"e.g. Good","status":"strong"|"ok"|"weak","evidence":"specific reference to the student's work","toImprove":"exactly what would raise this criterion to full marks"}],"strengths":["specific thing done well 1","2","3"],"issues":["specific problem with location 1","2","3","4"],"fixes":["concrete action 1","2","3","4"],"beforeSubmit":["final checklist item 1","2","3"]}`});
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,messages:[{role:'user',content}]})});
+    const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2500,messages:[{role:'user',content}]})});
     const data=await res.json();
-    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
     showWorkResult(JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()),c);
   }catch(e){result.innerHTML=`<div class="rsec rs-bad"><h4>⚠️ Error</h4><p style="font-size:13px;color:var(--text2)">${e.message}</p></div>`;result.classList.add('show');}
@@ -4809,9 +4886,9 @@ async function processUpload(){
     if(pasted)content.push({type:'text',text:`Additional pasted text:\n"""\n${pasted}\n"""`});
     content.push({type:'text',text:`You are helping a student at MacEwan University in Edmonton, Alberta study for ${c.title}.\n\n${c.knowContext}\n\nTask: ${modePrompts[uploadMode]}\n\nRespond ONLY with raw JSON (no markdown):\n{"title":"short title describing the material","sections":[{"heading":"section name","points":["point 1","point 2","point 3"]},...],"studyTip":"one specific tip for how to study this material"}\n\nBe thorough — include everything important. Use **bold** on key terms inside points.`});
 
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,messages:[{role:'user',content}]})});
+    const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3000,messages:[{role:'user',content}]})});
     const data=await res.json();
-    if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);
+    if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);
     if(!data.content?.length)throw new Error('Empty response. Check your API key.');
     const parsed=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim());
     parsed.mode=uploadMode;parsed.source=sourceName;parsed.date=new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric'});
@@ -4853,7 +4930,7 @@ async function sendToFlashcards(i){
   const allPoints=p.sections.flatMap(s=>s.points).map(pt=>pt.replace(/\*\*/g,''));
   const btn=event.target;btn.disabled=true;btn.textContent='⏳ Creating...';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:`Turn these study points into flashcard Q&A pairs. Make questions specific and testable.\n\n${allPoints.join('\n')}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]`}]})});
+    const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:`Turn these study points into flashcard Q&A pairs. Make questions specific and testable.\n\n${allPoints.join('\n')}\n\nRespond ONLY with a JSON array, no markdown:\n[{"q":"question","a":"answer"},...]`}]})});
     const data=await res.json();
     if(!res.ok)throw new Error(data?.error?.message||'API error');
     const cards=JSON.parse(data.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim()).map(f=>({...f,rating:null}));
@@ -5178,8 +5255,8 @@ async function summariseAllWeeks(key){
 
 /* ───────── Lesson content per week: paste text or upload files; summaries use it as the source ───────── */
 async function aiBlocks(blocks,max,system){
-  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:max||4000,...(system?{system}:{}),messages:[{role:'user',content:blocks}]})});
-  const data=await res.json();if(!res.ok)throw new Error(`API error ${res.status}: ${data?.error?.message||'Check your API key.'}`);return data.content.map(b=>b.text||'').join('');
+  const res=await fetch(aiURL(),{method:'POST',headers:aiHeaders(),body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:max||4000,...(system?{system}:{}),messages:[{role:'user',content:blocks}]})});
+  const data=await res.json();if(!res.ok)throw new Error(`AI error ${res.status}: ${data?.error?.message||(AI_PROXY?'The AI service is unavailable right now.':'Check your API key.')}`);return data.content.map(b=>b.text||'').join('');
 }
 function lessonBox(key,i){
   const w=SYLLABI[key].weeks[i], L=wlGet(key,w[0]); const has=(L.lesson||'').trim().length;
@@ -5256,10 +5333,10 @@ function lessonContextFor(key){const S=SYLLABI[key];if(!S)return '';return S.wee
 goHome();
 
 /* ══ Bento shell glue ══ */
-const SUBGROUPS=[['Study',[['lectures','Lectures'],['flash','Flashcards'],['quiz','Quiz'],['exam','Exam mode'],['drills','Drills'],['bank','Problems'],['plan','Study plan'],['iknow','What I know']]],['AI',[['tutor','AI Tutor'],['work','Review work'],['upload','Upload']]],['Plan',[['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['timer','Timer'],['today','Lesson'],['review','Review'],['tomorrow','Tomorrow'],['format','Exam format'],['agrade','Get an A']]]];
+const SUBGROUPS=[['Study',[['iknow','Gap Check'],['lectures','Lectures'],['flash','Flashcards'],['quiz','Quiz'],['exam','Exam mode'],['drills','Drills'],['bank','Problems'],['plan','Study plan']]],['AI',[['tutor','AI Tutor'],['work','Review work'],['upload','Upload']]],['Plan',[['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['timer','Timer'],['today','Lesson'],['review','Review'],['tomorrow','Tomorrow'],['format','Exam format'],['agrade','Get an A']]]];
 const SUBTABS=SUBGROUPS.flatMap(g=>g[1]);
 const CCLR={earth:'easc',english:'engl',comp:'cmpt',math:'math',anth:'anth'};
-function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;const due=(flashcards[currentCourse]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const n=(LECTURES[currentCourse]||[]).length;const badge={lectures:n?n+'':'',flash:due?due+'':''};bar.innerHTML=SUBGROUPS.map(([g,items])=>`<div class="st-group g-${g.toLowerCase()}"><i></i>${g}</div>`+items.map(([k,l])=>`<button class="st-btn g-${g.toLowerCase()}${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)"><span class="st-ico"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span></span><span class="st-lbl">${l}</span>${badge[k]?`<em class="st-badge">${badge[k]}</em>`:''}</button>`).join('')).join('')+`<div class="st-foot"><div class="st-foot-top"><span class="msi">timer</span><b id="rail-timer">${pomRunning?'':'25:00'}</b></div><div class="st-foot-sub">${courses[currentCourse].code} · <span id="rail-today">${fmtShort(stGet(todayKey(),currentCourse))}</span> today</div><button class="st-foot-btn" onclick="studyNow('${currentCourse}')"><span class="msi">play_arrow</span> Start session</button></div>`;bentoPomDisplay();const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
+function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;const due=(flashcards[currentCourse]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const n=(LECTURES[currentCourse]||[]).length;const badge={lectures:n?n+'':'',flash:due?due+'':''};bar.innerHTML=SUBGROUPS.map(([g,items])=>`<div class="st-group g-${g.toLowerCase()}"><i></i>${g}</div>`+items.map(([k,l])=>`<button class="st-btn g-${g.toLowerCase()}${k==='iknow'?' st-gap':''}${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)"><span class="st-ico"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span></span><span class="st-lbl">${l}</span>${badge[k]?`<em class="st-badge">${badge[k]}</em>`:''}</button>`).join('')).join('')+`<div class="st-foot"><div class="st-foot-top"><span class="msi">timer</span><b id="rail-timer">${pomRunning?'':'25:00'}</b></div><div class="st-foot-sub">${courses[currentCourse].code} · <span id="rail-today">${fmtShort(stGet(todayKey(),currentCourse))}</span> today</div><button class="st-foot-btn" onclick="studyNow('${currentCourse}')"><span class="msi">play_arrow</span> Start session</button></div>`;bentoPomDisplay();const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
 const _switchTool=switchTool;switchTool=function(name,btn){_switchTool(name,btn);document.querySelectorAll('.st-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===name));const on=document.querySelector('.st-btn.active');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById(name==='flash'?'tab-cards':'tab-courses').classList.add('active');};
 const _openCourse=openCourse;openCourse=function(key){_openCourse(key);document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-'+key));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-courses').classList.add('active');const c=courses[key],cc=CCLR[key];const b=document.getElementById('cd-badge');b.textContent=c.code;b.style.cssText=`background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)`;document.getElementById('cd-topic').textContent='Active module: '+c.today.topic;document.getElementById('detail-hero').style.borderLeft=`4px solid var(--c-${cc})`;if((LECTURES[key]||[]).length&&currentTool==='today')switchTool('lectures',null);renderSubtabs();document.getElementById('main-panel').scrollTo({top:0});};
 const _goHome=goHome;goHome=function(){_goHome();document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-home'));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-home').classList.add('active');renderBento();document.getElementById('main-panel').scrollTo({top:0});};
@@ -5267,7 +5344,7 @@ function nextExam(){const t0=new Date();t0.setHours(0,0,0,0);let best=null;Objec
 function studyNow(k){const nx=nextExam();k=k||(nx?nx.k:Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth');const lecs=LECTURES[k]||[];openCourse(k);if(lecs.length){lecSel[k]=lecs[lecs.length-1].n;lecTab[k]='questions';switchTool('lectures',null);}else{switchTool('quiz',null);}if(!pomRunning){pomMode='work';pomSecondsLeft=pomTotalSeconds=25*60;togglePom();bentoPomDisplay();}}
 function renderStudyNow(){const el=document.getElementById('study-now');if(!el)return;const nx=nextExam();const k=nx?nx.k:Object.keys(courses).find(x=>(LECTURES[x]||[]).length)||'earth';const c=courses[k],cc=CCLR[k];const lecs=(LECTURES[k]||[]).length;const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const weak=(weakness[k]||[]).filter(w=>!w.done).length;
   const others=Object.keys(courses).filter(x=>x!==k&&(LECTURES[x]||[]).length).map(x=>`<button class="sn-mini" style="--c:var(--c-${CCLR[x]})" onclick="studyNow('${x}')">${courses[x].code}<small>${(LECTURES[x]||[]).length} lectures</small></button>`).join('');
-  el.innerHTML=`<div class="sn-card" style="--c:var(--c-${cc});--cl:var(--c-${cc}-light)"><div class="sn-left"><div class="sn-kicker">${nx?`<span class="msi">event</span> ${nx.a.title.split('·')[0].trim()} in <b>${nx.d} day${nx.d===1?'':'s'}</b>`:'<span class="msi">school</span> Next up'}</div><div class="sn-title">${c.code} — ${c.title.split(' — ')[1]}</div><div class="sn-meta">${lecs} lecture package${lecs===1?'':'s'} to review${due?` · <b>${due} cards due</b>`:''}${weak?` · ${weak} weak topic${weak===1?'':'s'}`:''}</div><div class="sn-actions"><button class="sn-go" onclick="studyNow('${k}')"><span class="msi">play_arrow</span> Start 25-min session</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('flash',null)"><span class="msi">style</span> Cards</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('exam',null)"><span class="msi">assignment</span> Practice exam</button></div></div>${others?`<div class="sn-right"><div class="sn-rlabel">Other courses</div>${others}</div>`:''}</div>`;}
+  el.innerHTML=`<div class="sn-card" style="--c:var(--c-${cc});--cl:var(--c-${cc}-light)"><div class="sn-left"><div class="sn-kicker">${nx?`<span class="msi">event</span> ${nx.a.title.split('·')[0].trim()} in <b>${nx.d} day${nx.d===1?'':'s'}</b>`:'<span class="msi">school</span> Next up'}</div><div class="sn-title">${c.code} — ${c.title.split(' — ')[1]}</div><div class="sn-meta">${lecs} lecture package${lecs===1?'':'s'} to review${due?` · <b>${due} cards due</b>`:''}${weak?` · ${weak} weak topic${weak===1?'':'s'}`:''}</div><div class="sn-actions"><button class="sn-go" onclick="studyNow('${k}')"><span class="msi">play_arrow</span> Start 25-min session</button><button class="sn-alt sn-gap" onclick="openCourse('${k}');switchTool('iknow',null)"><span class="msi">psychology</span> Study Gap Check</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('flash',null)"><span class="msi">style</span> Cards</button><button class="sn-alt" onclick="openCourse('${k}');switchTool('exam',null)"><span class="msi">assignment</span> Practice exam</button></div></div>${others?`<div class="sn-right"><div class="sn-rlabel">Other courses</div>${others}</div>`:''}</div>`;}
 function renderBento(){renderStudyNow();const hr=new Date().getHours();document.getElementById('bento-greet').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+'!';
   /* deck tile: course with most due cards, else latest lecture package */
   let best=null;Object.keys(courses).forEach(k=>{const due=(flashcards[k]||[]).filter(x=>!x.due||x.due<=Date.now()).length,total=(flashcards[k]||[]).length;if(!best||due>best.due)best={k,due,total};});
@@ -5296,6 +5373,7 @@ toggleTheme=function(){const cur=document.documentElement.dataset.theme==='light
 syncUI=function(){const b=document.getElementById('sync-btn'),s=document.getElementById('sync-status'),off=document.getElementById('sync-off-btn');if(syncId){b.classList.add('on');b.innerHTML='<span class="msi">cloud_done</span>';if(s){s.className='sync-status on';s.textContent='● Syncing live across your devices';}if(off)off.style.display='inline-block';}else{b.innerHTML='<span class="msi">cloud</span>';b.classList.remove('on');if(s){s.className='sync-status off';s.textContent='○ Not syncing — data is only on this device';}if(off)off.style.display='none';}};
 window.addEventListener('DOMContentLoaded',()=>{tick();if(document.documentElement.dataset.theme==='dark')document.querySelector('#theme-btn .msi').textContent='light_mode';});
 if(!currentCourse){try{renderHomeCards();renderBento();}catch(e){}}
+if(AI_PROXY){const kb=document.getElementById('key-btn');if(kb)kb.style.display='none';}
 
 </script>
 </body>
