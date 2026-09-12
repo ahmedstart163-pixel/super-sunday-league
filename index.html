@@ -1365,12 +1365,32 @@ body{color:var(--text)}
 .sn-mini small{font-family:var(--font-sans);font-size:10.5px;font-weight:600;color:var(--muted)}
 @media(max-width:719px){.sn-card{flex-direction:column}.sn-right{border-left:none;padding-left:0;border-top:1px solid var(--border);padding-top:10px;flex-direction:row;flex-wrap:wrap}.sn-rlabel{width:100%}}
 /* grouped rail */
+.st-group{display:flex;align-items:center;gap:6px}
+.st-group i{width:3px;height:10px;border-radius:2px;background:var(--gc)}
+.g-study{--gc:var(--primary);--gt:var(--primary-tint);--gb:var(--primary-border)}
+.g-ai{--gc:#4F46E5;--gt:#EEF2FF;--gb:#C7D2FE}
+.g-plan{--gc:#B45309;--gt:#FFF7E6;--gb:#FDE68A}
+[data-theme="dark"] .g-ai{--gt:rgba(79,70,229,.18);--gb:rgba(79,70,229,.35)}
+[data-theme="dark"] .g-plan{--gc:#FBBF24;--gt:rgba(245,158,11,.16);--gb:rgba(245,158,11,.35)}
+.st-ico{width:28px;height:28px;border-radius:9px;background:var(--gt);border:1px solid var(--gb);display:grid;place-items:center;flex-shrink:0;transition:all .15s}
+.st-ico .msi{font-size:16px;color:var(--gc);opacity:1}
+.st-btn{gap:10px}
+.st-btn:hover .st-ico{transform:scale(1.06)}
+.st-btn.active{background:var(--primary)!important;border-color:var(--primary)!important;color:#fff;box-shadow:0 4px 12px rgba(142,20,40,.28)}
+.st-btn.active .st-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25)}
+.st-btn.active .st-ico .msi{color:#fff}
+.st-foot{margin-top:10px;padding:12px;border-radius:14px;background:linear-gradient(135deg,var(--primary-tint),var(--surface));border:1px solid var(--primary-border)}
+.st-foot-top{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:18px;font-weight:800;color:var(--text)}
+.st-foot-top .msi{font-size:18px;color:var(--primary)}
+.st-foot-sub{font-size:11px;color:var(--muted);margin:2px 0 8px}
+.st-foot-btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:5px;background:var(--primary);color:#fff;border:none;border-radius:10px;padding:8px;font-family:var(--font-sans);font-size:12px;font-weight:800;cursor:pointer}
+@media(max-width:719px){.st-foot{display:none}.st-ico{display:none}}
 .st-group{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted-light);padding:8px 10px 4px}
 .st-btn{display:inline-flex;align-items:center;gap:8px}
 .st-btn .msi{font-size:17px;opacity:.8}
 .st-badge{font-style:normal;margin-left:auto;background:var(--primary-tint);color:var(--primary);border:1px solid var(--primary-border);border-radius:10px;font-size:10px;font-weight:800;padding:1px 7px}
 .st-btn.active .st-badge{background:rgba(255,255,255,.2);color:#fff;border-color:transparent}
-@media(max-width:719px){.st-group{display:none}.subtabs-scroll .st-btn .msi{display:none}}
+@media(max-width:719px){.st-group{display:none}}
 /* ══ DESKTOP LAYOUT (≥ 900px) ══ */
 @media(min-width:720px){
   html,body{background:var(--bg)}
@@ -5230,7 +5250,7 @@ goHome();
 const SUBGROUPS=[['Study',[['lectures','Lectures'],['flash','Flashcards'],['quiz','Quiz'],['exam','Exam mode'],['drills','Drills'],['bank','Problems'],['plan','Study plan'],['iknow','What I know']]],['AI',[['tutor','AI Tutor'],['work','Review work'],['upload','Upload']]],['Plan',[['assign','Deadlines'],['grades','Grades'],['weeks','Weeks'],['syllabus','Syllabus'],['files','Files'],['notes','Notes'],['timer','Timer'],['today','Lesson'],['review','Review'],['tomorrow','Tomorrow'],['format','Exam format'],['agrade','Get an A']]]];
 const SUBTABS=SUBGROUPS.flatMap(g=>g[1]);
 const CCLR={earth:'easc',english:'engl',comp:'cmpt',math:'math',anth:'anth'};
-function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;const due=(flashcards[currentCourse]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const n=(LECTURES[currentCourse]||[]).length;const badge={lectures:n?n+'':'',flash:due?due+'':''};bar.innerHTML=SUBGROUPS.map(([g,items])=>`<div class="st-group">${g}</div>`+items.map(([k,l])=>`<button class="st-btn${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span>${l}${badge[k]?`<em class="st-badge">${badge[k]}</em>`:''}</button>`).join('')).join('');const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
+function renderSubtabs(){const bar=document.getElementById('course-subtabs-bar');if(!bar)return;const due=(flashcards[currentCourse]||[]).filter(x=>!x.due||x.due<=Date.now()).length;const n=(LECTURES[currentCourse]||[]).length;const badge={lectures:n?n+'':'',flash:due?due+'':''};bar.innerHTML=SUBGROUPS.map(([g,items])=>`<div class="st-group g-${g.toLowerCase()}"><i></i>${g}</div>`+items.map(([k,l])=>`<button class="st-btn g-${g.toLowerCase()}${currentTool===k?' active':''}" data-tool="${k}" onclick="switchTool('${k}',null)"><span class="st-ico"><span class="msi">${(TOOL_META[k]||['menu_book'])[0]}</span></span><span class="st-lbl">${l}</span>${badge[k]?`<em class="st-badge">${badge[k]}</em>`:''}</button>`).join('')).join('')+`<div class="st-foot"><div class="st-foot-top"><span class="msi">timer</span><b id="rail-timer">${pomRunning?'':'25:00'}</b></div><div class="st-foot-sub">${courses[currentCourse].code} · <span id="rail-today">${fmtShort(stGet(todayKey(),currentCourse))}</span> today</div><button class="st-foot-btn" onclick="studyNow('${currentCourse}')"><span class="msi">play_arrow</span> Start session</button></div>`;bentoPomDisplay();const on=bar.querySelector('.st-btn.active');if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
 const _switchTool=switchTool;switchTool=function(name,btn){_switchTool(name,btn);document.querySelectorAll('.st-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===name));const on=document.querySelector('.st-btn.active');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'});document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById(name==='flash'?'tab-cards':'tab-courses').classList.add('active');};
 const _openCourse=openCourse;openCourse=function(key){_openCourse(key);document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-'+key));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-courses').classList.add('active');const c=courses[key],cc=CCLR[key];const b=document.getElementById('cd-badge');b.textContent=c.code;b.style.cssText=`background:var(--c-${cc}-light);color:var(--c-${cc});border-color:var(--c-${cc}-border)`;document.getElementById('cd-topic').textContent='Active module: '+c.today.topic;document.getElementById('detail-hero').style.borderLeft=`4px solid var(--c-${cc})`;if((LECTURES[key]||[]).length&&currentTool==='today')switchTool('lectures',null);renderSubtabs();document.getElementById('main-panel').scrollTo({top:0});};
 const _goHome=goHome;goHome=function(){_goHome();document.querySelectorAll('.course-chip').forEach(c=>c.classList.toggle('active',c.id==='chip-home'));document.querySelectorAll('.f-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-home').classList.add('active');renderBento();document.getElementById('main-panel').scrollTo({top:0});};
@@ -5252,7 +5272,7 @@ function renderBento(){renderStudyNow();const hr=new Date().getHours();document.
   const days=weekDates();const vals=days.map(d=>Object.values(studyLog[todayKey(d)]||{}).reduce((a,b)=>a+b,0));const mx=Math.max(600,...vals);const tk=todayKey();
   document.getElementById('week-bars').innerHTML=days.map((d,i)=>`<div class="bar-col${vals[i]>=60?' active':''}${todayKey(d)===tk?' today':''}"><div class="bar-stick" style="height:${Math.max(8,Math.round(vals[i]/mx*32))}px"></div><span class="bar-day">${d.toLocaleDateString('en-CA',{weekday:'narrow'})}</span></div>`).join('');
   bentoPomDisplay();}
-function bentoPomDisplay(){const d=document.getElementById('bento-timer-display');if(!d)return;const m=Math.ceil(pomSecondsLeft/60);d.textContent=pomRunning?`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`:m+'m';document.getElementById('bento-timer-lbl').textContent=pomRunning?'Pause':'Start';document.getElementById('bento-timer-icon').textContent=pomRunning?'pause':'play_arrow';document.getElementById('timer-svg-circle').style.strokeDashoffset=198*(1-pomSecondsLeft/pomTotalSeconds);}
+function bentoPomDisplay(){const rt=document.getElementById('rail-timer');if(rt)rt.textContent=`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`;const d=document.getElementById('bento-timer-display');if(!d)return;const m=Math.ceil(pomSecondsLeft/60);d.textContent=pomRunning?`${Math.floor(pomSecondsLeft/60)}:${String(pomSecondsLeft%60).padStart(2,'0')}`:m+'m';document.getElementById('bento-timer-lbl').textContent=pomRunning?'Pause':'Start';document.getElementById('bento-timer-icon').textContent=pomRunning?'pause':'play_arrow';document.getElementById('timer-svg-circle').style.strokeDashoffset=198*(1-pomSecondsLeft/pomTotalSeconds);}
 function bentoPom(){if(!currentCourse){/* focus without a course still logs to none — open the last course */}togglePom();bentoPomDisplay();}
 const _updatePomDisplay=updatePomDisplay;updatePomDisplay=function(){_updatePomDisplay();bentoPomDisplay();};
 setInterval(()=>{if(pomRunning)bentoPomDisplay();},1000);
