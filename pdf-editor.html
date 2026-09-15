@@ -3018,6 +3018,14 @@ $("#downloadBtn").onclick = exportPdf;
 async function buildBytes(){
   if(selected && selected.type==="text" && selected._edit) selected._edit.blur();
   const doc = await PDFDocument.load(originalBytes);
+    // Viewer zoom is a display preference, not document content. Some PDFs store
+    // their opening zoom in Catalog/OpenAction as a destination that points at a
+    // specific page object. Re-saving such a PDF with pdf-lib can leave that old
+    // destination pointing at an object number that no longer exists, which makes
+    // strict readers such as Adobe Acrobat reject the exported file. Remove the
+    // inherited opening-view action before editing/saving. Majd's own Zoom control
+    // remains purely visual and never changes the downloaded PDF's page size.
+    try{ doc.catalog.delete(PDFName.of("OpenAction")); }catch(_){}
     if(window.fontkit){ try{ doc.registerFontkit(window.fontkit); }catch(_){} }
     // apply document info (title/author/subject/keywords) if the user set any
     try{
