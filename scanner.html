@@ -294,7 +294,7 @@
     <video id="camVideo" autoplay playsinline muted></video>
     <svg id="camSvg"><polygon id="camPoly" fill="rgba(37,99,235,0.16)" stroke="#5b8af2" stroke-width="2.5"/></svg>
     <div class="cam-badge" id="camBadge">0 pages</div>
-    <div class="cam-hint" id="camHint">Line up the document</div>
+    <div class="cam-hint" id="camHint">Point at the document — edges detect automatically</div>
     <div class="cam-flash" id="camFlash"></div>
   </div>
   <div class="cam-tools">
@@ -399,39 +399,102 @@ let autoCorners = null;
 function detectDocCorners(canvas){
   try{
     const W=canvas.width, H=canvas.height;
-    const dw=Math.min(480,W), dh=Math.max(1,Math.round(H*dw/W));
+    const dw=Math.min(420,W), dh=Math.max(1,Math.round(H*dw/W));
     const sm=document.createElement("canvas"); sm.width=dw; sm.height=dh;
-    const ctx=sm.getContext("2d",{willReadFrequently:true}); ctx.drawImage(canvas,0,0,dw,dh);
-    const d=ctx.getImageData(0,0,dw,dh).data, n=dw*dh;
-    const gray=new Uint8Array(n), edge=new Uint8Array(n);
-    for(let i=0;i<n;i++){ const o=i*4; gray[i]=(0.299*d[o]+0.587*d[o+1]+0.114*d[o+2])|0; }
-    // Sobel edge map: document borders are more reliable than "largest bright blob"
-    let sum=0,cnt=0;
-    for(let y=1;y<dh-1;y++) for(let x=1;x<dw-1;x++){
-      const i=y*dw+x;
-      const gx=-gray[i-dw-1]-2*gray[i-1]-gray[i+dw-1]+gray[i-dw+1]+2*gray[i+1]+gray[i+dw+1];
-      const gy=-gray[i-dw-1]-2*gray[i-dw]-gray[i-dw+1]+gray[i+dw-1]+2*gray[i+dw]+gray[i+dw+1];
-      const m=Math.min(255,(Math.abs(gx)+Math.abs(gy))/3); edge[i]=m; sum+=m; cnt++;
+    const ctx=sm.getContext("2d",{willReadFrequently:true});
+    ctx.drawImage(canvas,0,0,dw,dh);
+    const data=ctx.getImageData(0,0,dw,dh).data, n=dw*dh;
+    const gray=new Uint8Array(n), hist=new Uint32Array(256);
+    for(let i=0;i<n;i++){
+      const o=i*4, g=(0.299*data[o]+0.587*data[o+1]+0.114*data[o+2])|0;
+      gray[i]=g; hist[g]++;
     }
-    const thr=Math.max(28,(sum/Math.max(1,cnt))*2.0);
-    // collect strong border pixels, excluding the outer camera-frame margin
-    const pts=[]; const mx=Math.round(dw*.025), my=Math.round(dh*.025);
-    for(let y=my;y<dh-my;y++) for(let x=mx;x<dw-mx;x++) if(edge[y*dw+x]>thr) pts.push({x,y});
-    if(pts.length<80) return null;
-    // Trim outliers before taking four extreme points.
-    const xs=pts.map(p=>p.x).sort((a,b)=>a-b), ys=pts.map(p=>p.y).sort((a,b)=>a-b);
-    const q=(a,f)=>a[Math.max(0,Math.min(a.length-1,Math.floor((a.length-1)*f)))];
-    const xlo=q(xs,.04), xhi=q(xs,.96), ylo=q(ys,.04), yhi=q(ys,.96);
-    const core=pts.filter(p=>p.x>=xlo&&p.x<=xhi&&p.y>=ylo&&p.y<=yhi);
-    let tlS=1e9,brS=-1e9,trD=-1e9,blD=1e9,TL,TR,BR,BL;
-    for(const p of core){ const ss=p.x+p.y, df=p.x-p.y;
-      if(ss<tlS){tlS=ss;TL=p;} if(ss>brS){brS=ss;BR=p;} if(df>trD){trD=df;TR=p;} if(df<blD){blD=df;BL=p;}
+
+    // Otsu separates the sheet from most desks, fabric, floors and other backgrounds.
+    let total=0; for(let i=0;i<256;i++) total+=i*hist[i];
+    let sumB=0,wB=0,best=-1,thr=128;
+    for(let t=0;t<256;t++){
+      wB+=hist[t]; if(!wB) continue;
+      const wF=n-wB; if(!wF) break;
+      sumB+=t*hist[t];
+      const mB=sumB/wB, mF=(total-sumB)/wF;
+      const between=wB*wF*(mB-mF)*(mB-mF);
+      if(between>best){ best=between; thr=t; }
     }
-    if(!TL||!TR||!BR||!BL) return null;
-    const poly=[TL,TR,BR,BL];
-    const area=Math.abs(poly.reduce((a,p,i)=>{const q=poly[(i+1)%4];return a+p.x*q.y-q.x*p.y;},0))/2;
-    if(area < dw*dh*.12 || area > dw*dh*.94) return null;
-    const sx=W/dw, sy=H/dh; return poly.map(p=>({x:p.x*sx,y:p.y*sy}));
+
+    function componentCandidate(bright){
+      const mask=new Uint8Array(n);
+      // Keep a small safety band out of the search so the camera frame itself is never selected.
+      const bx=Math.max(2,Math.round(dw*.012)), by=Math.max(2,Math.round(dh*.012));
+      for(let y=by;y<dh-by;y++) for(let x=bx;x<dw-bx;x++){
+        const i=y*dw+x;
+        mask[i]=bright ? (gray[i] >= Math.min(245,thr+4)) : (gray[i] <= Math.max(10,thr-4));
+      }
+      // Morphological close/open: fills printed text and tiny holes so a document becomes one region.
+      let a=mask, b=new Uint8Array(n);
+      for(let pass=0;pass<2;pass++){
+        b.fill(0);
+        for(let y=1;y<dh-1;y++) for(let x=1;x<dw-1;x++){
+          const i=y*dw+x; let on=0;
+          for(let yy=-1;yy<=1&&!on;yy++) for(let xx=-1;xx<=1;xx++) if(a[i+yy*dw+xx]){on=1;break;}
+          b[i]=on;
+        }
+        [a,b]=[b,a];
+      }
+      // Find connected regions and keep the best page-like one.
+      const seen=new Uint8Array(n), stack=[]; let bestComp=null, bestScore=-1;
+      for(let y=1;y<dh-1;y++) for(let x=1;x<dw-1;x++){
+        const seed=y*dw+x; if(!a[seed]||seen[seed]) continue;
+        stack.length=0; stack.push(seed); seen[seed]=1;
+        let count=0,minX=dw,maxX=0,minY=dh,maxY=0;
+        let tlS=1e9,brS=-1e9,trD=-1e9,blD=1e9,TL=null,TR=null,BR=null,BL=null;
+        while(stack.length){
+          const i=stack.pop(), px=i%dw, py=(i/dw)|0; count++;
+          if(px<minX)minX=px;if(px>maxX)maxX=px;if(py<minY)minY=py;if(py>maxY)maxY=py;
+          const ss=px+py, df=px-py;
+          if(ss<tlS){tlS=ss;TL={x:px,y:py};} if(ss>brS){brS=ss;BR={x:px,y:py};}
+          if(df>trD){trD=df;TR={x:px,y:py};} if(df<blD){blD=df;BL={x:px,y:py};}
+          const ns=[i-1,i+1,i-dw,i+dw];
+          for(const q of ns) if(q>=0&&q<n&&a[q]&&!seen[q]){seen[q]=1;stack.push(q);}
+        }
+        if(count<n*.07 || !TL||!TR||!BR||!BL) continue;
+        const poly=[TL,TR,BR,BL];
+        const area=Math.abs(poly.reduce((z,p,j)=>{const q=poly[(j+1)%4];return z+p.x*q.y-q.x*p.y;},0))/2;
+        const af=area/n; if(af<.10||af>.96) continue;
+        const boxArea=Math.max(1,(maxX-minX)*(maxY-minY));
+        const fill=count/boxArea;
+        const cx=(minX+maxX)/2, cy=(minY+maxY)/2;
+        const centerPenalty=Math.hypot(cx-dw/2,cy-dh/2)/Math.hypot(dw/2,dh/2);
+        const touches=(minX<dw*.025?1:0)+(maxX>dw*.975?1:0)+(minY<dh*.025?1:0)+(maxY>dh*.975?1:0);
+        const score=af*3 + Math.min(fill,1)*.7 - centerPenalty*.35 - touches*.32;
+        if(score>bestScore){bestScore=score;bestComp=poly;}
+      }
+      return bestComp;
+    }
+
+    // Documents are usually the brighter region; dark-page support is the fallback.
+    let poly=componentCandidate(true) || componentCandidate(false);
+
+    // If segmentation is uncertain, use strong outer edges as a fallback.
+    if(!poly){
+      const edge=new Uint8Array(n); let es=0,ec=0;
+      for(let y=1;y<dh-1;y++) for(let x=1;x<dw-1;x++){
+        const i=y*dw+x;
+        const gx=-gray[i-dw-1]-2*gray[i-1]-gray[i+dw-1]+gray[i-dw+1]+2*gray[i+1]+gray[i+dw+1];
+        const gy=-gray[i-dw-1]-2*gray[i-dw]-gray[i-dw+1]+gray[i+dw-1]+2*gray[i+dw]+gray[i+dw+1];
+        const m=Math.min(255,(Math.abs(gx)+Math.abs(gy))/3); edge[i]=m; es+=m; ec++;
+      }
+      const et=Math.max(36,(es/Math.max(1,ec))*2.6), pts=[];
+      for(let y=3;y<dh-3;y++) for(let x=3;x<dw-3;x++) if(edge[y*dw+x]>et) pts.push({x,y});
+      if(pts.length>100){
+        let tlS=1e9,brS=-1e9,trD=-1e9,blD=1e9,TL,TR,BR,BL;
+        for(const p of pts){const ss=p.x+p.y,df=p.x-p.y;if(ss<tlS){tlS=ss;TL=p;}if(ss>brS){brS=ss;BR=p;}if(df>trD){trD=df;TR=p;}if(df<blD){blD=df;BL=p;}}
+        if(TL&&TR&&BR&&BL) poly=[TL,TR,BR,BL];
+      }
+    }
+    if(!poly) return null;
+    const sx=W/dw, sy=H/dh;
+    return poly.map(p=>({x:Math.max(0,Math.min(W-1,p.x*sx)),y:Math.max(0,Math.min(H-1,p.y*sy))}));
   }catch(e){ console.warn("Document detection failed",e); return null; }
 }
 
@@ -528,11 +591,11 @@ function drawCamOverlay(corners, stableCount){
   svg.setAttribute("width", stage.width); svg.setAttribute("height", stage.height);
   if(!corners || !camLastVW){
     poly.setAttribute("points",""); poly.classList.remove("armed");
-    hint.textContent="Line up the document"; hint.classList.add("show");
+    hint.textContent="Finding document edges…"; hint.classList.add("show");
     return;
   }
   poly.classList.toggle("armed", stableCount>=2);
-  hint.textContent = stableCount>=2 ? "Hold still…" : "Line up the document";
+  hint.textContent = stableCount>=2 ? "Edges detected — hold still…" : "Finding document edges…";
   hint.classList.toggle("show", stableCount>=2);
   const scale=Math.max(stage.width/camLastVW, stage.height/camLastVH);
   const dispW=camLastVW*scale, dispH=camLastVH*scale;
