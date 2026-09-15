@@ -62,6 +62,10 @@
   .zoom button{background:none; border:0; color:#e8ecf5; width:26px; height:26px; border-radius:5px; font-size:14px}
   .zoom button:hover{background:rgba(255,255,255,.15)}
   .zoom span{font-size:11.5px; color:#a9b4cc; min-width:38px; text-align:center; font-variant-numeric:tabular-nums}
+  .zoom select{background:#152c50;color:#e8ecf5;border:0;border-left:1px solid rgba(255,255,255,.12);height:26px;border-radius:0 5px 5px 0;font:600 11.5px inherit;padding:0 5px;outline:none;cursor:pointer}
+  .ocr-output{width:100%;min-height:240px;max-height:48vh;resize:vertical;border:1px solid var(--line);border-radius:9px;padding:12px;font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:#1d2a3d;background:#fbfcfe}
+  .ocr-progress{height:7px;background:#e8edf5;border-radius:999px;overflow:hidden;margin:10px 0}.ocr-progress>i{display:block;height:100%;width:0;background:#2f6fed;transition:width .2s}
+  .ocr-status{font-size:12px;color:#667085;min-height:18px}
 
   /* mode nav (Edit / Organize / Merge) — modern segmented tabs */
   .editnav{background:#fff; display:flex; align-items:center; gap:4px; padding:6px 14px; border-bottom:1px solid var(--line); overflow-x:auto}
@@ -75,25 +79,39 @@
 
   /* ---------- Toolbar ---------- */
   .toolbar{
-    background:var(--white); border-bottom:2px solid #bcd3f7;
-    display:flex; align-items:center; justify-content:center; gap:10px; padding:9px 14px; flex-wrap:wrap; min-height:50px;
+    background:#f7f9fc; border-bottom:1px solid #e5eaf2;
+    display:flex; align-items:center; justify-content:center; gap:10px; padding:8px 16px; flex-wrap:wrap; min-height:56px;
   }
   .toolgroup{
-    display:flex; align-items:stretch; border:1px solid #bcd3f7; border-radius:var(--r-md);
-    overflow:hidden; background:#fbfcfe; padding:2px; gap:1px;
+    display:flex; align-items:center; border:1px solid #dce3ee; border-radius:12px;
+    background:#fff; padding:4px; gap:2px; box-shadow:0 1px 2px rgba(20,35,60,.04);
+    max-width:100%; overflow-x:auto; scrollbar-width:none;
   }
+  .toolgroup::-webkit-scrollbar{display:none}
   .tool{
-    border:0; background:transparent; padding:7px 12px; border-radius:6px;
-    font-size:12.5px; font-weight:600; color:#40506c; display:flex; flex-direction:row;
-    align-items:center; gap:6px; white-space:nowrap; transition:background .1s, color .1s;
+    position:relative; border:0; background:transparent; padding:8px 10px; border-radius:8px;
+    font-size:12.5px; font-weight:600; color:#26354d; display:flex; flex-direction:row;
+    align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+    transition:background .15s ease,color .15s ease,box-shadow .15s ease,transform .15s ease;
   }
-  .tool svg{width:16px; height:16px; stroke:#5c7dc7; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke .1s}
-  .tool:hover{background:#eef2f9}
-  .tool.active{background:var(--gold); color:#fff}
+  .tool svg{width:16px; height:16px; stroke:#5573b7; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke .15s ease}
+  .tool:hover{background:#f0f4fa; color:#14233d}
+  .tool:active{transform:translateY(1px)}
+  .tool.active{background:#2f6fed; color:#fff; box-shadow:0 2px 6px rgba(47,111,237,.22)}
   .tool.active svg{stroke:#fff}
+  .tool[data-tool="redact"] svg rect{fill:currentColor}
+  .tool:not(.active)[data-tool="redact"] svg rect{fill:#5573b7}
+  .tool#undoBtn,.tool#redoBtn{padding-left:9px;padding-right:9px}
+  .tool#undoBtn{margin-left:5px}
+  .tool#undoBtn::before{content:"";position:absolute;left:-4px;top:7px;bottom:7px;width:1px;background:#e3e8f0}
   .divider{display:none}
-  .caret{width:11px; height:11px; stroke:#e0a800; stroke-width:2.2; fill:none; margin-left:-1px; transition:stroke .1s}
+  .caret{width:10px; height:10px; stroke:#7990bb; stroke-width:2.2; fill:none; margin-left:-2px; transition:stroke .15s ease}
   .tool.active .caret{stroke:#fff}
+  @media(max-width:980px){
+    .toolbar{justify-content:flex-start;padding:7px 10px}
+    .toolgroup{justify-content:flex-start;width:100%}
+    .tool{padding:8px 9px}
+  }
 
   /* dropdown menu */
   .menu{position:fixed; z-index:120; background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
@@ -311,7 +329,7 @@
   .modal{background:#fff; border-radius:var(--r-lg); width:min(560px,94vw); border:1px solid var(--line); box-shadow:0 20px 50px rgba(10,18,36,.28); overflow:hidden}
   .modal header{padding:14px 18px; border-bottom:1px solid var(--line); font-weight:700; font-size:14.5px; color:var(--navy)}
   .modal .body{padding:18px}
-  .sigpad{border:1px solid var(--line); border-radius:var(--r-md); background:#fffef9; width:100%; height:200px; touch-action:none; cursor:crosshair}
+  .sigpad{border:1px solid var(--line); border-radius:var(--r-md); background:#fffef9; width:100%; height:200px; touch-action:none; cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair}
   .modal footer{padding:12px 18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:10px}
   .modal .row{display:flex; gap:8px; align-items:center}
   .lbtn{border:1px solid var(--line); background:#fff; border-radius:var(--r-sm); padding:9px 15px; font-weight:600; font-size:12.5px; color:var(--ink); transition:background .1s}
@@ -450,7 +468,7 @@
   .snip-countdown{position:fixed; inset:0; background:rgba(10,16,30,.55); z-index:340; display:grid; place-items:center}
   .snip-countdown span{font-size:120px; font-weight:800; color:#fff; text-shadow:0 4px 24px rgba(0,0,0,.4)}
 
-  .snip-select{position:fixed; inset:0; background:#0b1120; z-index:330; cursor:crosshair}
+  .snip-select{position:fixed; inset:0; background:#0b1120; z-index:330; cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair}
   #snipSelCanvas{position:absolute; inset:0; width:100%; height:100%}
   .snip-select-hint{
     position:absolute; left:50%; top:22px; transform:translateX(-50%); color:#fff; font-size:13px; font-weight:600;
@@ -479,7 +497,7 @@
   .snip-canvaswrap{position:relative; box-shadow:0 6px 24px rgba(15,23,42,.22); background:#fff}
   #snipBaseCanvas, #snipDrawCanvas{position:absolute; left:0; top:0; display:block}
   #snipDrawCanvas{touch-action:none}
-  #snipDrawCanvas.crop-mode{cursor:crosshair}
+  #snipDrawCanvas.crop-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair}
 
   .snip-etools{
     flex:none; background:#fff; border-top:1px solid var(--line); display:flex; align-items:center;
@@ -547,6 +565,7 @@
     <button id="zoomOut" title="Zoom out">−</button>
     <span id="zoomLabel">100%</span>
     <button id="zoomIn" title="Zoom in">+</button>
+    <select id="zoomPreset" title="Zoom options" aria-label="Zoom options"><option value="fit-width">Fit width</option><option value="fit-page">Fit page</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select>
   </div>
   <button class="tbtn hide" id="pagesBtn" title="Show or hide the page list"><span class="ic">▥</span><span class="lbl">&nbsp;Pages</span></button>
   <button class="tbtn" id="homeBtn" title="Start over — back to the home screen"><span class="ic">⌂</span><span class="lbl">&nbsp;Home</span></button>
@@ -580,12 +599,14 @@
   <button class="tool" id="textBtn"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Text</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" id="formsBtn"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>Forms</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" data-tool="image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Images</span></button>
+  <button class="tool" id="ocrBtn" title="Recognize text in scanned pages"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/><path d="M7 12h10M9 9h6M9 15h6"/></svg><span>OCR</span></button>
   <button class="tool" id="signBtn"><svg viewBox="0 0 24 24"><path d="M3 18c4 0 4-9 8-9s4 6 8 1"/><path d="M3 21h18"/></svg><span>Sign</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" data-tool="redact" title="Permanently cover sensitive information in the downloaded PDF"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="1" fill="currentColor" stroke="currentColor"/><path d="M5 5l14 14"/></svg><span>Redact</span></button>
    <button class="tool" data-tool="whiteout"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/><path d="M4 12h16"/></svg><span>Whiteout</span></button>
   <button class="tool" id="annotateBtn"><svg viewBox="0 0 24 24"><path d="M4 18l3 1 11-11-4-4L3 15z"/><path d="M14 5l4 4"/></svg><span>Annotate</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" id="shapesBtn"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg><span>Shapes</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
   <button class="tool" id="undoBtn" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14l-4-4 4-4"/><path d="M5 10h9a5 5 0 015 5v0a5 5 0 01-5 5h-2"/></svg><span>Undo</span></button>
+  <button class="tool" id="redoBtn" title="Redo (Ctrl+Shift+Z / Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M15 14l4-4-4-4"/><path d="M19 10h-9a5 5 0 00-5 5v0a5 5 0 005 5h2"/></svg><span>Redo</span></button>
   </div>
 
   <div class="ctx" id="ctx">
@@ -697,7 +718,7 @@
     <h1>Edit, sign &amp; fill any PDF</h1>
     <p>Open a file to add text, fill forms, redact, whiteout, highlight, images,<br>drawings and signatures — then download the finished PDF.</p>
     <button class="cta" id="openBtn2">Choose a PDF</button>
-    <div class="privacy"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3 7-7 9-4-2-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg> Your file never leaves this device — everything runs locally.</div>
+    <div class="privacy"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3 7-7 9-4-2-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg> PDF processing stays in your browser. The app loads its code and fonts from external CDNs.</div>
   </div>
 </div>
 
@@ -765,7 +786,7 @@
     <header class="head"><span>Share for others to fill &amp; sign</span><button class="x" id="pubClose">×</button></header>
     <div class="body">
       <p style="margin:0 0 12px;color:var(--ink);font-size:14px;line-height:1.5">Your fields are real, interactive PDF fields. The simplest way to let others fill and sign is to download the finished PDF and send it — they can complete it in any free reader (Edge, Acrobat Reader, Preview) and send it back.</p>
-      <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">A hosted "fill online via a link" flow would need a server and accounts — it isn't part of this in-browser app, which keeps every file private to the device.</p>
+      <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">A hosted "fill online via a link" flow would need a server and accounts — it isn't part of this in-browser app, which processes PDF content in your browser.</p>
     </div>
     <footer><button class="lbtn" id="pubCancel">Close</button><div class="row"><button class="lbtn gold" id="pubDownload">Download fillable PDF</button></div></footer>
   </div>
@@ -798,12 +819,48 @@
   </div>
 </div>
 
+<!-- Find & Redact modal -->
+<div class="modal-bg hide" id="ocrModal">
+  <div class="modal" style="width:min(760px,96vw)">
+    <header class="head"><span>OCR — Recognize scanned text</span><button class="xbtn" id="ocrClose">✕</button></header>
+    <div class="body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+        <button class="btn primary" id="ocrCurrent">Recognize current page</button>
+        <button class="btn" id="ocrAll">Recognize all pages</button>
+        <select id="ocrLang" class="input" style="width:auto"><option value="eng">English</option><option value="fra">French</option><option value="ara">Arabic</option><option value="eng+fra">English + French</option></select>
+      </div>
+      <div class="ocr-progress"><i id="ocrProgressBar"></i></div><div class="ocr-status" id="ocrStatus">Choose a page or the whole document.</div>
+      <textarea class="ocr-output" id="ocrOutput" placeholder="Recognized text will appear here…"></textarea>
+    </div>
+    <footer><span style="font-size:11.5px;color:#667085">OCR runs in your browser. The first use may download the language model.</span><div class="row"><button class="btn" id="ocrCopy">Copy text</button><button class="btn" id="ocrTxt">Download .txt</button><button class="btn" id="ocrDone">Done</button></div></footer>
+  </div>
+</div>
+
+<div class="modal-bg hide" id="redactModal">
+  <div class="modal" style="width:min(500px,94vw)">
+    <header class="head"><span>Find &amp; redact</span><button class="x" id="redactClose">×</button></header>
+    <div class="body">
+      <label class="fp-row fp-col"><span>Find text</span><input type="text" id="redactFind" placeholder="Name, email, student ID…"></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="lbtn" data-redact-pattern="email">Find emails</button>
+        <button class="lbtn" data-redact-pattern="phone">Find phone numbers</button>
+        <button class="lbtn" data-redact-pattern="postal">Find postal codes</button>
+        <button class="lbtn" data-redact-pattern="card">Find card-like numbers</button>
+      </div>
+      <p style="margin:12px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45">Matches are marked for redaction. Secure export permanently rasterizes the finished PDF so covered text cannot be copied, searched, or recovered by removing the black box.</p>
+      <p id="redactStatus" style="margin:8px 0 0;color:var(--muted);font-size:12.5px;min-height:16px"></p>
+    </div>
+    <footer><button class="lbtn" id="redactClose2">Cancel</button><div class="row"><button class="lbtn gold" id="redactRun">Mark all matches</button></div></footer>
+  </div>
+</div>
+
 <!-- Download options -->
-<div class="menu hide" id="downloadMenu" style="min-width:260px">
-  <label class="mitem" style="gap:9px;cursor:pointer">
-    <input type="checkbox" id="grayscaleChk" style="width:16px;height:16px;accent-color:var(--gold)">
-    <span>Grayscale (flattens pages to images)</span>
-  </label>
+<div class="menu hide" id="downloadMenu" style="min-width:290px">
+  <div class="menu-sec">Export type</div>
+  <label class="mitem" style="gap:9px;cursor:pointer"><input type="radio" name="exportMode" value="standard" checked> <span>Standard PDF</span></label>
+  <label class="mitem" style="gap:9px;cursor:pointer"><input type="radio" name="exportMode" value="flatten"> <span>Flattened PDF (pages become images)</span></label>
+  <label class="mitem" style="gap:9px;cursor:pointer"><input type="radio" name="exportMode" value="secure"> <span>Secure / redacted PDF</span></label>
+  <label class="mitem" style="gap:9px;cursor:pointer"><input type="radio" name="exportMode" value="grayscale"> <span>Grayscale flattened PDF</span></label>
 </div>
 
 <!-- Sticky note editor popover -->
@@ -977,7 +1034,7 @@ function goHome(){
   if(pdfDoc && !confirm("Go back to the start screen? Anything you haven't downloaded will be lost.")) return;
   try{ if(pageObserver){ pageObserver.disconnect(); pageObserver=null; } }catch(e){}
   pdfDoc=null; originalBytes=null; pages=[]; annos=[]; selected=null; fieldMeta={}; history=[]; hIndex=-1; nextId=1; docDefaultFont="courier";
-  docMeta={title:"",author:"",subject:"",keywords:""}; exportGrayscale=false; if($("#grayscaleChk")) $("#grayscaleChk").checked=false;
+  docMeta={title:"",author:"",subject:"",keywords:""}; exportMode="standard"; const er=document.querySelector('input[name="exportMode"][value="standard"]'); if(er) er.checked=true;
   const ph=$("#pages"); if(ph) ph.innerHTML="";
   { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
   $("#editNav").style.display="none";
@@ -1314,6 +1371,8 @@ function deletePage(i){
 /* ---------------- tools ---------------- */
 const tools=[...document.querySelectorAll(".tool[data-tool]")];
 tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
+const redactToolBtn=document.querySelector('.tool[data-tool="redact"]');
+if(redactToolBtn) redactToolBtn.addEventListener("dblclick",()=>openRedactSearch());
 const CREATING=["text","highlight","strike","underline","note","whiteout","redact","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
@@ -1329,9 +1388,9 @@ function setTool(t, opts){
     const creating = CREATING.includes(t);
     const interact = creating || t==="edittext";
     p.overlay.style.pointerEvents = interact ? "auto" : "none";
-    p.overlay.style.cursor = t==="edittext" ? "text" : (creating ? "crosshair" : "default");
+    p.overlay.style.cursor = t==="edittext" ? "text" : (creating ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair` : "default");
     p.drawCanvas.style.pointerEvents = (t==="draw") ? "auto" : "none";
-    p.drawCanvas.style.cursor = (t==="draw") ? "crosshair" : "default";
+    p.drawCanvas.style.cursor = (t==="draw") ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair` : "default";
   });
   if(t!=="select") select(null);
   $("#pages").classList.toggle("tooling", t!=="select");
@@ -1384,6 +1443,7 @@ wireDropdown("shapesBtn","shapesMenu", act=>{
   if(act==="rect") setTool("rect");
 });
 $("#undoBtn").onclick=()=> doUndo();
+if($("#redoBtn")) $("#redoBtn").onclick=()=> doRedo();
 function formsAction(act){
   hideMenu();
   if(act==="text"){ setTool("text"); return; }
@@ -1489,7 +1549,46 @@ function showDownloadMenu(){
 }
 downloadCaret.onclick=e=>{ e.stopPropagation(); downloadMenu.classList.contains("hide")?showDownloadMenu():downloadMenu.classList.add("hide"); };
 document.addEventListener("pointerdown",e=>{ if(!downloadMenu.contains(e.target) && e.target!==downloadCaret) downloadMenu.classList.add("hide"); });
-$("#grayscaleChk").onchange=()=>{ exportGrayscale=$("#grayscaleChk").checked; };
+let exportMode="standard";
+document.querySelectorAll('input[name="exportMode"]').forEach(r=>r.onchange=()=>{ if(r.checked) exportMode=r.value; });
+
+/* ---- Find & redact / sensitive-pattern marking ---- */
+function openRedactSearch(){
+  if(!originalBytes){ toast("Open a PDF first.",true); return; }
+  $("#redactFind").value=""; $("#redactStatus").textContent=""; $("#redactModal").classList.remove("hide");
+  setTimeout(()=>$("#redactFind").focus(),20);
+}
+$("#redactClose").onclick=$("#redactClose2").onclick=()=>$("#redactModal").classList.add("hide");
+async function markRedactionMatches(matcher,label){
+  busy(true); let count=0;
+  try{
+    for(const rec of pages){
+      if(rec.deleted) continue;
+      let lines; try{ lines=await computeLines(rec); }catch(_){ continue; }
+      for(const hit of lines){
+        if(!hit.text || !matcher(hit.text)) continue;
+        const pad=2;
+        const a=makeAnno({type:"redact",page:rec.index,x:Math.max(0,hit.left-pad),y:Math.max(0,hit.top-pad),w:(hit.right-hit.left)+pad*2,h:hit.height+pad*2,color:"#000000"});
+        annos.push(a); renderAnno(a); count++;
+      }
+    }
+    if(count){ snapshot(); toast(`Marked ${count} ${label||"match"}${count===1?"":"es"} for redaction.`); }
+    $("#redactStatus").textContent=count?`${count} match${count===1?"":"es"} marked. Download as Secure / redacted PDF to permanently apply them.`:"No matches found.";
+  } finally { busy(false); }
+}
+$("#redactRun").onclick=async()=>{
+  const q=$("#redactFind").value.trim(); if(!q){ $("#redactStatus").textContent="Enter text to find."; return; }
+  const low=q.toLowerCase(); await markRedactionMatches(t=>t.toLowerCase().includes(low),"text match");
+};
+const redactPatterns={
+  email:/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i,
+  phone:/(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}/,
+  postal:/\b[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d\b/i,
+  card:/\b(?:\d[ -]*?){13,19}\b/
+};
+document.querySelectorAll("[data-redact-pattern]").forEach(b=>b.onclick=async()=>{
+  const k=b.dataset.redactPattern, re=redactPatterns[k]; await markRedactionMatches(t=>{ re.lastIndex=0; return re.test(t); },k);
+});
 
 /* ---- Find & replace: reuses the same line-detection used by "Edit existing text" ---- */
 function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
@@ -2808,6 +2907,15 @@ function trimCanvas(c){
 $("#zoomIn").onclick=()=>{ userZoomed=true; setZoom(zoom+0.15); };
 $("#zoomOut").onclick=()=>{ userZoomed=true; setZoom(zoom-0.15); };
 function setZoom(z){ zoom=Math.min(2.5,Math.max(0.4,Math.round(z*100)/100)); applyZoom(); }
+function fitToPage(){
+  if(!pages.length) return;
+  const rec=pages.find(p=>!p.deleted); if(!rec) return;
+  const st=$("#stage");
+  const availW=Math.max(100,st.clientWidth-32), availH=Math.max(100,st.clientHeight-32);
+  zoom=Math.min(1,Math.max(.2,Math.min(availW/rec.w,availH/rec.h)));
+  userZoomed=false; applyZoom();
+}
+$("#zoomPreset").onchange=e=>{ const v=e.target.value; if(v==="fit-width") fitToWidth(); else if(v==="fit-page") fitToPage(); else {userZoomed=true;setZoom(parseFloat(v));} };
 function fitToWidth(){
   if(!pages.length) return;
   const st=$("#stage"), ps=$("#pagesScale");
@@ -2859,6 +2967,7 @@ function applyZoom(){
   ps.style.transform="scale("+zoom+")";
   if(wrap){ wrap.style.width=(ps.offsetWidth*zoom)+"px"; wrap.style.height=(ps.offsetHeight*zoom)+"px"; }
   $("#zoomLabel").textContent=Math.round(zoom*100)+"%";
+  const zp=$("#zoomPreset"); if(zp && userZoomed){ const exact=[.5,.75,1,1.25,1.5,2].find(v=>Math.abs(v-zoom)<.01); if(exact) zp.value=String(exact); }
   if(typeof positionTextbar==="function") positionTextbar();
   if(typeof positionStrokeBar==="function") positionStrokeBar();
 }
@@ -2883,11 +2992,16 @@ function restore(state){
 }
 function doUndo(){ if(hIndex>0){ hIndex--; restore(history[hIndex]); } }
 function doRedo(){ if(hIndex<history.length-1){ hIndex++; restore(history[hIndex]); } }
-function updateUI(){}
+function updateUI(){
+  const u=$("#undoBtn"), r=$("#redoBtn");
+  if(u) u.disabled=hIndex<=0;
+  if(r) r.disabled=hIndex>=history.length-1;
+}
 document.addEventListener("keydown",e=>{
   const ae=document.activeElement, tag=ae&&ae.tagName;
   const typing = tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(ae&&ae.isContentEditable);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?doRedo():doUndo(); }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="y" && !typing){ e.preventDefault(); doRedo(); }
   if((e.key==="Delete"||e.key==="Backspace") && selected && !typing){ e.preventDefault(); removeAnno(selected); }
 });
 
@@ -3138,59 +3252,66 @@ async function buildBytes(){
     return await doc.save();
 }
 
+/* Flatten a baked PDF to page images. This is also the secure-redaction path:
+   once rasterized, original text/content streams are not carried into the output. */
+async function rasterizePdfBytes(baked, grayscale=false){
+  const src = await PDFDocument.load(baked);
+  const out = await PDFDocument.create();
+  const srcPdfjs = await pdfjsLib.getDocument({ data: baked.slice() }).promise;
+  const n=src.getPageCount();
+  for(let i=0;i<n;i++){
+    const page=await srcPdfjs.getPage(i+1), vp=page.getViewport({scale:2});
+    const canvas=document.createElement("canvas"); canvas.width=Math.round(vp.width); canvas.height=Math.round(vp.height);
+    const ctx=canvas.getContext("2d",{willReadFrequently:grayscale}); await page.render({canvasContext:ctx,viewport:vp}).promise;
+    if(grayscale){ const id=ctx.getImageData(0,0,canvas.width,canvas.height),d=id.data; for(let p=0;p<d.length;p+=4){ const g=.299*d[p]+.587*d[p+1]+.114*d[p+2]; d[p]=d[p+1]=d[p+2]=g; } ctx.putImageData(id,0,0); }
+    const jpegBytes=await new Promise((res,rej)=>canvas.toBlob(b=>b?b.arrayBuffer().then(res).catch(rej):rej(new Error("Rasterization failed")),"image/jpeg",0.9));
+    const img=await out.embedJpg(jpegBytes), size=src.getPage(i).getSize(), op=out.addPage([size.width,size.height]);
+    op.drawImage(img,{x:0,y:0,width:size.width,height:size.height});
+  }
+  try{ if(docMeta.title) out.setTitle(docMeta.title); if(docMeta.author) out.setAuthor(docMeta.author); if(docMeta.subject) out.setSubject(docMeta.subject); if(docMeta.keywords) out.setKeywords(docMeta.keywords.split(",").map(s=>s.trim()).filter(Boolean)); }catch(_){}
+  return await out.save();
+}
+async function buildFlattenedBytes(grayscale=false){ return await rasterizePdfBytes(await buildBytes(),grayscale); }
+async function verifySecureRaster(bytes){
+  try{
+    const d=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
+    for(let i=1;i<=d.numPages;i++){ const tc=await (await d.getPage(i)).getTextContent(); if(tc.items.some(x=>(x.str||"").trim())) return false; }
+    return true;
+  }catch(_){ return false; }
+}
+
 /* Grayscale export: bakes all edits normally, then rasterizes each page to a
    desaturated image. Note this flattens interactive form fields into pixels —
    there's no practical way to rewrite arbitrary PDF content-stream colours to
    grayscale without a full PDF interpreter, so this is the same trade-off most
    in-browser tools make for a "grayscale" export. */
-async function buildGrayscaleBytes(){
-  const baked = await buildBytes();
-  const src = await PDFDocument.load(baked);
-  const out = await PDFDocument.create();
-  const srcPdfjs = await pdfjsLib.getDocument({ data: baked.slice() }).promise;
-  const n = src.getPageCount();
-  for(let i=0;i<n;i++){
-    const page = await srcPdfjs.getPage(i+1);
-    const vp = page.getViewport({scale:2});
-    const canvas = document.createElement("canvas");
-    canvas.width=Math.round(vp.width); canvas.height=Math.round(vp.height);
-    const ctx=canvas.getContext("2d");
-    await page.render({canvasContext:ctx, viewport:vp}).promise;
-    const id=ctx.getImageData(0,0,canvas.width,canvas.height);
-    const d=id.data;
-    for(let p=0;p<d.length;p+=4){
-      const g=0.299*d[p]+0.587*d[p+1]+0.114*d[p+2];
-      d[p]=d[p+1]=d[p+2]=g;
-    }
-    ctx.putImageData(id,0,0);
-    const jpegBytes = await new Promise(res=>canvas.toBlob(b=>b.arrayBuffer().then(res),"image/jpeg",0.85));
-    const img = await out.embedJpg(jpegBytes);
-    const size = src.getPage(i).getSize();
-    const outPage = out.addPage([size.width, size.height]);
-    outPage.drawImage(img,{x:0,y:0,width:size.width,height:size.height});
-  }
-  try{
-    if(docMeta.title) out.setTitle(docMeta.title);
-    if(docMeta.author) out.setAuthor(docMeta.author);
-    if(docMeta.subject) out.setSubject(docMeta.subject);
-    if(docMeta.keywords) out.setKeywords(docMeta.keywords.split(",").map(s=>s.trim()).filter(Boolean));
-  }catch(_){}
-  return await out.save();
-}
+async function buildGrayscaleBytes(){ return await buildFlattenedBytes(true); }
 
 async function exportPdf(){
   if(!originalBytes) return;
+  const hasRedactions=annos.some(a=>a.type==="redact");
+  let mode=exportMode||"standard";
+  if(hasRedactions && mode==="standard"){
+    const ok=confirm("This document contains redaction marks. Standard PDF only draws black boxes and is NOT secure.\n\nPress OK to use Secure / redacted PDF instead, or Cancel to return without downloading.");
+    if(!ok) return; mode="secure";
+  }
+  if(mode==="secure" && !confirm("Apply secure redactions?\n\nThe downloaded PDF will be flattened to images. Text and form fields will no longer be editable/searchable. Keep your original file if you may need it later.")) return;
   busy(true);
   try{
-    const out = exportGrayscale ? await buildGrayscaleBytes() : await buildBytes();
-    const blob = new Blob([out],{type:"application/pdf"});
-    const url = URL.createObjectURL(blob);
-    const a=el("a"); a.href=url;
+    let out;
+    if(mode==="grayscale") out=await buildFlattenedBytes(true);
+    else if(mode==="flatten" || mode==="secure") out=await buildFlattenedBytes(false);
+    else out=await buildBytes();
+    if(mode==="secure"){
+      const verified=await verifySecureRaster(out);
+      if(!verified) throw new Error("Secure-redaction verification failed: extractable text remains.");
+    }
+    const blob=new Blob([out],{type:"application/pdf"}), url=URL.createObjectURL(blob), a=el("a"); a.href=url;
     const base=($("#filename").textContent||"document.pdf").replace(/\.pdf$/i,"");
-    a.download=base+"-edited.pdf"; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),4000);
-    toast(exportGrayscale ? "Downloaded your grayscale PDF." : "Downloaded your edited PDF.");
-  }catch(err){ console.error(err); toast("Export failed — see console for details.",true); }
+    const suffix=mode==="secure"?"-redacted":mode==="flatten"?"-flattened":mode==="grayscale"?"-grayscale":"-edited";
+    a.download=base+suffix+".pdf"; a.click(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+    toast(mode==="secure"?"Secure redaction verified and downloaded.":"Downloaded your PDF.");
+  }catch(err){ console.error(err); toast(err.message||"Export failed — see console for details.",true); }
   finally{ busy(false); }
 }
 
@@ -3709,6 +3830,40 @@ $("#snipInsertBtn").onclick = ()=>{
   toast("Click on a page to place the snip.");
 };
 
+/* ==================== Document OCR ==================== */
+let ocrBusy=false, ocrText="";
+function currentPageRecord(){
+  if(selected){ const r=pages.find(p=>p.index===selected.page); if(r&&!r.deleted) return r; }
+  const st=$("#stage"), sr=st.getBoundingClientRect(); let best=null,bestD=Infinity;
+  for(const r of pages){ if(r.deleted||!r.el) continue; const b=r.el.getBoundingClientRect(); const d=Math.abs((b.top+b.bottom)/2-(sr.top+sr.bottom)/2); if(d<bestD){bestD=d;best=r;} }
+  return best||pages.find(p=>!p.deleted);
+}
+async function ocrRecords(records){
+  if(ocrBusy||!records.length) return; ocrBusy=true; ocrText=""; $("#ocrOutput").value=""; $("#ocrProgressBar").style.width="0%";
+  const lang=$("#ocrLang").value;
+  try{
+    await ensureSnipTesseract();
+    $("#ocrStatus").textContent="Loading OCR language data…";
+    const worker=await Tesseract.createWorker(lang);
+    for(let i=0;i<records.length;i++){
+      const rec=records[i]; await renderPageCanvas(rec);
+      $("#ocrStatus").textContent=`Recognizing page ${rec.index+1} (${i+1} of ${records.length})…`;
+      const result=await worker.recognize(rec.canvas.toDataURL("image/png"));
+      const text=(result.data.text||"").trim();
+      ocrText += `${records.length>1?`--- Page ${rec.index+1} ---\n`:""}${text}${i<records.length-1?"\n\n":""}`;
+      $("#ocrOutput").value=ocrText; $("#ocrProgressBar").style.width=Math.round((i+1)/records.length*100)+"%";
+    }
+    await worker.terminate(); $("#ocrStatus").textContent=`OCR complete — ${records.length} page${records.length===1?"":"s"} recognized.`;
+  }catch(err){ console.error(err); $("#ocrStatus").textContent="OCR could not finish. Check your connection and try again."; toast("OCR failed.",true); }
+  finally{ ocrBusy=false; }
+}
+$("#ocrBtn").onclick=()=>{ if(!pdfDoc){toast("Open a PDF first.",true);return;} $("#ocrModal").classList.remove("hide"); };
+$("#ocrClose").onclick=$("#ocrDone").onclick=()=>{ if(!ocrBusy) $("#ocrModal").classList.add("hide"); };
+$("#ocrCurrent").onclick=()=>{ const r=currentPageRecord(); if(r) ocrRecords([r]); };
+$("#ocrAll").onclick=()=>ocrRecords(pages.filter(p=>!p.deleted));
+$("#ocrCopy").onclick=async()=>{ const t=$("#ocrOutput").value.trim(); if(!t){toast("Run OCR first.",true);return;} try{await navigator.clipboard.writeText(t);toast("OCR text copied.");}catch(_){toast("Couldn't copy text.",true);} };
+$("#ocrTxt").onclick=()=>{ const t=$("#ocrOutput").value.trim(); if(!t){toast("Run OCR first.",true);return;} const b=new Blob([t],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a"); a.href=u; a.download=($("#filename").textContent||"document").replace(/\.pdf$/i,"")+"-OCR.txt"; a.click(); setTimeout(()=>URL.revokeObjectURL(u),2000); };
+
 /* ---- text actions (OCR) ---- */
 function ensureSnipTesseract(){
   if(window.Tesseract) return Promise.resolve();
@@ -3787,7 +3942,7 @@ function showRestoreBanner(name){
     const buf = await idbGet("pendingScan");
     if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); return; }
   }catch(e){ /* no handoff */ }
-  try{ await idbDel("session_doc"); await idbDel("session_state"); }catch(e){}
+  try{ const saved=await idbGet("session_doc"); if(saved && saved.original) showRestoreBanner(saved.name); }catch(e){}
 })();
 
 })();
