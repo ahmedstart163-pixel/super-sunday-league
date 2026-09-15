@@ -3017,6 +3017,27 @@ function stdFontName(key,b,i){
 $("#downloadBtn").onclick = exportPdf;
 async function buildBytes(){
   if(selected && selected.type==="text" && selected._edit) selected._edit.blur();
+
+  // Zoom-only export: rebuild the pages into a fresh PDF container instead of
+  // re-saving the source catalog. This avoids carrying broken/stale OpenAction
+  // page references from PDFs that were authored with a saved 150%/200% view.
+  // Page content remains vector/searchable; only document-level extras such as
+  // the old opening-view instruction are intentionally left behind.
+  const zoomOnly = userZoomed && annos.length===0 && !pages.some(p=>p.deleted) && Object.keys(fieldMeta).length===0;
+  if(zoomOnly){
+    const src = await PDFDocument.load(originalBytes, { ignoreEncryption:true });
+    const clean = await PDFDocument.create();
+    const copied = await clean.copyPages(src, src.getPageIndices());
+    copied.forEach(pg=>clean.addPage(pg));
+    try{
+      const title=src.getTitle(); if(title) clean.setTitle(title);
+      const author=src.getAuthor(); if(author) clean.setAuthor(author);
+      const subject=src.getSubject(); if(subject) clean.setSubject(subject);
+      const keywords=src.getKeywords(); if(keywords) clean.setKeywords(String(keywords).split(/[,;]/).map(x=>x.trim()).filter(Boolean));
+    }catch(_){}
+    return await clean.save({ useObjectStreams:false });
+  }
+
   const doc = await PDFDocument.load(originalBytes);
     // Viewer zoom is a display preference, not document content. Some PDFs store
     // their opening zoom in Catalog/OpenAction as a destination that points at a
@@ -3258,7 +3279,7 @@ async function buildBytes(){
 
     // delete pages (remove from the end to keep indices valid)
     for(let i=docPages.length-1;i>=0;i--){ if(pages[i] && pages[i].deleted) doc.removePage(i); }
-    return await doc.save();
+    return await doc.save({ useObjectStreams:false });
 }
 
 /* Flatten a baked PDF to page images. This is also the secure-redaction path:
