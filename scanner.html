@@ -872,6 +872,16 @@ async function buildPdfBytes(ocr){
       }
     }
   }
+  // Ask PDF viewers to open the downloaded scan at exactly 100% zoom.
+  // XYZ destination: [page, /XYZ, left, top, zoom]. A zoom value of 1 = 100%.
+  if (pdf.getPageCount() > 0) {
+    try {
+      const { PDFName } = PDFLib;
+      const firstPage = pdf.getPage(0);
+      const openAction = pdf.context.obj([firstPage.ref, PDFName.of("XYZ"), null, null, 1]);
+      pdf.catalog.set(PDFName.of("OpenAction"), openAction);
+    } catch (e) { console.warn("Could not set initial PDF zoom", e); }
+  }
   return await pdf.save();
 }
 async function downloadPdf(bytes, prefix){
