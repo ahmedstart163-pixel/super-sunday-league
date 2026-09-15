@@ -554,35 +554,87 @@ function cornersMoved(a,b,thresh){
   return false;
 }
 
+function avgCorners(a,b,alpha){
+  if(!a) return b.map(p=>({x:p.x,y:p.y}));
+  return a.map((p,i)=>({x:p.x*(1-alpha)+b[i].x*alpha, y:p.y*(1-alpha)+b[i].y*alpha}));
+}
+function cornerDelta(a,b){
+  if(!a||!b) return Infinity;
+  let sum=0;
+  for(let i=0;i<4;i++) sum+=Math.hypot(a[i].x-b[i].x,a[i].y-b[i].y);
+  return sum/4;
+}
+
 function startCamDetectLoop(){
   const v=$("#camVideo");
   const detCanvas=document.createElement("canvas");
-  let misses=0;
+  let misses=0, candidate=null, candidateFrames=0, locked=null, lockFrames=0;
   camDetectTimer=setInterval(()=>{
     if(!v.videoWidth || camBusy) return;
     camLastVW=v.videoWidth; camLastVH=v.videoHeight;
-    const dw=360, dh=Math.max(1,Math.round(camLastVH*dw/camLastVW));
+    // A little more detection resolution makes the edge position less noisy.
+    const dw=420, dh=Math.max(1,Math.round(camLastVH*dw/camLastVW));
     detCanvas.width=dw; detCanvas.height=dh;
     detCanvas.getContext("2d").drawImage(v,0,0,dw,dh);
-    const corners = detectDocCorners(detCanvas);
-    if(corners){ camLastCorners=corners; misses=0; } else { misses++; if(misses>2) camLastCorners=null; }
+    const raw=detectDocCorners(detCanvas);
 
-    // stability tracking -> auto-capture once the document has been held steady for a moment
+    if(raw){
+      misses=0;
+      // Do not immediately move the blue outline to every new detection.
+      // First require several similar frames, then gently smooth it.
+      const candidateTol=dw*.032;
+      if(candidate && cornerDelta(candidate,raw)<candidateTol){
+        candidate=avgCorners(candidate,raw,.35);
+        candidateFrames++;
+      }else{
+        candidate=raw.map(p=>({x:p.x,y:p.y}));
+        candidateFrames=1;
+      }
+
+      if(candidateFrames>=3){
+        if(!locked){
+          locked=candidate.map(p=>({x:p.x,y:p.y}));
+          lockFrames=1;
+        }else{
+          const jump=cornerDelta(locked,candidate);
+          // Small changes are camera shake: smooth them. Large changes must persist
+          // before we allow the guide to jump to a different object/background.
+          if(jump<dw*.055){
+            locked=avgCorners(locked,candidate,.20);
+            lockFrames++;
+          }else if(candidateFrames>=6){
+            locked=candidate.map(p=>({x:p.x,y:p.y}));
+            lockFrames=1;
+          }
+        }
+        camLastCorners=locked.map(p=>({x:p.x,y:p.y}));
+      }
+    }else{
+      misses++;
+      candidateFrames=0; candidate=null;
+      // Keep the last good outline briefly instead of flashing on/off.
+      if(misses>6){ camLastCorners=null; locked=null; lockFrames=0; }
+    }
+
+    // Auto-capture only after the LOCKED outline has stayed stable much longer.
+    // This prevents false captures when edge detection is still settling.
     const now=Date.now();
     let willCapture=false;
-    if(corners && now>=camCooldownUntil){
-      const thresh=dw*0.018;
-      if(camStableRef && !cornersMoved(corners,camStableRef,thresh)) camStableCount++;
+    if(camLastCorners && now>=camCooldownUntil){
+      const thresh=dw*.010;
+      if(camStableRef && !cornersMoved(camLastCorners,camStableRef,thresh)) camStableCount++;
       else camStableCount=1;
-      camStableRef=corners;
-      if(camStableCount>=3){ willCapture=true; camStableCount=0; camStableRef=null; camCooldownUntil=now+1400; }
-    } else if(!corners){
+      camStableRef=camLastCorners.map(p=>({x:p.x,y:p.y}));
+      if(camStableCount>=8 && lockFrames>=8){
+        willCapture=true; camStableCount=0; camStableRef=null; camCooldownUntil=now+1800;
+      }
+    }else if(!camLastCorners){
       camStableCount=0; camStableRef=null;
     }
 
     drawCamOverlay(camLastCorners, camStableCount);
     if(willCapture) doCapture();
-  }, 220);
+  }, 180);
 }
 
 function drawCamOverlay(corners, stableCount){
@@ -594,9 +646,9 @@ function drawCamOverlay(corners, stableCount){
     hint.textContent="Finding document edges…"; hint.classList.add("show");
     return;
   }
-  poly.classList.toggle("armed", stableCount>=2);
+  poly.classList.toggle("armed", stableCount>=5);
   hint.textContent = stableCount>=2 ? "Edges detected — hold still…" : "Finding document edges…";
-  hint.classList.toggle("show", stableCount>=2);
+  hint.classList.add("show");
   const scale=Math.max(stage.width/camLastVW, stage.height/camLastVH);
   const dispW=camLastVW*scale, dispH=camLastVH*scale;
   const offx=(stage.width-dispW)/2, offy=(stage.height-dispH)/2;
