@@ -207,13 +207,18 @@
   .ps-item{
     cursor:pointer; margin-bottom:12px; text-align:center; border-radius:var(--r-md);
     padding:7px 6px 6px; border:1.5px solid transparent; transition:border-color .12s, background .12s;
+    position:relative;
   }
   .ps-item:hover{background:#eef2f9}
-  .ps-item.active{border-color:var(--gold); background:var(--tint)}
+  .ps-item.active{border-color:transparent; background:var(--tint)}
+  .ps-item.active::before{
+    content:""; position:absolute; left:-10px; top:4px; bottom:4px; width:4px;
+    background:var(--gold); border-radius:0 3px 3px 0;
+  }
   .ps-thumb-wrap{display:flex; align-items:center; justify-content:center; height:118px; overflow:hidden}
   .ps-thumb{box-shadow:0 1px 3px rgba(16,24,40,.18); background:#fff; max-width:100%; max-height:100%; border-radius:2px}
   .ps-no{font-size:10.5px; color:var(--muted); margin-top:6px; font-weight:600}
-  .ps-item.active .ps-no{color:var(--accent-d)}
+  .ps-item.active .ps-no{color:var(--accent-d); font-weight:800}
   @media (max-width:820px){
     .pagesidebar{display:none !important}
     .stage.with-sidebar{left:0}
@@ -1576,6 +1581,7 @@ pagesBtn.onclick=()=> setSidebarOpen(!sidebarOpen);
 function buildPageSidebar(){
   const list=$("#psList"); if(!list) return;
   list.innerHTML="";
+  lastSyncedSidebarIndex=-1;
   pages.forEach(rec=>{
     if(rec.deleted) return;
     const item=el("div","ps-item");
@@ -1606,12 +1612,22 @@ function scrollToPage(index){
   if(!rec || !rec.wrap || rec.deleted) return;
   rec.wrap.scrollIntoView({behavior:"smooth", block:"start"});
 }
+let lastSyncedSidebarIndex=-1;
 function updateActiveSidebarItem(){
   if(!sidebarOpen || !pages.length) return;
   const rec=currentVisiblePage();
   if(!rec) return;
   const list=$("#psList"); if(!list) return;
-  [...list.children].forEach(it=> it.classList.toggle("active", +it.dataset.pageIndex===rec.index));
+  let activeItem=null;
+  [...list.children].forEach(it=>{
+    const isActive = +it.dataset.pageIndex===rec.index;
+    it.classList.toggle("active", isActive);
+    if(isActive) activeItem=it;
+  });
+  if(rec.index!==lastSyncedSidebarIndex){
+    lastSyncedSidebarIndex=rec.index;
+    if(activeItem) activeItem.scrollIntoView({block:"nearest"});
+  }
 }
 
 // Sample the document's own text to find its typical body-text size, and use
