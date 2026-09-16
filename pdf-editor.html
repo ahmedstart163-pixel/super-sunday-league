@@ -313,7 +313,7 @@
     display:grid; place-items:center;
   }
   .drop .ic svg{width:26px; height:26px; stroke:var(--gold-soft); fill:none; stroke-width:1.6}
-  .drop-logo{width:52px; height:52px; margin:0 auto 18px; display:block}
+  .drop-logo{width:60px; height:60px; margin:0 auto 18px; display:block; filter:drop-shadow(0 6px 14px rgba(15,36,68,.28))}
   .drop h1{font-size:21px; margin:0 0 8px; color:#0c1730; letter-spacing:-.01em; font-weight:700}
   .drop p{margin:0 0 22px; color:var(--muted); font-size:13.5px; line-height:1.55}
   .drop .cta{
@@ -785,7 +785,7 @@
 
 /* sticky footer */
 .remove-panel .remove-actions{
-  position:sticky; bottom:0; margin-top:auto; padding:18px 26px 22px; background:#fff;
+  position:static; margin-top:22px; padding:18px 26px 26px; background:#fff;
   border-top:1px solid var(--rp-line); display:grid; grid-template-columns:1fr 1fr; gap:10px;
 }
 .remove-panel .remove-actions .btn{
@@ -802,16 +802,13 @@
 .remove-panel .remove-actions .reset:hover{background:transparent; color:#dc4b3e}
 .remove-panel .remove-actions .btn:focus-visible{outline:2px solid var(--rp-blue); outline-offset:2px}
 
-@media(max-width:900px){
-  .remove-panel{overflow:visible}
-  .remove-panel .remove-actions{position:static}
-}
+@media(max-width:900px){ .remove-panel{overflow:visible} }
 @media (prefers-reduced-motion: reduce){ .remove-panel *{transition:none!important; animation:none!important} }
 .remove-upload{cursor:pointer}
 .remove-dropzone{transition:border-color .15s, background .15s, box-shadow .15s}
 .remove-upload:hover .remove-dropzone,.remove-dropzone.drag{border-color:#2563eb;background:#f7faff;box-shadow:0 12px 30px -12px rgba(37,99,235,.25)}
 .remove-dropzone h3{font-weight:800;letter-spacing:-.2px;color:#16213b}
-.remove-bigicon{background:#eef4ff;color:#2563eb}
+.remove-bigicon{background:none;width:60px;height:60px;border-radius:50%;display:block;filter:drop-shadow(0 6px 14px rgba(15,36,68,.28))}
 .remove-dropzone .btn.primary{
   border:0;background:#0f1b33;color:#ffcb05;border-radius:10px;padding:11px 22px;
   font:700 13px inherit;cursor:pointer;box-shadow:0 6px 16px rgba(15,27,51,.22);transition:background .15s
@@ -1016,12 +1013,15 @@
  <div class="remove-shell">
   <div class="remove-head">
    <div><h2>Remove background</h2><p>Remove the background while keeping your image clean and natural.</p></div>
-   <button class="btn" id="removeBackPdf">‹ Back to PDF editor</button>
+   <div style="display:flex;gap:8px"><button class="btn hide" id="removeNewImage">New image</button><button class="btn" id="removeBackPdf">‹ Back to PDF editor</button></div>
   </div>
 
   <div id="removeUploadView" class="remove-card remove-upload">
    <div id="removeDropZone" class="remove-dropzone">
-    <div class="remove-bigicon">▧</div><h3>Drop an image here</h3><p>PNG, JPG, JPEG or WEBP <small>Click anywhere here or drop a file</small></p>
+    <svg class="remove-bigicon" viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="15.5" fill="#0f2444"/>
+      <path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/>
+    </svg><h3>Drop an image here</h3><p>PNG, JPG, JPEG or WEBP <small>Click anywhere here or drop a file</small></p>
     <button class="btn primary" id="removeChooseImage">Choose Image</button>
    </div>
   </div>
@@ -1106,19 +1106,8 @@
 <div class="empty" id="empty">
   <div class="drop" id="drop">
     <svg class="drop-logo" viewBox="0 0 32 32" aria-hidden="true">
-      <defs>
-        <linearGradient id="folioTile2" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#4f7cf6"/><stop offset="1" stop-color="#1d4ed8"/>
-        </linearGradient>
-      </defs>
-      <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#folioTile2)"/>
-      <path d="M10.5 8 H18.5 L22.5 12 V23.5 H10.5 Z" fill="#fff"/>
-      <path d="M18.5 8 L22.5 12 H18.5 Z" fill="#9db8ef"/>
-      <g stroke="#2563eb" stroke-width="1.15" stroke-linecap="round">
-        <line x1="13" y1="15.4" x2="20" y2="15.4"/>
-        <line x1="13" y1="18" x2="20" y2="18"/>
-        <line x1="13" y1="20.6" x2="17" y2="20.6"/>
-      </g>
+      <circle cx="16" cy="16" r="15.5" fill="#0f2444"/>
+      <path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/>
     </svg>
     <h1>Edit, sign &amp; fill any PDF</h1>
     <p>Open a file to add text, fill forms, redact, whiteout, highlight, images,<br>drawings and signatures — then download the finished PDF.</p>
@@ -3264,7 +3253,7 @@ async function loadRemoveWorkspaceFile(file){
  if(!/^image\/(png|jpeg|webp)$/i.test(file.type)){toast("Choose a PNG, JPG, JPEG or WEBP image.",true);return;}
  removePageName=(file.name||"image").replace(/\.[^.]+$/,"")||"image"; removeShowingOriginal=true;
  removePageOriginalSrc=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
- $("#removeUploadView").classList.add("hide");$("#removePreviewView").classList.remove("hide");
+ $("#removeUploadView").classList.add("hide");$("#removePreviewView").classList.remove("hide");$("#removeNewImage").classList.remove("hide");
  $("#removePagePreview").style.visibility="visible";
  $("#removePagePreview").src=removePageOriginalSrc;
  $("#removePreviewBadge").textContent="Original";
@@ -3382,8 +3371,20 @@ function openRemoveImagePicker(){
 }
 $("#removeChooseImage").onclick=e=>{ e.stopPropagation(); openRemoveImagePicker(); };
 $("#removeUploadView").onclick=openRemoveImagePicker;
-$("#removePageChange").onclick=openRemoveImagePicker;
+function resetRemoveWorkspace(){
+  removePageToken++; clearTimeout(removePageTimer);
+  removePageOriginalSrc=null; removePageResultSrc=null; removeBaseCutoutSrc=null; removeShowingOriginal=true;
+  removeBackgroundMode="transparent";
+  const pv=$("#removePagePreview"); pv.removeAttribute("src");
+  $("#removePreviewBadge").textContent="Original";
+  const wrap=$("#removeAiProgressWrap"); if(wrap) wrap.style.display="none";
+  const st=$("#removeAiStatusText"); if(st) st.textContent="";
+  $("#removePreviewView").classList.add("hide"); $("#removeUploadView").classList.remove("hide"); $("#removeNewImage").classList.add("hide");
+  const picker=$("#removeImagePicker"); if(picker) picker.value="";
+}
+$("#removePageChange").onclick=resetRemoveWorkspace;
 $("#removeBackPdf").onclick=hideRemoveWorkspace;
+$("#removeNewImage").onclick=resetRemoveWorkspace;
 $("#removePageStrength").oninput=scheduleRemoveWorkspacePreview;$("#removePageSoftness").oninput=scheduleRemoveWorkspacePreview;
 $("#removeUseSimple").onchange=()=>{ $("#removeSimpleControls").classList.toggle("hide",!$("#removeUseSimple").checked); updateRemoveWorkspacePreview(); };
 let removeShowingOriginal=true;
