@@ -2279,22 +2279,36 @@ function smartErasePatch(rec, x, y, w, h){
     const d=src.data;
     const n=cx*cy;
     const lum=new Float32Array(n);
-    let minL=255, sum=0;
+    const hist=new Array(256).fill(0);
     for(let i=0;i<n;i++){
       const l=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];
-      lum[i]=l; if(l<minL) minL=l; sum+=l;
+      lum[i]=l; hist[Math.round(l)]++;
     }
-    const mean=sum/n;
-    const threshold = minL + (mean-minL)*0.55; // pixels toward the dark end are treated as ink
+    // Otsu's method: pick the luminance split that maximizes separation between
+    // the two classes (ink vs. background), regardless of how much of the box
+    // each one covers — unlike a simple average cutoff, this holds up whether
+    // the mark is a faint line or a dense scribble that fills most of the box.
+    let total=0; for(let t=0;t<256;t++) total+=t*hist[t];
+    let sumB=0, wB=0, maxVar=-1, threshold=128;
+    for(let t=0;t<256;t++){
+      wB+=hist[t]; if(wB===0) continue;
+      const wF=n-wB; if(wF===0) break;
+      sumB+=t*hist[t];
+      const mB=sumB/wB, mF=(total-sumB)/wF;
+      const varBetween=wB*wF*(mB-mF)*(mB-mF);
+      if(varBetween>maxVar){ maxVar=varBetween; threshold=t; }
+    }
+    threshold=Math.min(threshold, 235); // don't let a busy/textured background read as entirely "ink"
     const ink=new Uint8Array(n);
-    for(let i=0;i<n;i++) ink[i] = lum[i] < threshold ? 1 : 0;
-    // dilate by 1px so anti-aliased edges of the strokes are caught too
+    for(let i=0;i<n;i++) ink[i] = lum[i] <= threshold ? 1 : 0;
+    // dilate by 2px (was 1px) so faint antialiased edges are fully caught —
+    // this is what fixes the leftover "smudge" residue
     const ink2=new Uint8Array(n);
     for(let yy=0;yy<cy;yy++) for(let xx=0;xx<cx;xx++){
       const idx=yy*cx+xx;
       if(ink[idx]){ ink2[idx]=1; continue; }
       let hit=false;
-      for(let dy=-1;dy<=1&&!hit;dy++) for(let dx=-1;dx<=1&&!hit;dx++){
+      for(let dy=-2;dy<=2&&!hit;dy++) for(let dx=-2;dx<=2&&!hit;dx++){
         const nx=xx+dx, ny=yy+dy;
         if(nx>=0&&nx<cx&&ny>=0&&ny<cy&&ink[ny*cx+nx]) hit=true;
       }
