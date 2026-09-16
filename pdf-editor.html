@@ -686,6 +686,138 @@
  .remove-panel{overflow:visible}
 }
 
+
+/* ---- Remove Background panel: Majd palette (navy / blue / gold) ---- */
+.remove-panel{
+  --rp-navy:#0f1b33; --rp-blue:#2563eb; --rp-blue-d:#1b4ed1; --rp-gold:#ffcb05;
+  --rp-ink:#16213b; --rp-muted:#64708a; --rp-line:#e4e9f2; --rp-tint:#eef4ff; --rp-ok:#1f8f5f;
+  padding:0; background:#fff; display:flex; flex-direction:column; min-height:0; overflow-y:auto;
+  font-family:-apple-system,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+.remove-panel .rp-head{padding:26px 26px 18px; border-bottom:1px solid var(--rp-line)}
+.remove-panel .rp-head h3{margin:0; font-size:20px; font-weight:800; letter-spacing:-.3px; color:var(--rp-ink)}
+.remove-panel .rp-head p{margin:5px 0 0; font-size:12.5px; color:var(--rp-muted); line-height:1.45}
+
+/* status line — the one element that changes with the job */
+.remove-panel .rp-status{
+  display:flex; align-items:center; gap:12px; margin:18px 26px 0; padding:12px 14px;
+  border-radius:12px; border:1px solid var(--rp-line); background:#f7f9fc; transition:background .2s, border-color .2s;
+}
+.remove-panel .rp-status-ic{
+  width:30px; height:30px; border-radius:50%; flex:none; display:grid; place-items:center;
+  background:var(--rp-navy); color:#fff; font-size:14px; font-weight:800;
+}
+.remove-panel .rp-status-txt{display:flex; flex-direction:column; gap:2px; min-width:0}
+.remove-panel .rp-status-txt b{font-size:13px; color:var(--rp-ink); font-weight:700}
+.remove-panel .rp-status-txt span{font-size:12px; color:var(--rp-muted); line-height:1.35}
+.remove-panel .rp-status[data-state="processing"]{background:var(--rp-tint); border-color:#c7d7fb}
+.remove-panel .rp-status[data-state="processing"] .rp-status-ic{background:transparent; border:3px solid #c7d7fb; border-top-color:var(--rp-blue); animation:rpSpin .8s linear infinite}
+.remove-panel .rp-status[data-state="processing"] .rp-status-ic::before{content:""}
+.remove-panel .rp-status[data-state="done"]{background:#eefaf3; border-color:#bfe7d1}
+.remove-panel .rp-status[data-state="done"] .rp-status-ic{background:var(--rp-ok)}
+.remove-panel .rp-status[data-state="done"] .rp-status-ic::before{content:"✓"}
+.remove-panel .rp-status[data-state="error"]{background:#fdeeec; border-color:#f3c9c3}
+.remove-panel .rp-status[data-state="error"] .rp-status-ic{background:#dc4b3e}
+.remove-panel .rp-status[data-state="error"] .rp-status-ic::before{content:"!"}
+.remove-panel .rp-status[data-state="idle"] .rp-status-ic::before{content:"◩"; font-size:12px}
+@keyframes rpSpin{to{transform:rotate(360deg)}}
+.remove-panel #removeAiProgressWrap{height:4px; background:var(--rp-line); border-radius:999px; overflow:hidden; margin:10px 26px 0; display:none}
+.remove-panel #removeAiProgress{display:block; height:100%; width:0; background:var(--rp-blue); transition:width .2s}
+
+/* sections */
+.remove-panel .rp-section{padding:22px 26px 0}
+.remove-panel .rp-label{font-size:12.5px; font-weight:700; color:var(--rp-ink); margin:0 0 10px}
+.remove-panel .rp-label small{font-weight:500; color:var(--rp-muted); margin-left:6px}
+
+/* segmented control — solid pill */
+.remove-panel .remove-mode{
+  display:grid; grid-template-columns:1fr 1fr; gap:0; padding:0; margin:0;
+  background:#fff; border:1.5px solid #d6deeb; border-radius:12px; overflow:hidden;
+}
+.remove-panel .remove-mode button{
+  min-height:46px; border:0; background:#fff; border-radius:0; padding:8px 12px;
+  font:600 13px/1.2 inherit; color:var(--rp-muted); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px; transition:background .15s, color .15s;
+}
+.remove-panel .remove-mode button+button{border-left:1.5px solid #d6deeb}
+.remove-panel .remove-mode button svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.remove-panel .remove-mode button:hover{background:#f3f6fb; color:var(--rp-ink)}
+.remove-panel .remove-mode button.active{background:var(--rp-blue); color:#fff; box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+.remove-panel .remove-mode button.active:hover{background:var(--rp-blue-d)}
+.remove-panel .remove-mode button.active+button{border-left-color:transparent}
+.remove-panel .remove-mode button:focus-visible{outline:2px solid var(--rp-blue); outline-offset:-3px}
+
+/* colour chips */
+.remove-panel .remove-color-row{margin:12px 0 0}
+.remove-panel .remove-bg-swatches{display:flex; gap:10px; width:100%}
+.remove-panel .remove-bg-swatch{
+  flex:1; min-height:44px; border:1px solid var(--rp-line); background:#fff; border-radius:10px; padding:6px 10px;
+  display:flex; align-items:center; gap:9px; font:600 12px inherit; color:var(--rp-ink); cursor:pointer; transition:border-color .15s, box-shadow .15s;
+}
+.remove-panel .remove-bg-swatch i{width:22px; height:22px; border-radius:50%; border:1px solid rgba(15,23,42,.18); flex:none}
+.remove-panel .remove-bg-swatch span{font-size:12px; color:inherit}
+.remove-panel .remove-bg-swatch:hover{border-color:#b8c7e6; transform:none}
+.remove-panel .remove-bg-swatch.active{border-color:var(--rp-blue); box-shadow:0 0 0 2px #d6e3fd; background:#fff; color:var(--rp-blue-d)}
+
+/* sliders */
+.remove-panel .remove-control{margin:0 0 16px}
+.remove-panel .remove-control .line{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; font-weight:600; color:var(--rp-ink); margin-bottom:8px}
+.remove-panel .remove-control .line span:last-child{
+  min-width:34px; text-align:center; padding:2px 7px; border-radius:6px; background:#f1f4f9; border:1px solid var(--rp-line);
+  color:var(--rp-muted); font-size:11.5px; font-variant-numeric:tabular-nums;
+}
+.remove-panel .remove-control input[type=range]{width:100%; height:4px; accent-color:var(--rp-blue); cursor:pointer}
+.remove-panel .rp-hint{display:flex; justify-content:space-between; font-size:11px; color:var(--rp-muted); margin-top:4px}
+
+/* toggle */
+.remove-panel .remove-toggle{
+  border:0; border-top:1px solid var(--rp-line); padding:16px 0 0; margin-top:2px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12.5px; font-weight:600; color:var(--rp-ink); cursor:pointer;
+}
+.remove-panel .remove-toggle small{display:block; font-weight:500; color:var(--rp-muted); font-size:11.5px; margin-top:2px}
+.remove-panel .remove-switch{position:relative; width:42px; height:24px; flex:none}
+.remove-panel .remove-switch input{opacity:0; width:0; height:0}
+.remove-panel .remove-switch i{position:absolute; inset:0; background:#cbd5e1; border-radius:999px; transition:.16s}
+.remove-panel .remove-switch i:before{content:""; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:.16s}
+.remove-panel .remove-switch input:checked+i{background:var(--rp-blue)}
+.remove-panel .remove-switch input:checked+i:before{transform:translateX(18px)}
+.remove-panel .remove-switch input:focus-visible+i{outline:2px solid var(--rp-blue); outline-offset:2px}
+
+/* sticky footer */
+.remove-panel .remove-actions{
+  position:sticky; bottom:0; margin-top:auto; padding:18px 26px 22px; background:#fff;
+  border-top:1px solid var(--rp-line); display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.remove-panel .remove-actions .btn{
+  min-height:42px; border:1px solid var(--rp-line); border-radius:10px; background:#fff; color:var(--rp-ink);
+  font:600 12.5px inherit; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:background .15s, border-color .15s;
+}
+.remove-panel .remove-actions .btn:hover{background:#f7f9fc; border-color:#b8c7e6; color:var(--rp-ink)}
+.remove-panel .remove-actions .primary{
+  grid-column:1/-1; min-height:48px; background:var(--rp-navy); border-color:var(--rp-navy); color:var(--rp-gold);
+  font-size:13.5px; font-weight:700; box-shadow:0 6px 16px rgba(15,27,51,.22);
+}
+.remove-panel .remove-actions .primary:hover{background:#18345c; border-color:#18345c; color:var(--rp-gold)}
+.remove-panel .remove-actions .reset{grid-column:1/-1; border:0; background:transparent; color:var(--rp-muted); min-height:32px; font-weight:600}
+.remove-panel .remove-actions .reset:hover{background:transparent; color:#dc4b3e}
+.remove-panel .remove-actions .btn:focus-visible{outline:2px solid var(--rp-blue); outline-offset:2px}
+
+@media(max-width:900px){
+  .remove-panel{overflow:visible}
+  .remove-panel .remove-actions{position:static}
+}
+@media (prefers-reduced-motion: reduce){ .remove-panel *{transition:none!important; animation:none!important} }
+.remove-upload{cursor:pointer}
+.remove-dropzone{transition:border-color .15s, background .15s, box-shadow .15s}
+.remove-upload:hover .remove-dropzone,.remove-dropzone.drag{border-color:#2563eb;background:#f7faff;box-shadow:0 12px 30px -12px rgba(37,99,235,.25)}
+.remove-dropzone h3{font-weight:800;letter-spacing:-.2px;color:#16213b}
+.remove-bigicon{background:#eef4ff;color:#2563eb}
+.remove-dropzone .btn.primary{
+  border:0;background:#0f1b33;color:#ffcb05;border-radius:10px;padding:11px 22px;
+  font:700 13px inherit;cursor:pointer;box-shadow:0 6px 16px rgba(15,27,51,.22);transition:background .15s
+}
+.remove-dropzone .btn.primary:hover{background:#18345c}
+.remove-dropzone p small{display:block;margin-top:6px;color:#8a95ab}
 </style>
 </head>
 <body>
@@ -889,7 +1021,7 @@
 
   <div id="removeUploadView" class="remove-card remove-upload">
    <div id="removeDropZone" class="remove-dropzone">
-    <div class="remove-bigicon">▧</div><h3>Drop an image here</h3><p>PNG, JPG, JPEG or WEBP</p>
+    <div class="remove-bigicon">▧</div><h3>Drop an image here</h3><p>PNG, JPG, JPEG or WEBP <small>Click anywhere here or drop a file</small></p>
     <button class="btn primary" id="removeChooseImage">Choose Image</button>
    </div>
   </div>
@@ -898,56 +1030,73 @@
    <div class="remove-grid">
     <div class="remove-checker" id="removeChecker"><span class="remove-preview-badge" id="removePreviewBadge">Original</span><img id="removePagePreview" alt="Background removal preview"></div>
     <div class="remove-panel">
-     <h3>Background removal</h3>
-     <p>Remove the background while keeping your image clean and natural.</p>
-
-     <div class="remove-success" id="removeAiStatus"><b>✓ Background removed successfully!</b><span id="removeAiStatusText">Download your transparent image.</span></div>
-     <div id="removeAiProgressWrap"><i id="removeAiProgress"></i></div>
-
-     <div class="remove-section-title">Background mode</div>
-     <div class="remove-mode">
-      <button type="button" id="removeTransparentMode" class="active">▧ Transparent (PNG)</button>
-      <button type="button" id="removeColourMode">✎ Add a colour background</button>
-     </div>
-     <div id="removeColourRow" class="remove-color-row hide">
-      <input type="hidden" id="removeBgColour" value="#ffffff">
-      <div class="remove-bg-swatches" role="group" aria-label="Background colour">
-       <button type="button" class="remove-bg-swatch active" data-bg="#ffffff" aria-label="White background" title="White"><i style="background:#ffffff"></i><span>White</span></button>
-       <button type="button" class="remove-bg-swatch" data-bg="#000000" aria-label="Black background" title="Black"><i style="background:#000000"></i><span>Black</span></button>
-       <button type="button" class="remove-bg-swatch" data-bg="#808080" aria-label="Grey background" title="Grey"><i style="background:#808080"></i><span>Grey</span></button>
+      <div class="rp-head">
+        <h3>Background removal</h3>
+        <p>Majd finds the subject, cuts away the background and keeps the edges clean.</p>
       </div>
-     </div>
-
-     <div class="remove-control">
-      <div class="line"><span>Edge smoothness</span><span id="removeEdgeSmoothVal">0</span></div>
-      <input id="removeEdgeSmooth" type="range" min="0" max="12" step="1" value="0">
-     </div>
-
-     <div class="remove-control">
-      <div class="line"><span>Refine edges</span><span id="removeRefineVal">0</span></div>
-      <input id="removeRefine" type="range" min="-20" max="20" step="1" value="0">
-     </div>
-
-     <label class="remove-toggle">
-      <span>Keep original colours (recommended)</span>
-      <span class="remove-switch"><input id="removeKeepColours" type="checkbox" checked><i></i></span>
-     </label>
-
-     <div class="remove-actions">
-      <button class="btn primary" id="removePageDownload">⇩ Download Transparent PNG</button>
-      <button class="btn secondary" id="removePageOriginal">◉ Preview Original</button>
-      <button class="btn secondary" id="removePageChange">▧ Choose Different Image</button>
-      <button class="btn reset" id="removePageReset">↻ Reset</button>
-     </div>
-
-     <!-- Compatibility controls retained for signature/plain-background fallback -->
-     <div class="hide">
-      <input id="removeUseSimple" type="checkbox">
-      <div id="removeSimpleControls">
-       <span id="removePageStrengthVal">55</span><input id="removePageStrength" type="range" min="5" max="120" value="55">
-       <span id="removePageSoftVal">28</span><input id="removePageSoftness" type="range" min="0" max="80" value="28">
+    
+      <div class="rp-status" id="removeAiStatus" data-state="idle">
+        <span class="rp-status-ic"></span>
+        <div class="rp-status-txt">
+          <b id="removeAiStatusTitle">Ready</b>
+          <span id="removeAiStatusText">Choose an image to begin.</span>
+        </div>
       </div>
-     </div>
+      <div id="removeAiProgressWrap"><i id="removeAiProgress"></i></div>
+    
+      <section class="rp-section">
+        <div class="rp-label">Background</div>
+        <div class="remove-mode">
+          <button type="button" id="removeTransparentMode" class="active">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 12h18M12 3v18"/></svg>Transparent
+          </button>
+          <button type="button" id="removeColourMode">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16z" fill="currentColor" stroke="none"/></svg>Solid colour
+          </button>
+        </div>
+        <div id="removeColourRow" class="remove-color-row hide">
+          <input type="hidden" id="removeBgColour" value="#ffffff">
+          <div class="remove-bg-swatches" role="group" aria-label="Background colour">
+            <button type="button" class="remove-bg-swatch active" data-bg="#ffffff" title="White"><i style="background:#ffffff"></i><span>White</span></button>
+            <button type="button" class="remove-bg-swatch" data-bg="#000000" title="Black"><i style="background:#000000"></i><span>Black</span></button>
+            <button type="button" class="remove-bg-swatch" data-bg="#808080" title="Grey"><i style="background:#808080"></i><span>Grey</span></button>
+          </div>
+        </div>
+      </section>
+    
+      <section class="rp-section">
+        <div class="rp-label">Edges <small>fine-tune the cutout</small></div>
+        <div class="remove-control">
+          <div class="line"><span>Smoothness</span><span id="removeEdgeSmoothVal">0</span></div>
+          <input id="removeEdgeSmooth" type="range" min="0" max="12" step="1" value="0">
+          <div class="rp-hint"><span>Crisp</span><span>Soft</span></div>
+        </div>
+        <div class="remove-control">
+          <div class="line"><span>Refine</span><span id="removeRefineVal">0</span></div>
+          <input id="removeRefine" type="range" min="-20" max="20" step="1" value="0">
+          <div class="rp-hint"><span>Trim edges</span><span>Grow edges</span></div>
+        </div>
+        <label class="remove-toggle">
+          <span>Keep original colours<small>Turn off to reduce pale halos around the subject</small></span>
+          <span class="remove-switch"><input id="removeKeepColours" type="checkbox" checked><i></i></span>
+        </label>
+      </section>
+    
+      <div class="remove-actions">
+        <button class="btn primary" id="removePageDownload">Download transparent PNG</button>
+        <button class="btn" id="removePageOriginal">Show removed background</button>
+        <button class="btn" id="removePageChange">Choose a different image</button>
+        <button class="btn reset" id="removePageReset">Reset adjustments</button>
+      </div>
+    
+      <!-- Compatibility controls retained for the plain-background fallback -->
+      <div class="hide">
+        <input id="removeUseSimple" type="checkbox">
+        <div id="removeSimpleControls">
+          <span id="removePageStrengthVal">55</span><input id="removePageStrength" type="range" min="5" max="120" value="55">
+          <span id="removePageSoftVal">28</span><input id="removePageSoftness" type="range" min="0" max="80" value="28">
+        </div>
+      </div>
     </div>
    </div>
   </div>
@@ -3099,11 +3248,16 @@ async function refreshRemoveFinalPreview(){
       checker.style.backgroundColor=colour ? ($("#removeBgColour").value||"#ffffff") : "#fff";
     }
     const dl=$("#removePageDownload");
-    if(dl) dl.textContent=colour ? "⇩ Download PNG with New Background" : "⇩ Download Transparent PNG";
+    if(dl) dl.textContent=colour ? "Download PNG with new background" : "Download transparent PNG";
   }catch(err){ console.error(err); toast("Could not refine the image.",true); }
 }
 let removePageOriginalSrc=null,removePageResultSrc=null,removePageName="image",removePageToken=0,removePageTimer=null;
-function showRemoveWorkspace(){ $("#removeWorkspace").classList.remove("hide"); }
+function showRemoveWorkspace(){
+  const tb=$("#topbar"), nv=$("#editNav");
+  let top=tb?tb.offsetHeight:52; if(nv && nv.style.display!=="none") top+=nv.offsetHeight;
+  $("#removeWorkspace").style.top=top+"px";
+  $("#removeWorkspace").classList.remove("hide");
+}
 function hideRemoveWorkspace(){ $("#removeWorkspace").classList.add("hide"); }
 async function loadRemoveWorkspaceFile(file){
  if(!file)return;
@@ -3114,7 +3268,7 @@ async function loadRemoveWorkspaceFile(file){
  $("#removePagePreview").style.visibility="visible";
  $("#removePagePreview").src=removePageOriginalSrc;
  $("#removePreviewBadge").textContent="Original";
- $("#removePageOriginal").textContent="◉ Show Removed Background";
+ $("#removePageOriginal").textContent="Show removed background";
  $("#removePageStrength").value=55;$("#removePageSoftness").value=28;
  removeBackgroundMode="transparent"; removeBaseCutoutSrc=null;
  $("#removeBgColour").value="#ffffff";
@@ -3165,11 +3319,11 @@ async function updateRemoveWorkspacePreview(){
     if(removeShowingOriginal){
       preview.src=removePageOriginalSrc;
       $("#removePreviewBadge").textContent="Original";
-      $("#removePageOriginal").textContent="◉ Show Removed Background";
+      $("#removePageOriginal").textContent="Show removed background";
     }else{
       preview.src=result;
       $("#removePreviewBadge").textContent="Background removed";
-      $("#removePageOriginal").textContent="◉ Preview Original";
+      $("#removePageOriginal").textContent="Show original";
     }
     if(status) status.textContent=simple ? "Plain background removed." : "Background removed — subject preserved.";
     setTimeout(()=>{if(wrap)wrap.style.display="none";},500);
@@ -3226,7 +3380,8 @@ function openRemoveImagePicker(){
   picker.value=""; // allow same file or a different file every time
   picker.click();
 }
-$("#removeChooseImage").onclick=openRemoveImagePicker;
+$("#removeChooseImage").onclick=e=>{ e.stopPropagation(); openRemoveImagePicker(); };
+$("#removeUploadView").onclick=openRemoveImagePicker;
 $("#removePageChange").onclick=openRemoveImagePicker;
 $("#removeBackPdf").onclick=hideRemoveWorkspace;
 $("#removePageStrength").oninput=scheduleRemoveWorkspacePreview;$("#removePageSoftness").oninput=scheduleRemoveWorkspacePreview;
@@ -3238,11 +3393,11 @@ $("#removePageOriginal").onclick=()=>{
   if(removeShowingOriginal){
     $("#removePagePreview").src=removePageOriginalSrc;
     $("#removePreviewBadge").textContent="Original";
-    $("#removePageOriginal").textContent="◉ Show Removed Background";
+    $("#removePageOriginal").textContent="Show removed background";
   }else{
     $("#removePagePreview").src=removePageResultSrc||removePageOriginalSrc;
     $("#removePreviewBadge").textContent=removePageResultSrc ? "Background removed" : "Original";
-    $("#removePageOriginal").textContent="◉ Preview Original";
+    $("#removePageOriginal").textContent="Show original";
   }
 };
 $("#removePageDownload").onclick=downloadRemoveWorkspacePng;
@@ -3252,7 +3407,7 @@ $("#removeTransparentMode").onclick=()=>{
   removeShowingOriginal=false;
   $("#removeTransparentMode").classList.add("active"); $("#removeColourMode").classList.remove("active");
   $("#removeColourRow").classList.add("hide");
-  $("#removePageOriginal").textContent="◉ Preview Original";
+  $("#removePageOriginal").textContent="Show original";
   $("#removePreviewBadge").textContent="Background removed";
   if(removePageResultSrc) $("#removePagePreview").src=removePageResultSrc;
   refreshRemoveFinalPreview();
@@ -3262,7 +3417,7 @@ $("#removeColourMode").onclick=()=>{
   removeShowingOriginal=false;
   $("#removeColourMode").classList.add("active"); $("#removeTransparentMode").classList.remove("active");
   $("#removeColourRow").classList.remove("hide");
-  $("#removePageOriginal").textContent="◉ Preview Original";
+  $("#removePageOriginal").textContent="Show original";
   $("#removePreviewBadge").textContent="New background";
   if(removePageResultSrc) $("#removePagePreview").src=removePageResultSrc;
   refreshRemoveFinalPreview();
@@ -3301,13 +3456,13 @@ $("#removePageReset").onclick=()=>{
   removeShowingOriginal=true;
   $("#removePagePreview").src=removePageOriginalSrc||"";
   $("#removePreviewBadge").textContent="Original";
-  $("#removePageOriginal").textContent="◉ Show Removed Background";
+  $("#removePageOriginal").textContent="Show removed background";
   refreshRemoveFinalPreview();
 };
-const removeDrop=$("#removeDropZone");
-["dragenter","dragover"].forEach(t=>removeDrop.addEventListener(t,e=>{e.preventDefault();removeDrop.classList.add("drag");}));
-["dragleave","drop"].forEach(t=>removeDrop.addEventListener(t,e=>{e.preventDefault();removeDrop.classList.remove("drag");}));
-removeDrop.addEventListener("drop",e=>loadRemoveWorkspaceFile(e.dataTransfer.files?.[0]));
+const removeDrop=$("#removeDropZone"), removeUploadArea=$("#removeUploadView");
+["dragenter","dragover"].forEach(t=>removeUploadArea.addEventListener(t,e=>{e.preventDefault();removeDrop.classList.add("drag");}));
+["dragleave","drop"].forEach(t=>removeUploadArea.addEventListener(t,e=>{e.preventDefault();removeDrop.classList.remove("drag");}));
+removeUploadArea.addEventListener("drop",e=>loadRemoveWorkspaceFile(e.dataTransfer.files?.[0]));
 
 function openBgRemove(){
   if(!selected || !["image","sign"].includes(selected.type)){ toast("Select an image or signature first.",true); return; }
@@ -3359,7 +3514,7 @@ $("#removeImagePicker").onchange=async e=>{
     removePageToken++;
     removePageResultSrc=null;
     $("#removePagePreview").removeAttribute("src");
-    $("#removePageOriginal").textContent="◉ Show Removed Background";
+    $("#removePageOriginal").textContent="Show removed background";
     removeShowingOriginal=true;
     $("#removePreviewBadge").textContent="Original";
     await loadRemoveWorkspaceFile(file);
@@ -4792,6 +4947,28 @@ function showRestoreBanner(name){
   try{ const saved=await idbGet("session_doc"); if(saved && saved.original) showRestoreBanner(saved.name); }catch(e){}
 })();
 
+})();
+</script>
+<script>
+/* Keeps the status card's icon, colour and title in step with the message the
+   existing remove-background code already writes into #removeAiStatusText.
+   No changes to the main editor script are needed. */
+(function(){
+  var card=document.getElementById("removeAiStatus"),
+      title=document.getElementById("removeAiStatusTitle"),
+      text=document.getElementById("removeAiStatusText");
+  if(!card||!title||!text) return;
+  function sync(){
+    var t=(text.textContent||"").trim(), low=t.toLowerCase(), state, head;
+    if(!t){ state="idle"; head="Ready"; }
+    else if(/failed|could not|couldn't|fallback/.test(low)){ state="error"; head="Something went wrong"; }
+    else if(/loading|identifying|removing|finishing|%|processing/.test(low)){ state="processing"; head="Working on it"; }
+    else { state="done"; head="Background removed"; }
+    if(card.dataset.state!==state) card.dataset.state=state;
+    if(title.textContent!==head) title.textContent=head;
+  }
+  new MutationObserver(sync).observe(text,{childList:true,characterData:true,subtree:true});
+  sync();
 })();
 </script>
 </body>
