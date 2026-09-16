@@ -731,7 +731,7 @@
 
 /* segmented control — solid pill */
 .remove-panel .remove-mode{
-  display:grid; grid-template-columns:1fr 1fr; gap:0; padding:0; margin:0;
+  display:grid; grid-template-columns:1fr 1fr auto; gap:0; padding:0; margin:0;
   background:#fff; border:1.5px solid #d6deeb; border-radius:12px; overflow:hidden;
 }
 .remove-panel .remove-mode button{
@@ -746,6 +746,9 @@
 .remove-panel .remove-mode button.active:hover{background:var(--rp-blue-d)}
 .remove-panel .remove-mode button.active+button{border-left-color:transparent}
 .remove-panel .remove-mode button:focus-visible{outline:2px solid var(--rp-blue); outline-offset:-3px}
+.remove-panel .remove-mode button.rp-download{padding:8px 16px; background:var(--rp-navy); color:var(--rp-gold); border-left:0!important}
+.remove-panel .remove-mode button.rp-download:hover{background:#18345c; color:var(--rp-gold)}
+.remove-panel .remove-mode button.rp-download svg{width:16px; height:16px}
 
 /* colour chips */
 .remove-panel .remove-color-row{margin:12px 0 0}
@@ -815,6 +818,34 @@
 }
 .remove-dropzone .btn.primary:hover{background:#18345c}
 .remove-dropzone p small{display:block;margin-top:6px;color:#8a95ab}
+.remove-head{padding:0 26px}
+.remove-head h2{font-size:17px;color:#16213b;letter-spacing:-.3px}
+.remove-head p{font-size:12px;color:#64708a}
+.remove-head-actions{display:flex;gap:10px;align-items:center}
+.remove-head-actions .btn{
+  display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:8px 14px;border-radius:10px;
+  border:1.5px solid #d6deeb;background:#fff;color:#16213b;font:700 12.5px inherit;cursor:pointer;
+  box-shadow:0 1px 2px rgba(15,23,42,.05);transition:background .15s,border-color .15s,transform .15s
+}
+.remove-head-actions .btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.remove-head-actions .btn:hover{background:#f3f6fb;border-color:#b8c7e6;color:#16213b}
+.remove-head-actions .btn:active{transform:translateY(1px)}
+.remove-head-actions .btn.primary{background:#0f1b33;border-color:#0f1b33;color:#ffcb05;box-shadow:0 6px 16px rgba(15,27,51,.22)}
+.remove-head-actions .btn.primary:hover{background:#18345c;border-color:#18345c;color:#ffcb05}
+.remove-head-actions .btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.remove-checker{overflow:hidden}
+.remove-rotate{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:5px;padding:5px;
+  background:#1e3a6e;border:1px solid #2b4f8f;border-radius:14px;box-shadow:0 8px 22px rgba(30,58,110,.35)
+}
+.remove-rotate button{
+  width:42px;height:42px;border:0;border-radius:10px;background:transparent;color:#ffcb05;cursor:pointer;
+  display:grid;place-items:center;transition:background .15s,color .15s,transform .15s
+}
+.remove-rotate button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.remove-rotate button:hover{background:#2f5fb3;color:#fff}
+.remove-rotate button:active{transform:scale(.92)}
+.remove-rotate button:focus-visible{outline:2px solid #fff;outline-offset:-3px}
 </style>
 </head>
 <body>
@@ -1013,7 +1044,10 @@
  <div class="remove-shell">
   <div class="remove-head">
    <div><h2>Remove background</h2><p>Remove the background while keeping your image clean and natural.</p></div>
-   <div style="display:flex;gap:8px"><button class="btn hide" id="removeNewImage">New image</button><button class="btn" id="removeBackPdf">‹ Back to PDF editor</button></div>
+   <div class="remove-head-actions">
+     <button class="btn hide" id="removeNewImage"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5L5 20"/><path d="M12 8h.01"/></svg>New image</button>
+     <button class="btn primary" id="removeBackPdf"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Back to PDF editor</button>
+   </div>
   </div>
 
   <div id="removeUploadView" class="remove-card remove-upload">
@@ -1028,7 +1062,11 @@
 
   <div id="removePreviewView" class="remove-card hide">
    <div class="remove-grid">
-    <div class="remove-checker" id="removeChecker"><span class="remove-preview-badge" id="removePreviewBadge">Original</span><img id="removePagePreview" alt="Background removal preview"></div>
+    <div class="remove-checker" id="removeChecker"><span class="remove-preview-badge" id="removePreviewBadge">Original</span><img id="removePagePreview" alt="Background removal preview">
+     <div class="remove-rotate" id="removeRotate">
+      <button type="button" id="removeRotateL" title="Rotate left"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"/></svg></button>
+      <button type="button" id="removeRotateR" title="Rotate right"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-9-9 9 9 0 017 3.3M21 4v4h-4"/></svg></button>
+     </div></div>
     <div class="remove-panel">
       <div class="rp-head">
         <h3>Background removal</h3>
@@ -1052,6 +1090,9 @@
           </button>
           <button type="button" id="removeColourMode">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16z" fill="currentColor" stroke="none"/></svg>Solid colour
+          </button>
+          <button type="button" id="removeModeDownload" class="rp-download" title="Download PNG">
+            <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Download
           </button>
         </div>
         <div id="removeColourRow" class="remove-color-row hide">
@@ -1083,10 +1124,10 @@
       </section>
     
       <div class="remove-actions">
-        <button class="btn primary" id="removePageDownload">Download transparent PNG</button>
+        <button class="btn primary hide" id="removePageDownload">Download transparent PNG</button>
         <button class="btn" id="removePageOriginal">Show removed background</button>
         <button class="btn" id="removePageChange">Choose a different image</button>
-        <button class="btn reset" id="removePageReset">Reset adjustments</button>
+        <button class="btn reset hide" id="removePageReset">Reset adjustments</button>
       </div>
     
       <!-- Compatibility controls retained for the plain-background fallback -->
@@ -3338,6 +3379,21 @@ async function updateRemoveWorkspacePreview(){
     toast("Background processing failed. Showing the original image.",true);
   }
 }
+async function rotateRemoveImage(deg){
+  if(!removePageOriginalSrc) return;
+  try{
+    const im=await loadImageElement(removePageOriginalSrc);
+    const w=im.naturalWidth||im.width, h=im.naturalHeight||im.height;
+    const c=document.createElement("canvas"); c.width=h; c.height=w;
+    const ctx=c.getContext("2d"); ctx.translate(h/2,w/2); ctx.rotate(deg*Math.PI/180); ctx.drawImage(im,-w/2,-h/2);
+    removePageOriginalSrc=c.toDataURL("image/png");
+    removePageResultSrc=null; removeBaseCutoutSrc=null;
+    $("#removePagePreview").src=removePageOriginalSrc;
+    await updateRemoveWorkspacePreview();
+  }catch(err){ console.error(err); toast("Couldn't rotate the image.",true); }
+}
+$("#removeRotateL").onclick=()=>rotateRemoveImage(-90);
+$("#removeRotateR").onclick=()=>rotateRemoveImage(90);
 function scheduleRemoveWorkspacePreview(){clearTimeout(removePageTimer);removePageTimer=setTimeout(updateRemoveWorkspacePreview,90);}
 async function downloadRemoveWorkspacePng(){
  if(!removePageResultSrc)return;
@@ -3445,6 +3501,7 @@ $("#removeRefine").oninput=()=>{
   clearTimeout(removePageTimer); removePageTimer=setTimeout(refreshRemoveFinalPreview,70);
 };
 $("#removeKeepColours").onchange=refreshRemoveFinalPreview;
+$("#removeModeDownload").onclick=()=>$("#removePageDownload").click();
 $("#removePageReset").onclick=()=>{
   removeBackgroundMode="transparent";
   $("#removeTransparentMode").classList.add("active"); $("#removeColourMode").classList.remove("active");
