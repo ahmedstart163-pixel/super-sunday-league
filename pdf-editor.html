@@ -2468,11 +2468,25 @@ function bindPage(rec){
     const start=clientToLocal(rec,e.clientX,e.clientY);
 
     if(tool==="text"){
+      // clicking back into a text box that's already on the page (e.g. to fix a
+      // typo) should not stamp a fresh empty box on top of it — let its own
+      // dblclick-to-edit handler take it instead. Other annotation types (a
+      // whiteout patch, say) can still have text placed on top of them, which
+      // is why this check is scoped to .anno.text specifically.
+      if(e.target.closest(".anno.text")) return;
       e.stopPropagation();
+      // stop the browser's own mouse-down focus change: without this it yanks
+      // focus off the box we're about to create, which blurs it while still
+      // empty — and an empty blurred box is discarded, so nothing ever appears
+      e.preventDefault();
+      // if a text box placed a moment ago was left empty, drop it instead of
+      // leaving a ghost box behind when the user clicks to place the next one
+      discardIfEmptyText(selected);
       const a=makeAnno({type:"text",page:rec.index,x:start.x,y:start.y,w:180,h:0,
                         fontSize:+fontRange.value,color:colorPick.value,font:docDefaultFont,bold:false,italic:false,text:""});
       annos.push(a); renderAnno(a);
-      setTool("select");
+      // stay on the Text tool so the next click places another box right away —
+      // matches how Stamp already behaves, instead of forcing Select each time
       enterEdit(a);
       snapshot(); return;
     }
@@ -2679,7 +2693,17 @@ function renderAnno(a){
         if(posRAF) return;
         posRAF=requestAnimationFrame(()=>{ posRAF=null; positionTextbar(); });
       });
-      ed.addEventListener("blur",()=>{ ed.contentEditable="false"; a._editing=false; captureRichText(a); snapshot(); });
+      ed.addEventListener("blur",()=>{
+        // a brand-new box can lose focus for a moment right after it's placed
+        // (browser focus juggling during the click) — give it a beat and only
+        // discard if it's still unfocused and still empty
+        setTimeout(()=>{
+          if(document.activeElement===ed) return; // focus came back — still editing
+          ed.contentEditable="false"; a._editing=false; captureRichText(a);
+          discardIfEmptyText(a); // never typed anything — discard rather than leave an empty box behind
+          snapshot();
+        },80);
+      });
       ed.addEventListener("focus",()=>select(a));
       ed.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
     }
@@ -2765,6 +2789,17 @@ function removeAnno(a){
   if(a.type==="draw") redrawPageStrokes(a.page);
   if(selected===a) select(null);
   snapshot();
+}
+// Silently drops a text box that was placed but never typed into — used when
+// chaining multiple "Add text" clicks in a row (no snapshot/select cleanup of
+// its own; the caller decides when to record history).
+function discardIfEmptyText(a){
+  if(!a || a.type!=="text") return false;
+  if(a.text && a.text.trim()) return false;
+  if(a._node) a._node.remove();
+  annos=annos.filter(x=>x!==a);
+  if(selected===a) selected=null;
+  return true;
 }
 
 /* select */
