@@ -1845,6 +1845,7 @@ function setTool(t, opts){
     p.drawCanvas.style.cursor = (t==="draw") ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M12 1v22M1 12h22' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23000'/%3E%3C/svg%3E") 12 12, crosshair` : "default";
   });
   if(t!=="select") select(null);
+  if(t==="highlight" && /^#1a1a1a$|^#000000$/i.test(colorPick.value)){ colorPick.value="#f5c211"; if(typeof markSwatch==="function") markSwatch(); }
   $("#pages").classList.toggle("tooling", t!=="select");
   if(t==="image" && !(opts&&opts.skipPick)) $("#imgInput").click();
   if(t==="edittext") toast("Tap a line of text to replace it — it gets covered and a typed copy drops on top.");
@@ -2093,7 +2094,7 @@ $("#frRun").onclick=async()=>{
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
-  const colorable = ["text","rect","stamp","draw","strike","underline"];
+  const colorable = ["text","rect","stamp","draw","strike","underline","highlight"];
   const showColor = ["text","highlight","rect","draw","stamp","strike","underline"].includes(tool) || (selected && colorable.includes(selected.type));
   const showFont  = tool==="text" || (selected && selected.type==="text");
   const showStroke= tool==="draw" || (selected && selected.type==="draw");
@@ -2102,7 +2103,7 @@ function refreshCtx(){
   $("#ctxStroke").classList.toggle("hide", !showStroke);
   $("#ctxBgRemove").classList.toggle("hide", !(selected && (selected.type==="image" || selected.type==="sign")));
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
-  if(selected && ["rect","stamp","draw","strike","underline"].includes(selected.type)){ colorPick.value=selected.color; }
+  if(selected && ["rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
   if(typeof markSwatch==="function") markSwatch();
   layout();
@@ -2124,7 +2125,7 @@ function markSwatch(){
 }
 function applyColor(c){
   if(selected && selected.type==="text" && selected._editing && applyPartialColorLive(selected, c)){ snapshot(); return; }
-  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){
+  if(selected && ["text","rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){
     selected.color=c; if(selected.type==="text") selected.colorRuns=null;
     renderAnno(selected); snapshot();
   }
@@ -2141,7 +2142,7 @@ colorPick.oninput=()=>{
     restoreEditSelectionForColorPicker();
     if(applyPartialColorLive(selected, colorPick.value)) return;
   }
-  if(selected && ["text","rect","stamp","draw","strike","underline"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
+  if(selected && ["text","rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
 };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
@@ -2451,6 +2452,7 @@ async function handleEditText(rec, pt){
 
 /* ---------------- annotations ---------------- */
 function makeAnno(o){ return Object.assign({id:nextId++, color:"#1a1a1a"}, o); }
+function hexToRgba(h,al){ const n=parseInt((h||"#ffdd00").slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${al})`; }
 
 function bindPage(rec){
   // create-by-drag on overlay (text=click, others=drag)
@@ -2576,7 +2578,7 @@ function bindPage(rec){
       if(annoType==="whiteout") smart=smartErasePatch(rec, wx, wy, w, h);
       const a=makeAnno(Object.assign({type:annoType,page:rec.index,
         x:wx, y:wy, w, h,
-        color: annoType==="redact" ? "#000000" : ((annoType==="rect"||annoType==="strike"||annoType==="underline")?colorPick.value : (annoType==="whiteout"?(smart?smart.fallbackColor:"#ffffff"):"#1f5fbf"))}, extra));
+        color: annoType==="redact" ? "#000000" : ((annoType==="rect"||annoType==="strike"||annoType==="underline"||annoType==="highlight")?colorPick.value : (annoType==="whiteout"?(smart?smart.fallbackColor:"#ffffff"):"#1f5fbf"))}, extra));
       if(smart){ a.smart=true; a.patchSrc=smart.src; }
       annos.push(a); renderAnno(a);
       // markups drop the dotted selection outline as soon as the mouse is released;
@@ -2767,6 +2769,7 @@ function renderAnno(a){
     if(a.type==="whiteout" && !(a.smart && a.patchSrc)) n.style.background=a.color||"#fff";
     if(a.type==="redact") n.style.background="#000";
     if(a.type==="strike"||a.type==="underline") n.style.setProperty("--anno-color", a.color||"#1a1a1a");
+    if(a.type==="highlight") n.style.background=hexToRgba(a.color||"#ffdd00",.4);
     if(a.type==="note"){ n.style.setProperty("--anno-color", a.color||"#ffd400"); n.title=a.text||"Double-click to add a comment"; }
     if(a.type==="stamp"){
       n._g.textContent = a.stamp==="dot"?"●":a.stamp==="check"?"✓":"✗";
@@ -4236,7 +4239,7 @@ async function buildBytes(){
           page.drawRectangle({x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE,color:rgb(0,0,0)});
         }
         else if(a.type==="highlight"){
-          page.drawRectangle({x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE,color:rgb(1,.87,0),opacity:.4});
+          page.drawRectangle({x:a.x/BASE,y:H-(a.y+a.h)/BASE,width:a.w/BASE,height:a.h/BASE,color:hexToRgb(a.color||"#ffdd00"),opacity:.4});
         }
         else if(a.type==="strike"){
           const col=hexToRgb(a.color||"#1a1a1a");
