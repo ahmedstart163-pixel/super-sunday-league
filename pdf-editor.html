@@ -128,6 +128,17 @@
   .msym{width:38px; height:38px; border:1px solid var(--line); border-radius:9px; background:#fff;
     font-size:18px; line-height:1; color:#16223f; display:grid; place-items:center}
   .msym:first-of-type{margin-left:auto}
+  .mstamp{border:1.5px solid #d1242f; color:#d1242f; background:#fff; border-radius:6px; padding:5px 9px;
+    font-weight:800; font-size:11px; letter-spacing:1.5px; font-family:Helvetica,Arial,sans-serif; cursor:pointer;
+    transform:rotate(-6deg); opacity:.9}
+  .mstamp:hover{background:#fff1f2; opacity:1}
+  .mstamp.blue{border-color:#1f5fbf; color:#1f5fbf} .mstamp.blue:hover{background:#eef4ff}
+  .mstamp.green{border-color:#1f9d4d; color:#1f9d4d} .mstamp.green:hover{background:#ecfbf1}
+  .anno.wstamp{cursor:move}
+  .anno.wstamp .wst{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    border:3px solid var(--anno-color,#d1242f); color:var(--anno-color,#d1242f); border-radius:6px;
+    font-family:Helvetica,Arial,sans-serif; font-weight:800; text-transform:uppercase;
+    white-space:nowrap; opacity:.85; box-sizing:border-box; pointer-events:none; mix-blend-mode:multiply}
   .msym:hover{background:#eef4fc; border-color:#bcdcf7}
   .menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px 8px}
 
@@ -197,7 +208,8 @@
   #pagesScale{transform-origin:top left; width:max-content}
   #pages{display:flex; flex-direction:column; align-items:center; gap:26px}
   .page-wrap{position:relative}
-  .page-no{position:absolute; left:-46px; top:0; font-size:12px; color:var(--muted); font-weight:600}
+  .page-no{position:absolute; left:-58px; top:0; font-size:11px; font-weight:700; letter-spacing:.2px;
+    color:#fff; background:var(--navy); padding:3px 9px; border-radius:999px; box-shadow:0 1px 3px rgba(15,27,51,.25); white-space:nowrap}
 
   /* ---------- Page sidebar (thumbnail list) ---------- */
   .pagesidebar{
@@ -229,11 +241,12 @@
   }
   .page-wrap:hover .page-tools{opacity:1}
   .page-tools button{
-    width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.95);
-    display:grid; place-items:center; box-shadow:var(--shadow);
+    width:30px; height:30px; border-radius:8px; border:1.5px solid var(--gold); background:var(--tint);
+    display:grid; place-items:center; box-shadow:var(--shadow); transition:background .12s, border-color .12s;
   }
-  .page-tools button svg{width:15px; height:15px; stroke:var(--ink); fill:none; stroke-width:1.8}
-  .page-tools button:hover{background:#fff; border-color:var(--gold)}
+  .page-tools button svg{width:15px; height:15px; stroke:var(--gold); fill:none; stroke-width:1.9; transition:stroke .12s}
+  .page-tools button:hover{background:#e02424; border-color:#e02424}
+  .page-tools button:hover svg{stroke:#fff}
   .page{position:relative; background:#fff; box-shadow:var(--shadow); border:1px solid #dee2e9; border-radius:2px}
   canvas.pdf{display:block; border-radius:4px}
   canvas.draw{position:absolute; inset:0; touch-action:none}
@@ -990,6 +1003,17 @@
     <button class="msym" data-act="cross" title="Cross">✗</button>
     <button class="msym" data-act="check" title="Check">✓</button>
     <button class="msym" data-act="dot" title="Dot">●</button>
+  </div>
+  <div class="menu-sec">Stamps</div>
+  <div class="menu-row" style="flex-wrap:wrap; gap:9px 8px; padding:4px 6px 6px">
+    <button class="mstamp" data-act="ws:DRAFT">DRAFT</button>
+    <button class="mstamp green" data-act="ws:APPROVED">APPROVED</button>
+    <button class="mstamp" data-act="ws:CONFIDENTIAL">CONFIDENTIAL</button>
+    <button class="mstamp blue" data-act="ws:COPY">COPY</button>
+    <button class="mstamp blue" data-act="ws:RECEIVED">RECEIVED</button>
+    <button class="mstamp" data-act="ws:VOID">VOID</button>
+    <button class="mstamp green" data-act="ws:PAID">PAID</button>
+    <button class="mstamp" data-act="ws:FINAL">FINAL</button>
   </div>
   <div class="menu-sec">Add new form fields</div>
   <div class="menu-grid">
@@ -1825,13 +1849,14 @@ const tools=[...document.querySelectorAll(".tool[data-tool]")];
 tools.forEach(b=> b.onclick=()=>setTool(b.dataset.tool));
 const redactToolBtn=document.querySelector('.tool[data-tool="redact"]');
 if(redactToolBtn) redactToolBtn.addEventListener("dblclick",()=>openRedactSearch());
-const CREATING=["text","highlight","strike","underline","note","whiteout","redact","rect","image","sign","stamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
+const CREATING=["text","highlight","strike","underline","note","whiteout","redact","rect","image","sign","stamp","wstamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
+let wordStamp={word:"DRAFT",color:"#d1242f"};
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t, opts){
   tool=t;
   tools.forEach(b=>b.classList.toggle("active",b.dataset.tool===t));
-  $("#formsBtn").classList.toggle("active", t==="stamp"||t.startsWith("field-"));
+  $("#formsBtn").classList.toggle("active", t==="stamp"||t==="wstamp"||t.startsWith("field-"));
   if($("#signBtn")) $("#signBtn").classList.toggle("active", t==="sign");
   if($("#textBtn")) $("#textBtn").classList.toggle("active", t==="text"||t==="edittext");
   if($("#annotateBtn")) $("#annotateBtn").classList.toggle("active", t==="highlight"||t==="draw"||t==="strike"||t==="underline"||t==="note");
@@ -1900,6 +1925,14 @@ if($("#redoBtn")) $("#redoBtn").onclick=()=> doRedo();
 function formsAction(act){
   hideMenu();
   if(act==="text"){ setTool("text"); return; }
+  if(act.startsWith("ws:")){
+    const word=act.slice(3);
+    const color = ["APPROVED","PAID"].includes(word) ? "#1f9d4d" : ["COPY","RECEIVED"].includes(word) ? "#1f5fbf" : "#d1242f";
+    wordStamp={word,color}; colorPick.value=color; if(typeof markSwatch==="function") markSwatch();
+    setTool("wstamp");
+    toast("Click on the page to place a "+word+" stamp — keep clicking to add more. Drag a corner to resize.");
+    return;
+  }
   if(["cross","check","dot"].includes(act)){
     stampType=act; setTool("stamp");
     toast("Click on the page to stamp a "+(act==="dot"?"dot":act==="check"?"check mark":"cross")+" — keep clicking to add more.");
@@ -2094,8 +2127,8 @@ $("#frRun").onclick=async()=>{
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
-  const colorable = ["text","rect","stamp","draw","strike","underline","highlight"];
-  const showColor = ["text","highlight","rect","draw","stamp","strike","underline"].includes(tool) || (selected && colorable.includes(selected.type));
+  const colorable = ["text","rect","stamp","wstamp","draw","strike","underline","highlight"];
+  const showColor = ["text","highlight","rect","draw","stamp","wstamp","strike","underline"].includes(tool) || (selected && colorable.includes(selected.type));
   const showFont  = tool==="text" || (selected && selected.type==="text");
   const showStroke= tool==="draw" || (selected && selected.type==="draw");
   $("#ctxColor").classList.toggle("hide", !showColor);
@@ -2103,7 +2136,7 @@ function refreshCtx(){
   $("#ctxStroke").classList.toggle("hide", !showStroke);
   $("#ctxBgRemove").classList.toggle("hide", !(selected && (selected.type==="image" || selected.type==="sign")));
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
-  if(selected && ["rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
+  if(selected && ["rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
   if(typeof markSwatch==="function") markSwatch();
   layout();
@@ -2125,7 +2158,7 @@ function markSwatch(){
 }
 function applyColor(c){
   if(selected && selected.type==="text" && selected._editing && applyPartialColorLive(selected, c)){ snapshot(); return; }
-  if(selected && ["text","rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){
+  if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){
     selected.color=c; if(selected.type==="text") selected.colorRuns=null;
     renderAnno(selected); snapshot();
   }
@@ -2142,7 +2175,7 @@ colorPick.oninput=()=>{
     restoreEditSelectionForColorPicker();
     if(applyPartialColorLive(selected, colorPick.value)) return;
   }
-  if(selected && ["text","rect","stamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
+  if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
 };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
@@ -2492,11 +2525,25 @@ function bindPage(rec){
       enterEdit(a);
       snapshot(); return;
     }
+    if(tool==="wstamp"||tool==="stamp"){
+      // clicking an already-placed stamp brings its outline + handles back so it can
+      // be moved/resized; otherwise a stamp is placed and left unselected (no outline)
+      const hitEl=e.target.closest(".anno."+tool);
+      if(hitEl){ const hit=annos.find(x=>x._node===hitEl); if(hit){ e.stopPropagation(); select(hit); } return; }
+    }
+    if(tool==="wstamp"){
+      e.stopPropagation();
+      const fs=26*BASE;                                  // 26pt letters
+      const w=Math.round(fs*0.72*wordStamp.word.length + fs*1.1), h=Math.round(fs*1.6);
+      const a=makeAnno({type:"wstamp",word:wordStamp.word,page:rec.index,
+                        x:start.x-w/2,y:start.y-h/2,w,h,rot:-15,color:colorPick.value||wordStamp.color});
+      annos.push(a); renderAnno(a); select(null); snapshot(); return;
+    }
     if(tool==="stamp"){
       const s=26;
       const a=makeAnno({type:"stamp",stamp:stampType,page:rec.index,
                         x:start.x-s/2,y:start.y-s/2,w:s,h:s,color:colorPick.value});
-      annos.push(a); renderAnno(a); select(a); snapshot(); return;
+      annos.push(a); renderAnno(a); select(null); snapshot(); return;
     }
     if(tool==="image"){
       if(!pendingImg){ toast("Pick an image first.",true); return; }
@@ -2726,6 +2773,7 @@ function renderAnno(a){
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
     if(a.type==="whiteout" && a.smart && a.patchSrc){ const img=el("img"); img.src=a.patchSrc; img.style.pointerEvents="none"; n.insertBefore(img,del); n._patchImg=img; }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
+    if(a.type==="wstamp"){ const g=el("div","wst"); n.insertBefore(g,del); n._g=g; }
     if(a.type==="note"){
       n.insertAdjacentHTML("afterbegin", '<svg viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4z"/></svg>');
       n.addEventListener("dblclick",ev=>{ ev.preventDefault(); openNoteEditor(a); });
@@ -2771,6 +2819,11 @@ function renderAnno(a){
     if(a.type==="strike"||a.type==="underline") n.style.setProperty("--anno-color", a.color||"#1a1a1a");
     if(a.type==="highlight") n.style.background=hexToRgba(a.color||"#ffdd00",.4);
     if(a.type==="note"){ n.style.setProperty("--anno-color", a.color||"#ffd400"); n.title=a.text||"Double-click to add a comment"; }
+    if(a.type==="wstamp"){
+      n._g.textContent=a.word; n.style.setProperty("--anno-color", a.color||"#d1242f");
+      n._g.style.fontSize=(a.h/1.6)+"px"; n._g.style.borderWidth=Math.max(2,a.h*0.07)+"px";
+      n._g.style.transform="rotate("+(a.rot||0)+"deg)";
+    }
     if(a.type==="stamp"){
       n._g.textContent = a.stamp==="dot"?"●":a.stamp==="check"?"✓":"✗";
       n.style.fontSize=(Math.min(a.w,a.h)*0.95)+"px"; n.style.color=a.color;
@@ -3022,7 +3075,7 @@ function drawGuides(rec, guides){
 function clearGuides(rec){ if(rec._guides) rec._guides.forEach(n=>n.remove()); rec._guides=[]; }
 
 function startMove(e,a){
-  if(tool!=="select") return;     // creating tools should place on top, not move existing objects
+  if(tool!=="select" && selected!==a) return;     // creating tools place on top of existing objects — unless this one was just clicked to adjust it
   if(pinchActive) return;
   if(a.type==="text" && a._editing) return; // typing — let the caret work
   if(a.type==="field" && a._fill && !a._fill.readOnly) return; // filling a field — let the caret work
@@ -3063,7 +3116,7 @@ function startResize(e,a,corner){
   const mW = corner.includes("w"), mE = corner.includes("e");
   const mN = corner.includes("n"), mS = corner.includes("s");
   const isCorner = corner.length===2;
-  const keepRatio = (a.type==="sign"||a.type==="image"||a.type==="stamp") && ow>0 && oh>0;
+  const keepRatio = (a.type==="sign"||a.type==="image"||a.type==="stamp"||a.type==="wstamp") && ow>0 && oh>0;
   const MINW=20, MINH=12;
   try{ e.target.setPointerCapture(e.pointerId); }catch(_){}
 
@@ -4215,7 +4268,7 @@ async function buildBytes(){
       const H = page.getHeight();
       const pageAnnos = annos.filter(a=>a.page===i);
       // draw order: backgrounds first, marks/text on top
-      const order = {whiteout:0,redact:0,highlight:1,strike:1,underline:1,rect:2,field:3,image:3,sign:3,draw:4,stamp:5,note:5,text:5};
+      const order = {whiteout:0,redact:0,highlight:1,strike:1,underline:1,rect:2,field:3,image:3,sign:3,draw:4,stamp:5,wstamp:5,note:5,text:5};
       pageAnnos.sort((a,b)=>(order[a.type]||3)-(order[b.type]||3));
 
       for(const a of pageAnnos){
@@ -4290,6 +4343,18 @@ async function buildBytes(){
             const p0=a.pts[k-1], p1=a.pts[k];
             page.drawLine({start:{x:p0[0]/BASE,y:H-p0[1]/BASE},end:{x:p1[0]/BASE,y:H-p1[1]/BASE},thickness:th,color:col,lineCap:PDFLib.LineCapStyle.Round});
           }
+        }
+        else if(a.type==="wstamp"){
+          const w=a.w/BASE, h=a.h/BASE, col=hexToRgb(a.color||"#d1242f");
+          const cx=(a.x+a.w/2)/BASE, cy=H-(a.y+a.h/2)/BASE;      // centre in PDF space
+          const th=(a.rot||0)*Math.PI/180, cs=Math.cos(th), sn=Math.sin(th);
+          const spin=(ax,ay)=>({x:cx-(ax*cs-ay*sn), y:cy-(ax*sn+ay*cs)}); // origin so the box spins about its centre
+          const bw=Math.max(1.5,h*0.07), fs=h/1.6, fb=await getFont("HelveticaBold");
+          const o=spin(w/2,h/2);
+          page.drawRectangle({x:o.x,y:o.y,width:w,height:h,borderColor:col,borderWidth:bw,opacity:0,borderOpacity:.85,rotate:degrees(a.rot||0)});
+          const label=a.word, tw=fb.widthOfTextAtSize(label,fs), capH=fs*0.72;
+          const t=spin(tw/2,capH/2);
+          page.drawText(label,{x:t.x,y:t.y,size:fs,font:fb,color:col,opacity:.85,rotate:degrees(a.rot||0)});
         }
         else if(a.type==="stamp"){
           const x=a.x/BASE, w=a.w/BASE, h=a.h/BASE, yt=a.y/BASE, col=hexToRgb(a.color);
