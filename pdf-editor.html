@@ -2528,6 +2528,11 @@ function bindPage(rec){
     }
     // drag-to-create tools (highlight / whiteout / rect / form fields)
     rec.overlay.setPointerCapture(e.pointerId);
+    // Text markups (highlight / strike / underline / redact) are placed and left alone —
+    // no selection outline after release. A plain click on one (no drag) brings
+    // the outline + handles back so it can be adjusted, without leaving the tool.
+    const isMarkup = tool==="highlight"||tool==="strike"||tool==="underline"||tool==="redact";
+    const hitAnnoEl = isMarkup ? e.target.closest(".anno."+tool) : null;
     let annoType=tool, extra={};
     if(tool==="field-text"){ annoType="field"; extra={fieldType:"text"}; }
     else if(tool==="field-multiline"){ annoType="field"; extra={fieldType:"text",multiline:true}; }
@@ -2554,12 +2559,17 @@ function bindPage(rec){
       let w=Math.abs(p.x-start.x), h=Math.abs(p.y-start.y);
       ghost.remove();
       if(w<6||h<6){
+        if(hitAnnoEl){ // click (not drag) on an existing markup → re-select it for adjusting
+          const hit=annos.find(x=>x._node===hitAnnoEl);
+          if(hit) select(hit);
+          return;
+        }
         if(annoType==="field"){
           if(extra.fieldType==="check"||extra.fieldType==="radio"){ w=32; h=32; }
           else if(extra.fieldType==="sign"){ w=200; h=46; }
           else { w=extra.multiline?200:140; h=extra.multiline?60:26; }
         } // click = default-size field
-        else return;
+        else { if(isMarkup) select(null); return; } // clicking empty page hides a markup's outline again
       }
       const wx=Math.min(p.x,start.x), wy=Math.min(p.y,start.y);
       let smart=null;
@@ -2568,7 +2578,11 @@ function bindPage(rec){
         x:wx, y:wy, w, h,
         color: annoType==="redact" ? "#000000" : ((annoType==="rect"||annoType==="strike"||annoType==="underline")?colorPick.value : (annoType==="whiteout"?(smart?smart.fallbackColor:"#ffffff"):"#1f5fbf"))}, extra));
       if(smart){ a.smart=true; a.patchSrc=smart.src; }
-      annos.push(a); renderAnno(a); select(a); snapshot();
+      annos.push(a); renderAnno(a);
+      // markups drop the dotted selection outline as soon as the mouse is released;
+      // everything else stays selected so it can be tweaked right away
+      if(isMarkup) select(null); else select(a);
+      snapshot();
       if(a.type==="field" && a.fieldType==="text"){ enterFieldFill(a); toast("Type a default value, or leave it blank for others to fill. Drag the edge to move it."); }
       // Radio buttons are placed several at a time to build a group, so keep that tool active.
       // Every other field type is a one-off placement — return to Select so clicking elsewhere
