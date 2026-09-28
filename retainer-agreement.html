@@ -82,7 +82,7 @@
   .doc-head .firm{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.3px}
   .doc-head .ttl{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:8px;font-family:'Inter'}
   .doc-head .meta{font-size:13px;color:#666;margin-top:10px;font-family:'Inter'}
-  .doclogo{max-height:68px;max-width:240px;object-fit:contain;display:block;margin:0 auto 12px}
+  .doclogo{max-height:92px;max-width:240px;object-fit:contain;display:block;margin:0 auto 12px}
   .insignia{max-height:58px;max-width:120px;object-fit:contain;display:block;margin:0 0 6px auto}
   .regbadge{font-family:'Inter';font-size:13px;letter-spacing:.3px;color:#6a7787;margin-top:7px;
     display:inline-flex;align-items:center;gap:6px}
@@ -120,7 +120,22 @@
   .inlinedate:focus{outline:none;background:rgba(194,146,42,.25)}
   .sig .inlinedate{font-weight:400;color:#333}
 
+  /* v2 additions */
+  .paper ol.pa{margin:4px 0 10px;padding-left:22px;columns:2;column-gap:28px}
+  .paper ol.pa li{margin-bottom:3px;break-inside:avoid}
+  .paper ol.alpha{list-style:lower-alpha;padding-left:24px;margin:0 0 10px}
+  .paper ol.alpha li{margin-bottom:6px}
+  .receipt{margin-top:30px;border-top:1.5px dashed #999;padding-top:14px;break-inside:avoid}
+  .receipt h3{font-family:'Inter';font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin:0 0 8px}
+  .v2box{background:#fbf7ec;border:1px solid var(--gold-soft);border-radius:9px;padding:10px 12px;margin-top:10px}
+  .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
+  .chk input{width:auto}
+  .pdate{display:none}
   @media print{
+    .sitenav{display:none !important}
+    .paper .inlinedate{display:none !important}
+    .paper .pdate{display:inline !important}
+    .receipt,.sigs{break-inside:avoid}
     body{background:#fff}
     .topbar,.note,.form{display:none !important}
     .tabs{display:none !important}
@@ -134,7 +149,7 @@
   }
 </style>
 </head>
-<body><div style="background:#070d1a;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 20px;display:flex;align-items:center;">
+<body><div class="sitenav" style="background:#070d1a;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 20px;display:flex;align-items:center;">
   <div style="display:flex;align-items:center;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
     <a href="index.html" style="padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;">⚽ Super Sunday</a>
     <a href="grade-transferer.html" style="color:rgba(255,255,255,0.4);padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;">📊 Grade Transferer</a>
@@ -185,13 +200,18 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 14.34A6 6 0 1 1 12 18"/><path d="M12 2v4M2 12h4M12 22v-2"/><path d="m5 5 2 2"/></svg>
         Auto-fill from your notes
       </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+        <label for="repPdf" class="btn btn-outline" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:var(--navy);border-color:var(--line);cursor:pointer;padding:7px 12px">📄 Upload IRCC Use of Representative form (IMM 5476)</label>
+        <input type="file" id="repPdf" accept="application/pdf" style="display:none" onchange="fillFromRepPdf(this)" />
+        <span id="pdfStatus" style="font-size:13px;color:var(--muted)"></span>
+      </div>
       <textarea id="notesIn" rows="5" placeholder="Paste client info from Notepad. Labels help, e.g.&#10;Name: John Doe&#10;DOB: 1990-05-12&#10;Email: john@email.com&#10;Phone: +1 780 555 1234&#10;Address: 123 Main St, Edmonton AB&#10;Program: Study permit&#10;Fee: 2000"></textarea>
       <div style="display:flex;gap:9px;align-items:center;margin-top:7px">
         <button type="button" class="btn btn-primary" onclick="autofillFromNotes()" style="padding:8px 14px">Auto-fill form</button>
         <button type="button" class="btn btn-outline" onclick="$('notesIn').value='';$('fillStatus').textContent=''" style="color:var(--muted);border-color:var(--line)">Clear</button>
         <span id="fillStatus" style="font-size:13px;color:var(--muted)"></span>
       </div>
-      <div class="hint">Reads name, email, phone, date of birth, address and immigration program from the text. Always review the filled fields before generating.</div>
+      <div class="hint">Reads name, email, phone, date of birth, address and immigration program from the text. Lines starting with <b>PA</b> (e.g. "PA Ali, Abdiqani Hassan") go into the principal applicants list, and "Date signed: 2024-04-15" sets the agreement date. The IMM 5476 upload reads the client's name, date of birth and signing date, plus your representative details — it only works on a fillable form (not a scan or a flattened PDF). The file stays in your browser and is never uploaded anywhere. Always review the filled fields before generating.</div>
     </div>
 
     <fieldset>
@@ -223,16 +243,16 @@
       </div>
       <div class="hint">Saves your firm/RCIC details, logo and settings in this browser so you don't re-enter them. Persists when the page is hosted on your own site; it won't persist inside this in-chat preview.</div>
       <label>Firm / business name</label>
-      <input type="text" id="firm" value="Alhijra Immigration Services" />
+      <input type="text" id="firm" value="Alhejra Immigration Consultancy" />
       <div class="two">
-        <div><label>RCIC full name</label><input type="text" id="rcicName" placeholder="Jane Doe" /></div>
-        <div><label>RCIC no.</label><input type="text" id="rcicNo" placeholder="R000000" /></div>
+        <div><label>RCIC full name</label><input type="text" id="rcicName" placeholder="Jane Doe" value="Kadar Awaleh" /></div>
+        <div><label>RCIC no.</label><input type="text" id="rcicNo" placeholder="R000000" value="R707789" /></div>
       </div>
       <label>Address</label>
-      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="Edmonton, Alberta, Canada" />
+      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="410 Richfield Rd, Edmonton, AB  T6K 3S8" />
       <div class="two">
-        <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" /></div>
-        <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." /></div>
+        <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" value="+1 (587) 710-0779" /></div>
+        <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." value="info@hijra2canada.com" /></div>
       </div>
       <label>People likely to assist (s.24(3)(e))</label>
       <input type="text" id="assist" placeholder="e.g., authorized staff and agents of the firm" />
@@ -285,7 +305,14 @@
       <select id="program"></select>
       <label>Scope of services (editable)</label>
       <textarea id="scope" rows="8"></textarea>
-      <div class="hint">One service per line. These become the numbered RCIC responsibilities in Section 2.</div>
+      <div class="hint">One service per line. These become the numbered RCIC responsibilities in Section 3.</div>
+      <div class="v2box">
+        <label style="margin-top:0">Principal applicants (sponsorships — optional)</label>
+        <textarea id="paList" rows="4" placeholder="One per line, e.g.&#10;PA Ali, Abdiqani Hassan&#10;PA Suldan, Abubakar"></textarea>
+        <div class="hint">Printed as a numbered list in Section 3. A leading "PA" is removed automatically. Leave blank if not needed.</div>
+        <label class="chk"><input type="checkbox" id="groupRep" /> Client acts for the sponsoring group (Group of Five)</label>
+        <div class="hint">Adds to Section 4: all communication goes to the Client, and the Client is responsible for the other group members' documents, IDs, genuine signatures and consents.</div>
+      </div>
       <label>Estimated time frame (s.24(3)(h))</label>
       <input type="text" id="timeframe" placeholder="e.g., 8–12 months, subject to IRCC processing times" />
       <label>Summary of preliminary advice given (s.24(3)(c))</label>
@@ -313,6 +340,22 @@
       </div>
       <label>GST/HST %</label>
       <input type="number" id="tax" value="5" min="0" step="0.5" />
+      <label class="chk"><input type="checkbox" id="taxIncl" /> Fee already includes any applicable tax</label>
+      <div class="v2box">
+        <label style="margin-top:0">Payment</label>
+        <select id="payMode" onchange="onPayMode()">
+          <option value="invoice">Advance on signing, balance invoiced as work is done</option>
+          <option value="paidFull">Paid in full on signing</option>
+        </select>
+        <div id="paidFields" style="display:none">
+          <div class="two">
+            <div><label>Paid by</label><select id="payMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+            <div><label>Date paid</label><input type="date" id="payDate" /></div>
+          </div>
+          <div class="hint">Leave the date blank to use the agreement date. Works with the flat-fee method.</div>
+          <label class="chk"><input type="checkbox" id="showReceipt" checked /> Add a payment receipt at the end of the agreement</label>
+        </div>
+      </div>
       <label>Advance payment held in client account (CAD)</label>
       <span class="moneywrap"><input type="number" id="advance" value="500" min="0" step="50" /></span>
       <div class="two">
@@ -331,13 +374,13 @@
     <fieldset>
       <legend><span class="n">6</span> Execution &amp; policies</legend>
       <div class="two">
-        <div><label>Agreement date</label><input type="date" id="adate" /></div>
+        <div><label>Agreement date (also used for signatures)</label><input type="date" id="adate" /></div>
         <div><label>File / ref no.</label><input type="text" id="fileNo" placeholder="ALH-0001" value="ALH-0001" /></div>
       </div>
       <label>File retention period (s.24(3)(q))</label>
       <input type="text" id="retention" placeholder="e.g., 7 years" value="the period required by the CICC by-laws and applicable law" />
       <label>Complaint-handling procedure (s.24(3)(r))</label>
-      <textarea id="complaintProc" rows="3">If the Client has a concern, they should present it in writing to the RCIC, who will acknowledge it promptly and respond within 30 days. If it remains unresolved, the Client may escalate to the College.</textarea>
+      <textarea id="complaintProc" rows="3">If the Client has a concern, they should present it in writing to the RCIC, who will acknowledge it promptly and respond within 30 days.</textarea>
     </fieldset>
   </div>
 
@@ -369,6 +412,7 @@
         <input type="checkbox" id="showInsignia2" checked style="width:auto" onchange="setBrand('insignia',this.checked)" /> Show insignia (if uploaded)
       </label>
     </fieldset>
+    <button type="button" onclick="pullConsultFromRetainer()" style="width:100%;margin-bottom:12px;background:var(--navy);border:none;border-radius:9px;padding:10px;color:#fff;font-weight:600;font-size:13px;cursor:pointer">↻ Copy client from Service Agreement</button>
     <fieldset>
       <legend><span class="n">1</span> Potential client</legend>
       <label>Full name</label>
@@ -389,6 +433,11 @@
       <div class="two">
         <div><label>Consultation fee (CAD)</label><span class="moneywrap"><input type="number" id="cfee" value="0" min="0" step="10" /></span></div>
         <div><label>GST/HST %</label><input type="number" id="cgst" value="5" min="0" step="0.5" /></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="cPaid" /> Fee paid on signing (adds a receipt line)</label>
+      <div class="two">
+        <div><label>Paid by</label><select id="cPayMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+        <div><label>Tax</label><select id="cTaxIncl"><option value="add">Add GST/HST on top</option><option value="incl">Fee includes tax</option></select></div>
       </div>
       <label>Purpose &amp; scope of consultation (s.23(2)(e))</label>
       <textarea id="cpurpose" rows="3" placeholder="What this consultation will cover."></textarea>
@@ -466,6 +515,10 @@
       <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:8px">
         <input type="checkbox" id="iPaid" style="width:auto" onchange="renderInvoice()" /> Mark as paid (adds a receipt — s.33(3))
       </label>
+      <div class="two">
+        <div><label>Paid by</label><select id="iPayMethod" onchange="renderInvoice()"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+        <div><label>Tax</label><select id="iTaxIncl" onchange="renderInvoice()"><option value="add">Add GST/HST on top</option><option value="incl">Amounts include tax</option></select></div>
+      </div>
     </fieldset>
   </div>
   <div class="pane">
@@ -591,6 +644,20 @@ const PROGRAMS = {
     milestones: [["Upon signing of this Agreement",60],["Upon final decision by IRCC",40]],
     disb: ["IRCC PR Card processing fee","Document translation (if required)","Courier / postage"]
   },
+  "Group of Five Refugee Sponsorship": {
+    scope: [
+      "Assess the eligibility of the Group to sponsor under the Group of Five category and advise the Client on the requirements",
+      "Advise on and review the settlement plan and the documents required from the Client and the Group Members",
+      "Prepare, review and complete the sponsorship application forms for each Principal Applicant listed below",
+      "Review the supporting documents provided by the Client and the Group Members for completeness before submission",
+      "Submit the sponsorship applications to IRCC",
+      "Act as the Client's authorized representative with IRCC and the Canada Border Services Agency",
+      "Monitor the applications and respond to requests from IRCC for additional information or documents",
+      "Advise the Client of the decision on each application and of any next steps"
+    ],
+    milestones:[["Upon signing of this Agreement",100]],
+    disb:[]
+  },
   "Custom matter": { scope: ["Provide immigration advice and representation as agreed with the Client"], milestones:[["Upon signing of this Agreement",50],["Upon final decision",50]], disb:["IRCC processing fee","Biometrics fee","Courier / postage"] }
 };
 
@@ -629,7 +696,8 @@ function detectProgram(t){
     [/work permit|lmia|employer.specific|labour market/, "Work Permit (LMIA-based)"],
     [/pnp|provincial nominee|nominee program/, "Provincial Nominee Program (PNP)"],
     [/citizenship|naturali/, "Citizenship Application"],
-    [/pr card|permanent resident card|card renew/, "PR Card Renewal"]
+    [/pr card|permanent resident card|card renew/, "PR Card Renewal"],
+    [/group of five|\bg5\b|refugee|private sponsor|privately sponsored|\bpsr\b/, "Group of Five Refugee Sponsorship"]
   ];
   for(const [re,key] of map){ if(re.test(s)) return key; }
   return "";
@@ -668,11 +736,17 @@ function autofillFromNotes(){
   if(email){ $("cliEmail").value=email; filled.push("email"); }
   if(program){ $("program").value=program; loadProgram(); filled.push("program"); }
   if(feeRaw && +feeRaw>0){ $("feeMethod").value="flat"; onFeeMethod(); $("fee").value=feeRaw; filled.push("fee"); }
+  const paLines=lines.filter(l=>/^PA\b\s*[:\-]?\s*/i.test(l)).map(cleanPA).filter(Boolean);
+  if(paLines.length){ $("paList").value=paLines.join("\n"); filled.push(paLines.length+" principal applicant"+(paLines.length>1?"s":"")); }
+  const signed=normNotesDate(labelVal(["date signed","signed","signing date","date of signing","agreement date"]));
+  if(signed){ $("adate").value=signed; filled.push("date signed"); }
+  if(program==="Group of Five Refugee Sponsorship"){ $("groupRep").checked=true; }
   render();
   if(filled.length){ st.textContent="✓ Filled: "+filled.join(", ")+" — review before generating."; st.style.color="#1f8a5e"; }
   else { st.textContent="Couldn't detect fields — try labels like Name:, Email:, Program:"; st.style.color="#c2922a"; }
 }
-let logoData = "";
+const DEFAULT_LOGO = "data:image/png;base64,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";
+let logoData = DEFAULT_LOGO;
 let insigniaData = "";
 const brand = { logo:true, badge:true, insignia:true };
 function renderAll(){ render(); renderConsult(); renderInvoice(); }
@@ -710,6 +784,14 @@ const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g
 const cad = n => "$" + Number(n||0).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2}) + " CAD";
 const today = () => { const d=new Date(); return d.toISOString().slice(0,10); };
 const longDate = iso => iso ? iso : "______________";
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const niceDate = iso => { const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${MONTHS[+m[2]-1]} ${+m[3]}, ${m[1]}` : (iso||"______________"); };
+const cleanPA = l => l.replace(/^PA\b\s*[:\-]?\s*/i,"").replace(/\s{2,}/g," ").trim();
+const paItems = () => ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter(Boolean);
+const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=="hourly";
+const payDateVal = () => $("payDate").value || $("adate").value;
+function addPrintDates(id){ const el=$(id); if(!el) return; el.querySelectorAll('input.inlinedate').forEach(i=>{ const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp); }); }
+function onPayMode(){ $("paidFields").style.display = $("payMode").value==="paidFull" ? "block" : "none"; render(); }
 
 /* ── init ────────────────────────────────────────────── */
 function initPrograms(){
@@ -719,6 +801,7 @@ function initPrograms(){
 }
 function loadProgram(){
   const p = PROGRAMS[$("program").value];
+  if($("program").value==="Group of Five Refugee Sponsorship") $("groupRep").checked=true;
   $("scope").value = p.scope.join("\n");
   disb = p.disb.map(name=>({name, amount:""}));
   renderDisb();
@@ -742,7 +825,9 @@ function render(){
   const program=$("program").value;
   const scopeItems=$("scope").value.split("\n").map(s=>s.trim()).filter(Boolean);
   const ms=PROGRAMS[program].milestones;
-  const tax=base*taxRate/100, total=base+tax;
+  const taxIncl=$("taxIncl").checked;
+  const tax=taxIncl?0:base*taxRate/100, total=base+tax;
+  const pas=paItems(), group=$("groupRep").checked, pf=paidFull(), pDate=payDateVal(), pMethod=$("payMethod").value;
   const assist=$("assist").value.trim(), instr=$("instructions").value.trim();
   const timeframe=$("timeframe").value.trim(), preadv=$("preadvice").value.trim(), conflict=$("conflict").value.trim();
   const dueDays=$("dueDays").value||"15", interest=+$("interest").value||0;
@@ -786,7 +871,7 @@ function render(){
     </div>
 
     <h2><span class="sn">1.</span> Definitions</h2>
-    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.</p>
+    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${group?` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`:""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
 
     <h2><span class="sn">2.</span> Preliminary advice</h2>
     <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
@@ -794,12 +879,20 @@ function render(){
     <h2><span class="sn">3.</span> Services to be provided by the RCIC</h2>
     <p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>
     <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    ${pas.length?`<p style="margin:10px 0 2px"><b>Principal Applicants covered by this Agreement (${pas.length}):</b></p><ol class="pa">${pas.map(p=>`<li>${esc(p)}</li>`).join("")}</ol>`:""}
     <p><b>Estimated time frame:</b> ${timeframe?esc(timeframe):"to be confirmed with the Client"}. Time frames are estimates only; once an application is submitted, processing times are controlled by IRCC and may change.</p>
     <p>The RCIC endeavours to provide quality immigration and citizenship consulting services and to adequately supervise any person who assists in providing them. The following persons are likely to assist the RCIC: ${assist?esc(assist):"the RCIC and authorized staff of the firm"}.</p>
     <p>The RCIC will provide services in ${esc(lang)} and will give the Client a signed copy of this Agreement.</p>
 
-    <h2><span class="sn">4.</span> Client's instructions</h2>
-    <p>${instr?esc(instr):"The Client instructs the RCIC to act on the matter described in Section 3. No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing."}</p>
+    ${group?`<h2><span class="sn">4.</span> Client's instructions &amp; responsibility for the Group</h2>
+    <p>The Client instructs the RCIC to act on the matter described in Section 3. The Client acts as the representative of the Group for this matter and is responsible for the other Group Members, and agrees that:</p>
+    <ol class="alpha">
+      <li>All communication from the RCIC about this matter, including file updates and requests for documents, will be sent to the Client. The Client is responsible for sharing that communication with the Group Members.</li>
+      <li>The Client will ensure that all information and documents provided by the Group Members are complete, accurate and truthful.</li>
+      <li>The Client takes full responsibility for obtaining each Group Member's identification documents, their genuine signatures on all required forms, and their informed consent to the applications and to the release of their personal information to the RCIC and IRCC.</li>
+      <li>No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing.</li>
+    </ol>${instr?`<p>${esc(instr)}</p>`:""}`:`<h2><span class="sn">4.</span> Client's instructions</h2>
+    <p>${instr?esc(instr):"The Client instructs the RCIC to act on the matter described in Section 3. No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing."}</p>`}
 
     <h2><span class="sn">5.</span> Responsibilities of the Client</h2>
     <ul class="plain">
@@ -817,18 +910,31 @@ function render(){
       <thead><tr><th>Description</th><th class="amt">Estimate</th></tr></thead>
       <tbody>
         <tr><td>Professional fees (${cad(rate)} × ${hours} h, estimated)</td><td class="amt">${cad(base)}</td></tr>
-        <tr><td>GST/HST (${taxRate}%)</td><td class="amt">${cad(tax)}</td></tr>
+        ${taxIncl?"":`<tr><td>GST/HST (${taxRate}%)</td><td class="amt">${cad(tax)}</td></tr>`}
         <tr class="total"><td>Estimated total</td><td class="amt">${cad(total)}</td></tr>
       </tbody>
     </table>
     <p>This is an estimate, not a fixed quote; actual fees depend on the hours worked and will be itemized on each invoice. Invoices are payable within ${esc(dueDays)} days of receipt.${interest>0?` Accounts not paid within that period bear interest at ${interest}% per annum.`:""} The RCIC will not switch from an hourly arrangement to a flat fee for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
+    ` : pf ? `
+    <p>The Client will be billed by the <b>flat fee</b> method. The flat fee is <b>${cad(base)}</b>${pas.length?` and covers all ${pas.length} Principal Applicant${pas.length>1?"s":""} listed in Section 3`:""}. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
+    <table class="fees">
+      <thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Professional fee — flat fee${pas.length?`, covering ${pas.length} Principal Applicant${pas.length>1?"s":""}`:""}</td><td class="amt">${cad(base)}</td></tr>
+        ${(!taxIncl&&taxRate>0)?`<tr><td>GST/HST (${taxRate}%)</td><td class="amt">${cad(tax)}</td></tr>`:""}
+        <tr class="total"><td>Total professional fees</td><td class="amt">${cad(total)}</td></tr>
+        <tr><td>Paid in full by ${esc(pMethod)} on ${niceDate(pDate)}</td><td class="amt">${cad(total)}</td></tr>
+        <tr class="total"><td>Balance owing</td><td class="amt">${cad(0)}</td></tr>
+      </tbody>
+    </table>
+    <p>The RCIC will not switch from a flat-fee arrangement to an hourly structure for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
     ` : `
     <p>The Client will be billed by the <b>flat fee</b> method, with payment by milestones. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
     <table class="fees">
       <thead><tr><th>Milestone</th><th class="amt">Share</th><th class="amt">Professional fee</th></tr></thead>
       <tbody>
         ${milestoneRows}
-        <tr><td>GST/HST (${taxRate}%)</td><td class="amt"></td><td class="amt">${cad(tax)}</td></tr>
+        ${taxIncl?"":`<tr><td>GST/HST (${taxRate}%)</td><td class="amt"></td><td class="amt">${cad(tax)}</td></tr>`}
         <tr class="total"><td>Total professional fees</td><td class="amt"></td><td class="amt">${cad(total)}</td></tr>
       </tbody>
     </table>
@@ -836,21 +942,22 @@ function render(){
     `}
 
     <h2><span class="sn">7.</span> Disbursements</h2>
-    <p>The following disbursements are payable by the Client and are in addition to the professional fees above. Government fees are set by the relevant authority and are subject to change:</p>
+    ${disbRows?`<p>The following disbursements are payable by the Client and are in addition to the professional fees above. Government fees are set by the relevant authority and are subject to change:</p>
     <table class="fees">
       <thead><tr><th>Disbursement</th><th class="amt">Estimated amount</th></tr></thead>
-      <tbody>${disbRows||`<tr><td>—</td><td class="amt">—</td></tr>`}</tbody>
-    </table>
+      <tbody>${disbRows}</tbody>
+    </table>`:`<p>No disbursements are anticipated for this matter. Should any disbursement arise (for example, translation or courier costs), the RCIC will inform the Client and obtain the Client's written agreement before incurring it.</p>`}
     <p>Disbursements charged to the Client will not exceed the actual amount incurred. Should any fees or disbursements exceed these estimates, or should a new disbursement arise, the RCIC will inform the Client and obtain the Client's written agreement before incurring it.</p>
 
     <h2><span class="sn">8.</span> Additional costs</h2>
     <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
 
     <h2><span class="sn">9.</span> Taxes</h2>
-    <p>${taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not Applicable.`}</p>
+    <p>${taxIncl?`Any applicable taxes are included in the professional fee.`:taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not Applicable.`}</p>
 
-    <h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
-    <p>An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>
+    ${pf?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
+    <p>The Client paid the professional fee of <b>${cad(total)}</b> in full by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>. The RCIC has provided the Client with a receipt. Funds received before services are rendered are held in trust in a client account at a financial institution approved by the College, kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`:`<h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
+    <p>An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`}
 
     <h2><span class="sn">11.</span> Invoices &amp; receipts</h2>
     <p>The RCIC will invoice the Client only after services have been provided or disbursements made. Each invoice will contain a full description of the services and disbursements to which it relates. The RCIC will provide the Client with a receipt for every payment received, identifying the invoice to which it relates.</p>
@@ -900,17 +1007,27 @@ function render(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigRcicDate)}" onchange="setSigRcic(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCliDate)}" onchange="setSigCli(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCli2Date)}" onchange="setSigCli2(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>`:""}
+      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>`:""}
     </div>
+    ${(pf&&$("showReceipt").checked)?`<div class="receipt"><h3>Receipt of payment</h3>
+      <p>Received from <b>${esc($("cliName").value||"[Client name]")}</b>${joint&&cli2?` and <b>${esc(cli2)}</b>`:""} the sum of <b>${cad(total)}</b> by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>, being payment in full of the professional fee under Service Agreement File No. ${esc($("fileNo").value||"—")}. Balance owing: ${cad(0)}.</p>
+      <div class="sigs" style="margin-top:18px"><div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC, ${esc(firmName)}</div></div><div></div></div></div>`:""}
   `;
+  addPrintDates("paper");
 }
 
 /* ── consultation agreement (s.23) ───────────────────── */
 let cAgreementDate = today();
 let csigR = "", csigC = "";
 function setCDate(v){ cAgreementDate=v; renderConsult(); }
+function pullConsultFromRetainer(){
+  $("ccliName").value=$("cliName").value; $("ccliPhone").value=$("cliPhone").value;
+  $("ccliEmail").value=$("cliEmail").value; $("ccliAddr").value=$("cliAddr").value;
+  if($("adate").value) cAgreementDate=$("adate").value;
+  renderConsult();
+}
 function setCSigR(v){ csigR=v; renderConsult(); }
 function setCSigC(v){ csigC=v; renderConsult(); }
 
@@ -921,7 +1038,9 @@ function renderConsult(){
   const clang=$("lang").value;
   const cfee=+$("cfee").value||0, cgst=+$("cgst").value||0;
   const probono=$("cProBono").checked;
-  const cTaxAmt=cfee*cgst/100, cTotal=cfee+cTaxAmt;
+  const cIncl=$("cTaxIncl").value==="incl";
+  const cTaxAmt=cIncl?0:cfee*cgst/100, cTotal=cfee+cTaxAmt;
+  const cPaid=$("cPaid").checked && !probono && cfee>0;
   const cpurpose=$("cpurpose").value.trim();
 
   $("paper2").innerHTML = `
@@ -953,7 +1072,7 @@ function renderConsult(){
     <p>This is an initial consultation only. It does not create a representation relationship and does not commit either party to proceed. Any ongoing immigration or citizenship consulting services would require a separate written service agreement.</p>
 
     <h2><span class="sn">2.</span> Consultation fee</h2>
-    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cgst>0?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.`}</p>
+    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cIncl?" (any applicable tax included)":""}${(!cIncl&&cgst>0)?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.`}</p>
 
     <h2><span class="sn">3.</span> The College's role</h2>
     <p>The RCIC is a Regulated Canadian Immigration Consultant licensed by, and subject to the Code of Professional Conduct of, the College of Immigration and Citizenship Consultants (CICC) — the national body that regulates immigration and citizenship consultants in Canada to protect the public. If the Client has a concern, they may contact the College:</p>
@@ -964,11 +1083,13 @@ function renderConsult(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigR)}" onchange="setCSigR(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigC)}" onchange="setCSigC(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigR||cAgreementDate)}" onchange="setCSigR(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
     </div>
+    ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
   `;
+  addPrintDates("paper2");
 }
 
 /* ── invoice (s.33) ──────────────────────────────────── */
@@ -986,8 +1107,15 @@ function pullFromRetainer(manual){
     const rate=+$("rate").value||0, hours=+$("hours").value||0;
     invSvc=[{name:`Professional fees (${hours} h @ ${cad(rate)}/h)`, amount: rate*hours}];
   } else {
-    invSvc=[{name:`Professional fees — ${$("program").value}`, amount:+$("fee").value||0}];
+    const n=paItems().length;
+    invSvc=[{name:`Professional fees — ${$("program").value}${n?` (flat fee, covering ${n} principal applicant${n>1?"s":""})`:""}`, amount:+$("fee").value||0}];
   }
+  $("iTaxIncl").value = $("taxIncl").checked ? "incl" : "add";
+  if(paidFull()){
+    $("iTrust").value = 0; $("iPaid").checked = true;
+    $("iPayMethod").value = $("payMethod").value;
+    iDate = payDateVal() || iDate;
+  } else if($("adate").value && !invoiceTouched){ /* keep today's date for normal invoices */ }
   invDisb = (disb||[]).filter(d=>d.name&&d.name.trim()).map(d=>({name:d.name, amount:(d.amount!==""&&d.amount!=null)?d.amount:""}));
   if(invDisb.length===0) invDisb=[{name:"",amount:""}];
   renderISvc(); renderIDisb(); renderInvoice();
@@ -1014,7 +1142,8 @@ function renderInvoice(){
   const itax=+$("iTax").value||0, itrust=+$("iTrust").value||0, idue=$("iDue").value||"15";
   const svcSub=invSvc.reduce((a,s)=>a+(+s.amount||0),0);
   const disbSub=invDisb.reduce((a,s)=>a+(+s.amount||0),0);
-  const taxAmt=svcSub*itax/100, total=svcSub+taxAmt+disbSub, due=Math.max(0,total-itrust);
+  const iIncl=$("iTaxIncl").value==="incl";
+  const taxAmt=iIncl?0:svcSub*itax/100, total=svcSub+taxAmt+disbSub, due=Math.max(0,total-itrust);
   const paid=$("iPaid").checked;
   const svcRows=invSvc.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("")||`<tr><td>—</td><td class="amt">—</td></tr>`;
   const disbRows=invDisb.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("");
@@ -1048,16 +1177,66 @@ function renderInvoice(){
 
     <table class="fees" style="margin-top:12px"><tbody>
       <tr><td>Professional services</td><td class="amt">${cad(svcSub)}</td></tr>
-      <tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>
+      ${iIncl?`<tr><td>GST/HST</td><td class="amt">Included</td></tr>`:`<tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>`}
       ${disbSub?`<tr><td>Disbursements</td><td class="amt">${cad(disbSub)}</td></tr>`:""}
       <tr class="total"><td>Total</td><td class="amt">${cad(total)}</td></tr>
       ${itrust?`<tr><td>Less advance / trust applied</td><td class="amt">−${cad(itrust)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
     </tbody></table>
 
-    <p style="margin-top:12px">Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}</p>
+    <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${iDate?` on ${niceDate(iDate)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
     <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
-    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received with thanks${iDate?` on ${longDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
+    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
+  addPrintDates("paper3");
+}
+
+/* ── auto-fill from IRCC IMM 5476 (fillable PDF, read locally) ── */
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  return new Promise((ok,fail)=>{
+    const sc=document.createElement("script");
+    sc.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+    sc.onload=()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; ok(window.pdfjsLib); };
+    sc.onerror=()=>fail(new Error("Couldn't load the PDF reader — check your internet connection."));
+    document.head.appendChild(sc);
+  });
+}
+async function fillFromRepPdf(input){
+  const f=input.files&&input.files[0]; const st=$("pdfStatus"); if(!f) return;
+  st.style.color="var(--muted)"; st.textContent="Reading…";
+  try{
+    const lib=await loadPdfJs();
+    const doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+    const objs=await doc.getFieldObjects()||{};
+    const all=[]; // [shortName, value] in document order
+    for(const [full,arr] of Object.entries(objs)){
+      const short=full.split(".").pop().replace(/\[\d+\]$/,"");
+      for(const o of arr){ let v=o.value; if(v==null||v===""||v==="Off") continue; if(typeof v!=="string") v=String(v); all.push([short,v.trim(),full]); }
+    }
+    if(!all.length){ st.style.color="#c2922a"; st.textContent="No fillable fields found (scanned or flattened PDF) — type or paste the details instead."; return; }
+    const nth=(name,i)=>{ const m=all.filter(a=>a[0]===name); return m[i]?m[i][1]:""; };
+    const filled=[];
+    const fam=nth("familyName",0), giv=nth("givenName",0);
+    if(fam||giv){ $("cliName").value=[giv,fam].filter(Boolean).join(" ").replace(/\s+/g," ").trim(); filled.push("name"); }
+    const dobRaw=nth("DOB",0).replace(/^(\d{4})(\d{2})(\d{2})$/,"$1-$2-$3");
+    const dob=normNotesDate(dobRaw);
+    if(dob){ $("cliDob").value=dob; filled.push("DOB"); } else if(dobRaw){ filled.push("⚠ DOB looks wrong on the form ("+dobRaw+")"); }
+    const signed=normNotesDate(nth("dateApplicantSigned",0)||nth("dateSigned",0));
+    if(signed){ $("adate").value=signed; filled.push("date signed"); }
+    // representative (second name block)
+    const rf=nth("familyName",1), rg=nth("givenName",1);
+    if(rf||rg){ $("rcicName").value=[rg,rf].filter(Boolean).join(" ").replace(/\s+/g," ").trim(); }
+    const rno=(all.find(a=>/^R\d{6}$/i.test(a[1]))||[])[1]; if(rno) $("rcicNo").value=rno.toUpperCase();
+    const org=nth("organization",0); if(org) $("firm").value=org;
+    const unit=nth("unit",0), sno=nth("streetNo",0), sname=nth("streetName",0), city=nth("city",0), prov=nth("province",0), pc=nth("postalcode",0);
+    if(sname){ $("firmAddr").value=`${unit?unit+"-":""}${sno} ${sname}`.replace(/\s+/g," ").trim()+(city?`, ${city}`:"")+(prov?`, ${prov}`:"")+(pc?`  ${pc}`:""); }
+    const ph=nth("phoneNumber",0).replace(/\D/g,""); if(ph.length===10) $("firmPhone").value=`+1 (${ph.slice(0,3)}) ${ph.slice(3,6)}-${ph.slice(6)}`;
+    const em=nth("email",0); if(em) $("firmEmail").value=em;
+    if(rf||rno||org) filled.push("your representative details");
+    render();
+    st.style.color="#1f8a5e"; st.textContent="✓ Filled: "+filled.join(", ")+" — add the client's address, phone and email, then review.";
+  }catch(e){ st.style.color="#c2922a"; st.textContent=e.message||"Couldn't read that PDF."; }
+  finally{ input.value=""; }
 }
 
 /* ── tab switching ───────────────────────────────────── */
@@ -1088,10 +1267,11 @@ function exportDoc(){
   else { paperId="paper3"; title="Invoice"; refId="iNo"; }
   const src = document.getElementById(paperId);
   const clone = src.cloneNode(true);
+  clone.querySelectorAll(".pdate").forEach(s=>s.remove());
   // replace date inputs with their text value
   clone.querySelectorAll('input[type="date"]').forEach(inp=>{
     const span=document.createElement("span");
-    span.textContent = inp.value ? inp.value : "______________";
+    span.textContent = inp.value ? niceDate(inp.value) : "______________";
     inp.replaceWith(span);
   });
   // drop decorative inline svgs (Word renders them poorly)
@@ -1102,7 +1282,7 @@ function exportDoc(){
     .doc-head .firm{font-size:20pt;font-weight:bold;color:#16233b}
     .doc-head .ttl{font-size:10pt;letter-spacing:3px;text-transform:uppercase;color:#a8801e;margin-top:6px}
     .doc-head .meta,.regbadge{font-size:9pt;color:#555;margin-top:6px}
-    .doclogo{max-height:70px} .insignia{max-height:56px;display:block;margin-left:auto}
+    .doclogo{max-height:90px} .insignia{max-height:56px;display:block;margin-left:auto}
     .parties{width:100%} .party{display:inline-block;width:48%;vertical-align:top;font-size:10pt}
     .party h4{font-size:9pt;color:#a8801e;text-transform:uppercase;margin:0 0 4px}
     h2{font-size:11pt;color:#16233b;text-transform:uppercase;border-bottom:1px solid #ccc;padding-bottom:3px;margin:16px 0 6px}
@@ -1110,7 +1290,8 @@ function exportDoc(){
     table{width:100%;border-collapse:collapse;font-size:10pt;margin:6px 0}
     th{background:#16233b;color:#fff;text-align:left;padding:6px} td{padding:6px;border-bottom:1px solid #ddd}
     .amt{text-align:right} .cicc{background:#f6f8fa;border:1px solid #ddd;padding:10px;font-size:9.5pt}
-    .sigs{margin-top:30px} .sig{display:inline-block;width:46%;margin-right:3%} .sig .ln{border-bottom:1px solid #333;height:30px} .sig .cap{font-size:9pt;color:#555}`;
+    .sigs{margin-top:30px} .sig{display:inline-block;width:46%;margin-right:3%} .sig .ln{border-bottom:1px solid #333;height:30px} .sig .cap{font-size:9pt;color:#555}
+    ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}`;
   const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
   const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
   const blob = new Blob(["\ufeff", html], {type:"application/msword"});
@@ -1244,7 +1425,7 @@ function doReset(){
   cAgreementDate = today();
   iDate = today();
   $("adate").value = today();
-  onJoint(); onFeeMethod();
+  onJoint(); onFeeMethod(); onPayMode();
   invoiceTouched = false;
   invSvc = [{name:"Professional fees",amount:""}];
   invDisb = [{name:"IRCC processing fee",amount:""}];
@@ -1261,6 +1442,8 @@ syncBrandUI();
 $("program").addEventListener("change", loadProgram);
 $("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
 $("cform").addEventListener("input", renderConsult);
+$("cform").addEventListener("change", renderConsult);
+$("form").addEventListener("change", ()=>render());
 ["showBadge","showInsignia","showLogo"].forEach(id=>$(id).addEventListener("change", ()=>saveFirm(true)));
 invSvc=[{name:"Professional fees",amount:""}];
 invDisb=[{name:"IRCC processing fee",amount:""}];
