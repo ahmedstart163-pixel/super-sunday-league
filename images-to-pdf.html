@@ -11,31 +11,25 @@
   :root{ --navy:#0f2444; --ink:#2b2f38; --muted:#5f6b77; --line:#dfe5ec; --teal:#3a9a94; --coral:#e8836b; --coral-soft:#f5b4a3; --blue:#2f6fdc; --blue-d:#245ec2; --sky:#a9c3e8; --tint:#eef4ff; }
   *{box-sizing:border-box}
   html,body{margin:0; min-height:100%; background:#fff; color:var(--ink); font-family:-apple-system,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:15px}
-  .topbar{height:62px; display:flex; align-items:center; gap:4px; padding:0 14px 0 0; background:#fff; border-bottom:1px solid var(--line)}
-  .brand{display:flex; align-items:center; gap:11px; align-self:stretch; background:var(--navy); padding:0 22px 0 18px; margin-right:10px; text-decoration:none}
-  .brand .logo{width:34px; height:34px; flex:none}
-  .brand-text{display:flex; flex-direction:column; line-height:1.02}
-  .brand-name{font-size:19px; font-weight:700; color:#fff; letter-spacing:-.1px}
-  .brand small{font-weight:600; font-size:10px; color:#9fb0cf; letter-spacing:1.8px; text-transform:uppercase; margin-top:2px}
-  .tbtn{display:inline-flex; align-items:center; gap:7px; padding:9px 13px; border-radius:9px; border:1px solid transparent; background:transparent; color:#16213b; font:inherit; font-size:14.5px; font-weight:600; cursor:pointer; text-decoration:none}
-  .tbtn:hover{background:#eef2f7}
-  .tbtn svg{width:19px; height:19px; stroke:#5f6b77; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
-  .tbtn.outline{margin-left:auto; border-color:#cfd8e3} .tbtn.outline:hover{border-color:#9fb0cf; background:#f6f8fb}
-
-  main{max-width:1000px; margin:26px auto 70px; padding:0 20px}
-  h1{margin:0 0 18px; font-size:56px; line-height:1; font-weight:900; letter-spacing:-1.5px; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .head{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap}
+  .brandlink{display:inline-flex; align-items:center; gap:9px; padding:7px 12px 7px 8px; border:1px solid #cfd8e3; border-radius:10px; text-decoration:none; color:#0f2444; font-weight:700; font-size:14px; background:#fff; margin-top:4px}
+  .brandlink:hover{border-color:#9fb0cf; background:#f6f8fb}
+  .brandlink svg{width:26px; height:26px; flex:none}
+  .brandlink small{display:block; font-size:10.5px; font-weight:600; color:#5f6b77; letter-spacing:.8px; text-transform:uppercase; line-height:1}
+  main{max-width:1000px; margin:26px auto 40px; padding:0 20px}
+  h1{margin:0 0 8px; font-size:42px; line-height:1; font-weight:900; letter-spacing:-1.2px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
   h1 .t1{color:var(--teal)} h1 .t2{color:var(--coral)} h1 .to{color:#2b2f38; display:inline-flex; align-items:center; gap:2px}
   .swirl{width:.85em; height:.85em; stroke:#2b2f38; fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
-  .intro{max-width:680px; line-height:1.55; margin:0 0 10px; color:#2b2f38}
-  .intro ul{margin:8px 0 0; padding-left:22px} .intro li{margin:5px 0} .intro li::marker{color:#b9c2ce}
+  .intro{max-width:760px; line-height:1.45; margin:0; color:#2b2f38; font-size:14px}
+  .intro ul{margin:4px 0 0; padding-left:20px} .intro li{margin:2px 0} .intro li::marker{color:#b9c2ce}
 
-  .tabs{display:flex; gap:4px; margin:36px 0 0; padding:0 2px; overflow-x:auto}
-  .tab{flex:none; padding:10px 18px; border:1px solid var(--line); border-bottom:0; border-radius:10px 10px 0 0; background:#f1f3f7; color:#2b2f38; font-weight:700; font-size:14px; text-decoration:none; white-space:nowrap}
+  .tabs{display:flex; gap:4px; margin:14px 0 0; padding:0 2px; overflow-x:auto}
+  .tab{flex:none; padding:8px 16px; border:1px solid var(--line); border-bottom:0; border-radius:10px 10px 0 0; background:#f1f3f7; color:#2b2f38; font-weight:700; font-size:14px; text-decoration:none; white-space:nowrap}
   .tab.on{background:#fff; color:var(--coral); position:relative; top:1px}
-  .card{background:#fff; border:1px solid var(--line); border-radius:0 14px 14px 14px; box-shadow:0 12px 34px rgba(15,36,68,.10); padding:26px 28px 24px}
+  .card{background:#fff; border:1px solid var(--line); border-radius:0 14px 14px 14px; box-shadow:0 12px 34px rgba(15,36,68,.10); padding:14px 18px 14px}
 
-  .actions-top{display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:22px}
-  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border-radius:6px; border:0; font:inherit; font-size:13px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; cursor:pointer; color:#fff; min-width:140px}
+  .actions-top{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:12px}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 16px; border-radius:6px; border:0; font:inherit; font-size:13px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; cursor:pointer; color:#fff; min-width:140px}
   .btn svg{width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
   .btn-upload{background:var(--blue)} .btn-upload:hover{background:var(--blue-d)}
   .btn-clear{background:#d9453c} .btn-clear:hover{background:#c33a31} .btn-clear:disabled{background:var(--coral-soft); cursor:default}
@@ -44,11 +38,11 @@
   .btn-ghost{background:#fff; color:#2b2f38; border:1.5px solid #cfd6e0} .btn-ghost:hover{background:#f4f6fa} .btn-ghost:disabled{color:#a8b0bb; border-color:#e3e8ee; cursor:default; background:#fff}
   .btn-ghost svg{stroke:#2b2f38}
 
-  .i2p-drop{border:2px dashed var(--sky); border-radius:8px; min-height:190px; max-height:min(52vh,480px); overflow:auto; padding:12px; background:#fff; transition:background .1s, border-color .1s}
+  .i2p-drop{border:2px dashed var(--sky); border-radius:8px; min-height:clamp(112px,22vh,170px); max-height:min(46vh,440px); overflow:auto; padding:10px; background:#fff; transition:background .1s, border-color .1s}
   .i2p-drop.over{border-color:var(--blue); background:var(--tint)}
-  .i2p-empty{height:165px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; text-align:center}
+  .i2p-empty{height:clamp(90px,19vh,145px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; text-align:center}
   .i2p-empty[hidden]{display:none}
-  .i2p-empty b{color:var(--sky); font-size:18px; font-weight:700}
+  .i2p-empty b{color:var(--sky); font-size:17px; font-weight:700}
   .i2p-empty span{color:#8b96a5; font-size:13px; line-height:1.5}
   .i2p-hint{font-size:12.5px; color:var(--muted); text-align:center; margin:0 0 10px} .i2p-hint[hidden]{display:none}
   .i2p-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px}
@@ -67,32 +61,30 @@
   .btn-combine[data-count]:not([data-count="0"])::after{content:attr(data-count); position:absolute; top:-9px; right:-9px; min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:#4b5563; color:#fff; font-size:12px; font-weight:800; display:grid; place-items:center; box-shadow:0 0 0 2px #fff; letter-spacing:0}
   .i2p-x{position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; border:0; background:#e02424; color:#fff; font-size:15px; line-height:1; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.25)}
 
-  .options{display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin:16px 0 4px; font-size:13px; color:var(--muted)}
-  .options label{display:flex; align-items:center; gap:6px}
-  .options select{border:1px solid var(--line); border-radius:6px; padding:6px 8px; font:inherit; font-size:13px; color:var(--ink); background:#fff}
-  .options #i2pCount{margin-left:auto}
-  .actions-bottom{display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px}
+  .options{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:10px 0 2px; font-size:13.5px; color:#16213b; font-weight:600}
+  .options label{display:flex; align-items:center; gap:8px; background:#eef2f7; border:1px solid #cfd8e3; border-radius:8px; padding:3px 5px 3px 10px}
+  .options select{border:1.5px solid #9fb0cf; border-radius:6px; padding:5px 8px; font:inherit; font-size:13.5px; font-weight:700; color:#0f2444; background:#fff; cursor:pointer}
+  .options select:hover{border-color:#2563eb} .options select:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  .options #i2pCount{margin-left:auto; font-weight:600; color:var(--muted)}
+  .actions-bottom{display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-top:10px}
   .btn-combine{position:relative}
   .btn-combine[data-count]:not([data-count="0"])::after{content:attr(data-count); position:absolute; top:-9px; right:-9px; min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:#e8836b; color:#fff; font-size:12px; font-weight:800; display:grid; place-items:center; box-shadow:0 0 0 2px #fff; letter-spacing:0}
-  .note{display:flex; align-items:center; gap:8px; justify-content:center; color:var(--muted); font-size:13px; margin-top:18px; text-align:center; flex-wrap:wrap}
+  .note{display:flex; align-items:center; gap:8px; justify-content:center; color:var(--muted); font-size:13px; margin-top:10px; text-align:center; flex-wrap:wrap}
   .note svg{width:16px; height:16px; stroke:#1f9d4d; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none}
   .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); background:var(--navy); color:#fff; padding:10px 18px; border-radius:10px; font-size:13px; font-weight:500; opacity:0; pointer-events:none; transition:.2s; z-index:50; max-width:92vw; text-align:center}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0)} .toast.err{background:#b42318}
   .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:60} .busy.hide{display:none}
   .spin{width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--blue); border-radius:50%; animation:s 1s linear infinite} @keyframes s{to{transform:rotate(360deg)}}
-  @media (max-width:720px){ .topbar{height:56px; padding-right:8px} .brand{padding:0 12px; margin-right:4px} .brand-text{display:none} .tbtn{padding:8px 9px}
-    main{margin-top:18px; padding:0 14px} h1{font-size:40px} .card{padding:18px 14px 16px; border-radius:0 12px 12px 12px} .btn{min-width:0; padding:11px 16px; flex:1} .actions-top{gap:10px} .options #i2pCount{margin-left:0; width:100%; text-align:center} }
+  @media (max-height:640px){ h1{font-size:36px} .intro{font-size:13.5px} .i2p-drop{min-height:100px} .i2p-empty{height:80px} }
+  @media (max-width:720px){ .brandlink span{display:none} .brandlink{padding:6px}
+    main{margin-top:12px; padding:0 14px} h1{font-size:36px} .card{padding:18px 14px 16px; border-radius:0 12px 12px 12px} .btn{min-width:0; padding:11px 16px; flex:1} .actions-top{gap:10px} .options #i2pCount{margin-left:0; width:100%; text-align:center} }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <a class="brand" href="pdf-editor.html" title="Majd PDF Editor"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15.5" fill="#0f2444"/><path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/></svg><div class="brand-text"><span class="brand-name">Majd</span><small>Images → PDF</small></div></a>
-  <a class="tbtn" href="pdf-editor.html"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Home</a>
-  <a class="tbtn outline" href="pdf-editor.html">Open PDF editor</a>
-</div>
-
 <main>
-  <h1><span class="t1">Images</span><span class="to">t<svg class="swirl" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5" /><path d="M4 4v4.5h4.5" /><path d="M4 13a8 8 0 0 0 13.7 4.7l2.3-2.2" /><path d="M20 20v-4.5h-4.5" /></svg></span><span class="t2">PDF</span></h1>
+  <div class="head"><h1><span class="t1">Images</span><span class="to">t<svg class="swirl" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5" /><path d="M4 4v4.5h4.5" /><path d="M4 13a8 8 0 0 0 13.7 4.7l2.3-2.2" /><path d="M20 20v-4.5h-4.5" /></svg></span><span class="t2">PDF</span></h1>
+    <a class="brandlink" href="pdf-editor.html" title="Majd PDF Editor"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15.5" fill="#0f2444"/><path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/></svg><span>Majd <small>PDF editor</small></span></a>
+  </div>
   <div class="intro">
     <p style="margin:0">Easily combine photos and pictures into a single PDF to file, share or send with an application. You can also mix images with existing PDF files. Majd rotates phone photos the right way up and keeps every image at its original resolution.</p>
     <ul>
@@ -119,9 +111,9 @@
     </div>
     <input type="file" id="i2pInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf" multiple hidden>
     <div class="options">
-      <label>Page size <select id="i2pSize"><option value="fit">Same as image</option><option value="letter">Letter</option><option value="a4">A4</option></select></label>
+      <label>Page size <select id="i2pSize"><option value="fit">Original size</option><option value="letter">Letter</option><option value="a4">A4</option></select></label>
       <label>Margin <select id="i2pMargin"><option value="0">None</option><option value="18" selected>Small</option><option value="36">Large</option></select></label>
-      <label title="Smaller file keeps photos at print quality (about 300 dpi) but shrinks huge ones">File size <select id="i2pQuality"><option value="compact" selected>Smaller file</option><option value="original">Original quality</option></select></label>
+      <label title="Smaller file keeps photos at print quality (about 300 dpi) but shrinks huge ones">File size <select id="i2pQuality"><option value="original" selected>Original quality</option><option value="compact">Smaller file</option></select></label>
       <span id="i2pCount">Up to 30 files</span>
     </div>
     <div class="actions-bottom">
@@ -140,7 +132,7 @@ const EDITOR_URL="pdf-editor.html";
 if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 (function(){
 "use strict";
-const { PDFDocument } = PDFLib;
+const PDFDocument = (window.PDFLib||{}).PDFDocument;   // if the library failed to load, the page still works and says so when you try to convert
 const $=s=>document.querySelector(s);
 const el=(t,c)=>{ const e=document.createElement(t); if(c) e.className=c; return e; };
 let toastT=null;
@@ -274,6 +266,7 @@ async function i2pPlaceImage(out, it, size, m){
   page.drawImage(img,{x:(pw-dw)/2, y:(ph-dh)/2, width:dw, height:dh});
 }
 async function i2pBuild(items, progress){
+  if(!window.PDFLib){ toast("The PDF engine didn't load — check your connection and refresh the page.",true); throw new Error("pdf-lib missing"); }
   const size=$("#i2pSize").value, m=+$("#i2pMargin").value;
   const out=await PDFDocument.create();
   for(let k=0;k<items.length;k++){
@@ -360,6 +353,14 @@ setInterval(()=>{
   old.forEach(it=>it.thumb&&URL.revokeObjectURL(it.thumb)); i2pItems=i2pItems.filter(it=>it.added>=cutoff); i2pRender();
   toast("Files added more than an hour ago were cleared.");
 },60*1000);
+// remember the three options between visits
+(function(){
+  const KEY="majd.i2p.options";
+  try{ const o=JSON.parse(localStorage.getItem(KEY)||"{}"); for(const id of ["i2pSize","i2pMargin","i2pQuality"]){ const sel=$("#"+id); if(sel && o[id] && [...sel.options].some(x=>x.value===o[id])) sel.value=o[id]; } }catch(_){ }
+  document.querySelectorAll("#i2pSize,#i2pMargin,#i2pQuality").forEach(sel=>sel.addEventListener("change",()=>{
+    try{ localStorage.setItem(KEY, JSON.stringify({i2pSize:$("#i2pSize").value, i2pMargin:$("#i2pMargin").value, i2pQuality:$("#i2pQuality").value})); }catch(_){ }
+  }));
+})();
 i2pRender();
 })();
 </script>
