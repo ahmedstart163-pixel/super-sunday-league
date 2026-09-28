@@ -41,6 +41,11 @@
   .brand-name{font-size:15px; font-weight:700; letter-spacing:-.1px; color:#fff}
   .brand small{font-weight:600; font-size:8.5px; color:#7e8fb2; letter-spacing:1.6px; text-transform:uppercase; margin-top:2px}
   .topbar .spacer{display:none}
+  /* keep the centred controls clear of the absolutely-positioned brand, and let the filename give way first */
+  .topbar{padding-left:150px}
+  .topbar .filename{flex:0 1 auto; min-width:0}
+  @media (max-width:1240px){ .topbar:has(#pagesBtn:not(.hide)) .tbtn:not(.primary) .lbl{display:none} }
+  @media (max-width:1000px){ .topbar{padding-left:112px} .brand small{display:none} }
   .filename{font-size:12.5px; color:#a9b4cc; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     cursor:text; padding:4px 7px; border-radius:5px; border:1px solid transparent}
   .filename:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
@@ -135,10 +140,29 @@
   .mstamp.blue{border-color:#1f5fbf; color:#1f5fbf} .mstamp.blue:hover{background:#eef4ff}
   .mstamp.green{border-color:#1f9d4d; color:#1f9d4d} .mstamp.green:hover{background:#ecfbf1}
   .anno.wstamp{cursor:move}
-  .anno.wstamp .wst{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  .wst{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     border:3px solid var(--anno-color,#d1242f); color:var(--anno-color,#d1242f); border-radius:6px;
-    font-family:Helvetica,Arial,sans-serif; font-weight:800; text-transform:uppercase;
+    font-family:Helvetica,Arial,sans-serif; font-weight:800; line-height:1;
     white-space:nowrap; opacity:.85; box-sizing:border-box; pointer-events:none; mix-blend-mode:multiply}
+  .wst.two{flex-direction:column; letter-spacing:.02em}
+  .wst.two .l2{font-weight:700}
+  .mstamp.date{border-style:dashed; border-color:#5f6b77; color:#16213b; transform:none; display:inline-flex; align-items:center; gap:5px}
+  .mstamp.date:hover{background:#f1f4f9}
+  .ds .body{padding:16px 18px}
+  .ds-preview{display:grid; place-items:center; min-height:120px; background:#f6f8fb; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; padding:14px}
+  .ds-preview .wst{position:static; display:inline-flex; padding:6px 16px; min-width:120px; text-align:center; line-height:1}
+  .ds-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; font-size:13px; color:var(--muted)}
+  .ds-grid label{display:flex; flex-direction:column; gap:4px}
+  .ds-grid .ds-wide{grid-column:1/-1}
+  .ds-grid label.ds-inline, .ds-grid .ds-inline{flex-direction:row; align-items:center; gap:8px; color:var(--ink)}
+  .ds-grid input[type=date], .ds-grid input[type=text], .ds-grid input[type=time], .ds-grid select{border:1px solid var(--line); border-radius:8px; padding:7px 9px; font:inherit; color:var(--ink); background:#fff}
+  .ds-grid input[type=checkbox]{width:16px; height:16px; accent-color:var(--gold)}
+  .ds-chips{display:flex; gap:6px; flex-wrap:wrap}
+  .ds-chips button{border:1px solid var(--line); background:#fff; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:600; color:var(--ink); cursor:pointer}
+  .ds-chips button:hover{background:#f1f4f9; border-color:#b9c6d8}
+  .ds-colors{display:inline-flex; gap:8px}
+  .ds-colors button{width:24px; height:24px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px var(--line); cursor:pointer}
+  .ds-colors button.on{box-shadow:0 0 0 2px var(--navy)}
   .msym:hover{background:#eef4fc; border-color:#bcdcf7}
   .menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px 8px}
 
@@ -865,6 +889,99 @@
 .remove-rotate button:hover{background:#2f5fb3;color:#fff}
 .remove-rotate button:active{transform:scale(.92)}
 .remove-rotate button:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+
+  /* ===== Top bar: option 3 — navy logo block + white bar, blue Download ===== */
+  .topbar{background:#fff; color:var(--ink); border-bottom:1px solid #dfe5ec; justify-content:flex-start; gap:4px; padding:0 14px 0 0}
+  .topbar .brand{position:static; transform:none; align-self:stretch; background:var(--navy); padding:0 18px 0 16px; margin-right:10px}
+  .topbar .brand-name{color:#fff}
+  .topbar .brand small{color:#9fb0cf}
+  .topbar .spacer{display:none}
+  .topbar .filename{color:#5f6b77; margin-right:6px}
+  .topbar .filename:hover{background:#f1f4f8; border-color:#dfe5ec}
+  .topbar .filename:focus{background:#fff; border-color:#b9c6d8; color:var(--ink)}
+  .topbar .tbtn{background:transparent; border-color:transparent; color:#16213b}
+  .topbar .tbtn:hover{background:#eef2f7; border-color:transparent}
+  .topbar .tbtn .ic{color:#5f6b77}
+  .topbar .tbtn:disabled:not(.primary){display:none}          /* no greyed-out buttons: they appear once a PDF is open */
+  .topbar #openBtn{margin-left:auto; border-color:#cfd8e3}
+  .topbar #openBtn:hover{border-color:#9fb0cf; background:#f6f8fb}
+  .topbar .tbtn.primary{background:#2563eb; border-color:#2563eb; color:#fff}
+  .topbar .tbtn.primary:hover{background:#1d4fd8; border-color:#1d4fd8}
+  .topbar .tbtn.primary:disabled{opacity:.45}
+  .topbar #downloadCaret{border-left-color:rgba(255,255,255,.35)!important}
+  .topbar .tbtn.active{background:#eef4ff; border-color:transparent; color:#2563eb}
+  .topbar .tbtn.active .ic{color:#2563eb}
+  .topbar .zoom{background:#f6f8fb; border-color:#dfe5ec}
+  .topbar .zoom button{color:#16213b} .topbar .zoom button:hover{background:#e8edf4}
+  .topbar .zoom span{color:#5f6b77}
+  .topbar .zoom select{background:#fff; color:#16213b; border-left-color:#dfe5ec}
+  .topbar .brand{flex:none} .topbar .brand-text{white-space:nowrap}
+  .topbar #downloadCaret{color:#fff}
+  @media (max-width:1440px){ .topbar:has(#pagesBtn:not(.hide)) .tbtn:not(.primary):not(#openBtn) .lbl{display:none} }   /* icons only for the secondary buttons on laptop widths; names show on hover */
+  @media (max-width:1000px){ .topbar .brand small{display:none} }
+  @media (max-width:720px){ .topbar{padding:0 10px 0 0; overflow-x:auto} .topbar .brand{padding:0 12px} .topbar .zoom{display:none!important}
+    .topbar .brand-text{display:none} .topbar .toolgroup{flex:none; flex-wrap:nowrap; display:flex}
+    .topbar .tbtn{padding:7px 8px} .topbar #openBtn{margin-left:auto}
+    .topbar:has(#pagesBtn:not(.hide)) #organizeTop, .topbar:has(#pagesBtn:not(.hide)) #scanBtn, .topbar:has(#pagesBtn:not(.hide)) #readerBtn{display:none}  /* same three are in the bar below */
+  }
+
+  /* bigger, easier-to-read top bar */
+  .topbar{height:62px}
+  .topbar .brand{padding:0 22px 0 18px; gap:11px}
+  .topbar .brand .logo{width:34px; height:34px}
+  .topbar .brand-name{font-size:19px}
+  .topbar .brand small{font-size:10px; letter-spacing:1.8px}
+  .topbar .tbtn{font-size:14.5px; padding:9px 13px; gap:7px; border-radius:9px}
+  .topbar .tbtn .ic{display:inline-flex}
+  .topbar .tbtn.primary{padding:10px 18px; font-size:15px}
+  .topbar #downloadCaret{padding:10px 11px!important}
+  .topbar #openBtn{padding:9px 15px}
+  .topbar .filename{font-size:14px; max-width:260px}
+  .topbar .zoom button{width:30px; height:30px; font-size:16px}
+  .topbar .zoom span{font-size:13px; min-width:44px}
+  .topbar .zoom select{height:30px; font-size:13px}
+  @media (max-width:720px){ .topbar{height:56px} .topbar .tbtn{padding:8px 9px} .topbar .tbtn.primary{padding:9px 12px; font-size:14px} .topbar .brand .logo{width:30px;height:30px} }
+  @media (max-width:900px){ .topbar .zoom{display:none!important} .topbar .filename{display:none} }
+  @media (max-width:820px){ .topbar{gap:2px} .topbar .brand{padding:0 10px; margin-right:4px} .topbar .tbtn{padding:7px 7px} .topbar #openBtn{padding:8px 10px} .topbar .tbtn.primary{padding:9px 10px} .topbar #downloadCaret{padding:9px 7px!important} }
+  @media (max-width:480px){ .topbar #navRemoveBgBtn{display:none} }
+  @media (max-width:820px){ .topbar .brand-text{display:none} }
+  @media (max-width:400px){ .topbar #infoBtn{display:none} .topbar .brand{padding:0 8px} }
+  @media (max-width:1760px){ .topbar:has(#pagesBtn:not(.hide)) .tbtn:not(.primary):not(#openBtn) .lbl{display:none} }
+  @media (max-width:1180px){ .topbar .filename{display:none} .topbar .zoom select{display:none} }
+  /* fillable text fields: see-through, only a faint dashed guide while editing */
+  .anno.field.fld-text{background:transparent; border:1px dashed #a9b8d6}
+  .anno.field.fld-text:hover{background:rgba(37,99,235,.04); border-color:#7f96c4}
+  .anno.field.fld-text.selected{border:1px solid #2563eb; background:transparent}
+
+  /* Images → PDF */
+  .i2p-link{display:block; margin:12px auto 0; background:none; border:0; color:#2563eb; font-weight:600; font-size:14px; cursor:pointer; text-decoration:underline; text-underline-offset:3px}
+  .i2p header small{font-weight:500; color:var(--muted); font-size:12.5px; margin-left:8px}
+  .i2p .body{padding:16px 18px}
+  .i2p-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px}
+  .i2p-top label{font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px}
+  .i2p-top select{border:1px solid var(--line); border-radius:8px; padding:6px 8px; font:inherit; color:var(--ink); background:#fff}
+  .i2p-top .lbtn{display:inline-flex; align-items:center; gap:7px}
+  .i2p-drop{border:2px dashed #b9c9e6; border-radius:12px; min-height:230px; max-height:min(52vh,460px); overflow:auto; padding:12px; background:#f8faff; transition:background .1s, border-color .1s}
+  .i2p-drop.over{border-color:#2563eb; background:#eef4ff}
+  .i2p-empty{height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; text-align:center}
+  .i2p-empty[hidden]{display:none}
+  .i2p-hint{font-size:12.5px; color:var(--muted); text-align:center; margin:0 0 10px}
+  .i2p-hint[hidden]{display:none}
+  .i2p-empty b{color:#2563eb; font-size:17px}
+  .i2p-empty span{color:var(--muted); font-size:13px}
+  .i2p-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px}
+  .i2p-card{position:relative; background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px; cursor:grab; user-select:none}
+  .i2p-card.dragging{opacity:.4} .i2p-card.target{outline:2px solid #2563eb; outline-offset:2px}
+  .i2p-thumb{height:120px; display:grid; place-items:center; background:#f1f4f9; border-radius:6px; overflow:hidden}
+  .i2p-thumb img{max-width:100%; max-height:100%; object-fit:contain; pointer-events:none}
+  .i2p-pdf{font-weight:800; color:#d1242f; border:2px solid #d1242f; border-radius:6px; padding:4px 8px; font-size:13px}
+  .i2p-name{font-size:11.5px; color:var(--ink); margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .i2p-tools{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12px; color:var(--muted); font-weight:600}
+  .i2p-tools button{background:#f1f4f9; border:0; border-radius:6px; width:26px; height:22px; font-size:15px; line-height:1; color:var(--ink); cursor:pointer}
+  .i2p-tools button:hover{background:#e3e9f3}
+  .i2p-x{position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; border:0; background:#e02424; color:#fff; font-size:15px; line-height:1; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .i2p footer .lbtn:disabled{opacity:.45; cursor:not-allowed}
+  @media (max-width:640px){ .i2p footer{flex-wrap:wrap} .i2p footer .row{flex-wrap:wrap} }
 </style>
 </head>
 <body>
@@ -885,14 +1002,15 @@
     <button id="zoomIn" title="Zoom in">+</button>
     <select id="zoomPreset" title="Zoom options" aria-label="Zoom options"><option value="fit-width">Fit width</option><option value="fit-page">Fit page</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option></select>
   </div>
-  <button class="tbtn hide" id="pagesBtn" title="Show or hide the page list"><span class="ic">▥</span><span class="lbl">&nbsp;Pages</span></button>
-  <button class="tbtn" id="homeBtn" title="Start over — back to the home screen"><span class="ic">⌂</span><span class="lbl">&nbsp;Home</span></button>
-  <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic">▦</span><span class="lbl">&nbsp;Organize</span></button>
-  <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic">⛶</span><span class="lbl">&nbsp;Scan</span></button>
-  <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic">▤</span><span class="lbl">&nbsp;Reader</span></button>
-  <button class="tbtn" id="infoBtn" disabled title="Document info — title, author, subject, keywords"><span class="ic">ⓘ</span><span class="lbl">&nbsp;Info</span></button>
+  <button class="tbtn hide" id="pagesBtn" title="Show or hide the page list"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></span><span class="lbl">&nbsp;Pages</span></button>
+  <button class="tbtn" id="homeBtn" title="Start over — back to the home screen"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><span class="lbl">&nbsp;Home</span></button>
+  <button class="tbtn" id="organizeTop" disabled title="Organize pages — reorder, rotate, delete"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="lbl">&nbsp;Organize</span></button>
+  <button class="tbtn" id="scanBtn" title="Scan a document with your camera"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg></span><span class="lbl">&nbsp;Scan</span></button>
+  <button class="tbtn" id="readerBtn" title="Open a PDF in the Reader — views government XFA forms"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11v16H5.5A2.5 2.5 0 0 0 3 21.5z"/><path d="M21 5.5A2.5 2.5 0 0 0 18.5 3H13v16h5.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg></span><span class="lbl">&nbsp;Reader</span></button>
+  <button class="tbtn" id="i2pBtn" title="Combine images (JPG, PNG) and PDFs into one PDF"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="11" height="14" rx="2"/><circle cx="7" cy="8.5" r="1.3"/><path d="M14 14l-3.5-3.5L3 18"/><path d="M17 8h4v12H10v-2"/></svg></span><span class="lbl">&nbsp;Images → PDF</span></button>
+  <button class="tbtn" id="infoBtn" disabled title="Document info — title, author, subject, keywords"><span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span><span class="lbl">&nbsp;Info</span></button>
   <button class="tbtn" id="navRemoveBgBtn" title="Remove background from a selected image or signature">
-    <span class="ic">◩</span><span class="lbl">&nbsp;Remove</span>
+    <span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span><span class="lbl">&nbsp;Remove</span>
   </button>
   <input id="removeImagePicker" type="file" accept="image/png,image/jpeg,image/webp" hidden>
   <input type="file" id="readerPick" accept="application/pdf" style="display:none">
@@ -1014,6 +1132,7 @@
     <button class="mstamp" data-act="ws:VOID">VOID</button>
     <button class="mstamp green" data-act="ws:PAID">PAID</button>
     <button class="mstamp" data-act="ws:FINAL">FINAL</button>
+    <button class="mstamp date" data-act="date-stamp" title="Stamp a date you choose"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> DATE…</button>
   </div>
   <div class="menu-sec">Add new form fields</div>
   <div class="menu-grid">
@@ -1183,6 +1302,7 @@
     <h1>Edit, sign &amp; fill any PDF</h1>
     <p>Open a file to add text, fill forms, redact, whiteout, highlight, images,<br>drawings and signatures — then download the finished PDF.</p>
     <button class="cta" id="openBtn2">Choose a PDF</button>
+    <button class="i2p-link" id="i2pBtn2">or combine images into one PDF (up to 30)</button>
     <div class="privacy"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3 7-7 9-4-2-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg> PDF processing stays in your browser. The app loads its code and fonts from external CDNs.</div>
   </div>
 </div>
@@ -1257,7 +1377,57 @@
   </div>
 </div>
 
+
+<!-- Images → PDF -->
+<div class="modal-bg hide" id="i2pModal">
+  <div class="modal i2p" style="width:min(820px,95vw)">
+    <header class="head"><span>Images → PDF <small id="i2pCount">Up to 30 files</small></span><button class="x" id="i2pClose">×</button></header>
+    <div class="body">
+      <div class="i2p-top">
+        <button class="lbtn gold" id="i2pUpload"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V8M8.5 11.5 12 8l3.5 3.5"/></svg> Upload files</button>
+        <label>Page size <select id="i2pSize"><option value="fit">Same as image</option><option value="letter">Letter</option><option value="a4">A4</option></select></label>
+        <label>Margin <select id="i2pMargin"><option value="0">None</option><option value="18" selected>Small</option><option value="36">Large</option></select></label>
+      </div>
+      <div class="i2p-drop" id="i2pDrop">
+        <div class="i2p-empty" id="i2pEmpty"><b>Drop your files here</b><span>JPG, PNG, WEBP or PDF · up to 30 files · drag to reorder<br>Photos are rotated the right way up and kept at full resolution</span></div>
+        <p class="i2p-hint" id="i2pHint" hidden>Drop more files here, or drag the cards to change the order</p>
+        <div class="i2p-grid" id="i2pGrid" hidden></div>
+      </div>
+      <input type="file" id="i2pInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf" multiple hidden>
+    </div>
+    <footer><button class="lbtn" id="i2pClear">Clear</button><div class="row"><button class="lbtn" id="i2pOpenEd">Open in editor</button><button class="lbtn" id="i2pEach" title="One PDF for each file">Download separately</button><button class="lbtn gold" id="i2pGo">Combine into one PDF</button></div></footer>
+  </div>
+</div>
 <!-- Document Info modal -->
+<!-- Date stamp -->
+<div class="modal-bg hide" id="dateModal">
+  <div class="modal ds" style="width:min(460px,94vw)">
+    <header class="head"><span>Date stamp</span><button class="x" id="dsClose">×</button></header>
+    <div class="body">
+      <div class="ds-preview"><div class="wst" id="dsPreview"></div></div>
+      <div class="ds-grid">
+        <label>Date <input type="date" id="dsDate"></label>
+        <label>Format <select id="dsFormat">
+          <option value="mdy-short">Sep 28, 2026</option>
+          <option value="mdy-long">September 28, 2026</option>
+          <option value="dmy-short">28 Sep 2026</option>
+          <option value="iso">2026-09-28</option>
+          <option value="dmy-slash">28/09/2026</option>
+          <option value="mdy-slash">09/28/2026</option>
+        </select></label>
+        <label class="ds-wide">Text above the date <input type="text" id="dsLabel" placeholder="Optional, e.g. RECEIVED" maxlength="24"></label>
+        <div class="ds-chips ds-wide" id="dsChips"><button type="button">RECEIVED</button><button type="button">APPROVED</button><button type="button">PAID</button><button type="button">FILED</button><button type="button">SENT</button><button type="button">SIGNED</button><button type="button" data-clear="1">None</button></div>
+        <label class="ds-inline"><input type="checkbox" id="dsTime"> Add the time <input type="time" id="dsTimeVal"></label>
+        <label class="ds-inline"><input type="checkbox" id="dsTilt"> Tilted</label>
+        <div class="ds-inline ds-wide">Colour
+          <span class="ds-colors" id="dsColors"><button type="button" data-c="#d1242f" style="background:#d1242f" title="Red"></button><button type="button" data-c="#1f5fbf" style="background:#1f5fbf" title="Blue"></button><button type="button" data-c="#1f9d4d" style="background:#1f9d4d" title="Green"></button><button type="button" data-c="#1a1a1a" style="background:#1a1a1a" title="Black"></button></span>
+        </div>
+      </div>
+    </div>
+    <footer><button class="lbtn" id="dsCancel">Cancel</button><div class="row"><button class="lbtn gold" id="dsPlace">Place on page</button></div></footer>
+  </div>
+</div>
+
 <div class="modal-bg hide" id="metaModal">
   <div class="modal" style="width:min(440px,94vw)">
     <header class="head"><span>Document info</span><button class="x" id="metaClose">×</button></header>
@@ -1851,7 +2021,7 @@ const redactToolBtn=document.querySelector('.tool[data-tool="redact"]');
 if(redactToolBtn) redactToolBtn.addEventListener("dblclick",()=>openRedactSearch());
 const CREATING=["text","highlight","strike","underline","note","whiteout","redact","rect","image","sign","stamp","wstamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
-let wordStamp={word:"DRAFT",color:"#d1242f"};
+let wordStamp={word:"DRAFT",color:"#d1242f",rot:-15};
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t, opts){
   tool=t;
@@ -1928,11 +2098,12 @@ function formsAction(act){
   if(act.startsWith("ws:")){
     const word=act.slice(3);
     const color = ["APPROVED","PAID"].includes(word) ? "#1f9d4d" : ["COPY","RECEIVED"].includes(word) ? "#1f5fbf" : "#d1242f";
-    wordStamp={word,color}; colorPick.value=color; if(typeof markSwatch==="function") markSwatch();
+    wordStamp={word,color,rot:-15}; colorPick.value=color; if(typeof markSwatch==="function") markSwatch();
     setTool("wstamp");
     toast("Click on the page to place a "+word+" stamp — keep clicking to add more. Drag a corner to resize.");
     return;
   }
+  if(act==="date-stamp"){ openDateStamp(); return; }
   if(["cross","check","dot"].includes(act)){
     stampType=act; setTool("stamp");
     toast("Click on the page to stamp a "+(act==="dot"?"dot":act==="check"?"check mark":"cross")+" — keep clicking to add more.");
@@ -2104,12 +2275,7 @@ $("#frRun").onclick=async()=>{
         if(newText===hit.text) continue;
         const col=sampleLineColors(rec, hit) || {text:"#1a1a1a", bg:"#ffffff"};
         const f=hit.font || {key:"helv",bold:false,italic:false};
-        const px=2, py=2;
-        const woX=hit.left-px, woY=hit.top-py, woW=(hit.right-hit.left)+px*2, woH=hit.height+py*2;
-        const smart=smartErasePatch(rec, woX, woY, woW, woH);
-        const wo=makeAnno({type:"whiteout",page:rec.index, x:woX, y:woY, w:woW, h:woH, color:smart?smart.fallbackColor:col.bg});
-        if(smart){ wo.smart=true; wo.patchSrc=smart.src; }
-        annos.push(wo); renderAnno(wo);
+        coverLine(rec, hit, col);
         const tx=makeAnno({type:"text",page:rec.index, x:hit.left, y:hit.top-1,
           w:Math.max(40,(hit.right-hit.left)+10), h:0, fontSize:Math.max(8,Math.round(hit.height)),
           color:col.text, font:f.key, bold:!!f.bold, italic:!!f.italic, text:newText});
@@ -2319,7 +2485,7 @@ function sampleLineColors(rec, L){
 // diffusion/inpaint pass). Whatever texture or shading is behind the text stays intact —
 // only the ink itself gets removed. Falls back to null (caller uses a flat colour) if the
 // canvas isn't ready or the region is empty.
-function smartErasePatch(rec, x, y, w, h){
+function smartErasePatch(rec, x, y, w, h, band){
   try{
     if(!rec.rendered) return null;
     const sx=Math.max(0,Math.round(x)), sy=Math.max(0,Math.round(y));
@@ -2352,6 +2518,25 @@ function smartErasePatch(rec, x, y, w, h){
     threshold=Math.min(threshold, 235); // don't let a busy/textured background read as entirely "ink"
     const ink=new Uint8Array(n);
     for(let i=0;i<n;i++) ink[i] = lum[i] <= threshold ? 1 : 0;
+    if(band){
+      // keep only the blobs of ink whose vertical middle sits inside the band (page px, converted to
+      // patch px). A tail from the line above, or a tall letter from the line below, is left alone.
+      const bt=band.top-sy, bb=band.bottom-sy;
+      const seen=new Uint8Array(n), stack=[];
+      for(let i=0;i<n;i++){
+        if(!ink[i]||seen[i]) continue;
+        const comp=[]; let minY=1e9, maxY=-1; stack.push(i); seen[i]=1;
+        while(stack.length){
+          const k=stack.pop(); comp.push(k);
+          const yy=(k/cx)|0, xx=k-yy*cx; if(yy<minY) minY=yy; if(yy>maxY) maxY=yy;
+          const nb=[k-1,k+1,k-cx,k+cx];
+          if(xx===0) nb[0]=-1; if(xx===cx-1) nb[1]=-1;
+          for(const m of nb){ if(m>=0&&m<n&&ink[m]&&!seen[m]){ seen[m]=1; stack.push(m); } }
+        }
+        const mid=(minY+maxY)/2;
+        if(mid<bt||mid>bb) for(const k of comp) ink[k]=0;
+      }
+    }
     // dilate by 2px (was 1px) so faint antialiased edges are fully caught —
     // this is what fixes the leftover "smudge" residue
     const ink2=new Uint8Array(n);
@@ -2438,6 +2623,7 @@ async function computeLines(rec){
     L.right=Math.max(...L.items.map(i=>i.x+i.w));
     L.top=Math.min(...L.items.map(i=>i.top));
     L.height=L.fh;
+    L.baseline=L.top+L.fh;
     const domFn=Object.keys(byFont).sort((a,b)=>byFont[b]-byFont[a])[0];
     L.font=resolveFont(domFn);
   });
@@ -2458,6 +2644,22 @@ function findLineAt(lines, pt){
   });
   return (best && bestDist<=Math.max(16, best.height*1.3)) ? best : null;
 }
+
+/* Cover one line of existing page text so replacement text can sit on top.
+   Used by "Edit existing text" and by Find & replace, so both erase the same way. */
+function coverLine(rec, hit, col){
+  // Box: full letter height above the baseline plus room for tails below. Neighbouring lines can poke
+  // into that box (their tails from above, their tall letters from below), so the erase is told which
+  // band of ink belongs to THIS line and leaves everything else in the box untouched.
+  const fh=hit.height, px=3;
+  const woX=hit.left-px, woY=hit.baseline-fh-2, woW=(hit.right-hit.left)+px*2, woH=fh*1.30+4;
+  const band={top:hit.baseline-fh*0.92, bottom:hit.baseline+fh*0.30};
+  const smart=smartErasePatch(rec, woX, woY, woW, woH, band);
+  const wo=makeAnno({type:"whiteout",page:rec.index, x:woX, y:woY, w:woW, h:woH, color:smart?smart.fallbackColor:col.bg});
+  if(smart){ wo.smart=true; wo.patchSrc=smart.src; }
+  annos.push(wo); renderAnno(wo);
+  return wo;
+}
 async function handleEditText(rec, pt){
   busy(true);
   let lines;
@@ -2468,13 +2670,10 @@ async function handleEditText(rec, pt){
   if(!hit){ toast("Tap closer to a line of text to edit it."); return; }
   const col = sampleLineColors(rec, hit) || {text:"#1a1a1a", bg:"#ffffff"};
   const f = hit.font || {key:"helv",bold:false,italic:false};
-  // cover the original line — smart-erase removes just the ink, keeping any texture/pattern intact
-  const px=2, py=2;
-  const woX=hit.left-px, woY=hit.top-py, woW=(hit.right-hit.left)+px*2, woH=hit.height+py*2;
-  const smart=smartErasePatch(rec, woX, woY, woW, woH);
-  const wo=makeAnno({type:"whiteout",page:rec.index, x:woX, y:woY, w:woW, h:woH, color:smart?smart.fallbackColor:col.bg});
-  if(smart){ wo.smart=true; wo.patchSrc=smart.src; }
-  annos.push(wo); renderAnno(wo);
+  // cover the original line — smart-erase removes just the ink, keeping any texture/pattern intact.
+  // The PDF's text box ends at the baseline, so letters with tails (p, g, y, commas) and the soft
+  // bottom edge of every glyph poke out below it; grow the box to the real ink instead.
+  coverLine(rec, hit, col);
   // drop an editable copy matching the original font, weight, slant and colour
   const tx=makeAnno({type:"text",page:rec.index, x:hit.left, y:hit.top-1,
     w:Math.max(40,(hit.right-hit.left)+10), h:0, fontSize:Math.max(8,Math.round(hit.height)),
@@ -2534,9 +2733,12 @@ function bindPage(rec){
     if(tool==="wstamp"){
       e.stopPropagation();
       const fs=26*BASE;                                  // 26pt letters
-      const w=Math.round(fs*0.72*wordStamp.word.length + fs*1.1), h=Math.round(fs*1.6);
+      const lines=String(wordStamp.word).split("\n");
+      let w,h;
+      if(lines.length>1){ h=Math.round(fs*2.3); const f1=h*0.44, f2=h*0.27; w=Math.round(Math.max(lines[0].length*f1*0.72, lines[1].length*f2*0.66)+f1*1.2); }
+      else { w=Math.round(fs*0.72*lines[0].length + fs*1.1); h=Math.round(fs*1.6); }
       const a=makeAnno({type:"wstamp",word:wordStamp.word,page:rec.index,
-                        x:start.x-w/2,y:start.y-h/2,w,h,rot:-15,color:colorPick.value||wordStamp.color});
+                        x:start.x-w/2,y:start.y-h/2,w,h,rot:(wordStamp.rot==null?-15:wordStamp.rot),color:colorPick.value||wordStamp.color});
       annos.push(a); renderAnno(a); select(null); snapshot(); return;
     }
     if(tool==="stamp"){
@@ -2820,8 +3022,9 @@ function renderAnno(a){
     if(a.type==="highlight") n.style.background=hexToRgba(a.color||"#ffdd00",.4);
     if(a.type==="note"){ n.style.setProperty("--anno-color", a.color||"#ffd400"); n.title=a.text||"Double-click to add a comment"; }
     if(a.type==="wstamp"){
-      n._g.textContent=a.word; n.style.setProperty("--anno-color", a.color||"#d1242f");
-      n._g.style.fontSize=(a.h/1.6)+"px"; n._g.style.borderWidth=Math.max(2,a.h*0.07)+"px";
+      n.style.setProperty("--anno-color", a.color||"#d1242f");
+      renderStampText(n._g, a.word, a.h);
+      n._g.style.borderWidth=Math.max(2,a.h*0.07)+"px";
       n._g.style.transform="rotate("+(a.rot||0)+"deg)";
     }
     if(a.type==="stamp"){
@@ -2833,6 +3036,7 @@ function renderAnno(a){
       n.classList.toggle("fld-sign", a.fieldType==="sign");
       n.classList.toggle("fld-dd", a.fieldType==="dropdown");
       n.classList.toggle("fld-button", a.fieldType==="button");
+      n.classList.toggle("fld-text", a.fieldType==="text");
       if(a._fill){
         if(document.activeElement!==a._fill) a._fill.value=a.value||"";
         n._lab.style.display="none";
@@ -4352,9 +4556,17 @@ async function buildBytes(){
           const bw=Math.max(1.5,h*0.07), fs=h/1.6, fb=await getFont("HelveticaBold");
           const o=spin(w/2,h/2);
           page.drawRectangle({x:o.x,y:o.y,width:w,height:h,borderColor:col,borderWidth:bw,opacity:0,borderOpacity:.85,rotate:degrees(a.rot||0)});
-          const label=a.word, tw=fb.widthOfTextAtSize(label,fs), capH=fs*0.72;
-          const t=spin(tw/2,capH/2);
-          page.drawText(label,{x:t.x,y:t.y,size:fs,font:fb,color:col,opacity:.85,rotate:degrees(a.rot||0)});
+          const lines=String(a.word).split("\n");
+          if(lines.length>1){
+            // label on top, date underneath — same proportions as on screen
+            const f1=h*0.44, f2=h*0.27, cap1=f1*0.72, cap2=f2*0.72, gap=h*0.07, block=cap1+gap+cap2;
+            const draws=[[lines[0],f1, block/2-cap1],[lines[1],f2,-block/2]];   // [text, size, baseline offset from centre]
+            for(const [txt,fz,base] of draws){ const tw=fb.widthOfTextAtSize(txt,fz); const t=spin(tw/2,-base); page.drawText(txt,{x:t.x,y:t.y,size:fz,font:fb,color:col,opacity:.85,rotate:degrees(a.rot||0)}); }
+          } else {
+            const label=lines[0], tw=fb.widthOfTextAtSize(label,fs), capH=fs*0.72;
+            const t=spin(tw/2,capH/2);
+            page.drawText(label,{x:t.x,y:t.y,size:fs,font:fb,color:col,opacity:.85,rotate:degrees(a.rot||0)});
+          }
         }
         else if(a.type==="stamp"){
           const x=a.x/BASE, w=a.w/BASE, h=a.h/BASE, yt=a.y/BASE, col=hexToRgb(a.color);
@@ -4423,7 +4635,8 @@ async function buildBytes(){
               const tf=form.createTextField(a.name||("tf_"+a.id));
               if(a.multiline) tf.enableMultiline();
               if(a.value) tf.setText(String(a.value));
-              tf.addToPage(page,{x,y,width:w,height:h,borderWidth:1,borderColor:bc,backgroundColor:bg});
+              // clear like Sejda: no fill, no border — just a place to type (pdf-lib draws a default border unless told not to)
+              tf.addToPage(page,{x,y,width:w,height:h,borderWidth:0,borderColor:undefined,backgroundColor:undefined}); try{ tf.setFontSize(a.multiline?10:11); }catch(_){}
             }
           }catch(err){ console.warn("field export",a.fieldType,err); }
         }
@@ -4703,6 +4916,255 @@ $("#mergeInput").onchange=async e=>{
   }
 };
 
+
+/* ==================== Images → PDF: combine up to 30 images/PDFs into one PDF ==================== */
+const I2P_MAX=30;
+let i2pItems=[], i2pSeq=0, i2pDragId=null;
+const i2pModal=$("#i2pModal");
+function i2pOpen(){ i2pModal.classList.remove("hide"); i2pRender(); }
+function i2pClose(){ i2pModal.classList.add("hide"); }
+$("#i2pBtn").onclick=i2pOpen;
+if($("#i2pBtn2")) $("#i2pBtn2").onclick=i2pOpen;
+$("#i2pClose").onclick=i2pClose;
+i2pModal.addEventListener("pointerdown",e=>{ if(e.target===i2pModal) i2pClose(); });
+$("#i2pUpload").onclick=()=>$("#i2pInput").click();
+$("#i2pInput").onchange=e=>{ i2pAdd([...e.target.files]); e.target.value=""; };
+$("#i2pClear").onclick=()=>{ i2pItems.forEach(it=>it.thumb&&URL.revokeObjectURL(it.thumb)); i2pItems=[]; i2pRender(); };
+const i2pDrop=$("#i2pDrop");
+const i2pHasFiles=e=>e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+["dragenter","dragover"].forEach(t=>i2pDrop.addEventListener(t,e=>{ if(i2pHasFiles(e)){ e.preventDefault(); i2pDrop.classList.add("over"); } }));
+["dragleave","drop"].forEach(t=>i2pDrop.addEventListener(t,()=>i2pDrop.classList.remove("over")));
+i2pDrop.addEventListener("drop",e=>{ if(!i2pHasFiles(e)) return; e.preventDefault(); i2pAdd([...e.dataTransfer.files]); });
+$("#i2pEmpty").onclick=()=>$("#i2pInput").click();
+
+function i2pKind(f){
+  if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)) return "pdf";
+  if(/^image\/(jpeg|png|webp|gif|bmp)$/.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name)) return "img";
+  return null;
+}
+function i2pAdd(files){
+  let skipped=0, over=0;
+  for(const f of files){
+    const kind=i2pKind(f); if(!kind){ skipped++; continue; }
+    if(i2pItems.length>=I2P_MAX){ over++; continue; }
+    i2pItems.push({id:++i2pSeq, file:f, name:f.name, kind, thumb: kind==="img" ? URL.createObjectURL(f) : null});
+  }
+  i2pRender();
+  if(over) toast("Up to "+I2P_MAX+" files at a time — "+over+" left out.",true);
+  else if(skipped) toast(skipped+" file"+(skipped>1?"s":"")+" skipped — use JPG, PNG, WEBP or PDF.",true);
+}
+function i2pMove(id,to){
+  const from=i2pItems.findIndex(x=>x.id===id); if(from<0) return;
+  to=Math.max(0,Math.min(i2pItems.length-1,to)); if(to===from) return;
+  const [it]=i2pItems.splice(from,1); i2pItems.splice(to,0,it); i2pRender();
+}
+function i2pRender(){
+  const grid=$("#i2pGrid"), n=i2pItems.length;
+  $("#i2pCount").textContent = n ? (n+" of "+I2P_MAX+" files") : ("Up to "+I2P_MAX+" files");
+  $("#i2pEmpty").hidden=!!n; grid.hidden=!n; $("#i2pHint").hidden=!n;
+  $("#i2pGo").disabled=!n; $("#i2pClear").disabled=!n; $("#i2pOpenEd").disabled=!n; $("#i2pEach").disabled=!n;
+  grid.innerHTML="";
+  i2pItems.forEach((it,i)=>{
+    const c=el("div","i2p-card"); c.draggable=true;
+    const th=el("div","i2p-thumb");
+    if(it.kind==="img"){ const im=el("img"); im.src=it.thumb; im.alt=""; th.appendChild(im); }
+    else { const b=el("span","i2p-pdf"); b.textContent="PDF"; th.appendChild(b); }
+    const nm=el("div","i2p-name"); nm.textContent=it.name; nm.title=it.name;
+    const tools=el("div","i2p-tools");
+    const l=el("button"); l.textContent="‹"; l.title="Move earlier"; l.onclick=()=>i2pMove(it.id,i-1);
+    const num=el("span"); num.textContent=i+1;
+    const r=el("button"); r.textContent="›"; r.title="Move later"; r.onclick=()=>i2pMove(it.id,i+1);
+    tools.append(l,num,r);
+    const x=el("button","i2p-x"); x.textContent="×"; x.title="Remove";
+    x.onclick=()=>{ if(it.thumb) URL.revokeObjectURL(it.thumb); i2pItems=i2pItems.filter(y=>y!==it); i2pRender(); };
+    c.append(th,nm,tools,x);
+    c.addEventListener("dragstart",e=>{ i2pDragId=it.id; c.classList.add("dragging"); e.dataTransfer.setData("text/plain","i2p"); e.dataTransfer.effectAllowed="move"; });
+    c.addEventListener("dragend",()=>{ i2pDragId=null; c.classList.remove("dragging"); grid.querySelectorAll(".target").forEach(t=>t.classList.remove("target")); });
+    c.addEventListener("dragover",e=>{ if(i2pDragId==null) return; e.preventDefault(); c.classList.add("target"); });
+    c.addEventListener("dragleave",()=>c.classList.remove("target"));
+    c.addEventListener("drop",e=>{ if(i2pDragId==null) return; e.preventDefault(); e.stopPropagation(); i2pMove(i2pDragId,i); });
+    grid.appendChild(c);
+  });
+}
+// EXIF orientation of a JPEG (1 = already upright). Phone photos are often stored sideways with a rotation flag.
+function i2pJpegOrientation(u8){
+  try{
+    if(u8[0]!==0xFF||u8[1]!==0xD8) return 1;
+    let p=2;
+    while(p+4<u8.length && u8[p]===0xFF){
+      const marker=u8[p+1], len=(u8[p+2]<<8)|u8[p+3];
+      if(marker===0xE1 && u8[p+4]===0x45&&u8[p+5]===0x78&&u8[p+6]===0x69&&u8[p+7]===0x66){
+        const t=p+10, le = u8[t]===0x49;
+        const rd16=o=>le?(u8[o]|(u8[o+1]<<8)):((u8[o]<<8)|u8[o+1]);
+        const rd32=o=>le?(u8[o]|(u8[o+1]<<8)|(u8[o+2]<<16)|(u8[o+3]<<24))>>>0:((u8[o]<<24)|(u8[o+1]<<16)|(u8[o+2]<<8)|u8[o+3])>>>0;
+        const ifd=t+rd32(t+4), n=rd16(ifd);
+        for(let i=0;i<n;i++){ const e=ifd+2+i*12; if(rd16(e)===0x0112) return rd16(e+8)||1; }
+        return 1;
+      }
+      if(marker===0xDA) break;
+      p+=2+len;
+    }
+  }catch(_){}
+  return 1;
+}
+// Turn an image file into something pdf-lib can embed, keeping the original pixels wherever possible:
+//  - upright JPEG  → original bytes, untouched
+//  - PNG           → original bytes, untouched (lossless)
+//  - anything else (rotated photo, WEBP, GIF, BMP) → redrawn upright at full size, JPEG quality 92
+async function i2pImageData(file){
+  const raw=new Uint8Array(await file.arrayBuffer());
+  const isJpg = raw[0]===0xFF&&raw[1]===0xD8, isPng = raw[0]===0x89&&raw[1]===0x50;
+  const orient = isJpg ? i2pJpegOrientation(raw) : 1;
+  let bmp;
+  try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+  catch(_){ bmp=await createImageBitmap(file); }
+  const w=bmp.width, h=bmp.height;   // upright size
+  if(isJpg && orient===1){ bmp.close&&bmp.close(); return {kind:"jpg", bytes:raw, w, h}; }
+  if(isPng){ bmp.close&&bmp.close(); return {kind:"png", bytes:raw, w, h}; }
+  const MAXS=4096, sc=Math.min(1, MAXS/Math.max(w,h));
+  const cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
+  const cv=document.createElement("canvas"); cv.width=cw; cv.height=ch;
+  const cx=cv.getContext("2d"); cx.fillStyle="#fff"; cx.fillRect(0,0,cw,ch); cx.drawImage(bmp,0,0,cw,ch);
+  bmp.close&&bmp.close();
+  const blob=await new Promise(res=>cv.toBlob(res,"image/jpeg",0.92));
+  return {kind:"jpg", bytes:new Uint8Array(await blob.arrayBuffer()), w:cw, h:ch};
+}
+async function i2pPlaceImage(out, it, size, m){
+  const d=await i2pImageData(it.file);
+  const img = d.kind==="png" ? await out.embedPng(d.bytes) : await out.embedJpg(d.bytes);
+  let pw,ph;
+  if(size==="fit"){ const s=Math.min(0.75, 842/Math.max(d.w,d.h)); pw=d.w*s+2*m; ph=d.h*s+2*m; }
+  else { const base=size==="a4"?[595.28,841.89]:[612,792]; [pw,ph]= d.w>d.h ? [base[1],base[0]] : base; }
+  const page=out.addPage([pw,ph]);
+  const aw=pw-2*m, ah=ph-2*m, sc=Math.min(aw/d.w, ah/d.h), dw=d.w*sc, dh=d.h*sc;
+  page.drawImage(img,{x:(pw-dw)/2, y:(ph-dh)/2, width:dw, height:dh});
+}
+async function i2pBuild(items, progress){
+  const size=$("#i2pSize").value, m=+$("#i2pMargin").value;
+  const out=await PDFDocument.create();
+  for(let k=0;k<items.length;k++){
+    const it=items[k]; if(progress) progress(k+1);
+    if(it.kind==="pdf"){
+      const src=await PDFDocument.load(new Uint8Array(await it.file.arrayBuffer()),{ignoreEncryption:true});
+      (await out.copyPages(src,src.getPageIndices())).forEach(p=>out.addPage(p));
+    } else await i2pPlaceImage(out, it, size, m);
+  }
+  return await out.save();
+}
+const i2pBaseName=n=>(n||"file").replace(/\.[^.]+$/,"").replace(/[\\/:*?"<>|]+/g,"_")||"file";
+function i2pSave(bytes,name,type,keepMs){
+  const url=URL.createObjectURL(new Blob([bytes],{type})); const a=document.createElement("a");
+  a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),keepMs||4000);
+}
+async function i2pRun(mode){ // "combine" | "open" | "each"
+  if(!i2pItems.length) return;
+  const go=$("#i2pGo"), label=go.textContent, btns=["#i2pGo","#i2pOpenEd","#i2pEach","#i2pClear"];
+  btns.forEach(b=>$(b).disabled=true); busy(true);
+  const items=i2pItems.slice(), total=items.length;
+  try{
+    if(mode==="each"){
+      const files=[], used={};
+      for(let k=0;k<total;k++){
+        go.textContent="Converting "+(k+1)+" of "+total+"…";
+        const it=items[k];
+        const bytes = it.kind==="pdf" ? new Uint8Array(await it.file.arrayBuffer()) : await i2pBuild([it]);
+        let name=i2pBaseName(it.name); if(used[name]) name+="-"+(++used[name]); else used[name]=1;
+        files.push({name:name+".pdf", bytes});
+      }
+      // one download per PDF, spaced out so the browser accepts them all
+      // (Chrome asks once to "allow multiple downloads" — after that it remembers)
+      if(files.length>1) toast("Downloading "+total+" PDFs… if your browser asks to allow multiple downloads, click Allow.");
+      for(let k=0;k<files.length;k++){
+        go.textContent="Downloading "+(k+1)+" of "+files.length+"…";
+        i2pSave(files[k].bytes, files[k].name, "application/pdf", 90000);
+        if(k<files.length-1) await new Promise(r=>setTimeout(r,500));
+      }
+      if(files.length===1) toast("Saved as a PDF.");
+    } else {
+      const bytes=await i2pBuild(items, k=>{ go.textContent="Combining "+k+" of "+total+"…"; });
+      const name=i2pBaseName(items[0].name)+(total>1?"-combined":"")+".pdf";
+      if(mode==="open"){ i2pClose(); await loadFile(new File([bytes],name,{type:"application/pdf"})); }
+      else { i2pSave(bytes,name,"application/pdf"); toast("Combined "+total+" file"+(total>1?"s":"")+" into one PDF."); }
+    }
+  }catch(err){ console.error(err); toast("Couldn't convert — one of the files may be damaged or password-protected.",true); }
+  finally{ busy(false); go.textContent=label; i2pRender(); }
+}
+$("#i2pEach").onclick=()=>i2pRun("each");
+$("#i2pGo").onclick=()=>i2pRun("combine");
+$("#i2pOpenEd").onclick=()=>i2pRun("open");
+
+
+/* ---- word / date stamps: draw one or two lines into a .wst box ---- */
+function renderStampText(g, word, h){
+  const lines=String(word).split("\n");
+  g.classList.toggle("two", lines.length>1);
+  if(lines.length>1){
+    g.textContent="";
+    const l1=el("span","l1"), l2=el("span","l2");
+    l1.textContent=lines[0]; l2.textContent=lines[1];
+    l1.style.fontSize=(h*0.44)+"px"; l2.style.fontSize=(h*0.27)+"px"; l2.style.marginTop=(h*0.07)+"px";
+    g.append(l1,l2); g.style.fontSize="";
+  } else { g.textContent=lines[0]; g.style.fontSize=(h/1.6)+"px"; }
+}
+
+/* ==================== Date stamp ==================== */
+const DS_KEY="majd.dateStamp";
+const DS_MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function dsFormatDate(iso, fmt){
+  const [y,m,d]=iso.split("-").map(Number); if(!y||!m||!d) return "";
+  const mm=String(m).padStart(2,"0"), dd=String(d).padStart(2,"0"), mon=DS_MONTHS[m-1];
+  switch(fmt){
+    case "mdy-long": return mon+" "+d+", "+y;
+    case "dmy-short": return d+" "+mon.slice(0,3)+" "+y;
+    case "iso": return y+"-"+mm+"-"+dd;
+    case "dmy-slash": return dd+"/"+mm+"/"+y;
+    case "mdy-slash": return mm+"/"+dd+"/"+y;
+    default: return mon.slice(0,3)+" "+d+", "+y;
+  }
+}
+function dsFormatTime(t){ const [H,M]=t.split(":").map(Number); if(isNaN(H)) return ""; const h12=H%12||12; return h12+":"+String(M).padStart(2,"0")+" "+(H<12?"AM":"PM"); }
+function dsLocalToday(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"); }
+function dsLocalNow(){ const n=new Date(); return String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"); }
+let dsColor="#d1242f";
+function dsText(){
+  const date=dsFormatDate($("#dsDate").value||dsLocalToday(), $("#dsFormat").value);
+  const time=$("#dsTime").checked ? dsFormatTime($("#dsTimeVal").value||dsLocalNow()) : "";
+  const line2=time ? date+"  "+time : date;
+  const label=$("#dsLabel").value.trim().toUpperCase();
+  return label ? label+"\n"+line2 : line2;
+}
+function dsRefresh(){
+  const iso=$("#dsDate").value||dsLocalToday();
+  document.querySelectorAll("#dsFormat option").forEach(o=>{ o.textContent=dsFormatDate(iso,o.value); }); // examples follow the chosen date
+  const g=$("#dsPreview"), word=dsText(), two=word.includes("\n");
+  renderStampText(g, word, two?58:40);
+  g.style.borderWidth="3px"; g.style.setProperty("--anno-color", dsColor); g.style.color=dsColor; g.style.borderColor=dsColor;
+  g.style.transform=$("#dsTilt").checked ? "rotate(-15deg)" : "none";
+  $("#dsTimeVal").disabled=!$("#dsTime").checked;
+  document.querySelectorAll("#dsColors button").forEach(b=>b.classList.toggle("on", b.dataset.c===dsColor));
+}
+function openDateStamp(){
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem(DS_KEY)||"{}"); }catch(_){ }
+  $("#dsDate").value=dsLocalToday(); $("#dsTimeVal").value=dsLocalNow();
+  $("#dsFormat").value=saved.fmt||"mdy-short"; $("#dsLabel").value=saved.label||""; $("#dsTime").checked=!!saved.time; $("#dsTilt").checked=!!saved.tilt;
+  dsColor=saved.color||"#d1242f";
+  dsRefresh(); $("#dateModal").classList.remove("hide"); setTimeout(()=>$("#dsDate").focus(),50);
+}
+function closeDateStamp(){ $("#dateModal").classList.add("hide"); }
+$("#dsClose").onclick=$("#dsCancel").onclick=closeDateStamp;
+$("#dateModal").addEventListener("pointerdown",e=>{ if(e.target===$("#dateModal")) closeDateStamp(); });
+["#dsDate","#dsFormat","#dsLabel","#dsTime","#dsTimeVal","#dsTilt"].forEach(sel=>{ $(sel).addEventListener("input",dsRefresh); $(sel).addEventListener("change",dsRefresh); });
+$("#dsChips").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; $("#dsLabel").value=b.dataset.clear?"":b.textContent; dsRefresh(); });
+$("#dsColors").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; dsColor=b.dataset.c; dsRefresh(); });
+$("#dsPlace").onclick=()=>{
+  const word=dsText(); if(!word.trim()) return;
+  try{ localStorage.setItem(DS_KEY, JSON.stringify({fmt:$("#dsFormat").value,label:$("#dsLabel").value.trim(),time:$("#dsTime").checked,tilt:$("#dsTilt").checked,color:dsColor})); }catch(_){ }
+  wordStamp={word, color:dsColor, rot:$("#dsTilt").checked?-15:0};
+  colorPick.value=dsColor; if(typeof markSwatch==="function") markSwatch();
+  closeDateStamp(); setTool("wstamp");
+  toast("Click on the page to place the date stamp — keep clicking to add more. Drag a corner to resize.");
+};
+
 /* ==================== Snip tool ==================== */
 let snipDelaySec=0;
 const SNIP_COLORS=["#e02f2f","#ff8a00","#ffd400","#2ecc71","#2563eb","#7b2ff7","#111111","#ffffff"];
@@ -4717,7 +5179,7 @@ function snipMenuAct(act){
   startSnip(snipDefaultMode);
 }
 let snipDefaultMode="rect";
-$("#snipBtn").onclick = ()=> startSnip(snipDefaultMode);
+if($("#snipBtn")) $("#snipBtn").onclick = ()=> startSnip(snipDefaultMode); // button may not be in the toolbar
 wireDropdown("snipCaretBtn","snipMenu", snipMenuAct);
 
 function runSnipCountdown(sec){
