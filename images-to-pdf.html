@@ -6,6 +6,7 @@
 <title>Majd — Images to PDF</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root{ --navy:#0f2444; --ink:#2b2f38; --muted:#5f6b77; --line:#dfe5ec; --teal:#3a9a94; --coral:#e8836b; --coral-soft:#f5b4a3; --blue:#2f6fdc; --blue-d:#245ec2; --sky:#a9c3e8; --tint:#eef4ff; }
   *{box-sizing:border-box}
@@ -37,7 +38,7 @@
   .btn{display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:11px 22px; border-radius:6px; border:0; font:inherit; font-size:14px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; cursor:pointer; color:#fff; min-width:150px}
   .btn svg{width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
   .btn-upload{background:var(--blue)} .btn-upload:hover{background:var(--blue-d)}
-  .btn-clear{background:var(--coral)} .btn-clear:hover{background:#dd7057} .btn-clear:disabled{background:var(--coral-soft); cursor:default}
+  .btn-clear{background:#d9453c} .btn-clear:hover{background:#c33a31} .btn-clear:disabled{background:var(--coral-soft); cursor:default}
   .btn-combine{background:var(--navy); min-width:190px} .btn-combine:hover{background:#1a3564}
   .btn-combine:disabled{background:#b9c0cb; cursor:default}
   .btn-ghost{background:#fff; color:#2b2f38; border:1.5px solid #cfd6e0} .btn-ghost:hover{background:#f4f6fa} .btn-ghost:disabled{color:#a8b0bb; border-color:#e3e8ee; cursor:default; background:#fff}
@@ -60,6 +61,10 @@
   .i2p-tools{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12px; color:var(--muted); font-weight:600}
   .i2p-tools button{background:#f1f4f9; border:0; border-radius:6px; width:26px; height:22px; font-size:15px; line-height:1; color:var(--ink); cursor:pointer}
   .i2p-tools button:hover{background:#e3e9f3}
+  .i2p-dl{width:100%; margin-top:6px; border:1px solid #cfd6e0; background:#f4f6fa; color:#2b2f38; border-radius:6px; padding:6px 0; font:inherit; font-size:12px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; cursor:pointer}
+  .i2p-dl:hover{background:#e9edf4}
+  .btn-combine{position:relative}
+  .btn-combine[data-count]:not([data-count="0"])::after{content:attr(data-count); position:absolute; top:-9px; right:-9px; min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:#4b5563; color:#fff; font-size:12px; font-weight:800; display:grid; place-items:center; box-shadow:0 0 0 2px #fff; letter-spacing:0}
   .i2p-x{position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; border:0; background:#e02424; color:#fff; font-size:15px; line-height:1; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.25)}
 
   .options{display:flex; align-items:center; justify-content:center; gap:18px; flex-wrap:wrap; margin:16px 0 6px; font-size:13px; color:var(--muted)}
@@ -129,6 +134,7 @@
 
 <script>
 const EDITOR_URL="pdf-editor.html";
+if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 (function(){
 "use strict";
 const { PDFDocument } = PDFLib;
@@ -161,7 +167,9 @@ function i2pAdd(files){
   for(const f of files){
     const kind=i2pKind(f); if(!kind){ skipped++; continue; }
     if(i2pItems.length>=I2P_MAX){ over++; continue; }
-    i2pItems.push({id:++i2pSeq, file:f, name:f.name, kind, added:Date.now(), thumb: kind==="img" ? URL.createObjectURL(f) : null});
+    const item={id:++i2pSeq, file:f, name:f.name, kind, added:Date.now(), thumb: kind==="img" ? URL.createObjectURL(f) : null};
+    i2pItems.push(item);
+    if(kind==="pdf") i2pThumbPdf(item);
   }
   i2pRender();
   if(over) toast("Up to "+I2P_MAX+" files at a time — "+over+" left out.",true);
@@ -176,22 +184,24 @@ function i2pRender(){
   const grid=$("#i2pGrid"), n=i2pItems.length;
   $("#i2pCount").textContent = n ? (n+" of "+I2P_MAX+" files") : ("Up to "+I2P_MAX+" files");
   $("#i2pEmpty").hidden=!!n; grid.hidden=!n; $("#i2pHint").hidden=!n;
-  $("#i2pGo").disabled=!n; $("#i2pClear").disabled=!n; $("#i2pOpenEd").disabled=!n; $("#i2pEach").disabled=!n;
+  $("#i2pGo").disabled=!n; $("#i2pClear").disabled=!n; $("#i2pOpenEd").disabled=!n; $("#i2pEach").disabled=!n; $("#i2pGo").dataset.count=n;
   grid.innerHTML="";
   i2pItems.forEach((it,i)=>{
     const c=el("div","i2p-card"); c.draggable=true;
     const th=el("div","i2p-thumb");
-    if(it.kind==="img"){ const im=el("img"); im.src=it.thumb; im.alt=""; th.appendChild(im); }
+    if(it.thumb){ const im=el("img"); im.src=it.thumb; im.alt=""; th.appendChild(im); }
     else { const b=el("span","i2p-pdf"); b.textContent="PDF"; th.appendChild(b); }
+    th.dataset.id=it.id;
     const nm=el("div","i2p-name"); nm.textContent=it.name; nm.title=it.name;
     const tools=el("div","i2p-tools");
     const l=el("button"); l.textContent="‹"; l.title="Move earlier"; l.onclick=()=>i2pMove(it.id,i-1);
     const num=el("span"); num.textContent=i+1;
     const r=el("button"); r.textContent="›"; r.title="Move later"; r.onclick=()=>i2pMove(it.id,i+1);
     tools.append(l,num,r);
+    const dl=el("button","i2p-dl"); dl.textContent="Download"; dl.title="Save this one as a PDF"; dl.onclick=()=>i2pDownloadOne(it);
     const x=el("button","i2p-x"); x.textContent="×"; x.title="Remove";
     x.onclick=()=>{ if(it.thumb) URL.revokeObjectURL(it.thumb); i2pItems=i2pItems.filter(y=>y!==it); i2pRender(); };
-    c.append(th,nm,tools,x);
+    c.append(th,nm,tools,dl,x);
     c.addEventListener("dragstart",e=>{ i2pDragId=it.id; c.classList.add("dragging"); e.dataTransfer.setData("text/plain","i2p"); e.dataTransfer.effectAllowed="move"; });
     c.addEventListener("dragend",()=>{ i2pDragId=null; c.classList.remove("dragging"); grid.querySelectorAll(".target").forEach(t=>t.classList.remove("target")); });
     c.addEventListener("dragover",e=>{ if(i2pDragId==null) return; e.preventDefault(); c.classList.add("target"); });
@@ -264,6 +274,30 @@ async function i2pBuild(items, progress){
     } else await i2pPlaceImage(out, it, size, m);
   }
   return await out.save();
+}
+// First page of a PDF as a small picture for its card (pdf.js), filled in when it's ready
+async function i2pThumbPdf(item){
+  if(!window.pdfjsLib) return;
+  try{
+    const data=new Uint8Array(await item.file.arrayBuffer());
+    const doc=await pdfjsLib.getDocument({data, isEvalSupported:false}).promise;
+    const page=await doc.getPage(1);
+    const vp0=page.getViewport({scale:1}), scale=240/vp0.width, vp=page.getViewport({scale});
+    const cv=document.createElement("canvas"); cv.width=Math.ceil(vp.width); cv.height=Math.ceil(vp.height);
+    await page.render({canvasContext:cv.getContext("2d"), viewport:vp}).promise;
+    item.thumb=cv.toDataURL("image/jpeg",0.82); doc.destroy&&doc.destroy();
+    if(!i2pItems.includes(item)) return;
+    const th=document.querySelector('.i2p-thumb[data-id="'+item.id+'"]');
+    if(th){ th.textContent=""; const im=el("img"); im.src=item.thumb; im.alt=""; th.appendChild(im); }
+  }catch(_){ /* keep the PDF badge */ }
+}
+async function i2pDownloadOne(it){
+  busy(true);
+  try{
+    const bytes = it.kind==="pdf" ? new Uint8Array(await it.file.arrayBuffer()) : await i2pBuild([it]);
+    i2pSave(bytes, i2pBaseName(it.name)+".pdf", "application/pdf");
+  }catch(err){ console.error(err); toast("Couldn't convert that file.",true); }
+  finally{ busy(false); }
 }
 const i2pBaseName=n=>(n||"file").replace(/\.[^.]+$/,"").replace(/[\\/:*?"<>|]+/g,"_")||"file";
 function i2pSave(bytes,name,type,keepMs){
