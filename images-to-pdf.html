@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Majd — Images to PDF</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230f2444'/%3E%3Cpath d='M9 23 L9 9 L16 16.6 L23 9 L23 23' fill='none' stroke='%23ffcb05' stroke-width='4.4' stroke-linejoin='miter'/%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  :root{ --navy:#0f2444; --ink:#16213b; --muted:#5f6b77; --line:#dfe5ec; --gold:#2563eb; --gold-soft:#4a7ef2; --tint:#eef4ff; --r-md:10px; }
+  *{box-sizing:border-box}
+  html,body{margin:0; min-height:100%; background:#f4f6fa; color:var(--ink); font-family:-apple-system,"SF Pro Text",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:14px}
+  .topbar{height:62px; display:flex; align-items:center; gap:4px; padding:0 14px 0 0; background:#fff; border-bottom:1px solid var(--line)}
+  .brand{display:flex; align-items:center; gap:11px; align-self:stretch; background:var(--navy); padding:0 22px 0 18px; margin-right:10px; text-decoration:none}
+  .brand .logo{width:34px; height:34px; flex:none}
+  .brand-text{display:flex; flex-direction:column; line-height:1.02}
+  .brand-name{font-size:19px; font-weight:700; color:#fff; letter-spacing:-.1px}
+  .brand small{font-weight:600; font-size:10px; color:#9fb0cf; letter-spacing:1.8px; text-transform:uppercase; margin-top:2px}
+  .tbtn{display:inline-flex; align-items:center; gap:7px; padding:9px 13px; border-radius:9px; border:1px solid transparent; background:transparent; color:var(--ink); font:inherit; font-size:14.5px; font-weight:600; cursor:pointer; text-decoration:none}
+  .tbtn:hover{background:#eef2f7}
+  .tbtn svg{width:19px; height:19px; stroke:#5f6b77; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
+  .tbtn.outline{margin-left:auto; border-color:#cfd8e3} .tbtn.outline:hover{border-color:#9fb0cf; background:#f6f8fb}
+  main{max-width:900px; margin:28px auto 60px; padding:0 16px}
+  h1{font-size:26px; margin:0 0 6px} .sub{color:var(--muted); margin:0 0 18px; font-size:15px; line-height:1.5}
+  .card{background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 10px 30px rgba(15,36,68,.06); padding:16px 18px 14px}
+  .lbtn{display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:9px; border:1px solid #cfd8e3; background:#fff; color:var(--ink); font:inherit; font-size:14px; font-weight:600; cursor:pointer}
+  .lbtn:hover{background:#f6f8fb; border-color:#9fb0cf}
+  .lbtn.gold{background:var(--gold); border-color:var(--gold); color:#fff} .lbtn.gold:hover{background:#1d4fd8; border-color:#1d4fd8}
+  .lbtn:disabled{opacity:.45; cursor:not-allowed}
+  footer.actions{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px}
+  footer.actions .row{display:flex; gap:8px; flex-wrap:wrap}
+  .privacy{display:flex; align-items:center; gap:8px; justify-content:center; color:var(--muted); font-size:13px; margin-top:16px}
+  .privacy svg{width:16px; height:16px; stroke:#1f9d4d; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); background:var(--navy); color:#fff; padding:10px 18px; border-radius:var(--r-md); font-size:13px; font-weight:500; opacity:0; pointer-events:none; transition:.2s; z-index:50; max-width:92vw; text-align:center}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)} .toast.err{background:#b42318}
+  .busy{position:fixed; inset:0; background:rgba(244,242,236,.7); display:grid; place-items:center; z-index:60} .busy.hide{display:none}
+  .spin{width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--gold); border-radius:50%; animation:s 1s linear infinite} @keyframes s{to{transform:rotate(360deg)}}
+  .i2p-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px}
+  .i2p-top label{font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px}
+  .i2p-top select{border:1px solid var(--line); border-radius:8px; padding:6px 8px; font:inherit; color:var(--ink); background:#fff}
+  .i2p-top .lbtn{display:inline-flex; align-items:center; gap:7px}
+  .i2p-drop{border:2px dashed #b9c9e6; border-radius:12px; min-height:230px; max-height:min(52vh,460px); overflow:auto; padding:12px; background:#f8faff; transition:background .1s, border-color .1s}
+  .i2p-drop.over{border-color:#2563eb; background:#eef4ff}
+  .i2p-empty{height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; text-align:center}
+  .i2p-empty[hidden]{display:none}
+  .i2p-hint{font-size:12.5px; color:var(--muted); text-align:center; margin:0 0 10px}
+  .i2p-hint[hidden]{display:none}
+  .i2p-empty b{color:#2563eb; font-size:17px}
+  .i2p-empty span{color:var(--muted); font-size:13px}
+  .i2p-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px}
+  .i2p-card{position:relative; background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px; cursor:grab; user-select:none}
+  .i2p-card.dragging{opacity:.4} .i2p-card.target{outline:2px solid #2563eb; outline-offset:2px}
+  .i2p-thumb{height:120px; display:grid; place-items:center; background:#f1f4f9; border-radius:6px; overflow:hidden}
+  .i2p-thumb img{max-width:100%; max-height:100%; object-fit:contain; pointer-events:none}
+  .i2p-pdf{font-weight:800; color:#d1242f; border:2px solid #d1242f; border-radius:6px; padding:4px 8px; font-size:13px}
+  .i2p-name{font-size:11.5px; color:var(--ink); margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .i2p-tools{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12px; color:var(--muted); font-weight:600}
+  .i2p-tools button{background:#f1f4f9; border:0; border-radius:6px; width:26px; height:22px; font-size:15px; line-height:1; color:var(--ink); cursor:pointer}
+  .i2p-tools button:hover{background:#e3e9f3}
+  .i2p-x{position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; border:0; background:#e02424; color:#fff; font-size:15px; line-height:1; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  @media (max-width:640px){ .i2p footer{flex-wrap:wrap} .i2p footer .row{flex-wrap:wrap} }
+  @media (max-width:720px){ .topbar{height:56px; padding-right:8px} .brand{padding:0 12px; margin-right:4px} .brand-text{display:none} .tbtn{padding:8px 9px} main{margin-top:18px} h1{font-size:22px} }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="pdf-editor.html" title="Majd PDF Editor"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15.5" fill="#0f2444"/><path d="M9 23 L9 9 L16 16.6 L23 9 L23 23" fill="none" stroke="#ffcb05" stroke-width="4.4" stroke-linecap="butt" stroke-linejoin="miter"/></svg><div class="brand-text"><span class="brand-name">Majd</span><small>Images → PDF</small></div></a>
+  <a class="tbtn" href="pdf-editor.html"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Home</a>
+  <a class="tbtn outline" href="pdf-editor.html">Open PDF editor</a>
+</div>
+
+<main>
+  <h1>Images → PDF</h1>
+  <p class="sub">Turn photos and pictures into a PDF. Add up to 30 files, put them in order, then combine them into one PDF or save each as its own PDF. PDFs can be mixed in too.</p>
+  <div class="card">
+    <div class="i2p-top">
+      <button class="lbtn gold" id="i2pUpload"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V8M8.5 11.5 12 8l3.5 3.5"/></svg> Upload files</button>
+      <label>Page size <select id="i2pSize"><option value="fit">Same as image</option><option value="letter">Letter</option><option value="a4">A4</option></select></label>
+      <label>Margin <select id="i2pMargin"><option value="0">None</option><option value="18" selected>Small</option><option value="36">Large</option></select></label>
+      <span id="i2pCount" style="margin-left:auto;color:var(--muted);font-size:13px">Up to 30 files</span>
+    </div>
+    <div class="i2p-drop" id="i2pDrop">
+      <div class="i2p-empty" id="i2pEmpty"><b>Drop your files here</b><span>JPG, PNG, WEBP or PDF · up to 30 files · drag to reorder<br>Photos are rotated the right way up and kept at full resolution</span></div>
+      <p class="i2p-hint" id="i2pHint" hidden>Drop more files here, or drag the cards to change the order</p>
+      <div class="i2p-grid" id="i2pGrid" hidden></div>
+    </div>
+    <input type="file" id="i2pInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf" multiple hidden>
+    <footer class="actions"><button class="lbtn" id="i2pClear" disabled>Clear</button><div class="row"><button class="lbtn" id="i2pOpenEd" disabled>Open in editor</button><button class="lbtn" id="i2pEach" disabled title="One PDF for each file">Download separately</button><button class="lbtn gold" id="i2pGo" disabled>Combine into one PDF</button></div></footer>
+  </div>
+  <div class="privacy"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3 7-7 9-4-2-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg> Your pictures stay on your computer — nothing is uploaded.</div>
+</main>
+<div class="toast" id="toast"></div>
+<div class="busy hide" id="busy"><div class="spin"></div></div>
+
+<script>
+(function(){
+"use strict";
+const { PDFDocument } = PDFLib;
+const $=s=>document.querySelector(s);
+const el=(t,c)=>{ const e=document.createElement(t); if(c) e.className=c; return e; };
+let toastT=null;
+function toast(msg, err){ const t=$("#toast"); t.textContent=msg; t.className="toast show"+(err?" err":""); clearTimeout(toastT); toastT=setTimeout(()=>t.className="toast",2600); }
+const busy=on=>$("#busy").classList.toggle("hide",!on);
+function idbSet(key,val){ return new Promise((res,rej)=>{ const r=indexedDB.open("majd",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>{ const db=r.result; const tx=db.transaction("kv","readwrite"); tx.objectStore("kv").put(val,key); tx.oncomplete=()=>{db.close();res();}; tx.onerror=()=>{db.close();rej(tx.error);}; }; r.onerror=()=>rej(r.error); }); }
+/* ==================== Images → PDF: combine up to 30 images/PDFs into one PDF ==================== */
+const I2P_MAX=30;
+let i2pItems=[], i2pSeq=0, i2pDragId=null;
+$("#i2pUpload").onclick=()=>$("#i2pInput").click();
+$("#i2pInput").onchange=e=>{ i2pAdd([...e.target.files]); e.target.value=""; };
+$("#i2pClear").onclick=()=>{ i2pItems.forEach(it=>it.thumb&&URL.revokeObjectURL(it.thumb)); i2pItems=[]; i2pRender(); };
+const i2pDrop=$("#i2pDrop");
+const i2pHasFiles=e=>e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+["dragenter","dragover"].forEach(t=>i2pDrop.addEventListener(t,e=>{ if(i2pHasFiles(e)){ e.preventDefault(); i2pDrop.classList.add("over"); } }));
+["dragleave","drop"].forEach(t=>i2pDrop.addEventListener(t,()=>i2pDrop.classList.remove("over")));
+i2pDrop.addEventListener("drop",e=>{ if(!i2pHasFiles(e)) return; e.preventDefault(); i2pAdd([...e.dataTransfer.files]); });
+$("#i2pEmpty").onclick=()=>$("#i2pInput").click();
+
+function i2pKind(f){
+  if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)) return "pdf";
+  if(/^image\/(jpeg|png|webp|gif|bmp)$/.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name)) return "img";
+  return null;
+}
+function i2pAdd(files){
+  let skipped=0, over=0;
+  for(const f of files){
+    const kind=i2pKind(f); if(!kind){ skipped++; continue; }
+    if(i2pItems.length>=I2P_MAX){ over++; continue; }
+    i2pItems.push({id:++i2pSeq, file:f, name:f.name, kind, thumb: kind==="img" ? URL.createObjectURL(f) : null});
+  }
+  i2pRender();
+  if(over) toast("Up to "+I2P_MAX+" files at a time — "+over+" left out.",true);
+  else if(skipped) toast(skipped+" file"+(skipped>1?"s":"")+" skipped — use JPG, PNG, WEBP or PDF.",true);
+}
+function i2pMove(id,to){
+  const from=i2pItems.findIndex(x=>x.id===id); if(from<0) return;
+  to=Math.max(0,Math.min(i2pItems.length-1,to)); if(to===from) return;
+  const [it]=i2pItems.splice(from,1); i2pItems.splice(to,0,it); i2pRender();
+}
+function i2pRender(){
+  const grid=$("#i2pGrid"), n=i2pItems.length;
+  $("#i2pCount").textContent = n ? (n+" of "+I2P_MAX+" files") : ("Up to "+I2P_MAX+" files");
+  $("#i2pEmpty").hidden=!!n; grid.hidden=!n; $("#i2pHint").hidden=!n;
+  $("#i2pGo").disabled=!n; $("#i2pClear").disabled=!n; $("#i2pOpenEd").disabled=!n; $("#i2pEach").disabled=!n;
+  grid.innerHTML="";
+  i2pItems.forEach((it,i)=>{
+    const c=el("div","i2p-card"); c.draggable=true;
+    const th=el("div","i2p-thumb");
+    if(it.kind==="img"){ const im=el("img"); im.src=it.thumb; im.alt=""; th.appendChild(im); }
+    else { const b=el("span","i2p-pdf"); b.textContent="PDF"; th.appendChild(b); }
+    const nm=el("div","i2p-name"); nm.textContent=it.name; nm.title=it.name;
+    const tools=el("div","i2p-tools");
+    const l=el("button"); l.textContent="‹"; l.title="Move earlier"; l.onclick=()=>i2pMove(it.id,i-1);
+    const num=el("span"); num.textContent=i+1;
+    const r=el("button"); r.textContent="›"; r.title="Move later"; r.onclick=()=>i2pMove(it.id,i+1);
+    tools.append(l,num,r);
+    const x=el("button","i2p-x"); x.textContent="×"; x.title="Remove";
+    x.onclick=()=>{ if(it.thumb) URL.revokeObjectURL(it.thumb); i2pItems=i2pItems.filter(y=>y!==it); i2pRender(); };
+    c.append(th,nm,tools,x);
+    c.addEventListener("dragstart",e=>{ i2pDragId=it.id; c.classList.add("dragging"); e.dataTransfer.setData("text/plain","i2p"); e.dataTransfer.effectAllowed="move"; });
+    c.addEventListener("dragend",()=>{ i2pDragId=null; c.classList.remove("dragging"); grid.querySelectorAll(".target").forEach(t=>t.classList.remove("target")); });
+    c.addEventListener("dragover",e=>{ if(i2pDragId==null) return; e.preventDefault(); c.classList.add("target"); });
+    c.addEventListener("dragleave",()=>c.classList.remove("target"));
+    c.addEventListener("drop",e=>{ if(i2pDragId==null) return; e.preventDefault(); e.stopPropagation(); i2pMove(i2pDragId,i); });
+    grid.appendChild(c);
+  });
+}
+// EXIF orientation of a JPEG (1 = already upright). Phone photos are often stored sideways with a rotation flag.
+function i2pJpegOrientation(u8){
+  try{
+    if(u8[0]!==0xFF||u8[1]!==0xD8) return 1;
+    let p=2;
+    while(p+4<u8.length && u8[p]===0xFF){
+      const marker=u8[p+1], len=(u8[p+2]<<8)|u8[p+3];
+      if(marker===0xE1 && u8[p+4]===0x45&&u8[p+5]===0x78&&u8[p+6]===0x69&&u8[p+7]===0x66){
+        const t=p+10, le = u8[t]===0x49;
+        const rd16=o=>le?(u8[o]|(u8[o+1]<<8)):((u8[o]<<8)|u8[o+1]);
+        const rd32=o=>le?(u8[o]|(u8[o+1]<<8)|(u8[o+2]<<16)|(u8[o+3]<<24))>>>0:((u8[o]<<24)|(u8[o+1]<<16)|(u8[o+2]<<8)|u8[o+3])>>>0;
+        const ifd=t+rd32(t+4), n=rd16(ifd);
+        for(let i=0;i<n;i++){ const e=ifd+2+i*12; if(rd16(e)===0x0112) return rd16(e+8)||1; }
+        return 1;
+      }
+      if(marker===0xDA) break;
+      p+=2+len;
+    }
+  }catch(_){}
+  return 1;
+}
+// Turn an image file into something pdf-lib can embed, keeping the original pixels wherever possible:
+//  - upright JPEG  → original bytes, untouched
+//  - PNG           → original bytes, untouched (lossless)
+//  - anything else (rotated photo, WEBP, GIF, BMP) → redrawn upright at full size, JPEG quality 92
+async function i2pImageData(file){
+  const raw=new Uint8Array(await file.arrayBuffer());
+  const isJpg = raw[0]===0xFF&&raw[1]===0xD8, isPng = raw[0]===0x89&&raw[1]===0x50;
+  const orient = isJpg ? i2pJpegOrientation(raw) : 1;
+  let bmp;
+  try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+  catch(_){ bmp=await createImageBitmap(file); }
+  const w=bmp.width, h=bmp.height;   // upright size
+  if(isJpg && orient===1){ bmp.close&&bmp.close(); return {kind:"jpg", bytes:raw, w, h}; }
+  if(isPng){ bmp.close&&bmp.close(); return {kind:"png", bytes:raw, w, h}; }
+  const MAXS=4096, sc=Math.min(1, MAXS/Math.max(w,h));
+  const cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
+  const cv=document.createElement("canvas"); cv.width=cw; cv.height=ch;
+  const cx=cv.getContext("2d"); cx.fillStyle="#fff"; cx.fillRect(0,0,cw,ch); cx.drawImage(bmp,0,0,cw,ch);
+  bmp.close&&bmp.close();
+  const blob=await new Promise(res=>cv.toBlob(res,"image/jpeg",0.92));
+  return {kind:"jpg", bytes:new Uint8Array(await blob.arrayBuffer()), w:cw, h:ch};
+}
+async function i2pPlaceImage(out, it, size, m){
+  const d=await i2pImageData(it.file);
+  const img = d.kind==="png" ? await out.embedPng(d.bytes) : await out.embedJpg(d.bytes);
+  let pw,ph;
+  if(size==="fit"){ const s=Math.min(0.75, 842/Math.max(d.w,d.h)); pw=d.w*s+2*m; ph=d.h*s+2*m; }
+  else { const base=size==="a4"?[595.28,841.89]:[612,792]; [pw,ph]= d.w>d.h ? [base[1],base[0]] : base; }
+  const page=out.addPage([pw,ph]);
+  const aw=pw-2*m, ah=ph-2*m, sc=Math.min(aw/d.w, ah/d.h), dw=d.w*sc, dh=d.h*sc;
+  page.drawImage(img,{x:(pw-dw)/2, y:(ph-dh)/2, width:dw, height:dh});
+}
+async function i2pBuild(items, progress){
+  const size=$("#i2pSize").value, m=+$("#i2pMargin").value;
+  const out=await PDFDocument.create();
+  for(let k=0;k<items.length;k++){
+    const it=items[k]; if(progress) progress(k+1);
+    if(it.kind==="pdf"){
+      const src=await PDFDocument.load(new Uint8Array(await it.file.arrayBuffer()),{ignoreEncryption:true});
+      (await out.copyPages(src,src.getPageIndices())).forEach(p=>out.addPage(p));
+    } else await i2pPlaceImage(out, it, size, m);
+  }
+  return await out.save();
+}
+const i2pBaseName=n=>(n||"file").replace(/\.[^.]+$/,"").replace(/[\\/:*?"<>|]+/g,"_")||"file";
+function i2pSave(bytes,name,type,keepMs){
+  const url=URL.createObjectURL(new Blob([bytes],{type})); const a=document.createElement("a");
+  a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),keepMs||4000);
+}
+async function i2pRun(mode){ // "combine" | "open" | "each"
+  if(!i2pItems.length) return;
+  const go=$("#i2pGo"), label=go.textContent, btns=["#i2pGo","#i2pOpenEd","#i2pEach","#i2pClear"];
+  btns.forEach(b=>$(b).disabled=true); busy(true);
+  const items=i2pItems.slice(), total=items.length;
+  try{
+    if(mode==="each"){
+      const files=[], used={};
+      for(let k=0;k<total;k++){
+        go.textContent="Converting "+(k+1)+" of "+total+"…";
+        const it=items[k];
+        const bytes = it.kind==="pdf" ? new Uint8Array(await it.file.arrayBuffer()) : await i2pBuild([it]);
+        let name=i2pBaseName(it.name); if(used[name]) name+="-"+(++used[name]); else used[name]=1;
+        files.push({name:name+".pdf", bytes});
+      }
+      // one download per PDF, spaced out so the browser accepts them all
+      // (Chrome asks once to "allow multiple downloads" — after that it remembers)
+      if(files.length>1) toast("Downloading "+total+" PDFs… if your browser asks to allow multiple downloads, click Allow.");
+      for(let k=0;k<files.length;k++){
+        go.textContent="Downloading "+(k+1)+" of "+files.length+"…";
+        i2pSave(files[k].bytes, files[k].name, "application/pdf", 90000);
+        if(k<files.length-1) await new Promise(r=>setTimeout(r,500));
+      }
+      if(files.length===1) toast("Saved as a PDF.");
+    } else {
+      const bytes=await i2pBuild(items, k=>{ go.textContent="Combining "+k+" of "+total+"…"; });
+      const name=i2pBaseName(items[0].name)+(total>1?"-combined":"")+".pdf";
+      if(mode==="open"){ await idbSet("pendingImport",{buf:bytes.buffer, name}); location.href="pdf-editor.html"; return; }
+      else { i2pSave(bytes,name,"application/pdf"); toast("Combined "+total+" file"+(total>1?"s":"")+" into one PDF."); }
+    }
+  }catch(err){ console.error(err); toast("Couldn't convert — one of the files may be damaged or password-protected.",true); }
+  finally{ busy(false); go.textContent=label; i2pRender(); }
+}
+$("#i2pEach").onclick=()=>i2pRun("each");
+$("#i2pGo").onclick=()=>i2pRun("combine");
+$("#i2pOpenEd").onclick=()=>i2pRun("open");
+
+
+
+i2pRender();
+})();
+</script>
+</body>
+</html>
