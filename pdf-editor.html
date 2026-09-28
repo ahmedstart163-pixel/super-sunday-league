@@ -953,35 +953,7 @@
   .anno.field.fld-text:hover{background:rgba(37,99,235,.04); border-color:#7f96c4}
   .anno.field.fld-text.selected{border:1px solid #2563eb; background:transparent}
 
-  /* Images → PDF */
   .i2p-link{display:block; margin:12px auto 0; background:none; border:0; color:#2563eb; font-weight:600; font-size:14px; cursor:pointer; text-decoration:underline; text-underline-offset:3px}
-  .i2p header small{font-weight:500; color:var(--muted); font-size:12.5px; margin-left:8px}
-  .i2p .body{padding:16px 18px}
-  .i2p-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px}
-  .i2p-top label{font-size:13px; color:var(--muted); display:flex; align-items:center; gap:6px}
-  .i2p-top select{border:1px solid var(--line); border-radius:8px; padding:6px 8px; font:inherit; color:var(--ink); background:#fff}
-  .i2p-top .lbtn{display:inline-flex; align-items:center; gap:7px}
-  .i2p-drop{border:2px dashed #b9c9e6; border-radius:12px; min-height:230px; max-height:min(52vh,460px); overflow:auto; padding:12px; background:#f8faff; transition:background .1s, border-color .1s}
-  .i2p-drop.over{border-color:#2563eb; background:#eef4ff}
-  .i2p-empty{height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; text-align:center}
-  .i2p-empty[hidden]{display:none}
-  .i2p-hint{font-size:12.5px; color:var(--muted); text-align:center; margin:0 0 10px}
-  .i2p-hint[hidden]{display:none}
-  .i2p-empty b{color:#2563eb; font-size:17px}
-  .i2p-empty span{color:var(--muted); font-size:13px}
-  .i2p-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px}
-  .i2p-card{position:relative; background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px; cursor:grab; user-select:none}
-  .i2p-card.dragging{opacity:.4} .i2p-card.target{outline:2px solid #2563eb; outline-offset:2px}
-  .i2p-thumb{height:120px; display:grid; place-items:center; background:#f1f4f9; border-radius:6px; overflow:hidden}
-  .i2p-thumb img{max-width:100%; max-height:100%; object-fit:contain; pointer-events:none}
-  .i2p-pdf{font-weight:800; color:#d1242f; border:2px solid #d1242f; border-radius:6px; padding:4px 8px; font-size:13px}
-  .i2p-name{font-size:11.5px; color:var(--ink); margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .i2p-tools{display:flex; align-items:center; justify-content:space-between; margin-top:4px; font-size:12px; color:var(--muted); font-weight:600}
-  .i2p-tools button{background:#f1f4f9; border:0; border-radius:6px; width:26px; height:22px; font-size:15px; line-height:1; color:var(--ink); cursor:pointer}
-  .i2p-tools button:hover{background:#e3e9f3}
-  .i2p-x{position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; border:0; background:#e02424; color:#fff; font-size:15px; line-height:1; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  .i2p footer .lbtn:disabled{opacity:.45; cursor:not-allowed}
-  @media (max-width:640px){ .i2p footer{flex-wrap:wrap} .i2p footer .row{flex-wrap:wrap} }
 </style>
 </head>
 <body>
@@ -1378,26 +1350,6 @@
 </div>
 
 
-<!-- Images → PDF -->
-<div class="modal-bg hide" id="i2pModal">
-  <div class="modal i2p" style="width:min(820px,95vw)">
-    <header class="head"><span>Images → PDF <small id="i2pCount">Up to 30 files</small></span><button class="x" id="i2pClose">×</button></header>
-    <div class="body">
-      <div class="i2p-top">
-        <button class="lbtn gold" id="i2pUpload"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V8M8.5 11.5 12 8l3.5 3.5"/></svg> Upload files</button>
-        <label>Page size <select id="i2pSize"><option value="fit">Same as image</option><option value="letter">Letter</option><option value="a4">A4</option></select></label>
-        <label>Margin <select id="i2pMargin"><option value="0">None</option><option value="18" selected>Small</option><option value="36">Large</option></select></label>
-      </div>
-      <div class="i2p-drop" id="i2pDrop">
-        <div class="i2p-empty" id="i2pEmpty"><b>Drop your files here</b><span>JPG, PNG, WEBP or PDF · up to 30 files · drag to reorder<br>Photos are rotated the right way up and kept at full resolution</span></div>
-        <p class="i2p-hint" id="i2pHint" hidden>Drop more files here, or drag the cards to change the order</p>
-        <div class="i2p-grid" id="i2pGrid" hidden></div>
-      </div>
-      <input type="file" id="i2pInput" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf" multiple hidden>
-    </div>
-    <footer><button class="lbtn" id="i2pClear">Clear</button><div class="row"><button class="lbtn" id="i2pOpenEd">Open in editor</button><button class="lbtn" id="i2pEach" title="One PDF for each file">Download separately</button><button class="lbtn gold" id="i2pGo">Combine into one PDF</button></div></footer>
-  </div>
-</div>
 <!-- Document Info modal -->
 <!-- Date stamp -->
 <div class="modal-bg hide" id="dateModal">
@@ -4917,182 +4869,9 @@ $("#mergeInput").onchange=async e=>{
 };
 
 
-/* ==================== Images → PDF: combine up to 30 images/PDFs into one PDF ==================== */
-const I2P_MAX=30;
-let i2pItems=[], i2pSeq=0, i2pDragId=null;
-const i2pModal=$("#i2pModal");
-function i2pOpen(){ i2pModal.classList.remove("hide"); i2pRender(); }
-function i2pClose(){ i2pModal.classList.add("hide"); }
-$("#i2pBtn").onclick=i2pOpen;
-if($("#i2pBtn2")) $("#i2pBtn2").onclick=i2pOpen;
-$("#i2pClose").onclick=i2pClose;
-i2pModal.addEventListener("pointerdown",e=>{ if(e.target===i2pModal) i2pClose(); });
-$("#i2pUpload").onclick=()=>$("#i2pInput").click();
-$("#i2pInput").onchange=e=>{ i2pAdd([...e.target.files]); e.target.value=""; };
-$("#i2pClear").onclick=()=>{ i2pItems.forEach(it=>it.thumb&&URL.revokeObjectURL(it.thumb)); i2pItems=[]; i2pRender(); };
-const i2pDrop=$("#i2pDrop");
-const i2pHasFiles=e=>e.dataTransfer && [...e.dataTransfer.types].includes("Files");
-["dragenter","dragover"].forEach(t=>i2pDrop.addEventListener(t,e=>{ if(i2pHasFiles(e)){ e.preventDefault(); i2pDrop.classList.add("over"); } }));
-["dragleave","drop"].forEach(t=>i2pDrop.addEventListener(t,()=>i2pDrop.classList.remove("over")));
-i2pDrop.addEventListener("drop",e=>{ if(!i2pHasFiles(e)) return; e.preventDefault(); i2pAdd([...e.dataTransfer.files]); });
-$("#i2pEmpty").onclick=()=>$("#i2pInput").click();
-
-function i2pKind(f){
-  if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)) return "pdf";
-  if(/^image\/(jpeg|png|webp|gif|bmp)$/.test(f.type)||/\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name)) return "img";
-  return null;
-}
-function i2pAdd(files){
-  let skipped=0, over=0;
-  for(const f of files){
-    const kind=i2pKind(f); if(!kind){ skipped++; continue; }
-    if(i2pItems.length>=I2P_MAX){ over++; continue; }
-    i2pItems.push({id:++i2pSeq, file:f, name:f.name, kind, thumb: kind==="img" ? URL.createObjectURL(f) : null});
-  }
-  i2pRender();
-  if(over) toast("Up to "+I2P_MAX+" files at a time — "+over+" left out.",true);
-  else if(skipped) toast(skipped+" file"+(skipped>1?"s":"")+" skipped — use JPG, PNG, WEBP or PDF.",true);
-}
-function i2pMove(id,to){
-  const from=i2pItems.findIndex(x=>x.id===id); if(from<0) return;
-  to=Math.max(0,Math.min(i2pItems.length-1,to)); if(to===from) return;
-  const [it]=i2pItems.splice(from,1); i2pItems.splice(to,0,it); i2pRender();
-}
-function i2pRender(){
-  const grid=$("#i2pGrid"), n=i2pItems.length;
-  $("#i2pCount").textContent = n ? (n+" of "+I2P_MAX+" files") : ("Up to "+I2P_MAX+" files");
-  $("#i2pEmpty").hidden=!!n; grid.hidden=!n; $("#i2pHint").hidden=!n;
-  $("#i2pGo").disabled=!n; $("#i2pClear").disabled=!n; $("#i2pOpenEd").disabled=!n; $("#i2pEach").disabled=!n;
-  grid.innerHTML="";
-  i2pItems.forEach((it,i)=>{
-    const c=el("div","i2p-card"); c.draggable=true;
-    const th=el("div","i2p-thumb");
-    if(it.kind==="img"){ const im=el("img"); im.src=it.thumb; im.alt=""; th.appendChild(im); }
-    else { const b=el("span","i2p-pdf"); b.textContent="PDF"; th.appendChild(b); }
-    const nm=el("div","i2p-name"); nm.textContent=it.name; nm.title=it.name;
-    const tools=el("div","i2p-tools");
-    const l=el("button"); l.textContent="‹"; l.title="Move earlier"; l.onclick=()=>i2pMove(it.id,i-1);
-    const num=el("span"); num.textContent=i+1;
-    const r=el("button"); r.textContent="›"; r.title="Move later"; r.onclick=()=>i2pMove(it.id,i+1);
-    tools.append(l,num,r);
-    const x=el("button","i2p-x"); x.textContent="×"; x.title="Remove";
-    x.onclick=()=>{ if(it.thumb) URL.revokeObjectURL(it.thumb); i2pItems=i2pItems.filter(y=>y!==it); i2pRender(); };
-    c.append(th,nm,tools,x);
-    c.addEventListener("dragstart",e=>{ i2pDragId=it.id; c.classList.add("dragging"); e.dataTransfer.setData("text/plain","i2p"); e.dataTransfer.effectAllowed="move"; });
-    c.addEventListener("dragend",()=>{ i2pDragId=null; c.classList.remove("dragging"); grid.querySelectorAll(".target").forEach(t=>t.classList.remove("target")); });
-    c.addEventListener("dragover",e=>{ if(i2pDragId==null) return; e.preventDefault(); c.classList.add("target"); });
-    c.addEventListener("dragleave",()=>c.classList.remove("target"));
-    c.addEventListener("drop",e=>{ if(i2pDragId==null) return; e.preventDefault(); e.stopPropagation(); i2pMove(i2pDragId,i); });
-    grid.appendChild(c);
-  });
-}
-// EXIF orientation of a JPEG (1 = already upright). Phone photos are often stored sideways with a rotation flag.
-function i2pJpegOrientation(u8){
-  try{
-    if(u8[0]!==0xFF||u8[1]!==0xD8) return 1;
-    let p=2;
-    while(p+4<u8.length && u8[p]===0xFF){
-      const marker=u8[p+1], len=(u8[p+2]<<8)|u8[p+3];
-      if(marker===0xE1 && u8[p+4]===0x45&&u8[p+5]===0x78&&u8[p+6]===0x69&&u8[p+7]===0x66){
-        const t=p+10, le = u8[t]===0x49;
-        const rd16=o=>le?(u8[o]|(u8[o+1]<<8)):((u8[o]<<8)|u8[o+1]);
-        const rd32=o=>le?(u8[o]|(u8[o+1]<<8)|(u8[o+2]<<16)|(u8[o+3]<<24))>>>0:((u8[o]<<24)|(u8[o+1]<<16)|(u8[o+2]<<8)|u8[o+3])>>>0;
-        const ifd=t+rd32(t+4), n=rd16(ifd);
-        for(let i=0;i<n;i++){ const e=ifd+2+i*12; if(rd16(e)===0x0112) return rd16(e+8)||1; }
-        return 1;
-      }
-      if(marker===0xDA) break;
-      p+=2+len;
-    }
-  }catch(_){}
-  return 1;
-}
-// Turn an image file into something pdf-lib can embed, keeping the original pixels wherever possible:
-//  - upright JPEG  → original bytes, untouched
-//  - PNG           → original bytes, untouched (lossless)
-//  - anything else (rotated photo, WEBP, GIF, BMP) → redrawn upright at full size, JPEG quality 92
-async function i2pImageData(file){
-  const raw=new Uint8Array(await file.arrayBuffer());
-  const isJpg = raw[0]===0xFF&&raw[1]===0xD8, isPng = raw[0]===0x89&&raw[1]===0x50;
-  const orient = isJpg ? i2pJpegOrientation(raw) : 1;
-  let bmp;
-  try{ bmp=await createImageBitmap(file,{imageOrientation:"from-image"}); }
-  catch(_){ bmp=await createImageBitmap(file); }
-  const w=bmp.width, h=bmp.height;   // upright size
-  if(isJpg && orient===1){ bmp.close&&bmp.close(); return {kind:"jpg", bytes:raw, w, h}; }
-  if(isPng){ bmp.close&&bmp.close(); return {kind:"png", bytes:raw, w, h}; }
-  const MAXS=4096, sc=Math.min(1, MAXS/Math.max(w,h));
-  const cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
-  const cv=document.createElement("canvas"); cv.width=cw; cv.height=ch;
-  const cx=cv.getContext("2d"); cx.fillStyle="#fff"; cx.fillRect(0,0,cw,ch); cx.drawImage(bmp,0,0,cw,ch);
-  bmp.close&&bmp.close();
-  const blob=await new Promise(res=>cv.toBlob(res,"image/jpeg",0.92));
-  return {kind:"jpg", bytes:new Uint8Array(await blob.arrayBuffer()), w:cw, h:ch};
-}
-async function i2pPlaceImage(out, it, size, m){
-  const d=await i2pImageData(it.file);
-  const img = d.kind==="png" ? await out.embedPng(d.bytes) : await out.embedJpg(d.bytes);
-  let pw,ph;
-  if(size==="fit"){ const s=Math.min(0.75, 842/Math.max(d.w,d.h)); pw=d.w*s+2*m; ph=d.h*s+2*m; }
-  else { const base=size==="a4"?[595.28,841.89]:[612,792]; [pw,ph]= d.w>d.h ? [base[1],base[0]] : base; }
-  const page=out.addPage([pw,ph]);
-  const aw=pw-2*m, ah=ph-2*m, sc=Math.min(aw/d.w, ah/d.h), dw=d.w*sc, dh=d.h*sc;
-  page.drawImage(img,{x:(pw-dw)/2, y:(ph-dh)/2, width:dw, height:dh});
-}
-async function i2pBuild(items, progress){
-  const size=$("#i2pSize").value, m=+$("#i2pMargin").value;
-  const out=await PDFDocument.create();
-  for(let k=0;k<items.length;k++){
-    const it=items[k]; if(progress) progress(k+1);
-    if(it.kind==="pdf"){
-      const src=await PDFDocument.load(new Uint8Array(await it.file.arrayBuffer()),{ignoreEncryption:true});
-      (await out.copyPages(src,src.getPageIndices())).forEach(p=>out.addPage(p));
-    } else await i2pPlaceImage(out, it, size, m);
-  }
-  return await out.save();
-}
-const i2pBaseName=n=>(n||"file").replace(/\.[^.]+$/,"").replace(/[\\/:*?"<>|]+/g,"_")||"file";
-function i2pSave(bytes,name,type,keepMs){
-  const url=URL.createObjectURL(new Blob([bytes],{type})); const a=document.createElement("a");
-  a.href=url; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(url),keepMs||4000);
-}
-async function i2pRun(mode){ // "combine" | "open" | "each"
-  if(!i2pItems.length) return;
-  const go=$("#i2pGo"), label=go.textContent, btns=["#i2pGo","#i2pOpenEd","#i2pEach","#i2pClear"];
-  btns.forEach(b=>$(b).disabled=true); busy(true);
-  const items=i2pItems.slice(), total=items.length;
-  try{
-    if(mode==="each"){
-      const files=[], used={};
-      for(let k=0;k<total;k++){
-        go.textContent="Converting "+(k+1)+" of "+total+"…";
-        const it=items[k];
-        const bytes = it.kind==="pdf" ? new Uint8Array(await it.file.arrayBuffer()) : await i2pBuild([it]);
-        let name=i2pBaseName(it.name); if(used[name]) name+="-"+(++used[name]); else used[name]=1;
-        files.push({name:name+".pdf", bytes});
-      }
-      // one download per PDF, spaced out so the browser accepts them all
-      // (Chrome asks once to "allow multiple downloads" — after that it remembers)
-      if(files.length>1) toast("Downloading "+total+" PDFs… if your browser asks to allow multiple downloads, click Allow.");
-      for(let k=0;k<files.length;k++){
-        go.textContent="Downloading "+(k+1)+" of "+files.length+"…";
-        i2pSave(files[k].bytes, files[k].name, "application/pdf", 90000);
-        if(k<files.length-1) await new Promise(r=>setTimeout(r,500));
-      }
-      if(files.length===1) toast("Saved as a PDF.");
-    } else {
-      const bytes=await i2pBuild(items, k=>{ go.textContent="Combining "+k+" of "+total+"…"; });
-      const name=i2pBaseName(items[0].name)+(total>1?"-combined":"")+".pdf";
-      if(mode==="open"){ i2pClose(); await loadFile(new File([bytes],name,{type:"application/pdf"})); }
-      else { i2pSave(bytes,name,"application/pdf"); toast("Combined "+total+" file"+(total>1?"s":"")+" into one PDF."); }
-    }
-  }catch(err){ console.error(err); toast("Couldn't convert — one of the files may be damaged or password-protected.",true); }
-  finally{ busy(false); go.textContent=label; i2pRender(); }
-}
-$("#i2pEach").onclick=()=>i2pRun("each");
-$("#i2pGo").onclick=()=>i2pRun("combine");
-$("#i2pOpenEd").onclick=()=>i2pRun("open");
-
+/* Images → PDF lives on its own page; it can hand the result back here (see pendingImport at startup) */
+$("#i2pBtn").onclick=()=>window.open("images-to-pdf.html","_blank");
+if($("#i2pBtn2")) $("#i2pBtn2").onclick=()=>window.open("images-to-pdf.html","_blank");
 
 /* ---- word / date stamps: draw one or two lines into a .wst box ---- */
 function renderStampText(g, word, h){
@@ -5611,6 +5390,8 @@ function showRestoreBanner(name){
   try{
     const buf = await idbGet("pendingScan");
     if(buf){ await idbDel("pendingScan"); await loadDoc(new Uint8Array(buf), "Scan.pdf"); if(pdfDoc) toast("Scan loaded — ready to edit."); return; }
+    const imp = await idbGet("pendingImport");
+    if(imp && imp.buf){ await idbDel("pendingImport"); await loadDoc(new Uint8Array(imp.buf), imp.name||"images.pdf"); if(pdfDoc) toast("Your PDF is ready to edit."); return; }
   }catch(e){ /* no handoff */ }
   try{ const saved=await idbGet("session_doc"); if(saved && saved.original) showRestoreBanner(saved.name); }catch(e){}
 })();
