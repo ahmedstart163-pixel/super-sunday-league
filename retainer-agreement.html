@@ -131,6 +131,43 @@
   .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
   .chk input{width:auto}
   .pdate{display:none}
+  .progswitch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px}
+  .progswitch button{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:10px 6px;font-weight:700;font-size:13px;color:var(--navy);cursor:pointer;font-family:inherit}
+  .progswitch button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .typedcopy{border:1.5px solid #b45309;background:#fff7ed;color:#7c2d12;border-radius:6px;padding:9px 12px;font-family:'Inter';font-size:12.5px;margin:0 0 18px}
+  .sig .onfile{font-family:'Inter';font-size:11px;color:#b45309;font-style:italic}
+  /* classic layout (Alhijra template) */
+  .paper.classic{--cn:#1c2657;--cr:#c8102e}
+  .paper.classic .chead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:12px;border-bottom:3px solid var(--cn)}
+  .paper.classic .chead .brand{display:flex;gap:12px;align-items:flex-start}
+  .paper.classic .chead .brand img{height:62px;width:auto}
+  .paper.classic .chead .fname{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:22px;color:var(--cn);line-height:1.1}
+  .paper.classic .chead .rcic{font-family:'Inter';font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--cr);margin-top:3px}
+  .paper.classic .chead .contact{font-family:'Inter';font-size:11px;color:#6b7280;margin-top:2px;line-height:1.4}
+  .paper.classic .chead .lic{font-family:'Inter';font-size:11px;color:#6b7280;text-align:right;white-space:nowrap;padding-top:4px}
+  .paper.classic .chead .lic b{color:var(--cn)}
+  .paper.classic .ctitle{text-align:center;margin:18px 0 12px}
+  .paper.classic .ctitle .t{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:30px;letter-spacing:3px;color:var(--cn)}
+  .paper.classic .ctitle .st{font-family:'Inter';font-size:11px;font-weight:700;letter-spacing:3px;color:var(--cr);text-transform:uppercase;margin-top:2px}
+  .paper.classic .ctitle .m{font-family:'Inter';font-size:11px;color:#6b7280;margin-top:6px}
+  .paper.classic .cparties{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 20px}
+  .paper.classic .ccard{border:1px solid #d1d5db;border-top:3px solid var(--cn);padding:10px 12px;break-inside:avoid}
+  .paper.classic .ccard.r{border-top-color:var(--cr)}
+  .paper.classic .ccard h4{margin:0 0 4px;font-family:'Inter';font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cn)}
+  .paper.classic .ccard.r h4{color:var(--cr)}
+  .paper.classic .ccard .big{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:17px;color:var(--cn);margin-bottom:4px}
+  .paper.classic .ccard .lb{font-family:'Inter';font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#6b7280;margin-top:5px}
+  .paper.classic .ccard .v{font-size:13.5px;line-height:1.35}
+  .paper.classic h2{border-bottom:1px solid #d1d5db;color:var(--cn);letter-spacing:1.5px;align-items:center}
+  .paper.classic h2 .sn{background:var(--cn);color:#fff;font-size:11px;min-width:18px;height:18px;display:inline-grid;place-items:center;border-radius:2px;padding:0 4px}
+  .paper.classic h2 .sn:empty{display:none}
+  .paper.classic table.fees th{background:var(--cn)}
+  .paper.classic .cfoot{display:none}
+  @media print{
+    .paper.classic .cfoot{display:block;position:fixed;bottom:0;left:0;right:0;font-family:'Inter';font-size:9px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:3px}
+    .paper.classic .cfoot span{float:right}
+    .paper.classic{padding-bottom:22px}
+  }
   @media print{
     .sitenav{display:none !important}
     .paper .inlinedate{display:none !important}
@@ -194,6 +231,16 @@
 <div class="wrap">
   <!-- ════════ FORM ════════ -->
   <div class="form" id="form">
+    <div class="progswitch">
+      <button type="button" id="ps-g5" onclick="pickProgram('g5')">Group of Five</button>
+      <button type="button" id="ps-sp" onclick="pickProgram('sp')">Spousal</button>
+      <button type="button" id="ps-ot" onclick="pickProgram('ot')">Other programs</button>
+    </div>
+    <label style="margin-top:0">Document layout</label>
+    <select id="layout" onchange="render()" style="margin-bottom:14px">
+      <option value="modern">Modern (centred header)</option>
+      <option value="classic">Classic (Alhijra letterhead)</option>
+    </select>
 
     <div style="background:#f3f6fb;border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:16px">
       <div style="font-weight:700;font-size:13px;color:var(--navy);display:flex;align-items:center;gap:7px;margin-bottom:7px">
@@ -309,6 +356,16 @@
       <legend><span class="n">3</span> Matter & scope</legend>
       <label>Immigration program</label>
       <select id="program"></select>
+      <div id="spFields" class="v2box" style="display:none">
+        <label style="margin-top:0">Spousal sponsorship details</label>
+        <div class="two">
+          <div><label>Relationship</label><select id="spRel"><option value="spouse">Spouse</option><option value="common-law partner">Common-law partner</option><option value="conjugal partner">Conjugal partner</option></select></div>
+          <div><label>Application</label><select id="spStream" onchange="onSpStream()"><option value="outland">Outside Canada (outland)</option><option value="inland">Inside Canada (inland)</option></select></div>
+        </div>
+        <label class="chk" id="owpWrap" style="display:none"><input type="checkbox" id="spOwp" onchange="render()" /> Include an open work permit application for the sponsored person</label>
+        <label class="chk"><input type="checkbox" id="spGov" checked onchange="render()" /> List IRCC government fees (paid directly by the Client)</label>
+        <div class="hint">The sponsored person is entered as the second client (joint retainer). Government fees: sponsorship $90, principal applicant processing $570, right of permanent residence $600 (effective 2026-04-30) — confirm against IRCC's fee list before signing.</div>
+      </div>
       <label>Scope of services (editable)</label>
       <textarea id="scope" rows="8"></textarea>
       <div class="hint">One service per line. These become the numbered RCIC responsibilities in Section 3.</div>
@@ -352,6 +409,7 @@
         <select id="payMode" onchange="onPayMode()">
           <option value="invoice">Advance on signing, balance invoiced as work is done</option>
           <option value="paidFull">Paid in full on signing</option>
+          <option value="onSubmit">Collected when the application is submitted (no advance, no trust account)</option>
         </select>
         <div id="paidFields" style="display:none">
           <div class="two">
@@ -380,7 +438,7 @@
     <fieldset>
       <legend><span class="n">6</span> Execution &amp; policies</legend>
       <div class="two">
-        <div><label>Agreement date (also used for signatures)</label><input type="date" id="adate" /></div>
+        <div><label>Agreement date (also used for signatures)</label><input type="date" id="adate" /><div id="oldDateHint" class="hint" style="display:none;color:#b45309"></div></div>
         <div><label>File / ref no.</label><input type="text" id="fileNo" placeholder="ALH-0001" value="ALH-0001" /></div>
       </div>
       <label>File retention period (s.24(3)(q))</label>
@@ -569,17 +627,18 @@ const PROGRAMS = {
   },
   "Spousal / Common-law Sponsorship": {
     scope: [
-      "Assess eligibility of the Sponsor and the Sponsored Person",
-      "Advise on relationship evidence and documentary requirements",
-      "Prepare and complete the Sponsorship and Permanent Residence application forms",
-      "Compile and review relationship and supporting evidence with the Client",
+      "Assess the eligibility and admissibility of the Sponsor and the Sponsored Person",
+      "Advise on relationship evidence and collect and review supporting documents",
+      "Prepare the sponsorship and permanent residence application forms and submissions",
       "Prepare a representation/submission letter to IRCC",
-      "Submit the application and act as the Client's authorized representative",
-      "Respond to IRCC requests, including biometrics, medicals and interviews",
-      "Communicate IRCC's decision and next steps to the Client"
+      "Submit the application to IRCC and act as the Clients' authorized representative",
+      "Monitor the application and respond to IRCC requests (e.g., additional documents, biometrics, medical exam, interview)",
+      "Communicate IRCC's decision and, where approved, guide the Clients through confirmation of permanent residence"
     ],
+    timeframe:"Preparation and submission: approximately 4–8 weeks after the RCIC receives complete documents. IRCC processing (outside Quebec, IRCC data 2026-09-03): currently about 18 months for applications from outside Canada and about 26 months for applications from inside Canada. The RCIC will respond to the Clients' communications within 48 hours",
+    preadvice:"The RCIC reviewed the Clients' circumstances and advised on eligibility to sponsor under the Family Class. The Sponsor must be 18 or older and a Canadian citizen, a person registered under the Indian Act, or a permanent resident living in Canada (a citizen living abroad must show they will live in Canada once the Sponsored Person becomes a permanent resident). The Sponsor must not be receiving social assistance other than for disability, must not be in default of a previous sponsorship undertaking, support order or immigration loan, and must not be barred from sponsoring (for example, having sponsored a previous spouse or partner, or having been sponsored as a spouse or partner, within the last five years). The relationship must be genuine and not entered into primarily for immigration; common-law partners must have lived together for at least 12 months. The Sponsor must sign an undertaking to support the Sponsored Person for three years. The Sponsored Person must be admissible to Canada (medical, criminal and security checks). The RCIC also advised on the documents and steps required. IRCC makes the final decision; approval is not guaranteed.",
     milestones: [["Upon signing of this Agreement",30],["Upon submission of the application to IRCC",50],["Upon final decision by IRCC",20]],
-    disb: ["IRCC sponsorship fee","IRCC processing fee","Right of Permanent Residence Fee (RPRF)","Biometrics fee","Medical examination","Police certificates","Document translation","Courier / postage"]
+    disb: ["Document translation","Courier / postage"]
   },
   "Visitor Visa (TRV)": {
     scope: [
@@ -816,6 +875,25 @@ const paItems = () => ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter
 const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=="hourly";
 const payDateVal = () => $("payDate").value || $("adate").value;
 function addPrintDates(id){ const el=$(id); if(!el) return; el.querySelectorAll('input.inlinedate').forEach(i=>{ const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp); }); }
+const isSp = () => $("program").value==="Spousal / Common-law Sponsorship";
+const isG5 = () => $("program").value==="Group of Five Refugee Sponsorship";
+function pickProgram(k){
+  const sel=$("program");
+  if(k==="g5") sel.value="Group of Five Refugee Sponsorship";
+  else if(k==="sp") sel.value="Spousal / Common-law Sponsorship";
+  else if(isG5()||isSp()) sel.value="Study Permit";
+  loadProgram();
+}
+function syncProgUI(){
+  const g=isG5(), p=isSp();
+  $("ps-g5").classList.toggle("on",g); $("ps-sp").classList.toggle("on",p); $("ps-ot").classList.toggle("on",!g&&!p);
+  $("spFields").style.display = p ? "block" : "none";
+  onSpStream(true);
+}
+function onSpStream(noRender){ $("owpWrap").style.display = $("spStream").value==="inland" ? "flex" : "none"; if(!noRender) render(); }
+function daysAgo(iso){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return 0; return Math.floor((Date.now()-new Date(+m[1],+m[2]-1,+m[3]).getTime())/86400000); }
+const isTypedCopy = iso => daysAgo(iso) > 30;
+function typedCopyBanner(iso, what){ return `<div class="typedcopy"><b>TYPED COPY.</b> This is a typed copy of the original ${what} signed on ${niceDate(iso)}. Prepared ${today()}. The signed original is kept on file.</div>`; }
 function onPayMode(){ $("paidFields").style.display = $("payMode").value==="paidFull" ? "block" : "none"; render(); }
 
 /* ── init ────────────────────────────────────────────── */
@@ -826,12 +904,15 @@ function initPrograms(){
 }
 function loadProgram(){
   const p = PROGRAMS[$("program").value];
+  if($("program").value==="Spousal / Common-law Sponsorship"){ if(!$("joint").checked){ $("joint").checked=true; window._autoJoint=true; onJoint(); } }
+  else if(window._autoJoint){ window._autoJoint=false; $("joint").checked=false; onJoint(); }
   if($("program").value==="Group of Five Refugee Sponsorship") $("groupRep").checked=true;
   $("scope").value = p.scope.join("\n");
   $("timeframe").value = p.timeframe || "";
   $("preadvice").value = p.preadvice || "";
   disb = p.disb.map(name=>({name, amount:""}));
   renderDisb();
+  syncProgUI();
   render();
 }
 function renderDisb(){
@@ -855,6 +936,9 @@ function render(){
   const taxIncl=$("taxIncl").checked;
   const tax=taxIncl?0:base*taxRate/100, total=base+tax;
   const mems=memberList();
+  const sp=isSp(), spRel=$("spRel").value, spStream=$("spStream").value, spOwp=sp&&spStream==="inland"&&$("spOwp").checked, onSub=$("payMode").value==="onSubmit"&&$("feeMethod").value!=="hourly";
+  const classic=$("layout").value==="classic", tcopy=isTypedCopy($("adate").value);
+  { const h=$("oldDateHint"); if(h){ h.style.display=tcopy?"block":"none"; h.textContent=tcopy?"This date is more than 30 days ago, so the agreement is marked as a typed copy of the signed original.":""; } }
   const pas=paItems(), group=$("groupRep").checked||mems.length>0, pf=paidFull(), pDate=payDateVal(), pMethod=$("payMethod").value;
   const assist=$("assist").value.trim(), instr=$("instructions").value.trim();
   const timeframe=$("timeframe").value.trim(), preadv=$("preadvice").value.trim(), conflict=$("conflict").value.trim();
@@ -887,7 +971,7 @@ function render(){
         <div>${esc($("firmAddr").value||"[Address]")}</div>
         <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
       </div>
-      <div class="party"><h4>${(joint||mems.length)?"The Clients":"The Client"}${mems.length?" — Group contact":""}</h4>
+      <div class="party"><h4>${(joint||mems.length)?"The Clients":"The Client"}${mems.length?" — Group contact":""}${sp?" — Sponsor & Principal Applicant":""}</h4>
         <div class="nm">${esc($("cliName").value||"[Client name]")}</div>
         ${$("cliDob").value?`<div>Date of birth: ${longDate($("cliDob").value)}</div>`:""}
         <div>${esc($("cliAddr").value||"[Address]")}</div>
@@ -908,8 +992,8 @@ function render(){
     <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
 
     <h2><span class="sn">3.</span> Services to be provided by the RCIC</h2>
-    <p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>
-    <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    ${sp?`<p>The RCIC will represent the Clients in an application for <b>permanent residence under the Family Class — sponsorship of a ${esc(spRel)}</b> (${spStream==="inland"?"inside Canada":"outside Canada"}). The Sponsor, <b>${esc($("cliName").value||"[Sponsor]")}</b>, is sponsoring their ${esc(spRel)}, <b>${esc(cli2||"[Sponsored Person]")}</b>, the Principal Applicant.${spOwp?` The services also include an open work permit application for the Principal Applicant.`:""} In consideration of the fees set out below, the RCIC agrees to:</p>`:`<p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>`}
+    <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}${spOwp?`<li>Prepare and submit an open work permit application for the Principal Applicant</li>`:""}</ol>
     ${pas.length?`<p style="margin:10px 0 2px"><b>Principal Applicants covered by this Agreement (${pas.length}):</b></p><ol class="pa">${pas.map(p=>`<li>${esc(p)}</li>`).join("")}</ol>`:""}
     <p><b>Estimated time frame:</b> ${timeframe?esc(timeframe):"to be confirmed with the Client"}. Time frames are estimates only; once an application is submitted, processing times are controlled by IRCC and may change.</p>
     <p>The RCIC endeavours to provide quality immigration and citizenship consulting services and to adequately supervise any person who assists in providing them. The following persons are likely to assist the RCIC: ${assist?esc(assist):"the RCIC and authorized staff of the firm"}.</p>
@@ -952,6 +1036,17 @@ function render(){
       </tbody>
     </table>
     <p>This is an estimate, not a fixed quote; actual fees depend on the hours worked and will be itemized on each invoice. Invoices are payable within ${esc(dueDays)} days of receipt.${interest>0?` Accounts not paid within that period bear interest at ${interest}% per annum.`:""} The RCIC will not switch from an hourly arrangement to a flat fee for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
+    ` : onSub ? `
+    <p>The Client will be billed by the <b>flat fee</b> method, as a single payment. The professional fee is earned on completion and submission of the application and is collected at that time. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
+    <table class="fees">
+      <thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Professional fee — ${esc(program)}</td><td class="amt">${cad(base)}</td></tr>
+        ${(!taxIncl&&taxRate>0)?`<tr><td>GST/HST (${taxRate}%)</td><td class="amt">${cad(tax)}</td></tr>`:""}
+        <tr class="total"><td>Total — payable when the application is submitted to IRCC</td><td class="amt">${cad(total)}</td></tr>
+      </tbody>
+    </table>
+    <p>Any later fees or disbursements are payable within ${esc(dueDays)} days of the invoice date. The RCIC will not switch from a flat-fee arrangement to an hourly structure for the same service, and will not undertake work that unnecessarily increases fees or disbursements.</p>
     ` : pf ? `
     <p>The Client will be billed by the <b>flat fee</b> method. The flat fee is <b>${cad(base)}</b>${pas.length?` and covers all ${pas.length} Principal Applicant${pas.length>1?"s":""} listed in Section 3`:""}. All amounts are in Canadian Dollars. Fees are fair and reasonable in the circumstances, and the RCIC will charge only for work that is relevant and necessary to the Client's matter.</p>
     <table class="fees">
@@ -987,12 +1082,20 @@ function render(){
     <p>Disbursements charged to the Client will not exceed the actual amount incurred. Should any fees or disbursements exceed these estimates, or should a new disbursement arise, the RCIC will inform the Client and obtain the Client's written agreement before incurring it.</p>
 
     <h2><span class="sn">8.</span> Additional costs</h2>
+    ${(sp&&$("spGov").checked)?`<p>The Client is responsible for the government fees charged by IRCC. These are paid directly to the Government of Canada when the application is submitted, are not professional fees, and may change without notice:</p>
+    <table class="fees"><thead><tr><th>Government fee (IRCC)</th><th class="amt">Amount</th></tr></thead><tbody>
+      <tr><td>Sponsorship fee</td><td class="amt">${cad(90)}</td></tr>
+      <tr><td>Principal applicant processing fee</td><td class="amt">${cad(570)}</td></tr>
+      <tr><td>Right of permanent residence fee</td><td class="amt">${cad(600)}</td></tr>
+      <tr><td>Biometrics, medical exam, police certificates${spOwp?", open work permit fees":""}</td><td class="amt">As applicable</td></tr>
+    </tbody></table>`:""}
     <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
 
     <h2><span class="sn">9.</span> Taxes</h2>
     <p>${taxIncl?`Any applicable taxes are included in the professional fee.`:taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not Applicable.`}</p>
 
-    ${pf?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
+    ${onSub?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
+    <p>The professional fee is earned on completion and submission of the application and is collected at that time. The RCIC does not collect or hold unearned fees in advance and does not hold client funds in trust for this matter. The RCIC will provide the Client with a receipt for every payment received.</p>`:pf?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
     <p>The Client paid the professional fee of <b>${cad(total)}</b> in full by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>. The RCIC has provided the Client with a receipt. Funds received before services are rendered are held in trust in a client account at a financial institution approved by the College, kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`:`<h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
     <p>An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`}
 
@@ -1053,6 +1156,33 @@ function render(){
       <p>Received from <b>${esc($("cliName").value||"[Client name]")}</b>${joint&&cli2?` and <b>${esc(cli2)}</b>`:""}${mems.length?`, on behalf of the Group,`:""} the sum of <b>${cad(total)}</b> by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>, being payment in full of the professional fee under Service Agreement File No. ${esc($("fileNo").value||"—")}. Balance owing: ${cad(0)}.</p>
       <div class="sigs" style="margin-top:18px"><div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC, ${esc(firmName)}</div></div><div></div></div></div>`:""}
   `;
+  { const P=$("paper");
+    P.classList.toggle("classic", classic);
+    if(classic){
+      const addr=$("firmAddr").value, ph=$("firmPhone").value, em=$("firmEmail").value;
+      const card=(cls,h,big,rows)=>`<div class="ccard ${cls}"><h4>${h}</h4><div class="big">${esc(big)}</div>${rows.filter(r=>r[1]).map(r=>`<div class="lb">${r[0]}</div><div class="v">${r[1]}</div>`).join("")}</div>`;
+      const subtitle = sp?`Family Class (${esc(spRel)}) sponsorship`: isG5()?"Group of Five refugee sponsorship": esc(program);
+      const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div><div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div><div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
+        <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. ${esc($("fileNo").value||"—")} · Services provided in ${esc(lang)}</div></div>`;
+      const intro=`<p>This Service Agreement is made on <b>${niceDate($("adate").value)}</b>, under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between the Client${(joint||mems.length)?"s":""} and the RCIC identified below. It sets out the terms on which the RCIC will provide immigration and citizenship consulting services.</p>`;
+      const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Date of birth",esc($("cliDob").value)],["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
+      const cR=card("r","The RCIC",rcic||"[RCIC name]",[["Firm",esc(firmName)],["College ID",`<b>${esc(rno)}</b>`],["Address",esc(addr)],["Telephone · Email",esc(ph)+(em?" · "+esc(em):"")]]);
+      let extra="";
+      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Date of birth",esc($("cli2Dob").value)],["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
+      mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Date of birth",esc(m.dob)],["Home address",esc(m.addr)],["Telephone",esc(m.phone)],["Email",esc(m.email)]]); });
+      const parties=`<div class="cparties">${c1}${cR}${extra}</div>`;
+      const oldHead=P.querySelector(".doc-head"), oldIntro=oldHead.nextElementSibling, oldParties=P.querySelector(".parties");
+      let n=oldParties.nextElementSibling; if(n && n.classList.contains("party")) n.remove(); // members block (shown in cards instead)
+      oldParties.outerHTML=parties; oldIntro.outerHTML=intro; oldHead.outerHTML=head;
+      P.querySelectorAll("h2 .sn").forEach(e=>e.textContent=e.textContent.replace(".",""));
+      P.insertAdjacentHTML("beforeend",`<div class="cfoot">Client initials: __________<span>Service Agreement · ${esc(firmName)}</span></div>`);
+    }
+    if(tcopy){
+      const anchor = classic ? P.querySelector(".ctitle") : P.querySelector(".doc-head");
+      if(anchor) anchor.insertAdjacentHTML("afterend", typedCopyBanner($("adate").value,"agreement"));
+      P.querySelectorAll(".sigs .sig .ln").forEach(l=>l.insertAdjacentHTML("afterend",`<div class="onfile">Signature on original</div>`));
+    }
+  }
   addPrintDates("paper");
 }
 
@@ -1127,6 +1257,7 @@ function renderConsult(){
     ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
   `;
+  if(isTypedCopy(cAgreementDate)){ const h=$("paper2").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(cAgreementDate,"consultation agreement")); }
   addPrintDates("paper2");
 }
 
@@ -1225,6 +1356,7 @@ function renderInvoice(){
     <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
     ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
+  if(isTypedCopy(iDate)){ const h=$("paper3").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(iDate,"invoice").replace(" signed on"," issued on")); }
   addPrintDates("paper3");
 }
 
@@ -1329,6 +1461,10 @@ function exportDoc(){
     th{background:#16233b;color:#fff;text-align:left;padding:6px} td{padding:6px;border-bottom:1px solid #ddd}
     .amt{text-align:right} .cicc{background:#f6f8fa;border:1px solid #ddd;padding:10px;font-size:9.5pt}
     .sigs{margin-top:30px} .sig{display:inline-block;width:46%;margin-right:3%} .sig .ln{border-bottom:1px solid #333;height:30px} .sig .cap{font-size:9pt;color:#555}
+    .typedcopy{border:1px solid #b45309;background:#fff7ed;color:#7c2d12;padding:8px;font-size:9.5pt;margin-bottom:12px} .onfile{font-size:8pt;color:#b45309;font-style:italic}
+    .chead .fname{font-size:18pt;font-weight:bold;color:#1c2657} .chead .rcic{font-size:8pt;color:#c8102e;font-weight:bold} .chead .contact,.chead .lic{font-size:8.5pt;color:#555} .chead img{height:60px}
+    .ctitle{text-align:center} .ctitle .t{font-size:22pt;font-weight:bold;color:#1c2657;letter-spacing:2px} .ctitle .st{font-size:9pt;color:#c8102e;letter-spacing:2px;text-transform:uppercase}
+    .ccard{border:1px solid #ccc;border-top:3px solid #1c2657;padding:8px;margin-bottom:8px;display:inline-block;width:46%;vertical-align:top;margin-right:2%} .ccard h4{font-size:8pt;margin:0;color:#1c2657;text-transform:uppercase} .ccard .big{font-weight:bold;font-size:12pt} .ccard .lb{font-size:7pt;color:#777;text-transform:uppercase;margin-top:4px} .cfoot{display:none}
     ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}`;
   const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
   const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
@@ -1479,6 +1615,7 @@ $("adate").value = today();
 loadFirm();
 syncBrandUI();
 $("program").addEventListener("change", loadProgram);
+$("spRel").addEventListener("change", ()=>render());
 $("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
 $("cform").addEventListener("input", renderConsult);
 $("cform").addEventListener("change", renderConsult);
@@ -1490,6 +1627,7 @@ renderISvc(); renderIDisb();
 $("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile)/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
 renderInvoice();
 loadProgram();
+syncProgUI();
 renderConsult();
 </script>
 </body>
