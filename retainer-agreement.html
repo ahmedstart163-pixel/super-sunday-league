@@ -249,9 +249,9 @@
         <div><label>RCIC no.</label><input type="text" id="rcicNo" placeholder="R000000" value="R707789" /></div>
       </div>
       <label>Address</label>
-      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="410 Richfield Rd, Edmonton, AB  T6K 3S8" />
+      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="11004 105 Ave NW, Edmonton, AB  T5H 4C8" />
       <div class="two">
-        <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" value="+1 (587) 710-0779" /></div>
+        <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" value="(587) 710-0779" /></div>
         <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." value="info@hijra2canada.com" /></div>
       </div>
       <label>People likely to assist (s.24(3)(e))</label>
@@ -297,6 +297,12 @@
         <label>Email</label>
         <input type="email" id="cli2Email" placeholder="client2@..." />
       </div>
+      <div class="v2box">
+        <label style="margin-top:0">Other group members / co-sponsors</label>
+        <div class="hint" style="margin:0 0 8px">The client above is the group's contact person. Add every other sponsor who appointed the RCIC — each one is a client, is listed in the agreement and gets a signature line.</div>
+        <div id="memberList"></div>
+        <button type="button" onclick="addMember()" style="margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer">+ Add group member</button>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -314,9 +320,9 @@
         <div class="hint">Adds to Section 4: all communication goes to the Client, and the Client is responsible for the other group members' documents, IDs, genuine signatures and consents.</div>
       </div>
       <label>Estimated time frame (s.24(3)(h))</label>
-      <input type="text" id="timeframe" placeholder="e.g., 8–12 months, subject to IRCC processing times" />
+      <textarea id="timeframe" rows="3" placeholder="e.g., 8–12 months, subject to IRCC processing times"></textarea>
       <label>Summary of preliminary advice given (s.24(3)(c))</label>
-      <textarea id="preadvice" rows="2" placeholder="Brief summary of any advice already given. Leave blank if none."></textarea>
+      <textarea id="preadvice" rows="5" placeholder="Brief summary of any advice already given. Leave blank if none."></textarea>
       <label>Conflict of interest disclosure (s.24(3)(o))</label>
       <input type="text" id="conflict" placeholder="Leave blank if none" />
     </fieldset>
@@ -656,7 +662,9 @@ const PROGRAMS = {
       "Advise the Client of the decision on each application and of any next steps"
     ],
     milestones:[["Upon signing of this Agreement",100]],
-    disb:[]
+    disb:[],
+    timeframe:"Preparation and submission: approximately 4–8 weeks after the RCIC receives complete documents from the Group. IRCC processing: currently about 38 months on average for privately sponsored refugees (IRCC, January 2026), and it varies by the country where the Principal Applicant lives. The RCIC will respond to the Clients' communications within 3 business days",
+    preadvice:"The RCIC advised that, to sponsor as a Group of Five, the Group must consist of at least five Canadian citizens, persons registered under the Indian Act, or permanent residents who are 18 or older and live in the expected community of settlement, and that no group member may be subject to a removal order or have certain criminal convictions or be in default of a previous sponsorship or immigration loan. The Principal Applicant must be recognized as a refugee by the UNHCR or a foreign state and must meet the Convention refugee abroad or country of asylum class definition. The Group must provide at least 12 months of income support plus start-up costs, in line with IRCC's sponsorship cost table, and must submit a settlement plan describing its financial and non-financial support. IRCC makes the final decision on the sponsorship and on the refugee's admissibility (including medical, criminal and security checks); approval is not guaranteed."
   },
   "Custom matter": { scope: ["Provide immigration advice and representation as agreed with the Client"], milestones:[["Upon signing of this Agreement",50],["Upon final decision",50]], disb:["IRCC processing fee","Biometrics fee","Courier / postage"] }
 };
@@ -667,6 +675,21 @@ let sigRcicDate = "";
 let sigCliDate = "";
 let sigCli2Date = "";
 function setSigCli2(v){ sigCli2Date=v; render(); }
+/* ── group members (co-sponsors) ── */
+let members = [];
+function addMember(){ members.push({name:"",dob:"",phone:"",email:"",addr:""}); renderMembers(); render(); }
+function delMember(i){ members.splice(i,1); renderMembers(); render(); }
+function setMember(i,k,v){ members[i][k]=v; render(); }
+function renderMembers(){
+  const f=(i,k,ph,w)=>`<input type="text" value="${esc(members[i][k])}" placeholder="${ph}" oninput="setMember(${i},'${k}',this.value)" ${k==="dob"?`onchange="const v=normNotesDate(this.value); if(v){this.value=v; setMember(${i},'dob',v);}"`:""} style="font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;width:100%" />`;
+  $("memberList").innerHTML = members.map((m,i)=>`
+    <div style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;margin-bottom:8px">
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><b style="font-size:13px;color:var(--navy);flex:none">Member ${i+2}</b>${f(i,"name","Full legal name")}<button type="button" onclick="delMember(${i})" title="Remove" style="border:1px solid var(--line);background:#fff;border-radius:7px;color:var(--muted);cursor:pointer;padding:6px 9px">×</button></div>
+      <div class="two" style="margin-bottom:6px">${f(i,"dob","DOB YYYY-MM-DD")}${f(i,"phone","Phone")}</div>
+      <div class="two">${f(i,"email","Email")}${f(i,"addr","Address")}</div>
+    </div>`).join("");
+}
+const memberList = () => members.filter(m=>m.name.trim());
 function onJoint(){ document.getElementById("jointFields").style.display = document.getElementById("joint").checked ? "block" : "none"; render(); }
 
 /* ── auto-fill from pasted notes ─────────────────────── */
@@ -741,6 +764,8 @@ function autofillFromNotes(){
   const signed=normNotesDate(labelVal(["date signed","signed","signing date","date of signing","agreement date"]));
   if(signed){ $("adate").value=signed; filled.push("date signed"); }
   if(program==="Group of Five Refugee Sponsorship"){ $("groupRep").checked=true; }
+  const gm=lines.map(l=>(l.match(/^(?:co-?sponsor|sponsor|group member(?:\s*\d+)?|gm\s*\d*)\s*[:\-–]\s*(.+)$/i)||[])[1]).filter(Boolean);
+  if(gm.length){ gm.forEach(n=>members.push({name:n.trim(),dob:"",phone:"",email:"",addr:""})); renderMembers(); filled.push(gm.length+" group member"+(gm.length>1?"s":"")); }
   render();
   if(filled.length){ st.textContent="✓ Filled: "+filled.join(", ")+" — review before generating."; st.style.color="#1f8a5e"; }
   else { st.textContent="Couldn't detect fields — try labels like Name:, Email:, Program:"; st.style.color="#c2922a"; }
@@ -785,7 +810,7 @@ const cad = n => "$" + Number(n||0).toLocaleString("en-CA",{minimumFractionDigit
 const today = () => { const d=new Date(); return d.toISOString().slice(0,10); };
 const longDate = iso => iso ? iso : "______________";
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const niceDate = iso => { const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${MONTHS[+m[2]-1]} ${+m[3]}, ${m[1]}` : (iso||"______________"); };
+const niceDate = iso => { const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${m[1]}-${m[2]}-${m[3]}` : (iso||"____-__-__"); };
 const cleanPA = l => l.replace(/^PA\b\s*[:\-]?\s*/i,"").replace(/\s{2,}/g," ").trim();
 const paItems = () => ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter(Boolean);
 const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=="hourly";
@@ -803,6 +828,8 @@ function loadProgram(){
   const p = PROGRAMS[$("program").value];
   if($("program").value==="Group of Five Refugee Sponsorship") $("groupRep").checked=true;
   $("scope").value = p.scope.join("\n");
+  $("timeframe").value = p.timeframe || "";
+  $("preadvice").value = p.preadvice || "";
   disb = p.disb.map(name=>({name, amount:""}));
   renderDisb();
   render();
@@ -827,7 +854,8 @@ function render(){
   const ms=PROGRAMS[program].milestones;
   const taxIncl=$("taxIncl").checked;
   const tax=taxIncl?0:base*taxRate/100, total=base+tax;
-  const pas=paItems(), group=$("groupRep").checked, pf=paidFull(), pDate=payDateVal(), pMethod=$("payMethod").value;
+  const mems=memberList();
+  const pas=paItems(), group=$("groupRep").checked||mems.length>0, pf=paidFull(), pDate=payDateVal(), pMethod=$("payMethod").value;
   const assist=$("assist").value.trim(), instr=$("instructions").value.trim();
   const timeframe=$("timeframe").value.trim(), preadv=$("preadvice").value.trim(), conflict=$("conflict").value.trim();
   const dueDays=$("dueDays").value||"15", interest=+$("interest").value||0;
@@ -859,7 +887,7 @@ function render(){
         <div>${esc($("firmAddr").value||"[Address]")}</div>
         <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
       </div>
-      <div class="party"><h4>${joint?"The Clients":"The Client"}</h4>
+      <div class="party"><h4>${(joint||mems.length)?"The Clients":"The Client"}${mems.length?" — Group contact":""}</h4>
         <div class="nm">${esc($("cliName").value||"[Client name]")}</div>
         ${$("cliDob").value?`<div>Date of birth: ${longDate($("cliDob").value)}</div>`:""}
         <div>${esc($("cliAddr").value||"[Address]")}</div>
@@ -870,8 +898,11 @@ function render(){
       </div>
     </div>
 
+    ${mems.length?`<div class="party" style="margin:-6px 0 22px;font-size:13px"><h4>Other Clients — Group Members</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px">${mems.map(m=>`<div style="line-height:1.5"><div class="nm">${esc(m.name)}</div>${m.dob?`<div>Date of birth: ${esc(m.dob)}</div>`:""}${m.addr?`<div>${esc(m.addr)}</div>`:""}${(m.phone||m.email)?`<div>${esc(m.phone)}${m.phone&&m.email?" · ":""}${esc(m.email)}</div>`:""}</div>`).join("")}</div></div>`:""}
+
     <h2><span class="sn">1.</span> Definitions</h2>
-    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${group?` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`:""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
+    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${group?(mems.length?` “Clients” means ${esc($("cliName").value||"the Group Contact")} and the Group Members named above, each of whom is a client of the RCIC. “Group” means the Group of Five sponsoring group made up of the Clients, “Group Contact” means ${esc($("cliName").value||"the first-named Client")}, and “Group Members” means the other members of the Group.`:` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`):""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
 
     <h2><span class="sn">2.</span> Preliminary advice</h2>
     <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
@@ -885,13 +916,19 @@ function render(){
     <p>The RCIC will provide services in ${esc(lang)} and will give the Client a signed copy of this Agreement.</p>
 
     ${group?`<h2><span class="sn">4.</span> Client's instructions &amp; responsibility for the Group</h2>
-    <p>The Client instructs the RCIC to act on the matter described in Section 3. The Client acts as the representative of the Group for this matter and is responsible for the other Group Members, and agrees that:</p>
+    ${mems.length?`<p>The Clients instruct the RCIC to act on the matter described in Section 3. The Clients appoint the Group Contact, <b>${esc($("cliName").value||"[Group Contact]")}</b>, to act as the representative of the Group for this matter. The Group Contact is responsible for the other Group Members, and the Clients agree that:</p>
+    <ol class="alpha">
+      <li>All communication from the RCIC about this matter, including file updates and requests for documents, will be sent to the Group Contact. The Group Contact is responsible for sharing that communication with the Group Members.</li>
+      <li>The Group Contact will ensure that all information and documents provided by the Group Members are complete, accurate and truthful. Each Client remains responsible for the accuracy of their own information.</li>
+      <li>The Group Contact takes full responsibility for obtaining each Group Member's identification documents, their genuine signatures on all required forms, and their informed consent to the applications and to the release of their personal information to the RCIC and IRCC.</li>
+      <li>No other person is authorized to receive file updates or communicate with the RCIC on the Clients' behalf unless named here in writing.</li>
+    </ol>`:`<p>The Client instructs the RCIC to act on the matter described in Section 3. The Client acts as the representative of the Group for this matter and is responsible for the other Group Members, and agrees that:</p>
     <ol class="alpha">
       <li>All communication from the RCIC about this matter, including file updates and requests for documents, will be sent to the Client. The Client is responsible for sharing that communication with the Group Members.</li>
       <li>The Client will ensure that all information and documents provided by the Group Members are complete, accurate and truthful.</li>
       <li>The Client takes full responsibility for obtaining each Group Member's identification documents, their genuine signatures on all required forms, and their informed consent to the applications and to the release of their personal information to the RCIC and IRCC.</li>
       <li>No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing.</li>
-    </ol>${instr?`<p>${esc(instr)}</p>`:""}`:`<h2><span class="sn">4.</span> Client's instructions</h2>
+    </ol>`}${instr?`<p>${esc(instr)}</p>`:""}`:`<h2><span class="sn">4.</span> Client's instructions</h2>
     <p>${instr?esc(instr):"The Client instructs the RCIC to act on the matter described in Section 3. No other person is authorized to receive file updates or communicate with the RCIC on the Client's behalf unless named here in writing."}</p>`}
 
     <h2><span class="sn">5.</span> Responsibilities of the Client</h2>
@@ -968,7 +1005,7 @@ function render(){
     <h2><span class="sn">13.</span> Conflict of interest</h2>
     <p>${conflict?esc(conflict):"The RCIC is not aware of any actual or potential conflict of interest in relation to this matter. The RCIC will promptly disclose, in writing, any conflict that later arises and will only continue to act with the Client's free and informed written consent, as permitted by the Code of Professional Conduct."}</p>
     <p>If the RCIC provides both immigration or citizenship consulting services and employment or student recruitment services to the Client, this Agreement will clearly differentiate the two, the Client will not be charged any fee or disbursement for the recruitment services, the RCIC will disclose any fee it receives from an employer or institution, and the Client's free and informed written consent will be obtained.</p>
-    ${joint?`<p>This is a <b>joint retainer</b>. The Clients acknowledge that no information received from one Client in connection with the matter can be treated as confidential as against the other Client. If a conflict develops between the Clients that cannot be resolved, the RCIC may be unable to continue acting for either Client and may have to withdraw. Each Client confirms their consent to the joint retainer on the terms set out in this Agreement.</p>`:""}
+    ${(joint||mems.length)?`<p>This is a <b>joint retainer</b>. The Clients acknowledge that no information received from one Client in connection with the matter can be treated as confidential as against the other Client. If a conflict develops between the Clients that cannot be resolved, the RCIC may be unable to continue acting for either Client and may have to withdraw. Each Client confirms their consent to the joint retainer on the terms set out in this Agreement.</p>`:""}
 
     <h2><span class="sn">14.</span> Confidentiality &amp; privacy</h2>
     <p>The RCIC has an obligation of confidentiality under the CICC Code of Professional Conduct and will keep all information relating to the Client confidential indefinitely. The RCIC collects the Client's personal information and documents solely to provide the services described in this Agreement, and handles them in accordance with the <i>Personal Information Protection and Electronic Documents Act</i> (PIPEDA), applicable provincial privacy law, and the Code. By signing, the Client consents to the RCIC collecting, using and disclosing their personal information to IRCC and other relevant authorities to the extent necessary to carry out the matter.</p>
@@ -1010,9 +1047,10 @@ function render(){
       <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
       <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
       ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>`:""}
+      ${mems.map(m=>`<div class="sig"><div class="ln"></div><div class="cap">${esc(m.name)} — Client (Group Member) &nbsp; Date: ${esc($("adate").value||"____-__-__")}</div></div>`).join("")}
     </div>
     ${(pf&&$("showReceipt").checked)?`<div class="receipt"><h3>Receipt of payment</h3>
-      <p>Received from <b>${esc($("cliName").value||"[Client name]")}</b>${joint&&cli2?` and <b>${esc(cli2)}</b>`:""} the sum of <b>${cad(total)}</b> by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>, being payment in full of the professional fee under Service Agreement File No. ${esc($("fileNo").value||"—")}. Balance owing: ${cad(0)}.</p>
+      <p>Received from <b>${esc($("cliName").value||"[Client name]")}</b>${joint&&cli2?` and <b>${esc(cli2)}</b>`:""}${mems.length?`, on behalf of the Group,`:""} the sum of <b>${cad(total)}</b> by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>, being payment in full of the professional fee under Service Agreement File No. ${esc($("fileNo").value||"—")}. Balance owing: ${cad(0)}.</p>
       <div class="sigs" style="margin-top:18px"><div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC, ${esc(firmName)}</div></div><div></div></div></div>`:""}
   `;
   addPrintDates("paper");
@@ -1303,7 +1341,7 @@ function exportDoc(){
 }
 
 /* ── firm-detail persistence (guarded for sandbox) ───── */
-const FIRM_KEY="rcic_firm_v1";
+const FIRM_KEY="rcic_firm_v2"; /* v2: old saved firm details are ignored so the new defaults load */
 const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang"];
 function saveFirm(silent){
   try{
@@ -1411,6 +1449,7 @@ function resetForm(){
   ov.querySelector("#rstGo").onclick=()=>{ ov.remove(); doReset(); };
 }
 function doReset(){
+  members = []; renderMembers();
   const preserve = new Set([...FIRM_FIELDS, "showBadge", "showInsignia"]);
   ["form","cform","iform"].forEach(fid=>{
     document.getElementById(fid).querySelectorAll("input, textarea, select").forEach(el=>{
