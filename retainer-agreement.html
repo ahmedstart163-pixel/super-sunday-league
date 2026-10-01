@@ -33,8 +33,18 @@
   .btn-outline:hover{background:rgba(255,255,255,.10);color:#fff}
   .btn-ghost{background:transparent;color:#fff;border:1px solid #3a4c69}
   .moneywrap{position:relative;display:block}
-  .moneywrap::before{content:"$";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
-  .moneywrap input{padding-left:21px}
+  .moneywrap::before{content:"$";position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;line-height:1;pointer-events:none;z-index:1}
+  .moneywrap input{padding-left:24px !important}
+  .isync{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:13px;font-weight:600}
+  .isync.ok{background:#e9f6ef;color:#15603f;border:1px solid #bfe3cf}
+  .isync.edited{background:#fff4e0;color:#8a5a00;border:1px solid #f1d39b}
+  .isync button{margin-left:auto;border:none;background:var(--navy);color:#fff;border-radius:8px;padding:7px 12px;font-weight:600;font-size:12.5px;cursor:pointer}
+  .actions .btn.icon{padding-left:11px;padding-right:11px}
+  .actions .btn:disabled{opacity:.4;cursor:default}
+  .feechips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .feechips button{font:600 12.5px 'Inter',system-ui,sans-serif;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+  .feechips button:hover{border-color:var(--gold)}
+  .feechips button.on{background:var(--navy);border-color:var(--navy);color:#fff}
 
   /* ── disclaimer ──────────────────────────────────── */
   .note{background:#fbfaf6;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px;padding:7px 20px;line-height:1.5}
@@ -49,6 +59,15 @@
   .tab.active{color:var(--navy);border-bottom-color:var(--gold)}
   .tabpanel{display:none}
   .tabpanel.active{display:block}
+  .docmenu{position:fixed;z-index:60;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 40px rgba(15,28,46,.22);padding:6px;min-width:240px}
+  .docmenu button{display:block;width:100%;text-align:left;border:none;background:none;border-radius:8px;padding:9px 12px;font:500 13.5px 'Inter',system-ui,sans-serif;color:#1b2330;cursor:pointer}
+  .docmenu button:hover{background:var(--soft)}
+  .docmenu button.main{font-weight:700;color:var(--navy)}
+  .docmenu hr{border:none;border-top:1px solid var(--line);margin:4px 2px}
+  @media print{
+    body.printall .tabpanel{display:block !important}
+    body.printall .tabpanel + .tabpanel .paper{break-before:page}
+  }
 
   /* ── layout ──────────────────────────────────────── */
   .wrap{display:grid;grid-template-columns:380px 1fr;gap:0;align-items:start}
@@ -180,6 +199,19 @@
     .paper.classic .cfoot span{float:right}
     .paper.classic{padding-bottom:22px}
   }
+  @page{size:portrait;margin:14mm 14mm 14mm 14mm}
+  @media print{
+    /* invoice: keep it to one page */
+    #paper3{font-size:10.5pt !important;line-height:1.4}
+    #paper3 .doc-head{padding-bottom:8px;margin-bottom:10px}
+    #paper3 .doclogo{max-height:56px}
+    #paper3 .typedcopy{margin:8px 0;padding:6px 10px}
+    #paper3 .parties{margin:8px 0 6px}
+    #paper3 h2{margin:12px 0 6px}
+    #paper3 table.fees td,#paper3 table.fees th{padding-top:5px;padding-bottom:5px}
+    #paper3 p{margin:8px 0}
+    #paper3 .cicc{margin-top:6px}
+  }
   @media print{
     .sitenav{display:none !important}
     .paper .inlinedate,.paper .inlinefile,.paper .pickbtn{display:none !important}
@@ -218,13 +250,16 @@
   </div>
   
   <div class="actions">
-    <button class="btn btn-outline" onclick="resetForm()" title="Start a new file">Reset</button>
+    <button class="btn btn-outline icon" id="undoBtn" onclick="undoStep()" title="Undo (Ctrl+Z)" disabled>↶</button>
+    <button class="btn btn-outline icon" id="redoBtn" onclick="redoStep()" title="Redo (Ctrl+Y)" disabled>↷</button>
+    <button class="btn btn-outline" onclick="resetTab()" title="Clear only the tab you are on">Reset this tab</button>
+    <button class="btn btn-outline" onclick="resetForm()" title="Start a new file">New client</button>
     <button class="btn btn-outline" onclick="verifyDoc()" title="Check required fields">Check</button>
-    <button class="btn btn-light" onclick="exportDoc()" title="Download as Word">
+    <button class="btn btn-light" onclick="openDocMenu(this,'word')" title="Download as Word">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
-      Word
+      Word ▾
     </button>
-    <button class="btn btn-primary" onclick="printDoc()" title="Print or save as PDF">Print / PDF</button>
+    <button class="btn btn-primary" onclick="openDocMenu(this,'print')" title="Print or save as PDF">Print / PDF ▾</button>
   </div>
 </div>
 
@@ -406,6 +441,9 @@
       <div id="flatFields">
         <label>Professional fee (CAD)</label>
         <span class="moneywrap"><input type="number" id="fee" value="2000" min="0" step="50" /></span>
+        <div class="feechips" id="feeChips">
+          <button type="button" data-v="50">$50</button><button type="button" data-v="100">$100</button><button type="button" data-v="500">$500</button><button type="button" data-v="1000">$1,000</button><button type="button" data-v="2000">$2,000</button><button type="button" data-v="5000">$5,000</button><button type="button" data-v="custom">Custom</button>
+        </div>
       </div>
       <div id="hourlyFields" style="display:none">
         <div class="two">
@@ -517,6 +555,20 @@
       </div>
       <label>Purpose &amp; scope of consultation (s.23(2)(e))</label>
       <textarea id="cpurpose" rows="3" placeholder="What this consultation will cover."></textarea>
+      <div class="two">
+        <div><label>Consultation date &amp; time (optional)</label><input type="text" id="cWhen" placeholder="e.g. 2026-10-05, 2:00 pm" /></div>
+        <div><label>How</label><select id="cHow"><option value="">—</option><option>in person</option><option>by phone</option><option>by video call</option></select></div>
+      </div>
+      <div class="two">
+        <div><label>Length (minutes, optional)</label><input type="number" id="cLen" min="0" step="15" placeholder="30" /></div>
+        <div></div>
+      </div>
+      <div id="cFeeExtras">
+        <label class="chk"><input type="checkbox" id="cCredit" /> Credit the fee toward a service agreement signed within</label>
+        <div class="two"><div><input type="number" id="cCreditDays" value="30" min="1" step="1" /></div><div class="hint" style="align-self:center">days</div></div>
+        <label>Late arrival / cancellation (optional)</label>
+        <textarea id="cCancel" rows="2" placeholder="e.g. Please give at least 24 hours' notice to reschedule. A late arrival shortens the consultation."></textarea>
+      </div>
       <label>File / ref no.</label>
       <input type="text" id="cfileNo" placeholder="ALH-C-0001" value="ALH-C-0001" />
     </fieldset>
@@ -530,8 +582,9 @@
 <div class="tabpanel" id="tab-invoice">
 <div class="wrap">
   <div class="form" id="iform">
-    <button type="button" onclick="pullFromRetainer(true)" style="width:100%;margin-bottom:12px;background:var(--navy);border:none;border-radius:9px;padding:10px;color:#fff;font-weight:600;font-size:13px;cursor:pointer">↻ Pull details from Service Agreement</button>
-    <div class="hint" style="margin-bottom:14px">Client, matter, fee and disbursements auto-fill from the <b>Service Agreement</b> tab. Edit anything here and it stops auto-syncing so your changes stick.</div>
+    <div id="iSync" class="isync"></div>
+    <div style="margin:0 0 14px"><label>Bill for</label><select id="iBill"></select>
+      <div class="hint">The invoice follows the <b>Service Agreement</b> tab: client, file no., fee, tax, advance and payment. Edit anything here and it stops following, until you press <b>Match agreement again</b>.</div></div>
     <fieldset>
       <legend>Branding</legend>
       <label>Firm logo (optional) — shared across all documents</label>
@@ -752,7 +805,7 @@ function addMember(){ members.push({name:"",dob:"",phone:"",email:"",addr:""}); 
 function delMember(i){ members.splice(i,1); renderMembers(); render(); }
 function setMember(i,k,v){ members[i][k]=v; render(); }
 function renderMembers(){
-  const f=(i,k,ph,w)=>`<input type="text" value="${esc(members[i][k])}" placeholder="${ph}" oninput="setMember(${i},'${k}',this.value)" ${k==="dob"?`onchange="const v=normNotesDate(this.value); if(v){this.value=v; setMember(${i},'dob',v);}"`:""} style="font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;width:100%" />`;
+  const f=(i,k,ph,w)=>`<input type="text" value="${esc(members[i][k])}" placeholder="${ph}" oninput="setMember(${i},'${k}',this.value)" ${k==="dob"?`onchange="const v=normNotesDate(this.value); if(v){this.value=v; setMember(${i},'dob',v);}"`:k==="phone"?`onchange="this.value=fmtPhone(this.value); setMember(${i},'phone',this.value);"`:""} style="font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;width:100%" />`;
   $("memberList").innerHTML = members.map((m,i)=>`
     <div style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;margin-bottom:8px">
       <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><b style="font-size:13px;color:var(--navy);flex:none">Member ${i+2}</b>${f(i,"name","Full legal name")}<button type="button" onclick="delMember(${i})" title="Remove" style="border:1px solid var(--line);background:#fff;border-radius:7px;color:var(--muted);cursor:pointer;padding:6px 9px">×</button></div>
@@ -826,7 +879,7 @@ function autofillFromNotes(){
   if(name){ $("cliName").value=name; filled.push("name"); }
   if(dob){ $("cliDob").value=dob; filled.push("DOB"); }
   if(addr){ $("cliAddr").value=addr; filled.push("address"); }
-  if(phone){ $("cliPhone").value=phone; filled.push("phone"); }
+  if(phone){ $("cliPhone").value=fmtPhone(phone); filled.push("phone"); }
   if(email){ $("cliEmail").value=email; filled.push("email"); }
   if(program){ $("program").value=program; loadProgram(); filled.push("program"); }
   if(feeRaw && +feeRaw>0){ $("feeMethod").value="flat"; onFeeMethod(); $("fee").value=feeRaw; filled.push("fee"); }
@@ -983,7 +1036,8 @@ function renderDisb(){
 }
 
 /* ── render the document ─────────────────────────────── */
-function render(){
+function render(){ try{ renderMain(); } finally { if(!invoiceTouched && typeof pullFromRetainer==="function" && $("iBill")) pullFromRetainer(); } }
+function renderMain(){
   const firm=$("firm").value, rcic=$("rcicName").value, rno=$("rcicNo").value;
   const prov=$("prov").value, lang=$("lang").value;
   const feeMethod=$("feeMethod").value, taxRate=+$("tax").value||0, adv=+$("advance").value||0;
@@ -1034,15 +1088,15 @@ function render(){
         <div class="nm">${esc($("cliName").value||"[Client name]")}</div>
         ${$("cliDob").value?`<div>Date of birth: ${longDate($("cliDob").value)}</div>`:""}
         <div>${esc($("cliAddr").value||"[Address]")}</div>
-        <div>${esc($("cliPhone").value||"")} ${$("cliEmail").value?(" · "+esc($("cliEmail").value)):""}</div>
+        <div>${esc(fmtPhone($("cliPhone").value)||"")} ${$("cliEmail").value?(" · "+esc($("cliEmail").value)):""}</div>
         ${joint&&cli2?`<div class="nm" style="margin-top:8px">${esc(cli2)}</div>
         ${$("cli2Dob").value?`<div>Date of birth: ${longDate($("cli2Dob").value)}</div>`:""}
-        <div>${esc($("cli2Phone").value||"")} ${$("cli2Email").value?(" · "+esc($("cli2Email").value)):""}</div>`:""}
+        <div>${esc(fmtPhone($("cli2Phone").value)||"")} ${$("cli2Email").value?(" · "+esc($("cli2Email").value)):""}</div>`:""}
       </div>
     </div>
 
     ${mems.length?`<div class="party" style="margin:-6px 0 22px;font-size:13px"><h4>Other Clients — Group Members</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px">${mems.map(m=>`<div style="line-height:1.5"><div class="nm">${esc(m.name)}</div>${m.dob?`<div>Date of birth: ${esc(m.dob)}</div>`:""}${m.addr?`<div>${esc(m.addr)}</div>`:""}${(m.phone||m.email)?`<div>${esc(m.phone)}${m.phone&&m.email?" · ":""}${esc(m.email)}</div>`:""}</div>`).join("")}</div></div>`:""}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px">${mems.map(m=>`<div style="line-height:1.5"><div class="nm">${esc(m.name)}</div>${m.dob?`<div>Date of birth: ${esc(m.dob)}</div>`:""}${m.addr?`<div>${esc(m.addr)}</div>`:""}${(m.phone||m.email)?`<div>${esc(fmtPhone(m.phone))}${m.phone&&m.email?" · ":""}${esc(m.email)}</div>`:""}</div>`).join("")}</div></div>`:""}
 
     <h2><span class="sn">1.</span> Definitions</h2>
     <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${group?(mems.length?` “Clients” means ${esc($("cliName").value||"the Group Contact")} and the Group Members named above, each of whom is a client of the RCIC. “Group” means the Group of Five sponsoring group made up of the Clients, “Group Contact” means ${esc($("cliName").value||"the first-named Client")}, and “Group Members” means the other members of the Group.`:` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`):""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
@@ -1224,11 +1278,11 @@ function render(){
       const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div><div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div><div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
         <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. <input type="text" class="inlinefile" value="${esc($("fileNo").value)}" placeholder="ALH-0001" spellcheck="false" onchange="setFileNo('fileNo',this.value)" title="Type to change the file number" /> · Services provided in ${esc(lang)}</div></div>`;
       const intro=`<p>This Service Agreement is made on <b>${niceDate($("adate").value)}</b>, under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between the Client${(joint||mems.length)?"s":""} and the RCIC identified below. It sets out the terms on which the RCIC will provide immigration and citizenship consulting services.</p>`;
-      const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Date of birth",esc($("cliDob").value)],["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
+      const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Date of birth",esc($("cliDob").value)],["Home address",esc($("cliAddr").value)],["Telephone",esc(fmtPhone($("cliPhone").value))],["Email",esc($("cliEmail").value)]]);
       const cR=card("r","The RCIC",rcic||"[RCIC name]",[["Firm",esc(firmName)],["College ID",`<b>${esc(rno)}</b>`],["Address",esc(addr)],["Telephone · Email",esc(ph)+(em?" · "+esc(em):"")]]);
       let extra="";
-      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Date of birth",esc($("cli2Dob").value)],["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
-      mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Date of birth",esc(m.dob)],["Home address",esc(m.addr)],["Telephone",esc(m.phone)],["Email",esc(m.email)]]); });
+      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Date of birth",esc($("cli2Dob").value)],["Telephone",esc(fmtPhone($("cli2Phone").value))],["Email",esc($("cli2Email").value)]]);
+      mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Date of birth",esc(m.dob)],["Home address",esc(m.addr)],["Telephone",esc(fmtPhone(m.phone))],["Email",esc(m.email)]]); });
       const parties=`<div class="cparties">${c1}${cR}${extra}</div>`;
       const oldHead=P.querySelector(".doc-head"), oldIntro=oldHead.nextElementSibling, oldParties=P.querySelector(".parties");
       let n=oldParties.nextElementSibling; if(n && n.classList.contains("party")) n.remove(); // members block (shown in cards instead)
@@ -1269,6 +1323,10 @@ function renderConsult(){
   const cTaxAmt=cIncl?0:cfee*cgst/100, cTotal=cfee+cTaxAmt;
   const cPaid=$("cPaid").checked && !probono && cfee>0;
   const cpurpose=$("cpurpose").value.trim();
+  const cWhen=$("cWhen").value.trim(), cHow=$("cHow").value, cLen=+$("cLen").value||0;
+  const cCredit=$("cCredit").checked, cCreditDays=+$("cCreditDays").value||30, cCancel=$("cCancel").value.trim();
+  { const fx=$("cFeeExtras"); if(fx) fx.style.display=probono?"none":"block"; }
+  const cWhenLine=(cWhen||cHow||cLen)?`<p>The consultation will take place${cWhen?` on <b>${esc(cWhen)}</b>`:""}${cHow?` ${esc(cHow)}`:""}${cLen?`, for about ${cLen} minutes`:""}.</p>`:"";
 
   $("paper2").innerHTML = `
     <div class="doc-head">
@@ -1279,7 +1337,7 @@ function renderConsult(){
       <div class="meta">File No. <input type="text" class="inlinefile" value="${esc($("cfileNo").value)}" placeholder="ALH-C-0001" spellcheck="false" onchange="setFileNo('cfileNo',this.value)" title="Type to change the file number" /> &nbsp;·&nbsp; Dated <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
     </div>
 
-    <p>This Consultation Agreement is made under section 23 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), before any immigration or citizenship consulting services are provided, between:</p>
+    <p>This Consultation Agreement is made under section 23 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), before the initial consultation takes place, between:</p>
     <div class="parties">
       <div class="party"><h4>The RCIC</h4>
         <div class="nm">${esc(crcicLine)}</div>
@@ -1290,16 +1348,19 @@ function renderConsult(){
       <div class="party"><h4>The Potential Client</h4>
         <div class="nm">${esc($("ccliName").value||"[Client name]")}</div>
         <div>${esc($("ccliAddr").value||"[Address]")}</div>
-        <div>${esc($("ccliPhone").value||"")} ${$("ccliEmail").value?(" · "+esc($("ccliEmail").value)):""}</div>
+        <div>${esc(fmtPhone($("ccliPhone").value)||"")} ${$("ccliEmail").value?(" · "+esc($("ccliEmail").value)):""}</div>
       </div>
     </div>
 
     <h2><span class="sn">1.</span> Purpose &amp; scope of the consultation</h2>
     <p>${cpurpose?esc(cpurpose):"To assess the potential Client's immigration or citizenship options, review their circumstances and eligibility, answer their questions, and outline possible pathways and next steps."}</p>
-    <p>This is an initial consultation only. It does not create a representation relationship and does not commit either party to proceed. Any ongoing immigration or citizenship consulting services would require a separate written service agreement.</p>
+    ${cWhenLine}
+    <p>This is a one-time initial consultation only. The RCIC is not representing the Client before Immigration, Refugees and Citizenship Canada (IRCC) or any other authority, and will not prepare or submit any application, unless both parties later sign a separate written service agreement. This agreement does not commit either party to proceed.</p>
+    <p>The RCIC's advice is based on the information the Client provides during the consultation. No outcome can be guaranteed: decisions on applications are made by IRCC and other government authorities.</p>
 
     <h2><span class="sn">2.</span> Consultation fee</h2>
-    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cIncl?" (any applicable tax included)":""}${(!cIncl&&cgst>0)?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.`}</p>
+    <p>${probono?"This initial consultation is provided on a pro bono basis — free of charge. No fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cIncl?" (any applicable tax included)":""}${(!cIncl&&cgst>0)?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.${cCredit?` If the Client signs a service agreement with the RCIC within ${cCreditDays} days of the consultation, the consultation fee will be credited toward the professional fees under that agreement.`:""}`}</p>
+    ${cCancel&&!probono?`<p>${esc(cCancel)}</p>`:""}
 
     <h2><span class="sn">3.</span> The College's role</h2>
     <p>The RCIC is a Regulated Canadian Immigration Consultant licensed by, and subject to the Code of Professional Conduct of, the College of Immigration and Citizenship Consultants (CICC) — the national body that regulates immigration and citizenship consultants in Canada to protect the public. If the Client has a concern, they may contact the College:</p>
@@ -1322,33 +1383,56 @@ function renderConsult(){
 
 /* ── invoice (s.33) ──────────────────────────────────── */
 let invSvc = [], invDisb = [], iDate = today(), invoiceTouched = false;
+/* What the agreement says about money, in one place (the invoice copies it). */
+function agreementMoney(){
+  const hourly=$("feeMethod").value==="hourly";
+  const base=hourly ? (+$("rate").value||0)*(+$("hours").value||0) : (+$("fee").value||0);
+  const mode=hourly?"invoice":$("payMode").value;               // invoice = advance on signing, balance invoiced
+  const advance=(mode==="invoice") ? (+$("advance").value||0) : 0;
+  const ms=hourly?[]:(PROGRAMS[$("program").value]||{}).milestones||[];
+  return {hourly, base, mode, advance, ms, paid:paidFull(), taxRate:+$("tax").value||0, taxIncl:$("taxIncl").checked};
+}
+function fillBillOptions(){
+  const sel=$("iBill"); if(!sel) return; const m=agreementMoney(), cur=sel.value;
+  const opts=[["full",m.hourly?"Professional fees (hours × rate)":"The full professional fee"]];
+  if(!m.hourly && !m.paid && m.ms.length>1) m.ms.forEach(([label,pct],k)=>opts.push(["ms"+k,`${label} (${pct}%)`]));
+  sel.innerHTML=opts.map(([v,t])=>`<option value="${v}">${esc(t)}</option>`).join("");
+  const def = (m.paid||m.hourly||m.mode==="onSubmit"||m.ms.length<2) ? "full" : "ms0";
+  sel.value = opts.some(o=>o[0]===cur) ? cur : def;
+}
 function pullFromRetainer(manual){
-  $("iName").value = $("cliName").value;
+  if(!$("iName")) return;
+  fillBillOptions();
+  const m=agreementMoney(), bill=$("iBill").value||"full";
+  const cli2=$("joint").checked ? $("cli2Name").value.trim() : "";
+  $("iName").value = $("cliName").value + (cli2?` and ${cli2}`:"");
   $("iAddr").value = $("cliAddr").value;
   $("iEmail").value = $("cliEmail").value;
   $("iFile").value = $("fileNo").value;
   $("iMatter").value = $("program").value;
   $("iTax").value = $("tax").value;
   $("iDue").value = $("dueDays").value;
-  $("iTrust").value = $("advance").value;
-  if($("feeMethod").value==="hourly"){
-    const rate=+$("rate").value||0, hours=+$("hours").value||0;
-    invSvc=[{name:`Professional fees (${hours} h @ ${cad(rate)}/h)`, amount: rate*hours}];
+  $("iTaxIncl").value = m.taxIncl ? "incl" : "add";
+  const n=paItems().length, who=n?`, covering ${n} principal applicant${n>1?"s":""}`:"";
+  if(m.hourly){
+    invSvc=[{name:`Professional fees — ${$("program").value} (${+$("hours").value||0} h @ ${cad(+$("rate").value||0)}/h)`, amount:m.base}];
+  } else if(bill.startsWith("ms")){
+    const [label,pct]=m.ms[+bill.slice(2)]||["",100];
+    invSvc=[{name:`Professional fees — ${$("program").value}: ${label} (${pct}% of the ${cad(m.base)} flat fee${who})`, amount:Math.round(m.base*pct)/100}];
   } else {
-    const n=paItems().length;
-    invSvc=[{name:`Professional fees — ${$("program").value}${n?` (flat fee, covering ${n} principal applicant${n>1?"s":""})`:""}`, amount:+$("fee").value||0}];
+    invSvc=[{name:`Professional fees — ${$("program").value} (flat fee${who})`, amount:m.base}];
   }
-  $("iTaxIncl").value = $("taxIncl").checked ? "incl" : "add";
-  if(paidFull()){
-    $("iTrust").value = 0; $("iPaid").checked = true;
-    $("iPayMethod").value = $("payMethod").value;
-    iDate = payDateVal() || iDate;
-  } else if($("adate").value && !invoiceTouched){ /* keep today's date for normal invoices */ }
+  // the advance held in trust is applied to the first invoice only (full fee, or the signing milestone)
+  $("iTrust").value = (bill==="full"||bill==="ms0") ? m.advance : 0;
+  $("iPaid").checked = m.paid;
+  if(m.paid){ $("iPayMethod").value = $("payMethod").value; iDate = payDateVal() || $("adate").value || today(); }
+  else iDate = (bill==="full"||bill==="ms0") ? ($("adate").value||today()) : today();
   invDisb = (disb||[]).filter(d=>d.name&&d.name.trim()).map(d=>({name:d.name, amount:(d.amount!==""&&d.amount!=null)?d.amount:""}));
   if(invDisb.length===0) invDisb=[{name:"",amount:""}];
+  invoiceTouched = false;
   renderISvc(); renderIDisb(); renderInvoice();
-  if(manual) invoiceTouched = false; // re-synced on request; resume auto-sync
 }
+function matchAgreementAgain(){ invoiceTouched=false; pullFromRetainer(true); }
 function setIDate(v){ iDate=v; renderInvoice(); }
 function lineRow(arr,i,s,ph){
   const reFn = arr==="invSvc" ? "renderISvc" : "renderIDisb";
@@ -1404,17 +1488,23 @@ function renderInvoice(){
     <table class="fees"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>${disbRows}</tbody></table>`:""}
 
     <table class="fees" style="margin-top:12px"><tbody>
-      <tr><td>Professional services</td><td class="amt">${cad(svcSub)}</td></tr>
+      ${(invSvc.filter(s=>s.name.trim()||s.amount).length>1||disbSub)?`<tr><td>Subtotal — professional services</td><td class="amt">${cad(svcSub)}</td></tr>`:""}
       ${iIncl?`<tr><td>GST/HST</td><td class="amt">Included</td></tr>`:`<tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>`}
       ${disbSub?`<tr><td>Disbursements</td><td class="amt">${cad(disbSub)}</td></tr>`:""}
       <tr class="total"><td>Total</td><td class="amt">${cad(total)}</td></tr>
-      ${itrust?`<tr><td>Less advance / trust applied</td><td class="amt">−${cad(itrust)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
+      ${itrust?`<tr><td>Less advance held in trust</td><td class="amt">−${cad(Math.min(itrust,total))}</td></tr>`:""}
+      ${paid?`<tr><td>Paid${iDate?` on ${niceDate(iDate)}`:""} by ${esc($("iPayMethod").value)}</td><td class="amt">−${cad(due)}</td></tr><tr class="total"><td>Balance owing</td><td class="amt">${cad(0)}</td></tr>`
+            :(itrust?`<tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:"")}
     </tbody></table>
 
     <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${iDate?` on ${niceDate(iDate)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
     <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
     ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
+  { const st=$("iSync"); if(st){ const fno=esc($("fileNo").value||"");
+      st.className="isync "+(invoiceTouched?"edited":"ok");
+      st.innerHTML = invoiceTouched ? `✎ Edited — no longer matches the Service Agreement<button type="button" onclick="matchAgreementAgain()">↻ Match agreement again</button>`
+                                    : `✓ Matches Service Agreement${fno?` ${fno}`:""}`; } }
   if(isTypedCopy(iDate)){ const h=$("paper3").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(iDate,"invoice").replace(" signed on"," issued on")); }
   addPrintDates("paper3");
 }
@@ -1475,7 +1565,7 @@ function showTab(name){
     document.getElementById("tabbtn-"+t).classList.toggle("active", t===name);
   });
   if(name==="retainer") render();
-  else if(name==="consult") renderConsult();
+  else if(name==="consult"){ consultFillIfBlank(); renderConsult(); }
   else { if(!invoiceTouched) pullFromRetainer(); else renderInvoice(); }
 }
 
@@ -1488,25 +1578,29 @@ function onFeeMethod(){
 }
 
 /* ── Word (.doc) export of the active document ───────── */
-function exportDoc(){
-  if(!guardRequired()) return;
-  let paperId, title, refId;
-  if(document.getElementById("tab-retainer").classList.contains("active")){ paperId="paper"; title="Service Agreement"; refId="fileNo"; }
-  else if(document.getElementById("tab-consult").classList.contains("active")){ paperId="paper2"; title="Consultation Agreement"; refId="cfileNo"; }
-  else { paperId="paper3"; title="Invoice"; refId="iNo"; }
-  const src = document.getElementById(paperId);
-  const clone = src.cloneNode(true);
+const DOCS={retainer:{paper:"paper",title:"Service Agreement",ref:"fileNo"},consult:{paper:"paper2",title:"Consultation Agreement",ref:"cfileNo"},invoice:{paper:"paper3",title:"Invoice",ref:"iNo"}};
+function cleanPaper(paperId){
+  const clone=document.getElementById(paperId).cloneNode(true);
   clone.querySelectorAll(".pdate").forEach(s=>s.remove());
-  // replace date inputs with their text value
   clone.querySelectorAll('.pickbtn').forEach(b=>b.remove());
   clone.querySelectorAll('input.inlinefile').forEach(inp=>{ const span=document.createElement("span"); span.textContent=inp.value||"—"; inp.replaceWith(span); });
-  clone.querySelectorAll('input.inlinedate').forEach(inp=>{
-    const span=document.createElement("span");
-    span.textContent = inp.value ? niceDate(inp.value) : "______________";
-    inp.replaceWith(span);
-  });
-  // drop decorative inline svgs (Word renders them poorly)
-  clone.querySelectorAll("svg").forEach(s=>s.remove());
+  clone.querySelectorAll('input.inlinedate').forEach(inp=>{ const span=document.createElement("span"); span.textContent=inp.value?niceDate(inp.value):"______________"; inp.replaceWith(span); });
+  clone.querySelectorAll("svg").forEach(s=>s.remove());   // decorative icons render poorly in Word
+  return clone.innerHTML;
+}
+function consultFillIfBlank(){ if(!$("ccliName").value.trim() && $("cliName").value.trim()) pullConsultFromRetainer(); }
+function refreshAllDocs(){ try{ render(); }catch(e){} try{ consultFillIfBlank(); renderConsult(); }catch(e){} try{ renderInvoice(); }catch(e){} }
+/* which: "retainer" | "consult" | "invoice" | "all" */
+function guardDocs(which){
+  const tabs = which==="all" ? ["retainer","consult","invoice"] : [which];
+  const miss=[]; tabs.forEach(t=>getMissing(t).forEach(m=>miss.push(tabs.length>1?`${docTitle(t)}: ${m}`:m)));
+  if(miss.length){ showCheck(which==="all"?"three documents":docTitle(which), miss, true); return false; }
+  return true;
+}
+function exportDoc(which){
+  which = which || activeTab();
+  refreshAllDocs();
+  if(!guardDocs(which)) return;
   const css = `
     body{font-family:Georgia,'Times New Roman',serif;color:#222;font-size:11pt;line-height:1.5}
     .doc-head{text-align:center;border-bottom:2px solid #16233b;padding-bottom:12px;margin-bottom:18px}
@@ -1527,14 +1621,36 @@ function exportDoc(){
     .ctitle{text-align:center} .ctitle .t{font-size:22pt;font-weight:bold;color:#1c2657;letter-spacing:2px} .ctitle .st{font-size:9pt;color:#c8102e;letter-spacing:2px;text-transform:uppercase}
     .ccard{border:1px solid #ccc;border-top:3px solid #1c2657;padding:8px;margin-bottom:8px;display:inline-block;width:46%;vertical-align:top;margin-right:2%} .ccard h4{font-size:8pt;margin:0;color:#1c2657;text-transform:uppercase} .ccard .big{font-weight:bold;font-size:12pt} .ccard .lb{font-size:7pt;color:#777;text-transform:uppercase;margin-top:4px} .cfoot{display:none}
     ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}`;
-  const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
-  const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
+  const tabs = which==="all" ? ["retainer","consult","invoice"] : [which];
+  const pageBreak = `<br clear="all" style="mso-special-character:line-break;page-break-before:always" />`;
+  const bodyHtml = tabs.map(t=>cleanPaper(DOCS[t].paper)).join(pageBreak);
+  const title = which==="all" ? "Agreements and Invoice" : DOCS[which].title;
+  const fileRef = (document.getElementById(DOCS[which==="all"?"retainer":which].ref).value||"document").replace(/[^\w-]/g,"_");
+  const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${bodyHtml}</body></html>`;
   const blob = new Blob(["\ufeff", html], {type:"application/msword"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${title.replace(/ /g,"_")}_${fileRef}.doc`;
+  a.download = which==="all" ? `All_three_${fileRef}.doc` : `${title.replace(/ /g,"_")}_${fileRef}.doc`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+function printDocs(which){
+  which = which || activeTab();
+  refreshAllDocs();
+  if(!guardDocs(which)) return;
+  if(which==="all"){ document.body.classList.add("printall"); const done=()=>{ document.body.classList.remove("printall"); window.removeEventListener("afterprint",done); }; window.addEventListener("afterprint",done); window.print(); setTimeout(done,1500); }
+  else { const was=activeTab(); if(was!==which) showTab(which); window.print(); if(was!==which) showTab(was); }
+}
+function openDocMenu(btn, kind){
+  const old=document.querySelector(".docmenu"); if(old){ old.remove(); if(old.dataset.kind===kind) return; }
+  const m=document.createElement("div"); m.className="docmenu"; m.dataset.kind=kind;
+  const act = kind==="word" ? "exportDoc" : "printDocs";
+  m.innerHTML=`<button class="main" data-w="all">${kind==="word"?"⬇ All three documents (one Word file)":"🖨 All three documents"}</button><hr/>
+    <button data-w="retainer">Service Agreement only</button><button data-w="consult">Consultation Agreement only</button><button data-w="invoice">Invoice only</button>`;
+  document.body.appendChild(m);
+  const r=btn.getBoundingClientRect(); m.style.top=(r.bottom+6)+"px"; m.style.left=Math.max(8,Math.min(r.right-m.offsetWidth, innerWidth-m.offsetWidth-8))+"px";
+  m.addEventListener("click",e=>{ const b=e.target.closest("button[data-w]"); if(!b) return; m.remove(); window[act](b.dataset.w); });
+  setTimeout(()=>document.addEventListener("click",function close(e){ if(!m.contains(e.target)&&e.target!==btn){ m.remove(); document.removeEventListener("click",close); } }),0);
 }
 
 /* ── firm-detail persistence (guarded for sandbox) ───── */
@@ -1589,7 +1705,14 @@ function getMissing(tab){
   } else if(tab==="consult"){
     need($("rcicName").value.trim(),"RCIC full name");
     need($("firm").value.trim(),"Firm name");
+    need($("rcicNo").value.trim(),"RCIC registration number (s.23(2)(a))");
+    need($("firmAddr").value.trim(),"Firm address (s.23(2)(a))");
+    need($("firmPhone").value.trim(),"Firm telephone (s.23(2)(a))");
+    need($("firmEmail").value.trim(),"Firm email (s.23(2)(a))");
     need($("ccliName").value.trim(),"Potential client name");
+    need($("ccliAddr").value.trim(),"Potential client address (s.23(2)(b))");
+    need($("ccliPhone").value.trim(),"Potential client telephone (s.23(2)(b))");
+    need($("ccliEmail").value.trim(),"Potential client email (s.23(2)(b))");
     need($("cProBono").checked || +$("cfee").value>0,"Consultation fee (or mark it free)");
   } else {
     need($("rcicName").value.trim(),"RCIC full name");
@@ -1607,7 +1730,7 @@ function guardRequired(){
   if(miss.length){ showCheck(docTitle(t), miss, true); return false; }
   return true;
 }
-function printDoc(){ if(guardRequired()) window.print(); }
+function printDoc(){ printDocs(activeTab()); }
 function showCheck(docName, miss, blocked){
   const old=document.getElementById("checkbox-ov"); if(old) old.remove();
   const ok = miss.length===0;
@@ -1664,6 +1787,7 @@ function doReset(){
   onJoint(); onFeeMethod(); onPayMode();
   invoiceTouched = false;
   invSvc = [{name:"Professional fees",amount:""}];
+  if($("iBill")) $("iBill").innerHTML="";
   invDisb = [{name:"IRCC processing fee",amount:""}];
   renderISvc(); renderIDisb();
   loadProgram(); renderConsult(); renderInvoice();
@@ -1685,11 +1809,117 @@ $("form").addEventListener("change", ()=>render());
 invSvc=[{name:"Professional fees",amount:""}];
 invDisb=[{name:"IRCC processing fee",amount:""}];
 renderISvc(); renderIDisb();
-$("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile)/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
+$("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile|iBill)/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
+$("iBill").addEventListener("change", ()=>{ if(!invoiceTouched) pullFromRetainer(); else renderInvoice(); });
+$("iform").addEventListener("change", (e)=>{ const id=(e.target&&e.target.id)||""; if(/^(iPaid|iPayMethod|iTaxIncl)$/.test(id)){ invoiceTouched=true; renderInvoice(); } });
 renderInvoice();
 loadProgram();
 syncProgUI();
 renderConsult();
+
+/* quick-pick professional fee: preset amounts, or Custom to type any amount */
+(function(){
+  const box=document.getElementById("feeChips"), fee=document.getElementById("fee"); if(!box||!fee) return;
+  const mark=()=>{ const v=String(+fee.value||""); let hit=false;
+    box.querySelectorAll("button").forEach(b=>{ const on=b.dataset.v===v; if(on) hit=true; b.classList.toggle("on",on); });
+    box.querySelector('[data-v="custom"]').classList.toggle("on",!hit && fee.value!==""); };
+  box.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+    if(b.dataset.v==="custom"){ fee.value=""; fee.focus(); mark(); return; }
+    fee.value=b.dataset.v; fee.dispatchEvent(new Event("input",{bubbles:true})); mark(); });
+  fee.addEventListener("input",mark); fee.addEventListener("change",mark);
+  window.addEventListener("load",mark); setTimeout(mark,300);
+})();
+
+/* Phone numbers: a 10-digit Canadian / US number is shown as 587-336-4500, however it was typed
+   (5873364500, 587 336 4500, (587) 336-4500, +1 587 336 4500). Anything else is left exactly as typed. */
+function fmtPhone(str){
+  const raw=String(str||'').trim(); if(!raw) return '';
+  if(/[a-z]/i.test(raw.replace(/\b(ext|x)\.?\s*\d+$/i,''))) return raw;
+  const ext=(raw.match(/\b(?:ext|x)\.?\s*(\d+)$/i)||[])[1];
+  let d=raw.replace(/\b(?:ext|x)\.?\s*\d+$/i,'').replace(/\D/g,'');
+  if(d.length===11 && d[0]==='1') d=d.slice(1);
+  if(d.length!==10) return raw;
+  return `${d.slice(0,3)}-${d.slice(3,6)}-${d.slice(6)}${ext?` ext. ${ext}`:''}`;
+}
+document.addEventListener('change',e=>{ const t=e.target;
+  if(t && /^(cliPhone|cli2Phone|ccliPhone)$/.test(t.id||'')){ const v=fmtPhone(t.value); if(v!==t.value){ t.value=v; t.dispatchEvent(new Event('input',{bubbles:true})); } }
+},true);
+
+/* ── Undo / Redo (up to 50 steps) and Reset this tab ─────────────────── */
+const HIST={past:[],future:[],busy:false,timer:0,last:""};
+function snapState(){
+  const v={};
+  ["form","cform","iform"].forEach(fid=>{ const f=document.getElementById(fid); if(!f) return;
+    f.querySelectorAll("input[id],textarea[id],select[id]").forEach(el=>{ if(el.type==="file") return; v[el.id]=(el.type==="checkbox"||el.type==="radio")?el.checked:el.value; }); });
+  return JSON.stringify({v, g:{disb,sigRcicDate,sigCliDate,sigCli2Date,members,cAgreementDate,csigR,csigC,invSvc,invDisb,iDate,invoiceTouched}});
+}
+function applyState(json){
+  const st=JSON.parse(json); HIST.busy=true;
+  try{
+    const g=st.g;
+    disb=g.disb; sigRcicDate=g.sigRcicDate; sigCliDate=g.sigCliDate; sigCli2Date=g.sigCli2Date; members=g.members;
+    cAgreementDate=g.cAgreementDate; csigR=g.csigR; csigC=g.csigC; invSvc=g.invSvc; invDisb=g.invDisb; iDate=g.iDate;
+    if(st.v.iBill!==undefined){ invoiceTouched=true; fillBillOptions(); }
+    for(const [id,val] of Object.entries(st.v)){ const el=document.getElementById(id); if(!el) continue;
+      if(el.type==="checkbox"||el.type==="radio") el.checked=val; else el.value=val; }
+    invoiceTouched=g.invoiceTouched;
+    ["renderMembers","renderDisb","syncProgUI"].forEach(fn=>{ try{ window[fn]&&window[fn](); }catch(e){} });
+    try{ document.getElementById("jointFields").style.display=$("joint").checked?"block":"none"; }catch(e){}
+    try{ $("paidFields").style.display=$("payMode").value==="paidFull"?"block":"none"; }catch(e){}
+    try{ onFeeMethod(); }catch(e){}
+    renderMain(); renderConsult(); renderISvc(); renderIDisb(); renderInvoice();
+  } finally { HIST.busy=false; HIST.last=snapState(); updateHistButtons(); }
+}
+function recordStep(){
+  if(HIST.busy) return; const now=snapState(); if(now===HIST.last) return;
+  HIST.past.push(HIST.last); if(HIST.past.length>50) HIST.past.shift();
+  HIST.future=[]; HIST.last=now; updateHistButtons();
+}
+function scheduleStep(){ if(HIST.busy) return; clearTimeout(HIST.timer); HIST.timer=setTimeout(recordStep,450); }
+function undoStep(){ clearTimeout(HIST.timer); recordStep(); if(!HIST.past.length) return; HIST.future.push(HIST.last); applyState(HIST.past.pop()); }
+function redoStep(){ if(!HIST.future.length) return; HIST.past.push(HIST.last); applyState(HIST.future.pop()); }
+function updateHistButtons(){ const u=$("undoBtn"), r=$("redoBtn"); if(u) u.disabled=!HIST.past.length; if(r) r.disabled=!HIST.future.length; }
+["input","change","click"].forEach(t=>document.addEventListener(t,e=>{ if(e.target&&e.target.closest&&e.target.closest("#undoBtn,#redoBtn")) return; scheduleStep(); },true));
+document.addEventListener("keydown",e=>{
+  if(!(e.ctrlKey||e.metaKey)) return; const k=e.key.toLowerCase();
+  const typing=e.target&&e.target.matches&&e.target.matches("input[type=text],input[type=number],input:not([type]),textarea") && !e.target.closest(".paper");
+  if(k==="z"&&!e.shiftKey){ if(typing) return; e.preventDefault(); undoStep(); }
+  else if(k==="y"||(k==="z"&&e.shiftKey)){ if(typing) return; e.preventDefault(); redoStep(); }
+});
+function activeTab(){ return ["retainer","consult","invoice"].find(t=>document.getElementById("tab-"+t).classList.contains("active"))||"retainer"; }
+function resetTab(){
+  const t=activeTab(), name={retainer:"Service Agreement",consult:"Consultation",invoice:"Invoice"}[t];
+  const msg = t==="invoice" ? "This throws away your invoice edits and copies everything from the Service Agreement again." : `This clears the ${name} tab. Your firm details, logo and the other tabs are kept.`;
+  const ov=document.createElement("div");
+  ov.style.cssText="position:fixed;inset:0;background:rgba(15,28,46,.4);display:grid;place-items:center;z-index:50";
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  ov.innerHTML=`<div style="background:#fff;border-radius:14px;max-width:360px;width:90%;padding:22px;box-shadow:0 20px 60px rgba(15,28,46,.3)">
+    <div style="font-weight:700;font-size:15px;color:#16233b">Reset the ${name} tab?</div>
+    <p style="font-size:13px;color:#5d6b7d;margin:8px 0 16px">${msg} You can press ↶ Undo to bring it back.</p>
+    <div style="display:flex;gap:8px">
+      <button id="rtCancel" style="flex:1;border:1px solid #d8dee6;background:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Cancel</button>
+      <button id="rtGo" style="flex:1;border:none;background:#16233b;color:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Reset</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+  ov.querySelector("#rtCancel").onclick=()=>ov.remove();
+  ov.querySelector("#rtGo").onclick=()=>{ ov.remove(); clearTimeout(HIST.timer); recordStep(); doResetTab(t); recordStep(); };
+}
+function doResetTab(t){
+  if(t==="invoice"){ matchAgreementAgain(); return; }
+  const preserve=new Set([...FIRM_FIELDS,"showBadge","showInsignia","showLogo","layout"]);
+  const fid = t==="retainer" ? "form" : "cform";
+  document.getElementById(fid).querySelectorAll("input, textarea, select").forEach(el=>{
+    if(!el.id || preserve.has(el.id) || el.type==="file") return;
+    if(el.type==="checkbox"){ el.checked=el.defaultChecked; }
+    else if(el.tagName==="SELECT"){ for(const o of el.options) o.selected=o.defaultSelected; }
+    else { el.value=el.defaultValue; }
+  });
+  if(t==="retainer"){
+    members=[]; renderMembers(); sigRcicDate=sigCliDate=sigCli2Date=""; $("adate").value=today();
+    onJoint(); onFeeMethod(); onPayMode(); loadProgram(); syncProgUI();
+  } else { csigR=csigC=""; cAgreementDate=today(); renderConsult(); }
+}
+setTimeout(()=>{ HIST.last=snapState(); updateHistButtons(); },400);
 </script>
 </body>
 </html>
