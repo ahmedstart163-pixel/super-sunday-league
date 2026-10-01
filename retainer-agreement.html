@@ -272,7 +272,7 @@
         <button type="button" class="btn btn-outline" onclick="$('notesIn').value='';$('fillStatus').textContent=''" style="color:var(--muted);border-color:var(--line)">Clear</button>
         <span id="fillStatus" style="font-size:13px;color:var(--muted)"></span>
       </div>
-      <div class="hint">Reads name, email, phone, address and immigration program from the text. Lines starting with <b>PA</b> (e.g. "PA Ali, Abdiqani Hassan") go into the principal applicants list, and "Date signed: 2024-04-15" sets the agreement date. The IMM 5476 upload reads the client's name and signing date, plus your representative details — it only works on a fillable form (not a scan or a flattened PDF). The file stays in your browser and is never uploaded anywhere. Always review the filled fields before generating.</div>
+      <div class="hint">Reads name, email, phone, address and immigration program from the text. Lines starting with <b>PA</b> (e.g. "PA Ali, Abdiqani Hassan") go into the principal applicants list, and "Date signed: 2024-04-15" sets the agreement date. The IMM 5476 upload reads the client's name and signing date (your firm details are never changed) — it only works on a fillable form (not a scan or a flattened PDF). The file stays in your browser and is never uploaded anywhere. Always review the filled fields before generating.</div>
         </div>
       </details>
     </fieldset>
@@ -349,7 +349,7 @@
           <div><label>Email</label><input type="email" id="cli2Email" placeholder="client2@..." /></div>
         </div>
       </div>
-      <div class="v2box">
+      <div class="v2box" id="g5Members">
         <label style="margin-top:0">Other group members / co-sponsors</label>
         <div class="hint" style="margin:0 0 8px">The client above is the group's contact person. Add every other sponsor who appointed the RCIC — each one is a client, is listed in the agreement and gets a signature line.</div>
         <div id="memberList"></div>
@@ -374,8 +374,8 @@
       <label>Scope of services (editable)</label>
       <textarea id="scope" rows="8"></textarea>
       <div class="hint">One service per line. These become the numbered RCIC responsibilities in Section 3.</div>
-      <div class="v2box">
-        <label style="margin-top:0">Principal applicants (sponsorships — optional)</label>
+      <div class="v2box" id="g5Box">
+        <label style="margin-top:0">Principal applicants (Group of Five)</label>
         <textarea id="paList" rows="4" placeholder="One per line, e.g.&#10;PA Ali, Abdiqani Hassan&#10;PA Suldan, Abubakar"></textarea>
         <div class="hint">Printed as a numbered list in Section 3. A leading "PA" is removed automatically. Leave blank if not needed.</div>
         <label class="chk"><input type="checkbox" id="groupRep" /> Client acts for the sponsoring group (Group of Five)</label>
@@ -426,7 +426,7 @@
         </div>
       </div>
       <label>Advance payment held in client account (CAD)</label>
-      <span class="moneywrap"><input type="number" id="advance" value="500" min="0" step="50" /></span>
+      <span class="moneywrap"><input type="number" id="advance" value="0" min="0" step="50" /></span>
       <div class="two">
         <div><label>Payment due (days)</label><input type="number" id="dueDays" value="15" min="0" step="1" /></div>
         <div><label>Interest on overdue (%/yr)</label><input type="number" id="interest" value="0" min="0" step="0.5" /></div>
@@ -888,7 +888,7 @@ const longDate = iso => iso ? iso : "______________";
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const niceDate = iso => { const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${m[1]}-${m[2]}-${m[3]}` : (iso||"____-__-__"); };
 const cleanPA = l => l.replace(/^PA\b\s*[:\-]?\s*/i,"").replace(/\s{2,}/g," ").trim();
-const paItems = () => ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter(Boolean);
+const paItems = () => ($("program").value==="Group of Five Refugee Sponsorship") ? ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter(Boolean) : [];
 const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=="hourly";
 const payDateVal = () => $("payDate").value || $("adate").value;
 function addPrintDates(id){ const el=$(id); if(!el) return; el.querySelectorAll('input.inlinedate').forEach(i=>{ const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp); }); }
@@ -905,6 +905,8 @@ function syncProgUI(){
   const g=isG5(), p=isSp();
   $("ps-g5").classList.toggle("on",g); $("ps-sp").classList.toggle("on",p); $("ps-ot").classList.toggle("on",!g&&!p);
   $("spFields").style.display = p ? "block" : "none";
+  $("g5Box").style.display = g ? "block" : "none";
+  $("g5Members").style.display = g ? "block" : "none";
   onSpStream(true);
 }
 function onSpStream(noRender){ $("owpWrap").style.display = $("spStream").value==="inland" ? "flex" : "none"; if(!noRender) render(); }
@@ -933,14 +935,30 @@ function onPayMode(){ $("paidFields").style.display = $("payMode").value==="paid
 /* ── init ────────────────────────────────────────────── */
 function initPrograms(){
   const sel = $("program");
-  Object.keys(PROGRAMS).forEach(k=>{ const o=document.createElement("option"); o.textContent=k; sel.appendChild(o); });
-  sel.value = "Study Permit";
+  const main=["Group of Five Refugee Sponsorship","Spousal / Common-law Sponsorship"];
+  const g1=document.createElement("optgroup"); g1.label="Main programs";
+  const g2=document.createElement("optgroup"); g2.label="Other programs";
+  Object.keys(PROGRAMS).forEach(k=>{ const o=document.createElement("option"); o.textContent=k; o.value=k; (main.includes(k)?g1:g2).appendChild(o); });
+  main.forEach(k=>{ const o=[...g1.children].find(x=>x.value===k); if(o) g1.appendChild(o); });
+  sel.appendChild(g1); sel.appendChild(g2);
+  let last=""; try{ last=localStorage.getItem("rcic_last_program")||""; }catch(e){}
+  sel.value = PROGRAMS[last] ? last : "Group of Five Refugee Sponsorship";
 }
 function loadProgram(){
   const p = PROGRAMS[$("program").value];
   if($("program").value==="Spousal / Common-law Sponsorship"){ if(!$("joint").checked){ $("joint").checked=true; window._autoJoint=true; onJoint(); } }
   else if(window._autoJoint){ window._autoJoint=false; $("joint").checked=false; onJoint(); }
-  if($("program").value==="Group of Five Refugee Sponsorship") $("groupRep").checked=true;
+  const wasG5 = window._lastProg==="Group of Five Refugee Sponsorship"; window._lastProg=$("program").value;
+  try{ localStorage.setItem("rcic_last_program",$("program").value); }catch(e){}
+  if($("program").value==="Group of Five Refugee Sponsorship"){
+    $("groupRep").checked=true;
+    $("feeMethod").value="flat"; $("fee").value=1000; $("taxIncl").checked=true;
+    $("payMode").value="paidFull"; $("payMethod").value="cash"; $("payDate").value=""; $("advance").value=0;
+    onFeeMethod(); onPayMode();
+  } else {
+    $("groupRep").checked=false;
+    if(wasG5){ $("taxIncl").checked=false; $("payMode").value="invoice"; onPayMode(); }
+  }
   $("scope").value = p.scope.join("\n");
   $("timeframe").value = p.timeframe || "";
   $("preadvice").value = p.preadvice || "";
@@ -969,7 +987,7 @@ function render(){
   const ms=PROGRAMS[program].milestones;
   const taxIncl=$("taxIncl").checked;
   const tax=taxIncl?0:base*taxRate/100, total=base+tax;
-  const mems=memberList();
+  const mems=isG5()?memberList():[];
   const sp=isSp(), spRel=$("spRel").value, spStream=$("spStream").value, spOwp=sp&&spStream==="inland"&&$("spOwp").checked, onSub=$("payMode").value==="onSubmit"&&$("feeMethod").value!=="hourly";
   const classic=$("layout").value==="classic", tcopy=isTypedCopy($("adate").value);
   { const h=$("oldDateHint"); if(h){ h.style.display=tcopy?"block":"none"; h.textContent=tcopy?"This date is more than 30 days ago, so the agreement is marked as a typed copy of the signed original.":""; } }
@@ -1131,7 +1149,7 @@ function render(){
     ${onSub?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
     <p>The professional fee is earned on completion and submission of the application and is collected at that time. The RCIC does not collect or hold unearned fees in advance and does not hold client funds in trust for this matter. The RCIC will provide the Client with a receipt for every payment received.</p>`:pf?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
     <p>The Client paid the professional fee of <b>${cad(total)}</b> in full by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>. The RCIC has provided the Client with a receipt. Funds received before services are rendered are held in trust in a client account at a financial institution approved by the College, kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`:`<h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
-    <p>An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`}
+    <p>${adv>0?`An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds`:`No advance payment is collected on signing. If the Client pays any amount before services are provided, the RCIC will provide a receipt and will hold the funds`} in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`}
 
     <h2><span class="sn">11.</span> Invoices &amp; receipts</h2>
     <p>The RCIC will invoice the Client only after services have been provided or disbursements made. Each invoice will contain a full description of the services and disbursements to which it relates. The RCIC will provide the Client with a receipt for every payment received, identifying the invoice to which it relates.</p>
@@ -1322,7 +1340,7 @@ function renderConsult(){
     ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
     <div class="receipt" style="margin-top:26px"><h3>Acknowledgment — to be signed after the consultation</h3>
       <p>I confirm that the RCIC explained the topics listed in Section 1, answered my questions, and that I understand the information provided. I understand that the decision whether to proceed is mine.</p>
-      <div class="sigs" style="margin-top:14px"><div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: ____-__-__</div></div><div></div></div>
+      <div class="sigs" style="margin-top:14px"><div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: ${niceDate(cAgreementDate)}</div></div><div></div></div>
     </div>
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
   `;
@@ -1423,7 +1441,7 @@ function renderInvoice(){
 
     <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${iDate?` on ${niceDate(iDate)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
     <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
-    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}. This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
+    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> ${itrust?`Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}, plus the advance of ${cad(itrust)} already received — total paid ${cad(total)}.`:`Payment in full of ${cad(total)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}.`} This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
   if(isTypedCopy(iDate)){ const h=$("paper3").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(iDate,"invoice").replace(" signed on"," issued on")); }
   addPrintDates("paper3");
@@ -1461,18 +1479,9 @@ async function fillFromRepPdf(input){
     const dob=normNotesDate(dobRaw);
     const signed=normNotesDate(nth("dateApplicantSigned",0)||nth("dateSigned",0));
     if(signed){ $("adate").value=signed; filled.push("date signed"); }
-    // representative (second name block)
-    const rf=nth("familyName",1), rg=nth("givenName",1);
-    if(rf||rg){ $("rcicName").value=[rg,rf].filter(Boolean).join(" ").replace(/\s+/g," ").trim(); }
-    const rno=(all.find(a=>/^R\d{6}$/i.test(a[1]))||[])[1]; if(rno) $("rcicNo").value=rno.toUpperCase();
-    const org=nth("organization",0); if(org) $("firm").value=org;
-    const unit=nth("unit",0), sno=nth("streetNo",0), sname=nth("streetName",0), city=nth("city",0), prov=nth("province",0), pc=nth("postalcode",0);
-    if(sname){ $("firmAddr").value=`${unit?unit+"-":""}${sno} ${sname}`.replace(/\s+/g," ").trim()+(city?`, ${city}`:"")+(prov?`, ${prov}`:"")+(pc?`  ${pc}`:""); }
-    const ph=nth("phoneNumber",0).replace(/\D/g,""); if(ph.length===10) $("firmPhone").value=`+1 (${ph.slice(0,3)}) ${ph.slice(3,6)}-${ph.slice(6)}`;
-    const em=nth("email",0); if(em) $("firmEmail").value=em;
-    if(rf||rno||org) filled.push("your representative details");
+    // firm / representative details are never changed by the upload
     syncAll(); render(); renderConsult(); renderInvoice();
-    st.style.color="#1f8a5e"; st.textContent="✓ Filled: "+filled.join(", ")+" — add the client's address, phone and email, then review.";
+    st.style.color="#1f8a5e"; st.textContent="✓ Filled: "+filled.join(", ")+" — add the client's address, phone and email, then review. Your firm details were not changed.";
   }catch(e){ st.style.color="#c2922a"; st.textContent=e.message||"Couldn't read that PDF."; }
   finally{ input.value=""; }
 }
