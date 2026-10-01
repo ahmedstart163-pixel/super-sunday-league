@@ -508,7 +508,6 @@
   .restore-bar button{border:0; border-radius:9px; padding:9px 15px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer}
   .restore-bar .rb-no{background:#eef1f6; color:var(--muted)}
   .restore-bar .rb-yes{background:var(--gold); color:#fff}
-  .restore-bar .rb-alt{background:#fff; color:var(--gold); border:1.5px solid var(--gold)!important}
   .restore-bar.oversize{max-width:min(94vw,960px); width:max-content}
   .restore-bar.oversize span{line-height:1.4}
   @media (max-width:720px){ .restore-bar.oversize{flex-wrap:wrap; width:auto; left:10px; right:10px; transform:none; max-width:none} .restore-bar.oversize span{flex:1 1 200px} .restore-bar.oversize .rb-btns{width:100%; justify-content:flex-end; flex-wrap:wrap} }
@@ -1408,8 +1407,7 @@
       <div class="pgsize">
         <div class="pgsize-head"><span>Page size</span><span id="pgSizeNow">—</span></div>
         <div class="pgsize-row">
-          <button class="lbtn" id="pgFitLetter">Fit to Letter</button>
-          <button class="lbtn" id="pgFitA4">Fit to A4</button>
+          <button class="lbtn" id="pgFitLetter">Fit to Letter (8.5 × 11 in)</button>
         </div>
         <p class="pgsize-hint">Phone scans often come as huge pages that open zoomed in. Fitting keeps the content and its quality; only the page changes.</p>
       </div>
@@ -1759,10 +1757,10 @@ function offerPageSizeFix(){
   const bar=document.createElement("div"); bar.className="restore-bar oversize";
   bar.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/><path d="M4 9h5M15 9h5M9 4v5M9 15v5"/></svg>'+
     '<span>'+(n===1?'This page is':'These pages are')+' <b>'+pageSizeLabel(big)+'</b> — about '+times+' times a normal sheet, which is why it opens so zoomed in. Shrink '+(n===1?'it':'them')+' to a normal page?</span>'+
-    '<div class="rb-btns"><button class="rb-no">No, keep as is</button><button class="rb-alt" data-size="a4">Yes, A4</button><button class="rb-yes" data-size="letter">Yes, Letter</button></div>';
+    '<div class="rb-btns"><button class="rb-no">No, keep as is</button><button class="rb-yes" data-size="letter">Yes, fit to Letter</button></div>';
   document.body.appendChild(bar);
   bar.querySelector(".rb-no").onclick=()=>bar.remove();
-  bar.querySelectorAll(".rb-yes,.rb-alt").forEach(b=>b.onclick=async()=>{ bar.remove(); await fitPagesTo(b.dataset.size); });
+  bar.querySelector(".rb-yes").onclick=async()=>{ bar.remove(); await fitPagesTo("letter"); };
 }
 // Rebuild the document on Letter/A4 pages: every page is drawn onto a new page, scaled to fit and centred.
 // The original content (scans, text, vectors) is kept as it is, so nothing loses quality. Edits made so far are kept too.
@@ -1798,7 +1796,7 @@ async function fitPagesTo(size){
   finally{ busy(false); }
 }
 $("#pgFitLetter").onclick=async()=>{ $("#metaModal").classList.add("hide"); await fitPagesTo("letter"); };
-$("#pgFitA4").onclick=async()=>{ $("#metaModal").classList.add("hide"); await fitPagesTo("a4"); };
+
 
 /* ---------------- page sidebar (thumbnail list) ---------------- */
 const pageSidebar=$("#pageSidebar"), pagesBtn=$("#pagesBtn");
