@@ -508,6 +508,10 @@
   .restore-bar button{border:0; border-radius:9px; padding:9px 15px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer}
   .restore-bar .rb-no{background:#eef1f6; color:var(--muted)}
   .restore-bar .rb-yes{background:var(--gold); color:#fff}
+  .restore-bar .rb-alt{background:#fff; color:var(--gold); border:1.5px solid var(--gold)!important}
+  .restore-bar.oversize{max-width:min(94vw,960px); width:max-content}
+  .restore-bar.oversize span{line-height:1.4}
+  @media (max-width:720px){ .restore-bar.oversize{flex-wrap:wrap; width:auto; left:10px; right:10px; transform:none; max-width:none} .restore-bar.oversize span{flex:1 1 200px} .restore-bar.oversize .rb-btns{width:100%; justify-content:flex-end; flex-wrap:wrap} }
 
   .fab-download{
     position:fixed; left:50%; bottom:16px; transform:translateX(-50%) translateY(8px);
@@ -1750,13 +1754,15 @@ function offerPageSizeFix(){
   document.querySelectorAll(".restore-bar.oversize").forEach(b=>b.remove());
   if(!hasOversizePages()) return;
   const big=pages.find(p=>!p.deleted && Math.max(p.wPt,p.hPt)>1300);
+  const n=pages.filter(p=>!p.deleted).length;
+  const times=Math.max(2, Math.round(Math.max(big.wPt,big.hPt)/792));   // compared with the long side of a Letter sheet
   const bar=document.createElement("div"); bar.className="restore-bar oversize";
   bar.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/><path d="M4 9h5M15 9h5M9 4v5M9 15v5"/></svg>'+
-    '<span>These pages are <b>'+pageSizeLabel(big)+'</b> — much bigger than a sheet of paper, so the PDF opens zoomed in. Shrink them?</span>'+
-    '<div class="rb-btns"><button class="rb-no">Keep</button><button class="rb-yes" data-size="a4">A4</button><button class="rb-yes" data-size="letter">Letter</button></div>';
+    '<span>'+(n===1?'This page is':'These pages are')+' <b>'+pageSizeLabel(big)+'</b> — about '+times+' times a normal sheet, which is why it opens so zoomed in. Shrink '+(n===1?'it':'them')+' to a normal page?</span>'+
+    '<div class="rb-btns"><button class="rb-no">No, keep as is</button><button class="rb-alt" data-size="a4">Yes, A4</button><button class="rb-yes" data-size="letter">Yes, Letter</button></div>';
   document.body.appendChild(bar);
   bar.querySelector(".rb-no").onclick=()=>bar.remove();
-  bar.querySelectorAll(".rb-yes").forEach(b=>b.onclick=async()=>{ bar.remove(); await fitPagesTo(b.dataset.size); });
+  bar.querySelectorAll(".rb-yes,.rb-alt").forEach(b=>b.onclick=async()=>{ bar.remove(); await fitPagesTo(b.dataset.size); });
 }
 // Rebuild the document on Letter/A4 pages: every page is drawn onto a new page, scaled to fit and centred.
 // The original content (scans, text, vectors) is kept as it is, so nothing loses quality. Edits made so far are kept too.
