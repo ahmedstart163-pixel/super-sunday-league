@@ -220,6 +220,11 @@
   .tbColor input{position:absolute; inset:-6px; width:42px; height:42px; border:0; padding:0; cursor:pointer}
   .ctx{display:flex; align-items:center; justify-content:center; gap:10px; flex-basis:100%; flex-wrap:wrap}
   .ctx .field{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted)}
+  .ctx .seg{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#fff}
+  .ctx .seg button{border:0; background:#fff; color:var(--muted); font:inherit; font-size:12.5px; font-weight:600; padding:6px 11px; cursor:pointer}
+  .ctx .seg button+button{border-left:1px solid var(--line)}
+  .ctx .seg button:hover{background:#f3f6fa}
+  .ctx .seg button.on{background:var(--gold); color:#fff}
   .ctx input[type=color]{width:30px; height:30px; padding:0; border:1px solid var(--line); border-radius:7px; background:none}
   .ctx input[type=range]{width:120px; accent-color:var(--gold)}
   .ctx .val{min-width:34px; text-align:right; font-weight:600; color:var(--ink)}
@@ -1036,6 +1041,12 @@
     <div class="field" id="ctxColor"><span>Color</span><input type="color" id="colorPick" value="#1a1a1a"><div class="swatches" id="swatches"></div></div>
     <div class="field" id="ctxFont"><span>Size</span><input type="range" id="fontRange" min="8" max="64" value="16"><span class="val" id="fontVal">16</span></div>
     <div class="field" id="ctxStroke"><span>Pen</span><input type="range" id="strokeRange" min="1" max="14" value="3"><span class="val" id="strokeVal">3</span></div>
+    <div class="field hide" id="ctxWhiteout"><span>Whiteout</span>
+      <div class="seg" id="woSeg">
+        <button type="button" data-mode="smart" class="on" title="Removes only the ink and keeps the paper's colour and texture underneath">Keep background</button>
+        <button type="button" data-mode="solid" title="Paints a plain white box over the area">Solid white</button>
+      </div>
+    </div>
     <div class="field hide" id="ctxBgRemove">
       <button class="btn" id="bgRemoveBtn" type="button" title="Remove a plain or light background from the selected image or signature">
         Remove background
@@ -2057,6 +2068,23 @@ const redactToolBtn=document.querySelector('.tool[data-tool="redact"]');
 if(redactToolBtn) redactToolBtn.addEventListener("dblclick",()=>openRedactSearch());
 const CREATING=["text","highlight","strike","underline","note","whiteout","redact","rect","image","sign","stamp","wstamp","field-text","field-multiline","field-check","field-radio","field-dropdown","field-sign","field-buttons"];
 let stampType="check";
+let whiteoutMode = (function(){ try{ return localStorage.getItem("majd.whiteoutMode")==="solid" ? "solid" : "smart"; }catch(_){ return "smart"; } })();  // "smart" keeps the paper under the ink; "solid" paints a white box
+function setWhiteoutMode(mode, applyToSelected){
+  whiteoutMode = mode==="solid" ? "solid" : "smart";
+  try{ localStorage.setItem("majd.whiteoutMode", whiteoutMode); }catch(_){ }
+  document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===whiteoutMode));
+  if(applyToSelected && selected && selected.type==="whiteout"){
+    const a=selected, rec=pages[a.page];
+    if(whiteoutMode==="smart"){
+      // (re)build the patch from where the box sits now, so it erases exactly what is under it
+      const smart=smartErasePatch(rec, a.x, a.y, a.w, a.h);
+      if(smart){ a.smart=true; a.patchSrc=smart.src; a.color=smart.fallbackColor; }
+      else { a.smart=false; toast("Couldn't read the page under the box — using solid white here.",true); }
+    } else { a.smart=false; a.color="#ffffff"; }
+    renderAnno(a); snapshot(); refreshCtx();
+  }
+}
+document.querySelectorAll("#woSeg button").forEach(b=>b.addEventListener("click",()=>setWhiteoutMode(b.dataset.mode,true)));
 let wordStamp={word:"DRAFT",color:"#d1242f",rot:-15};
 let radioGroupSeq=1, radioOptSeq=0, curRadioGroup="choice1", formEditMode=false;
 function setTool(t, opts){
@@ -2080,6 +2108,7 @@ function setTool(t, opts){
   $("#pages").classList.toggle("tooling", t!=="select");
   if(t==="image" && !(opts&&opts.skipPick)) $("#imgInput").click();
   if(t==="edittext") toast("Tap a line of text to replace it — it gets covered and a typed copy drops on top.");
+  if(t==="whiteout") toast(whiteoutMode==="smart" ? "Drag over what to cover. Keep background removes only the ink — switch to Solid white above for a plain box." : "Drag over what to cover. Solid white paints a plain box — switch to Keep background above to keep the paper's look.");
   refreshCtx();
 }
 
@@ -2338,6 +2367,10 @@ function refreshCtx(){
   $("#ctxFont").classList.toggle("hide", !showFont);
   $("#ctxStroke").classList.toggle("hide", !showStroke);
   $("#ctxBgRemove").classList.toggle("hide", !(selected && (selected.type==="image" || selected.type==="sign")));
+  const woSel = selected && selected.type==="whiteout";
+  $("#ctxWhiteout").classList.toggle("hide", !(tool==="whiteout" || woSel));
+  if(woSel){ const m = (selected.smart && selected.patchSrc) ? "smart" : "solid"; document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===m)); if(m==="solid"){ $("#ctxColor").classList.remove("hide"); colorPick.value=selected.color||"#ffffff"; } }
+  else document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===whiteoutMode));
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
   if(selected && ["rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
@@ -2361,6 +2394,7 @@ function markSwatch(){
 }
 function applyColor(c){
   if(selected && selected.type==="text" && selected._editing && applyPartialColorLive(selected, c)){ snapshot(); return; }
+  if(selected && selected.type==="whiteout" && !(selected.smart && selected.patchSrc)){ selected.color=c; renderAnno(selected); snapshot(); return; }
   if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){
     selected.color=c; if(selected.type==="text") selected.colorRuns=null;
     renderAnno(selected); snapshot();
@@ -2378,6 +2412,7 @@ colorPick.oninput=()=>{
     restoreEditSelectionForColorPicker();
     if(applyPartialColorLive(selected, colorPick.value)) return;
   }
+  if(selected && selected.type==="whiteout" && !(selected.smart && selected.patchSrc)){ selected.color=colorPick.value; renderAnno(selected); return; }
   if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
 };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
@@ -2861,7 +2896,7 @@ function bindPage(rec){
       }
       const wx=Math.min(p.x,start.x), wy=Math.min(p.y,start.y);
       let smart=null;
-      if(annoType==="whiteout") smart=smartErasePatch(rec, wx, wy, w, h);
+      if(annoType==="whiteout" && whiteoutMode==="smart") smart=smartErasePatch(rec, wx, wy, w, h);
       const a=makeAnno(Object.assign({type:annoType,page:rec.index,
         x:wx, y:wy, w, h,
         color: annoType==="redact" ? "#000000" : ((annoType==="rect"||annoType==="strike"||annoType==="underline"||annoType==="highlight")?colorPick.value : (annoType==="whiteout"?(smart?smart.fallbackColor:"#ffffff"):"#1f5fbf"))}, extra));
@@ -3010,7 +3045,7 @@ function renderAnno(a){
       ed.addEventListener("dblclick",ev=>{ ev.preventDefault(); enterEdit(a); });
     }
     if(a.type==="image"||a.type==="sign"){ const img=el("img"); img.src=a.src; n.insertBefore(img,del); }
-    if(a.type==="whiteout" && a.smart && a.patchSrc){ const img=el("img"); img.src=a.patchSrc; img.style.pointerEvents="none"; n.insertBefore(img,del); n._patchImg=img; }
+    if(a.type==="whiteout"){ const img=el("img"); img.style.pointerEvents="none"; img.style.display="none"; n.insertBefore(img,del); n._patchImg=img; }
     if(a.type==="stamp"){ const g=el("span"); g.style.pointerEvents="none"; n.insertBefore(g,del); n._g=g; }
     if(a.type==="wstamp"){ const g=el("div","wst"); n.insertBefore(g,del); n._g=g; }
     if(a.type==="note"){
@@ -3053,7 +3088,11 @@ function renderAnno(a){
   }else{
     n.style.width=a.w+"px"; n.style.height=a.h+"px";
     if(a.type==="rect") n.style.borderColor=a.color;
-    if(a.type==="whiteout" && !(a.smart && a.patchSrc)) n.style.background=a.color||"#fff";
+    if(a.type==="whiteout"){
+      const useSmart=!!(a.smart && a.patchSrc);
+      if(n._patchImg){ if(useSmart && n._patchImg.getAttribute("src")!==a.patchSrc) n._patchImg.src=a.patchSrc; n._patchImg.style.display=useSmart?"block":"none"; }
+      n.style.background = useSmart ? "" : (a.color||"#fff");
+    }
     if(a.type==="redact") n.style.background="#000";
     if(a.type==="strike"||a.type==="underline") n.style.setProperty("--anno-color", a.color||"#1a1a1a");
     if(a.type==="highlight") n.style.background=hexToRgba(a.color||"#ffdd00",.4);
