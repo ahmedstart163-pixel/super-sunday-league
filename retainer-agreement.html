@@ -509,7 +509,17 @@
         <div><label>Tax</label><select id="cTaxIncl"><option value="add">Add GST/HST on top</option><option value="incl">Fee includes tax</option></select></div>
       </div>
       <label>Purpose &amp; scope of consultation (s.23(2)(e))</label>
-      <textarea id="cpurpose" rows="3" placeholder="What this consultation will cover."></textarea>
+      <label style="margin-top:0">Length of consultation</label>
+      <input type="text" id="cDuration" value="1 hour" placeholder="e.g. 1 hour" />
+      <label>Topics covered</label>
+      <select id="cTopic" onchange="renderConsult()" style="margin-bottom:6px">
+        <option value="auto">Standard topics — same program as the Service Agreement</option>
+        <option value="g5">Standard topics — Group of Five refugee sponsorship</option>
+        <option value="sp">Standard topics — Spousal / common-law sponsorship</option>
+        <option value="gen">General consultation</option>
+      </select>
+      <textarea id="cpurpose" rows="3" placeholder="Optional — add anything else this consultation will cover."></textarea>
+      <div class="hint">The standard topics are listed in Section 1 automatically. Anything you type here is added after them.</div>
       <label>File / ref no.</label>
       <input type="text" id="cfileNo" placeholder="ALH-C-0001" value="ALH-C-0001" />
     </fieldset>
@@ -889,7 +899,7 @@ function pickProgram(k){
   if(k==="g5") sel.value="Group of Five Refugee Sponsorship";
   else if(k==="sp") sel.value="Spousal / Common-law Sponsorship";
   else if(isG5()||isSp()) sel.value="Study Permit";
-  loadProgram();
+  loadProgram(); renderConsult();
 }
 function syncProgUI(){
   const g=isG5(), p=isSp();
@@ -1223,6 +1233,36 @@ function pullConsultFromRetainer(){
 function setCSigR(v){ csigR=v; renderConsult(); }
 function setCSigC(v){ csigC=v; renderConsult(); }
 
+const CONSULT_TOPICS={
+  g5:{intro:"During this consultation, the RCIC will explain the following to the potential Client so that they can make an <b>informed decision</b> about whether to proceed with a Group of Five refugee sponsorship:",
+    items:[
+      "<b>Group eligibility</b> — the RCIC will explain that the group must have at least five members who are Canadian citizens, persons registered under the Indian Act, or permanent residents, who are 18 or older and live in the expected community of settlement.",
+      "<b>Who cannot be a group member</b> — the RCIC will explain who is not eligible, for example a person subject to a removal order, in default of a previous sponsorship undertaking, support order or immigration loan, or with certain criminal convictions.",
+      "<b>The refugee's eligibility</b> — the RCIC will explain that the Principal Applicant must be recognized as a refugee by the UNHCR or a foreign state, must fit the Convention refugee abroad or country of asylum class, and must pass medical, criminal and security checks.",
+      "<b>Financial requirements</b> — the RCIC will explain the requirement to provide at least 12 months of income support plus start-up costs, based on IRCC's sponsorship cost table, and how each member will contribute and show their funds.",
+      "<b>Settlement plan</b> — the RCIC will explain the support the group must provide, including housing, orientation, language training, help finding employment, schooling and access to health care.",
+      "<b>The sponsorship undertaking</b> — the RCIC will explain each member's legal commitment for the sponsorship period and what happens if the group cannot meet it.",
+      "<b>Documents and forms</b> — the RCIC will explain what is needed from each group member and from the Principal Applicant and their family.",
+      "<b>IRCC's current situation</b> — the RCIC will inform the Client of IRCC's current intake and processing times, including any pause or limit on new Group of Five applications, and of other options such as the Blended Visa Office-Referred (BVOR) program or a Sponsorship Agreement Holder.",
+      "<b>Next steps</b> — the RCIC will explain what representation would involve, the estimated professional fees, and how the group would communicate with the RCIC."]},
+  sp:{intro:"During this consultation, the RCIC will explain the following to the potential Client so that they can make an <b>informed decision</b> about whether to proceed with sponsoring their spouse or partner:",
+    items:[
+      "<b>Sponsor eligibility</b> — the RCIC will explain that the Sponsor must be 18 or older; a Canadian citizen, person registered under the Indian Act, or permanent resident living in Canada; not receiving social assistance other than for disability; and not in default of a previous undertaking, support order or immigration loan.",
+      "<b>Sponsorship bars</b> — the RCIC will explain situations that prevent sponsoring, for example having sponsored a previous spouse or partner, or having been sponsored as one, within the last five years.",
+      "<b>The relationship</b> — the RCIC will explain the difference between a spouse, a common-law partner (12 months living together) and a conjugal partner, and the evidence needed to show the relationship is genuine.",
+      "<b>Inside or outside Canada</b> — the RCIC will explain the differences between the two applications and whether an open work permit is available.",
+      "<b>Admissibility</b> — the RCIC will explain the medical, criminal and security checks the sponsored person must pass.",
+      "<b>The undertaking</b> — the RCIC will explain the Sponsor's three-year legal commitment to support the sponsored person.",
+      "<b>Documents, fees and timelines</b> — the RCIC will explain the documents required, the government fees, and IRCC's current processing times.",
+      "<b>Next steps</b> — the RCIC will explain what representation would involve and the estimated professional fees."]},
+  gen:{intro:"During this consultation, the RCIC will assess the potential Client's immigration or citizenship options, review their circumstances and eligibility, answer their questions, and explain the possible pathways and next steps, so that the Client can make an <b>informed decision</b> about whether to proceed.",items:[]}
+};
+function consultTopicsHTML(){
+  let k=$("cTopic")?$("cTopic").value:"auto";
+  if(k==="auto"){ const p=$("program").value; k = p==="Group of Five Refugee Sponsorship"?"g5" : p==="Spousal / Common-law Sponsorship"?"sp" : "gen"; }
+  const t=CONSULT_TOPICS[k];
+  return `<p>${t.intro}</p>${t.items.length?`<ul class="plain">${t.items.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}<p>The RCIC will answer the Client's questions and confirm that the Client understands the information provided. Any advice given is based on the information the Client provides and on the law and IRCC policies in effect at the time of the consultation.</p>`;
+}
 function renderConsult(){
   const cfirm=$("firm").value||"[Firm name]";
   const crno=$("rcicNo").value;
@@ -1260,7 +1300,8 @@ function renderConsult(){
     </div>
 
     <h2><span class="sn">1.</span> Purpose &amp; scope of the consultation</h2>
-    <p>${cpurpose?esc(cpurpose):"To assess the potential Client's immigration or citizenship options, review their circumstances and eligibility, answer their questions, and outline possible pathways and next steps."}</p>
+    ${consultTopicsHTML()}${cpurpose?`<p>${esc(cpurpose)}</p>`:""}
+    ${$("cDuration").value.trim()?`<p><b>Length:</b> The consultation is scheduled for approximately <b>${esc($("cDuration").value.trim())}</b>.</p>`:""}
     <p>This is an initial consultation only. It does not create a representation relationship and does not commit either party to proceed. Any ongoing immigration or citizenship consulting services would require a separate written service agreement.</p>
 
     <h2><span class="sn">2.</span> Consultation fee</h2>
@@ -1279,6 +1320,10 @@ function renderConsult(){
       <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
     </div>
     ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
+    <div class="receipt" style="margin-top:26px"><h3>Acknowledgment — to be signed after the consultation</h3>
+      <p>I confirm that the RCIC explained the topics listed in Section 1, answered my questions, and that I understand the information provided. I understand that the decision whether to proceed is mine.</p>
+      <div class="sigs" style="margin-top:14px"><div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: ____-__-__</div></div><div></div></div>
+    </div>
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
   `;
   if(isTypedCopy(cAgreementDate)){ const h=$("paper2").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(cAgreementDate,"consultation agreement")); }
@@ -1638,6 +1683,7 @@ $("adate").value = today();
 loadFirm();
 syncBrandUI();
 $("program").addEventListener("change", loadProgram);
+$("program").addEventListener("change", ()=>renderConsult());
 $("spRel").addEventListener("change", ()=>render());
 $("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
 $("cform").addEventListener("input", renderConsult);
