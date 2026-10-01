@@ -483,6 +483,19 @@
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
   .toast.err{background:var(--danger)}
 
+  /* labelled fields inside modals (Document info, Find & replace) */
+  .modal .fp-row.fp-col{display:flex; flex-direction:column; gap:5px; margin-bottom:12px}
+  .modal .fp-row.fp-col:last-of-type{margin-bottom:0}
+  .modal .fp-row.fp-col span{font-size:12px; font-weight:600; color:#64708a}
+  .modal .fp-row.fp-col input[type=text]{width:100%; box-sizing:border-box; border:1px solid #dfe7f2; border-radius:8px; padding:9px 11px; font:inherit; font-size:14px; color:var(--ink); background:#fff}
+  .modal .fp-row.fp-col input[type=text]:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.14)}
+  .pgsize{margin-top:14px; padding-top:12px; border-top:1px solid var(--line)}
+  .pgsize-head{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#64708a; margin-bottom:8px}
+  .pgsize-head span:first-child{font-weight:600}
+  .pgsize-head #pgSizeNow{font-weight:600; color:var(--ink)} .pgsize-head #pgSizeNow.big{color:#c0392b}
+  .pgsize-row{display:flex; gap:8px} .pgsize-row .lbtn{flex:1; justify-content:center}
+  .pgsize-hint{margin:8px 0 0; font-size:12px; color:var(--muted); line-height:1.4}
+  .restore-bar.oversize svg{stroke:#c0392b}
   .restore-bar{
     position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
     background:#fff; border:1px solid var(--line); box-shadow:0 12px 36px rgba(16,24,40,.18);
@@ -1388,6 +1401,14 @@
       <label class="fp-row fp-col"><span>Author</span><input type="text" id="metaAuthor" placeholder="Author name"></label>
       <label class="fp-row fp-col"><span>Subject</span><input type="text" id="metaSubject" placeholder="Subject"></label>
       <label class="fp-row fp-col"><span>Keywords</span><input type="text" id="metaKeywords" placeholder="Comma-separated keywords"></label>
+      <div class="pgsize">
+        <div class="pgsize-head"><span>Page size</span><span id="pgSizeNow">—</span></div>
+        <div class="pgsize-row">
+          <button class="lbtn" id="pgFitLetter">Fit to Letter</button>
+          <button class="lbtn" id="pgFitA4">Fit to A4</button>
+        </div>
+        <p class="pgsize-hint">Phone scans often come as huge pages that open zoomed in. Fitting keeps the content and its quality; only the page changes.</p>
+      </div>
     </div>
     <footer><button class="lbtn" id="metaClose2">Cancel</button><div class="row"><button class="lbtn gold" id="metaSave">Save</button></div></footer>
   </div>
@@ -1709,10 +1730,69 @@ async function loadDoc(bytes, name){
     snapshot();
     setTool("select");
     showFab(true);
+    offerPageSizeFix();
   }catch(err){
     console.error(err); toast("Couldn't open this PDF.",true);
   }finally{ busy(false); }
 }
+
+/* ---------------- page size: phone-made PDFs can be poster-sized, which makes 100% zoom look huge ---------------- */
+const PAGE_SIZES={ letter:[612,792], a4:[595.28,841.89] };
+function pageSizeLabel(rec){
+  const w=rec.wPt/72, h=rec.hPt/72;
+  const near=(a,b)=>Math.abs(a-b)<0.15;
+  if((near(w,8.5)&&near(h,11))||(near(w,11)&&near(h,8.5))) return "Letter";
+  if((near(w,8.27)&&near(h,11.69))||(near(w,11.69)&&near(h,8.27))) return "A4";
+  return w.toFixed(1)+" × "+h.toFixed(1)+" in";
+}
+function hasOversizePages(){ return pages.some(p=>!p.deleted && Math.max(p.wPt,p.hPt)>1300); } // bigger than a 17 in tabloid sheet
+function offerPageSizeFix(){
+  document.querySelectorAll(".restore-bar.oversize").forEach(b=>b.remove());
+  if(!hasOversizePages()) return;
+  const big=pages.find(p=>!p.deleted && Math.max(p.wPt,p.hPt)>1300);
+  const bar=document.createElement("div"); bar.className="restore-bar oversize";
+  bar.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/><path d="M4 9h5M15 9h5M9 4v5M9 15v5"/></svg>'+
+    '<span>These pages are <b>'+pageSizeLabel(big)+'</b> — much bigger than a sheet of paper, so the PDF opens zoomed in. Shrink them?</span>'+
+    '<div class="rb-btns"><button class="rb-no">Keep</button><button class="rb-yes" data-size="a4">A4</button><button class="rb-yes" data-size="letter">Letter</button></div>';
+  document.body.appendChild(bar);
+  bar.querySelector(".rb-no").onclick=()=>bar.remove();
+  bar.querySelectorAll(".rb-yes").forEach(b=>b.onclick=async()=>{ bar.remove(); await fitPagesTo(b.dataset.size); });
+}
+// Rebuild the document on Letter/A4 pages: every page is drawn onto a new page, scaled to fit and centred.
+// The original content (scans, text, vectors) is kept as it is, so nothing loses quality. Edits made so far are kept too.
+async function fitPagesTo(size){
+  if(!pdfDoc) return;
+  const base=PAGE_SIZES[size]||PAGE_SIZES.letter;
+  busy(true);
+  try{
+    const src=await PDFDocument.load(await buildBytes());
+    const out=await PDFDocument.create();
+    const srcPages=src.getPages();
+    const embedded=await out.embedPages(srcPages);
+    embedded.forEach((ep,i)=>{
+      const rot=((srcPages[i].getRotation().angle%360)+360)%360;
+      const pw=ep.width, ph=ep.height;
+      const dispW = rot===90||rot===270 ? ph : pw, dispH = rot===90||rot===270 ? pw : ph;   // as the viewer shows it
+      const [tw,th] = dispW>dispH ? [base[1],base[0]] : base;
+      const sc=Math.min(tw/dispW, th/dispH), ox=(tw-dispW*sc)/2, oy=(th-dispH*sc)/2;
+      const page=out.addPage([tw,th]);
+      // /Rotate turns the page clockwise on screen; drawing with the opposite turn reproduces that look
+      const opts={xScale:sc, yScale:sc, rotate:degrees((360-rot)%360)};
+      if(rot===0)        Object.assign(opts,{x:ox,            y:oy});
+      else if(rot===90)  Object.assign(opts,{x:ox,            y:oy+pw*sc});
+      else if(rot===180) Object.assign(opts,{x:ox+pw*sc,      y:oy+ph*sc});
+      else               Object.assign(opts,{x:ox+ph*sc,      y:oy});
+      page.drawPage(ep,opts);
+    });
+    const bytes=await out.save();
+    const name=$("#filename").textContent;
+    await loadDoc(bytes, name);
+    toast("Pages fitted to "+(size==="a4"?"A4":"Letter")+".");
+  }catch(err){ console.error(err); toast("Couldn't resize the pages.",true); }
+  finally{ busy(false); }
+}
+$("#pgFitLetter").onclick=async()=>{ $("#metaModal").classList.add("hide"); await fitPagesTo("letter"); };
+$("#pgFitA4").onclick=async()=>{ $("#metaModal").classList.add("hide"); await fitPagesTo("a4"); };
 
 /* ---------------- page sidebar (thumbnail list) ---------------- */
 const pageSidebar=$("#pageSidebar"), pagesBtn=$("#pagesBtn");
@@ -2138,6 +2218,7 @@ $("#infoBtn").onclick=()=>{
   if(!originalBytes) return;
   $("#metaTitle").value=docMeta.title; $("#metaAuthor").value=docMeta.author;
   $("#metaSubject").value=docMeta.subject; $("#metaKeywords").value=docMeta.keywords;
+  { const first=pages.find(p=>!p.deleted); const lbl=$("#pgSizeNow"); if(first&&lbl){ lbl.textContent=pageSizeLabel(first); lbl.classList.toggle("big", hasOversizePages()); } }
   $("#metaModal").classList.remove("hide");
 };
 $("#metaClose").onclick=$("#metaClose2").onclick=()=>$("#metaModal").classList.add("hide");
