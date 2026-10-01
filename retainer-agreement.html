@@ -116,6 +116,10 @@
   .inlinedate{font-family:inherit;font-size:inherit;color:var(--navy);font-weight:600;
     border:none;background:rgba(194,146,42,.10);border-bottom:1px dashed var(--gold);
     border-radius:4px;padding:1px 5px;cursor:pointer;min-width:8.5em}
+  .paper input.inlinedate{display:inline-block;width:6.9em;min-width:0;text-align:center;font-family:inherit;font-size:inherit;
+    color:var(--navy);font-weight:600;border:none;border-bottom:1px dashed var(--gold);border-radius:4px;
+    background:rgba(194,146,42,.10);padding:1px 4px;margin:0;box-shadow:none;vertical-align:baseline}
+  .paper .sig input.inlinedate{font-weight:400;color:#333}
   .inlinedate:hover{background:rgba(194,146,42,.20)}
   .inlinedate:focus{outline:none;background:rgba(194,146,42,.25)}
   .sig .inlinedate{font-weight:400;color:#333}
@@ -414,7 +418,7 @@
         <div id="paidFields" style="display:none">
           <div class="two">
             <div><label>Paid by</label><select id="payMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
-            <div><label>Date paid</label><input type="date" id="payDate" /></div>
+            <div><label>Date paid</label><span style="display:flex;gap:6px"><input type="text" id="payDate" placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
           </div>
           <div class="hint">Leave the date blank to use the agreement date. Works with the flat-fee method.</div>
           <label class="chk"><input type="checkbox" id="showReceipt" checked /> Add a payment receipt at the end of the agreement</label>
@@ -438,7 +442,7 @@
     <fieldset>
       <legend><span class="n">6</span> Execution &amp; policies</legend>
       <div class="two">
-        <div><label>Agreement date (also used for signatures)</label><input type="date" id="adate" /><div id="oldDateHint" class="hint" style="display:none;color:#b45309"></div></div>
+        <div><label>Agreement date (also used for signatures)</label><span style="display:flex;gap:6px"><input type="text" id="adate" placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span><div id="oldDateHint" class="hint" style="display:none;color:#b45309"></div></div>
         <div><label>File / ref no.</label><input type="text" id="fileNo" placeholder="ALH-0001" value="ALH-0001" /></div>
       </div>
       <label>File retention period (s.24(3)(q))</label>
@@ -894,6 +898,17 @@ function onSpStream(noRender){ $("owpWrap").style.display = $("spStream").value=
 function daysAgo(iso){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return 0; return Math.floor((Date.now()-new Date(+m[1],+m[2]-1,+m[3]).getTime())/86400000); }
 const isTypedCopy = iso => daysAgo(iso) > 30;
 function typedCopyBanner(iso, what){ return `<div class="typedcopy"><b>TYPED COPY.</b> This is a typed copy of the original ${what} signed on ${niceDate(iso)}. Prepared ${today()}. The signed original is kept on file.</div>`; }
+/* year-month-day date fields with a calendar picker */
+function fixDateField(el){ const v=normNotesDate(el.value); if(v) el.value=v; el.dispatchEvent(new Event("input",{bubbles:true})); }
+function pickDate(el){
+  const r=el.getBoundingClientRect(), d=document.createElement("input");
+  d.type="date"; d.value=/^\d{4}-\d{2}-\d{2}$/.test(el.value)?el.value:"";
+  d.style.cssText=`position:fixed;left:${r.left}px;top:${r.bottom}px;width:1px;height:1px;opacity:0;border:0;padding:0`;
+  document.body.appendChild(d);
+  d.addEventListener("change",()=>{ if(d.value){ el.value=d.value; el.dispatchEvent(new Event("input",{bubbles:true})); el.dispatchEvent(new Event("change",{bubbles:true})); } d.remove(); });
+  d.addEventListener("blur",()=>setTimeout(()=>d.remove(),400));
+  try{ d.showPicker(); }catch(e){ d.style.cssText=`position:fixed;left:${r.left}px;top:${r.bottom}px;z-index:99`; d.focus(); }
+}
 function onPayMode(){ $("paidFields").style.display = $("payMode").value==="paidFull" ? "block" : "none"; render(); }
 
 /* ── init ────────────────────────────────────────────── */
@@ -960,7 +975,7 @@ function render(){
       <div class="firm">${esc(firmName)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${rno?` · RCIC No. ${esc(rno)}`:""}</div>`:""}
       <div class="ttl">Service Agreement</div>
-      <div class="meta">File No. ${esc($("fileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc($("adate").value)}" onchange="setDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change the agreement date" /> &nbsp;·&nbsp; Services provided in ${esc(lang)}</div>
+      <div class="meta">File No. ${esc($("fileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc($("adate").value)}" onchange="setDate(this.value)" onclick="pickDate(this)" title="Tap to change the agreement date" /> &nbsp;·&nbsp; Services provided in ${esc(lang)}</div>
     </div>
 
     <p>This Service Agreement is made under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between:</p>
@@ -1147,9 +1162,9 @@ function render(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>`:""}
+      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
+      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>`:""}
       ${mems.map(m=>`<div class="sig"><div class="ln"></div><div class="cap">${esc(m.name)} — Client (Group Member) &nbsp; Date: ${esc($("adate").value||"____-__-__")}</div></div>`).join("")}
     </div>
     ${(pf&&$("showReceipt").checked)?`<div class="receipt"><h3>Receipt of payment</h3>
@@ -1217,7 +1232,7 @@ function renderConsult(){
       <div class="firm">${esc(cfirm)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${crno?` · RCIC No. ${esc(crno)}`:""}</div>`:""}
       <div class="ttl">Consultation Agreement</div>
-      <div class="meta">File No. ${esc($("cfileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
+      <div class="meta">File No. ${esc($("cfileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" onclick="pickDate(this)" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
     </div>
 
     <p>This Consultation Agreement is made under section 23 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), before any immigration or citizenship consulting services are provided, between:</p>
@@ -1251,8 +1266,8 @@ function renderConsult(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigR||cAgreementDate)}" onchange="setCSigR(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="date" class="inlinedate" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(csigR||cAgreementDate)}" onchange="setCSigR(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
     </div>
     ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
@@ -1323,7 +1338,7 @@ function renderInvoice(){
       <div class="firm">${esc(ifirm)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${irno?` · RCIC No. ${esc(irno)}`:""}</div>`:""}
       <div class="ttl">Invoice</div>
-      <div class="meta">Invoice ${esc($("iNo").value||"—")} &nbsp;·&nbsp; Dated <input type="date" class="inlinedate" value="${esc(iDate)}" onchange="setIDate(this.value)" onclick="this.showPicker&&this.showPicker()" title="Tap to change date" />${$("iMatter").value?` &nbsp;·&nbsp; ${esc($("iMatter").value)}`:""}</div>
+      <div class="meta">Invoice ${esc($("iNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc(iDate)}" onchange="setIDate(this.value)" onclick="pickDate(this)" title="Tap to change date" />${$("iMatter").value?` &nbsp;·&nbsp; ${esc($("iMatter").value)}`:""}</div>
     </div>
     <div class="parties">
       <div class="party"><h4>From</h4>
@@ -1439,7 +1454,7 @@ function exportDoc(){
   const clone = src.cloneNode(true);
   clone.querySelectorAll(".pdate").forEach(s=>s.remove());
   // replace date inputs with their text value
-  clone.querySelectorAll('input[type="date"]').forEach(inp=>{
+  clone.querySelectorAll('input.inlinedate').forEach(inp=>{
     const span=document.createElement("span");
     span.textContent = inp.value ? niceDate(inp.value) : "______________";
     inp.replaceWith(span);
