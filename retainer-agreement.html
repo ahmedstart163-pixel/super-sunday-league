@@ -135,12 +135,18 @@
   .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
   .chk input{width:auto}
   .pdate{display:none}
+  #paper3{position:relative}
+  .paidstamp{position:absolute;top:34px;left:40px;transform:rotate(-14deg);border:4px solid #1f8a5e;color:#1f8a5e;border-radius:10px;
+    padding:4px 16px 3px;font-family:'Inter',Arial,sans-serif;font-weight:800;font-size:34px;letter-spacing:5px;line-height:1;text-align:center;opacity:.88;pointer-events:none}
+  .paidstamp small{display:block;font-size:11px;letter-spacing:1px;font-weight:700;margin-top:3px}
+  #paper3 .cicc{break-inside:avoid}
+  @media print{ .paidstamp{top:18px;left:18px} .paper{break-inside:auto} .cicc{break-inside:avoid} .paper h2+p{break-before:avoid} .paper p:has(+ .cicc){break-after:avoid} #paper3 table.fees{break-inside:auto} }
   .progswitch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px}
   .progswitch button{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:10px 6px;font-weight:700;font-size:13px;color:var(--navy);cursor:pointer;font-family:inherit}
   .progswitch button.on{background:var(--navy);border-color:var(--navy);color:#fff}
   .typedcopy{border:1.5px solid #b45309;background:#fff7ed;color:#7c2d12;border-radius:6px;padding:9px 12px;font-family:'Inter';font-size:12.5px;margin:0 0 18px}
   .sig .onfile{font-family:'Inter';font-size:11px;color:#b45309;font-style:italic}
-  /* classic layout (Alhijra template) */
+  /* classic layout (Alhejra letterhead) */
   .paper.classic{--cn:#1c2657;--cr:#c8102e}
   .paper.classic .chead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-bottom:12px;border-bottom:3px solid var(--cn)}
   .paper.classic .chead .brand{display:flex;gap:12px;align-items:flex-start}
@@ -168,7 +174,7 @@
   .paper.classic table.fees th{background:var(--cn)}
   .paper.classic .cfoot{display:none}
   @media print{
-    .paper.classic .cfoot{display:block;position:fixed;bottom:0;left:0;right:0;font-family:'Inter';font-size:9px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:3px}
+    .paper.classic .cfoot{display:none !important}
     .paper.classic .cfoot span{float:right}
     .paper.classic{padding-bottom:22px}
   }
@@ -229,6 +235,7 @@
   <button class="tab active" id="tabbtn-retainer" onclick="showTab('retainer')">Service Agreement</button>
   <button class="tab" id="tabbtn-consult" onclick="showTab('consult')">Initial Consultation</button>
   <button class="tab" id="tabbtn-invoice" onclick="showTab('invoice')">Invoice</button>
+  <button class="tab" id="tabbtn-close" onclick="showTab('close')">Close file</button>
 </div>
 
 <div class="tabpanel active" id="tab-retainer">
@@ -243,7 +250,7 @@
     <label style="margin-top:0">Document layout</label>
     <select id="layout" onchange="render()" style="margin-bottom:14px">
       <option value="modern">Modern (centred header)</option>
-      <option value="classic">Classic (Alhijra letterhead)</option>
+      <option value="classic">Classic (Alhejra letterhead)</option>
     </select>
 
     <fieldset>
@@ -257,7 +264,7 @@
       <label>Address</label>
       <input type="text" id="cliAddr" placeholder="Street, city, province, postal code" />
       <input type="hidden" id="cliDob" />
-      <div class="hint">Name, phone, email and address fill in automatically on the Consultation and Invoice tabs.</div>
+      <div class="hint">Name, phone, email and address fill in automatically on the Consultation, Invoice and Close file tabs.</div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 0">
         <label for="repPdf" class="btn btn-outline" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:var(--navy);border-color:var(--line);cursor:pointer;padding:7px 12px">📄 Upload IRCC Use of Representative form (IMM 5476)</label>
         <input type="file" id="repPdf" accept="application/pdf" style="display:none" onchange="fillFromRepPdf(this)" />
@@ -292,7 +299,7 @@
       </div>
       <div class="hint">Upload only the official insignia file the College issued to you, and only if you are in good standing and authorized to use it per the College's Insignia Guide. The insignia is the College's property — this just places your own authorized file; it does not generate one.</div>
       <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">
-        <input type="checkbox" id="showLogo" checked style="width:auto" onchange="setBrand('logo',this.checked)" /> Show logo (on all three documents)
+        <input type="checkbox" id="showLogo" checked style="width:auto" onchange="setBrand('logo',this.checked)" /> Show logo (on all documents)
       </label>
       <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:4px">
         <input type="checkbox" id="showBadge" checked style="width:auto" onchange="setBrand('badge',this.checked)" /> Show "Regulated by the College" badge
@@ -312,11 +319,13 @@
         <div><label>RCIC no.</label><input type="text" id="rcicNo" placeholder="R000000" value="R707789" /></div>
       </div>
       <label>Address</label>
-      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="11004 105 Ave NW, Edmonton, AB  T5H 4C8" />
+      <input type="text" id="firmAddr" placeholder="Suite, street, city, province, postal" value="11004 105 Ave NW, Edmonton, AB T5H 4C8" />
       <div class="two">
         <div><label>Phone</label><input type="text" id="firmPhone" placeholder="(780) 000-0000" value="(587) 710-0779" /></div>
         <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." value="info@hijra2canada.com" /></div>
       </div>
+      <label>GST/HST registration no. <span style="text-transform:none;font-weight:400">(optional — printed on invoices)</span></label>
+      <input type="text" id="gstNo" placeholder="e.g. 123456789 RT0001" />
       <label>People likely to assist (s.24(3)(e))</label>
       <input type="text" id="assist" placeholder="e.g., authorized staff and agents of the firm" />
       <div class="two">
@@ -419,7 +428,7 @@
         <div id="paidFields" style="display:none">
           <div class="two">
             <div><label>Paid by</label><select id="payMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
-            <div><label>Date paid</label><span style="display:flex;gap:6px"><input type="text" id="payDate" placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+            <div><label>Date paid</label><span style="display:flex;gap:6px"><input type="text" id="payDate" placeholder="YYYY-MM-DD" inputmode="numeric" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
           </div>
           <div class="hint">Leave the date blank to use the agreement date. Works with the flat-fee method.</div>
           <label class="chk"><input type="checkbox" id="showReceipt" checked /> Add a payment receipt at the end of the agreement</label>
@@ -443,11 +452,11 @@
     <fieldset>
       <legend><span class="n">6</span> Execution &amp; policies</legend>
       <div class="two">
-        <div><label>Agreement date (also used for signatures)</label><span style="display:flex;gap:6px"><input type="text" id="adate" placeholder="YYYY-MM-DD" inputmode="numeric" maxlength="10" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span><div id="oldDateHint" class="hint" style="display:none;color:#b45309"></div></div>
+        <div><label>Agreement date (also used for signatures)</label><span style="display:flex;gap:6px"><input type="text" id="adate" placeholder="YYYY-MM-DD" inputmode="numeric" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span><div id="oldDateHint" class="hint" style="display:none;color:#b45309"></div></div>
         <div><label>File / ref no.</label><input type="text" id="fileNo" placeholder="ALH-0001" value="ALH-0001" /></div>
       </div>
       <label>File retention period (s.24(3)(q))</label>
-      <input type="text" id="retention" placeholder="e.g., 7 years" value="the period required by the CICC by-laws and applicable law" />
+      <input type="text" id="retention" placeholder="e.g., 7 years" value="at least six years after the file is closed, as required by the College's Client File Management Regulation (s.7.2)" />
       <label>Complaint-handling procedure (s.24(3)(r))</label>
       <textarea id="complaintProc" rows="3">If the Client has a concern, they should present it in writing to the RCIC, who will acknowledge it promptly and respond within 30 days.</textarea>
     </fieldset>
@@ -487,7 +496,7 @@
       <label>Full name</label>
       <input type="text" id="ccliName" placeholder="Potential client's full name" />
       <div class="two">
-        <div><label>Phone</label><input type="text" id="ccliPhone" placeholder="+000 ..." /></div>
+        <div><label>Phone</label><input type="text" id="ccliPhone" placeholder="(780) 000-0000" onchange="this.value=fmtPhone(this.value);this.dispatchEvent(new Event('input',{bubbles:true}))" /></div>
         <div><label>Email</label><input type="email" id="ccliEmail" placeholder="client@..." /></div>
       </div>
       <label>Address</label>
@@ -585,7 +594,7 @@
       <legend><span class="n">5</span> Totals &amp; payment</legend>
       <div class="two">
         <div><label>GST/HST % (on services)</label><input type="number" id="iTax" value="5" min="0" step="0.5" /></div>
-        <div><label>Advance / trust applied (CAD)</label><span class="moneywrap"><input type="number" id="iTrust" value="0" min="0" step="50" /></span></div>
+        <div><label>Paid in advance / held in trust (CAD)</label><span class="moneywrap"><input type="number" id="iTrust" value="0" min="0" step="50" /></span></div>
       </div>
       <label>Payment due (days)</label>
       <input type="number" id="iDue" value="15" min="0" step="1" />
@@ -594,6 +603,8 @@
       <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);margin-top:8px">
         <input type="checkbox" id="iPaid" style="width:auto" onchange="renderInvoice()" /> Mark as paid (adds a receipt — s.33(3))
       </label>
+      <label>Date payment was received <span style="text-transform:none;font-weight:400">(blank = invoice date)</span></label>
+      <span style="display:flex;gap:6px"><input type="text" id="iPaidDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span>
       <div class="two">
         <div><label>Paid by</label><select id="iPayMethod" onchange="renderInvoice()"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
         <div><label>Tax</label><select id="iTaxIncl" onchange="renderInvoice()"><option value="add">Add GST/HST on top</option><option value="incl">Amounts include tax</option></select></div>
@@ -605,6 +616,74 @@
   </div>
 </div>
 </div><!-- /tab-invoice -->
+<div class="tabpanel" id="tab-close">
+<div class="wrap">
+  <div class="form" id="xform">
+    <button type="button" onclick="pullClose()" style="width:100%;margin-bottom:12px;background:var(--navy);border:none;border-radius:9px;padding:10px;color:#fff;font-weight:600;font-size:13px;cursor:pointer">↻ Fill from the other tabs</button>
+    <div id="xStatus" style="border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:12px"></div>
+    <fieldset>
+      <legend><span class="n">1</span> Client &amp; file</legend>
+      <label>Client name</label><input type="text" id="xName" placeholder="Client full name" />
+      <label>Address</label><input type="text" id="xAddr" placeholder="Street, city, province, postal code" />
+      <div class="two">
+        <div><label>Email</label><input type="email" id="xEmail" /></div>
+        <div><label>File no.</label><input type="text" id="xFile" /></div>
+      </div>
+      <label>Matter</label><input type="text" id="xMatter" placeholder="e.g. Group of Five Refugee Sponsorship" />
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">2</span> Why the file is closing</legend>
+      <select id="xReason">
+        <option value="approved">Completed — application approved</option>
+        <option value="refused">Completed — application refused</option>
+        <option value="decided">Completed — other final decision / services finished</option>
+        <option value="client">Client ended the agreement</option>
+        <option value="rcic">RCIC withdrew from representation</option>
+        <option value="transfer">File transferred to another representative</option>
+      </select>
+      <div class="two">
+        <div><label>File opened</label><span style="display:flex;gap:6px"><input type="text" id="xOpenDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); window._xOpenTouched=true; autoCloseDate()" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        <div><label>Closing date <span style="text-transform:none;font-weight:400">(opened + 5 years)</span></label><span style="display:flex;gap:6px"><input type="text" id="xCloseDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); xCloseManual=true" /><button type="button" title="Reset to 5 years after the file was opened" onclick="xCloseManual=false; autoCloseDate()" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 9px">↺</button><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+      </div>
+      <div class="hint" id="xCloseHint">Enter the date the file was opened. The closing date is set automatically to 5 years later; you can change it if the file closes earlier.</div>
+      <div class="two">
+        <div><label id="xDecLbl">Decision date</label><span style="display:flex;gap:6px"><input type="text" id="xDecDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        <div></div>
+      </div>
+      <div id="xSuccWrap"><label>New representative (name and firm)</label><input type="text" id="xSucc" /></div>
+      <div id="xIrccWrap"><label>Date IRCC was told the RCIC no longer represents the client</label><span style="display:flex;gap:6px"><input type="text" id="xIrcc" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span>
+        <div class="hint">Use Section C of the IMM 5476 or IRCC's web form. Required within 10 days when the agreement ends early (Code s.36(2)(c)).</div></div>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">3</span> Money — final accounting</legend>
+      <div class="two">
+        <div><label>Total received from client</label><span class="moneywrap"><input type="number" id="xRecv" min="0" step="0.01" oninput="window._xRecvTouched=true" placeholder="enter amount" /></span></div>
+        <div><label>Total invoiced (fees + disbursements)</label><span class="moneywrap"><input type="number" id="xInv" min="0" step="0.01" oninput="window._xInvTouched=true" /></span></div>
+      </div>
+      <div id="xRefWrap">
+        <div class="two">
+          <div><label>Refund paid by</label><select id="xRefMethod"><option>cash</option><option>e-transfer</option><option>cheque</option><option>debit</option><option>credit card</option></select></div>
+          <div><label>Refund date (blank = not yet sent)</label><span style="display:flex;gap:6px"><input type="text" id="xRefDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        </div>
+      </div>
+      <div class="hint" id="xMoneyHint"></div>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">4</span> Client documents returned</legend>
+      <textarea id="xDocs" rows="3">None — the RCIC held only copies of the Client's documents; no original documents or property were kept.</textarea>
+    </fieldset>
+    <fieldset>
+      <legend><span class="n">5</span> Closing checklist</legend>
+      <div id="xChecks"></div>
+      <div class="hint">Tick each step and enter the date it was done. Steps marked “if ended early” only apply when the agreement ends before the work is finished.</div>
+    </fieldset>
+  </div>
+  <div class="pane">
+    <div id="paper4" class="paper"></div>
+  </div>
+</div>
+</div><!-- /tab-close -->
+
 
 <script>
 /* ── program templates ───────────────────────────────── */
@@ -738,7 +817,7 @@ const PROGRAMS = {
     milestones:[["Upon signing of this Agreement",100]],
     disb:[],
     timeframe:"Preparation and submission: approximately 4–8 weeks after the RCIC receives complete documents from the Group. IRCC processing: currently about 38 months on average for privately sponsored refugees (IRCC, January 2026), and it varies by the country where the Principal Applicant lives. The RCIC will respond to the Clients' communications within 3 business days",
-    preadvice:"The RCIC advised that, to sponsor as a Group of Five, the Group must consist of at least five Canadian citizens, persons registered under the Indian Act, or permanent residents who are 18 or older and live in the expected community of settlement, and that no group member may be subject to a removal order or have certain criminal convictions or be in default of a previous sponsorship or immigration loan. The Principal Applicant must be recognized as a refugee by the UNHCR or a foreign state and must meet the Convention refugee abroad or country of asylum class definition. The Group must provide at least 12 months of income support plus start-up costs, in line with IRCC's sponsorship cost table, and must submit a settlement plan describing its financial and non-financial support. IRCC makes the final decision on the sponsorship and on the refugee's admissibility (including medical, criminal and security checks); approval is not guaranteed."
+    preadvice:"The RCIC advised that, to sponsor as a Group of Five, the Group must consist of at least five Canadian citizens, persons registered under the Indian Act, or permanent residents who are 18 or older and live in the expected community of settlement, and that no group member may be subject to a removal order or have certain criminal convictions or be in default of a previous sponsorship undertaking or immigration loan. The Principal Applicant must be recognized as a refugee by the UNHCR or a foreign state and must meet the Convention refugee abroad or country of asylum class definition. The Group must provide at least 12 months of income support plus start-up costs, in line with IRCC's sponsorship cost table, and must submit a settlement plan describing its financial and non-financial support. IRCC makes the final decision on the sponsorship and on the refugee's admissibility (including medical, criminal and security checks); approval is not guaranteed."
   },
   "Custom matter": { scope: ["Provide immigration advice and representation as agreed with the Client"], milestones:[["Upon signing of this Agreement",50],["Upon final decision",50]], disb:["IRCC processing fee","Biometrics fee","Courier / postage"] }
 };
@@ -751,7 +830,7 @@ let sigCli2Date = "";
 function setSigCli2(v){ sigCli2Date=v; render(); }
 /* ── group members (co-sponsors) ── */
 let members = [];
-function addMember(){ members.push({name:"",dob:"",phone:"",email:"",addr:""}); renderMembers(); render(); }
+function addMember(){ members.push({name:"",phone:"",email:"",addr:""}); renderMembers(); render(); }
 function delMember(i){ members.splice(i,1); renderMembers(); render(); }
 function setMember(i,k,v){ members[i][k]=v; render(); }
 function renderMembers(){
@@ -837,11 +916,13 @@ function autofillFromNotes(){
   if(feeRaw && +feeRaw>0){ $("feeMethod").value="flat"; onFeeMethod(); $("fee").value=feeRaw; filled.push("fee"); }
   const paLines=lines.filter(l=>/^PA\b\s*[:\-]?\s*/i.test(l)).map(cleanPA).filter(Boolean);
   if(paLines.length){ $("paList").value=paLines.join("\n"); filled.push(paLines.length+" principal applicant"+(paLines.length>1?"s":"")); }
-  const signed=normNotesDate(labelVal(["date signed","signed","signing date","date of signing","agreement date"]));
+  const signedRaw=labelVal(["date signed","signed","signing date","date of signing","agreement date"]);
+  const signed=strictDate(signedRaw);
   if(signed){ $("adate").value=signed; filled.push("date signed"); }
+  else if(signedRaw){ filled.push("⚠ date signed not used — write it as YYYY-MM-DD"); }
   if(program==="Group of Five Refugee Sponsorship"){ $("groupRep").checked=true; }
   const gm=lines.map(l=>(l.match(/^(?:co-?sponsor|sponsor|group member(?:\s*\d+)?|gm\s*\d*)\s*[:\-–]\s*(.+)$/i)||[])[1]).filter(Boolean);
-  if(gm.length){ gm.forEach(n=>members.push({name:n.trim(),dob:"",phone:"",email:"",addr:""})); renderMembers(); filled.push(gm.length+" group member"+(gm.length>1?"s":"")); }
+  if(gm.length){ gm.forEach(n=>{ n=n.trim(); if(!members.some(m=>m.name.trim().toLowerCase()===n.toLowerCase())) members.push({name:n,phone:"",email:"",addr:""}); }); renderMembers(); filled.push(gm.length+" group member"+(gm.length>1?"s":"")); }
   syncAll(); render(); renderConsult(); renderInvoice();
   if(filled.length){ st.textContent="✓ Filled: "+filled.join(", ")+" — review before generating."; st.style.color="#1f8a5e"; }
   else { st.textContent="Couldn't detect fields — try labels like Name:, Email:, Program:"; st.style.color="#c2922a"; }
@@ -881,9 +962,9 @@ function setSigCli(v){ sigCliDate = v; render(); }
 
 /* ── helpers ─────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
-const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const esc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const cad = n => "$" + Number(n||0).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2}) + " CAD";
-const today = () => { const d=new Date(); return d.toISOString().slice(0,10); };
+const today = () => { const d=new Date(); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
 const longDate = iso => iso ? iso : "______________";
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const niceDate = iso => { const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${m[1]}-${m[2]}-${m[3]}` : (iso||"____-__-__"); };
@@ -909,12 +990,35 @@ function syncProgUI(){
   $("g5Members").style.display = g ? "block" : "none";
   onSpStream(true);
 }
-function onSpStream(noRender){ $("owpWrap").style.display = $("spStream").value==="inland" ? "flex" : "none"; if(!noRender) render(); }
+function onSpStream(noRender){
+  const conj = $("spRel").value==="conjugal partner";
+  const inl = [...$("spStream").options].find(o=>o.value==="inland"); if(inl) inl.disabled=conj;
+  if(conj && $("spStream").value==="inland") $("spStream").value="outland";
+  if(conj) $("spOwp").checked=false;
+  $("owpWrap").style.display = $("spStream").value==="inland" ? "flex" : "none";
+  let n=$("conjNote"); if(!n){ n=document.createElement("div"); n.id="conjNote"; n.className="hint"; $("owpWrap").before(n); }
+  n.textContent = conj ? "Conjugal partners can only be sponsored from outside Canada, so the inside-Canada option and the open work permit are not available." : "";
+  if(!noRender) render(); }
 function daysAgo(iso){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return 0; return Math.floor((Date.now()-new Date(+m[1],+m[2]-1,+m[3]).getTime())/86400000); }
 const isTypedCopy = iso => daysAgo(iso) > 30;
-function typedCopyBanner(iso, what){ return `<div class="typedcopy"><b>TYPED COPY.</b> This is a typed copy of the original ${what} signed on ${niceDate(iso)}. Prepared ${today()}. The signed original is kept on file.</div>`; }
+function typedCopyBanner(iso, what, verb){ verb=verb||"signed"; return `<div class="typedcopy"><b>TYPED COPY.</b> This is a typed copy of the original ${what} ${verb} on ${niceDate(iso)}. Prepared ${today()}. The ${verb==="signed"?"signed ":""}original is kept on file.</div>`; }
 /* year-month-day date fields with a calendar picker */
-function fixDateField(el){ const v=normNotesDate(el.value); if(v) el.value=v; el.dispatchEvent(new Event("input",{bubbles:true})); }
+function strictDate(str){
+  str=(str||"").trim(); if(!str) return "";
+  let y,m,d, r=str.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+  if(r){ y=+r[1]; m=+r[2]; d=+r[3]; }
+  else if((r=str.match(/^(\d{4})(\d{2})(\d{2})$/))){ y=+r[1]; m=+r[2]; d=+r[3]; }
+  else { const v=normNotesDate(str); if(!v) return null; const a=str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.]\d{4}$/); if(a && +a[1]<=12 && +a[2]<=12) return null; [y,m,d]=v.split("-").map(Number); }
+  const t=new Date(y,m-1,d); if(t.getFullYear()!==y||t.getMonth()!==m-1||t.getDate()!==d) return null;
+  return `${y}-${pad2(m)}-${pad2(d)}`;
+}
+document.addEventListener("focusin",e=>{ const t=e.target; if(t&&t.matches&&t.matches('input[onchange*="fixDateField"]')) t.dataset.last=t.value; });
+function fixDateField(el){
+  const v=strictDate(el.value);
+  if(v===null){ el.style.borderColor="#d92d20"; el.title="Please enter the date as YYYY-MM-DD (for example 2026-10-01)"; if(!el._warned){ el._warned=true; setTimeout(()=>{ el._warned=false; },3000); alert("Please enter the date as YYYY-MM-DD, for example 2026-10-01.\n\nDates like 10/03/2026 are ambiguous (March 10 or October 3?), so they aren't accepted."); } el.value=el.dataset.last||""; el.style.borderColor=""; }
+  else { el.value=v; el.dataset.last=v; el.style.borderColor=""; }
+  el.dispatchEvent(new Event("input",{bubbles:true}));
+}
 function pickDate(el){
   const r=el.getBoundingClientRect(), d=document.createElement("input");
   d.type="date"; d.value=/^\d{4}-\d{2}-\d{2}$/.test(el.value)?el.value:"";
@@ -924,7 +1028,7 @@ function pickDate(el){
   d.addEventListener("blur",()=>setTimeout(()=>d.remove(),400));
   try{ d.showPicker(); }catch(e){ d.style.cssText=`position:fixed;left:${r.left}px;top:${r.bottom}px;z-index:99`; d.focus(); }
 }
-function fmtPhone(p){ const d=(p||"").replace(/\D/g,""); if(d.length===10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; if(d.length===11&&d[0]==="1") return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; return (p||"").trim(); }
+function fmtPhone(p){ const d=(p||"").replace(/\D/g,""); if(d.length===10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; if(d.length===11&&d[0]==="1") return `(${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; return (p||"").trim(); }
 /* client details shared across Service Agreement, Consultation and Invoice */
 const CLIENT_SYNC=[["cliName","ccliName","iName"],["cliPhone","ccliPhone"],["cliEmail","ccliEmail","iEmail"],["cliAddr","ccliAddr","iAddr"],["fileNo","iFile"]];
 function syncFrom(id){ const g=CLIENT_SYNC.find(g=>g.includes(id)); if(!g) return false; const v=$(id).value; g.forEach(o=>{ if(o!==id && $(o)) $(o).value=v; }); return true; }
@@ -951,13 +1055,14 @@ function loadProgram(){
   const wasG5 = window._lastProg==="Group of Five Refugee Sponsorship"; window._lastProg=$("program").value;
   try{ localStorage.setItem("rcic_last_program",$("program").value); }catch(e){}
   if($("program").value==="Group of Five Refugee Sponsorship"){
+    if(!wasG5) window._preG5Fee=$("fee").value;
     $("groupRep").checked=true;
     $("feeMethod").value="flat"; $("fee").value=1000; $("taxIncl").checked=true;
     $("payMode").value="paidFull"; $("payMethod").value="cash"; $("payDate").value=""; $("advance").value=0;
     onFeeMethod(); onPayMode();
   } else {
     $("groupRep").checked=false;
-    if(wasG5){ $("taxIncl").checked=false; $("payMode").value="invoice"; onPayMode(); }
+    if(wasG5){ $("taxIncl").checked=false; $("payMode").value="invoice"; $("fee").value = (window._preG5Fee && +window._preG5Fee!==1000) ? window._preG5Fee : 2000; $("payMethod").value="cash"; onPayMode(); }
   }
   $("scope").value = p.scope.join("\n");
   $("timeframe").value = p.timeframe || "";
@@ -997,7 +1102,7 @@ function render(){
   const dueDays=$("dueDays").value||"15", interest=+$("interest").value||0;
   const joint=$("joint").checked;
   const cli2=$("cli2Name").value.trim();
-  const retention=$("retention").value.trim()||"the period required by the CICC by-laws and applicable law";
+  const retention=$("retention").value.trim()||"at least six years after the file is closed, as required by the College's Client File Management Regulation (s.7.2)";
   const complaintProc=$("complaintProc").value.trim();
 
   const firmName = firm||"[Firm name]";
@@ -1023,22 +1128,20 @@ function render(){
         <div>${esc($("firmAddr").value||"[Address]")}</div>
         <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
       </div>
-      <div class="party"><h4>${(joint||mems.length)?"The Clients":"The Client"}${mems.length?" — Group contact":""}${sp?" — Sponsor & Principal Applicant":""}</h4>
+      <div class="party"><h4>${sp?"The Client — Sponsor":mems.length?"The Clients — Group contact":(joint?"The Clients":"The Client")}</h4>
         <div class="nm">${esc($("cliName").value||"[Client name]")}</div>
-        ${$("cliDob").value?`<div>Date of birth: ${longDate($("cliDob").value)}</div>`:""}
         <div>${esc($("cliAddr").value||"[Address]")}</div>
-        <div>${esc($("cliPhone").value||"")} ${$("cliEmail").value?(" · "+esc($("cliEmail").value)):""}</div>
-        ${joint&&cli2?`<div class="nm" style="margin-top:8px">${esc(cli2)}</div>
-        ${$("cli2Dob").value?`<div>Date of birth: ${longDate($("cli2Dob").value)}</div>`:""}
-        <div>${esc($("cli2Phone").value||"")} ${$("cli2Email").value?(" · "+esc($("cli2Email").value)):""}</div>`:""}
+        <div>${[esc($("cliPhone").value),esc($("cliEmail").value)].filter(Boolean).join(" · ")}</div>
+        ${joint&&cli2?`${sp?`<h4 style="margin-top:10px">Sponsored ${esc(spRel)} — Principal Applicant</h4>`:""}<div class="nm" style="margin-top:${sp?0:8}px">${esc(cli2)}</div>
+        <div>${[esc($("cli2Phone").value),esc($("cli2Email").value)].filter(Boolean).join(" · ")}</div>`:""}
       </div>
     </div>
 
     ${mems.length?`<div class="party" style="margin:-6px 0 22px;font-size:13px"><h4>Other Clients — Group Members</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px">${mems.map(m=>`<div style="line-height:1.5"><div class="nm">${esc(m.name)}</div>${m.dob?`<div>Date of birth: ${esc(m.dob)}</div>`:""}${m.addr?`<div>${esc(m.addr)}</div>`:""}${(m.phone||m.email)?`<div>${esc(m.phone)}${m.phone&&m.email?" · ":""}${esc(m.email)}</div>`:""}</div>`).join("")}</div></div>`:""}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px">${mems.map(m=>`<div style="line-height:1.5"><div class="nm">${esc(m.name)}</div>${m.addr?`<div>${esc(m.addr)}</div>`:""}${(m.phone||m.email)?`<div>${esc(m.phone)}${m.phone&&m.email?" · ":""}${esc(m.email)}</div>`:""}</div>`).join("")}</div></div>`:""}
 
     <h2><span class="sn">1.</span> Definitions</h2>
-    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${group?(mems.length?` “Clients” means ${esc($("cliName").value||"the Group Contact")} and the Group Members named above, each of whom is a client of the RCIC. “Group” means the Group of Five sponsoring group made up of the Clients, “Group Contact” means ${esc($("cliName").value||"the first-named Client")}, and “Group Members” means the other members of the Group.`:` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`):""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
+    <p>“CICC” means the College of Immigration and Citizenship Consultants. “Disbursements” means out-of-pocket expenses incurred in providing services, including government filing fees, for which the Client reimburses the RCIC, and excludes professional fees. “IRCC” means Immigration, Refugees and Citizenship Canada.${((joint&&cli2)||mems.length)?` Where this Agreement names more than one client, “the Client” means each of them, and their obligations under this Agreement are joint and several.`:""}${group?(mems.length?` “Clients” means ${esc($("cliName").value||"the Group Contact")} and the Group Members named above, each of whom is a client of the RCIC. “Group” means the Group of Five sponsoring group made up of the Clients, “Group Contact” means ${esc($("cliName").value||"the first-named Client")}, and “Group Members” means the other members of the Group.`:` “Group” means the Group of Five sponsoring group of which the Client is a member, and “Group Members” means the other members of that Group.`):""}${pas.length?` “Principal Applicants” means the persons listed in Section 3.`:""}</p>
 
     <h2><span class="sn">2.</span> Preliminary advice</h2>
     <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
@@ -1144,7 +1247,7 @@ function render(){
     <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
 
     <h2><span class="sn">9.</span> Taxes</h2>
-    <p>${taxIncl?`Any applicable taxes are included in the professional fee.`:taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not Applicable.`}</p>
+    <p>${taxIncl?`Any applicable taxes are included in the professional fee.`:taxRate>0?`Applicable taxes (GST/HST at ${taxRate}%) are included in the totals above and are payable by the Client.`:`Not applicable.`}</p>
 
     ${onSub?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
     <p>The professional fee is earned on completion and submission of the application and is collected at that time. The RCIC does not collect or hold unearned fees in advance and does not hold client funds in trust for this matter. The RCIC will provide the Client with a receipt for every payment received.</p>`:pf?`<h2><span class="sn">10.</span> Payment &amp; client account</h2>
@@ -1214,14 +1317,14 @@ function render(){
       const addr=$("firmAddr").value, ph=$("firmPhone").value, em=$("firmEmail").value;
       const card=(cls,h,big,rows)=>`<div class="ccard ${cls}"><h4>${h}</h4><div class="big">${esc(big)}</div>${rows.filter(r=>r[1]).map(r=>`<div class="lb">${r[0]}</div><div class="v">${r[1]}</div>`).join("")}</div>`;
       const subtitle = sp?`Family Class (${esc(spRel)}) sponsorship`: isG5()?"Group of Five refugee sponsorship": esc(program);
-      const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div><div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div><div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
+      const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div>${brand.badge?`<div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div>`:""}<div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
         <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. ${esc($("fileNo").value||"—")} · Services provided in ${esc(lang)}</div></div>`;
       const intro=`<p>This Service Agreement is made on <b>${niceDate($("adate").value)}</b>, under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between the Client${(joint||mems.length)?"s":""} and the RCIC identified below. It sets out the terms on which the RCIC will provide immigration and citizenship consulting services.</p>`;
-      const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Date of birth",esc($("cliDob").value)],["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
+      const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
       const cR=card("r","The RCIC",rcic||"[RCIC name]",[["Firm",esc(firmName)],["College ID",`<b>${esc(rno)}</b>`],["Address",esc(addr)],["Telephone · Email",esc(ph)+(em?" · "+esc(em):"")]]);
       let extra="";
-      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Date of birth",esc($("cli2Dob").value)],["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
-      mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Date of birth",esc(m.dob)],["Home address",esc(m.addr)],["Telephone",esc(m.phone)],["Email",esc(m.email)]]); });
+      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
+      mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Home address",esc(m.addr)],["Telephone",esc(m.phone)],["Email",esc(m.email)]]); });
       const parties=`<div class="cparties">${c1}${cR}${extra}</div>`;
       const oldHead=P.querySelector(".doc-head"), oldIntro=oldHead.nextElementSibling, oldParties=P.querySelector(".parties");
       let n=oldParties.nextElementSibling; if(n && n.classList.contains("party")) n.remove(); // members block (shown in cards instead)
@@ -1241,7 +1344,7 @@ function render(){
 /* ── consultation agreement (s.23) ───────────────────── */
 let cAgreementDate = today();
 let csigR = "", csigC = "";
-function setCDate(v){ cAgreementDate=v; renderConsult(); }
+function setCDate(v){ cAgreementDate=v; window._cDateTouched=true; renderConsult(); }
 function pullConsultFromRetainer(){
   $("ccliName").value=$("cliName").value; $("ccliPhone").value=$("cliPhone").value;
   $("ccliEmail").value=$("cliEmail").value; $("ccliAddr").value=$("cliAddr").value;
@@ -1282,6 +1385,7 @@ function consultTopicsHTML(){
   return `<p>${t.intro}</p>${t.items.length?`<ul class="plain">${t.items.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}<p>The RCIC will answer the Client's questions and confirm that the Client understands the information provided. Any advice given is based on the information the Client provides and on the law and IRCC policies in effect at the time of the consultation.</p>`;
 }
 function renderConsult(){
+  if(!window._cDateTouched){ cAgreementDate = $("adate").value || today(); }
   const cfirm=$("firm").value||"[Firm name]";
   const crno=$("rcicNo").value;
   const crcicLine=($("rcicName").value||"[RCIC name]")+(crno?` (RCIC No. ${esc(crno)})`:" (RCIC No. R______)");
@@ -1358,21 +1462,27 @@ function pullFromRetainer(manual){
   $("iMatter").value = $("program").value;
   $("iTax").value = $("tax").value;
   $("iDue").value = $("dueDays").value;
-  $("iTrust").value = $("advance").value;
+  $("iTrust").value = +$("advance").value||0;
+  const n=paItems().length, prog=$("program").value, fee=+$("fee").value||0;
+  const onSubmit = $("payMode").value==="onSubmit" && $("feeMethod").value!=="hourly";
   if($("feeMethod").value==="hourly"){
     const rate=+$("rate").value||0, hours=+$("hours").value||0;
     invSvc=[{name:`Professional fees (${hours} h @ ${cad(rate)}/h)`, amount: rate*hours}];
+  } else if(paidFull() || onSubmit){
+    invSvc=[{name:`Professional fees — ${prog}${n?` (flat fee, covering ${n} principal applicant${n>1?"s":""})`:" (flat fee)"}`, amount:fee}];
   } else {
-    const n=paItems().length;
-    invSvc=[{name:`Professional fees — ${$("program").value}${n?` (flat fee, covering ${n} principal applicant${n>1?"s":""})`:""}`, amount:+$("fee").value||0}];
+    const ms=(PROGRAMS[prog]&&PROGRAMS[prog].milestones)||[["Professional fees",100]];
+    invSvc=[{name:`Professional fees — ${prog}: ${ms[0][0]} (${ms[0][1]}% of ${cad(fee)})`, amount:+(fee*ms[0][1]/100).toFixed(2)}];
   }
   $("iTaxIncl").value = $("taxIncl").checked ? "incl" : "add";
+  $("iPaid").checked = paidFull();
   if(paidFull()){
-    $("iTrust").value = 0; $("iPaid").checked = true;
+    const t=+$("tax").value||0, tot=$("taxIncl").checked?fee:fee*(1+t/100);
+    $("iTrust").value = +tot.toFixed(2);            /* the full fee was received on signing and held in trust */
     $("iPayMethod").value = $("payMethod").value;
-    iDate = payDateVal() || iDate;
-  } else if($("adate").value && !invoiceTouched){ /* keep today's date for normal invoices */ }
-  invDisb = (disb||[]).filter(d=>d.name&&d.name.trim()).map(d=>({name:d.name, amount:(d.amount!==""&&d.amount!=null)?d.amount:""}));
+    $("iPaidDate").value = payDateVal() || "";
+  } else { $("iPaidDate").value = ""; }
+  invDisb = (disb||[]).filter(d=>d.name&&d.name.trim()&&d.amount!==""&&d.amount!=null).map(d=>({name:d.name, amount:d.amount}));
   if(invDisb.length===0) invDisb=[{name:"",amount:""}];
   renderISvc(); renderIDisb(); renderInvoice();
   if(manual) invoiceTouched = false; // re-synced on request; resume auto-sync
@@ -1399,12 +1509,14 @@ function renderInvoice(){
   const svcSub=invSvc.reduce((a,s)=>a+(+s.amount||0),0);
   const disbSub=invDisb.reduce((a,s)=>a+(+s.amount||0),0);
   const iIncl=$("iTaxIncl").value==="incl";
-  const taxAmt=iIncl?0:svcSub*itax/100, total=svcSub+taxAmt+disbSub, due=Math.max(0,total-itrust);
-  const paid=$("iPaid").checked;
+  const taxAmt=iIncl?0:svcSub*itax/100, total=svcSub+taxAmt+disbSub;
+  const applied=Math.min(itrust,total), left=Math.max(0,itrust-total), due=Math.max(0,total-applied);
+  const paid=$("iPaid").checked, paidOn=$("iPaidDate").value||iDate;
   const svcRows=invSvc.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("")||`<tr><td>—</td><td class="amt">—</td></tr>`;
   const disbRows=invDisb.filter(s=>s.name.trim()||s.amount).map(s=>`<tr><td>${esc(s.name)||"—"}</td><td class="amt">${cad(+s.amount||0)}</td></tr>`).join("");
 
   $("paper3").innerHTML = `
+    ${paid?`<div class="paidstamp">PAID<small>${paidOn?niceDate(paidOn):""}</small></div>`:""}
     <div class="doc-head">
       ${(logoData&&brand.logo)?`<img class="doclogo" src="${logoData}" alt="Firm logo" />`:""}
       <div class="firm">${esc(ifirm)}</div>
@@ -1416,7 +1528,8 @@ function renderInvoice(){
       <div class="party"><h4>From</h4>
         <div class="nm">${esc(ircicLine)}</div><div>${esc(ifirm)}</div>
         <div>${esc($("firmAddr").value||"")}</div>
-        <div>${esc($("firmPhone").value||"")} ${$("firmEmail").value?(" · "+esc($("firmEmail").value)):""}</div>
+        <div>${[esc($("firmPhone").value),esc($("firmEmail").value)].filter(Boolean).join(" · ")}</div>
+        ${$("gstNo").value.trim()?`<div>GST/HST Reg. No. ${esc($("gstNo").value.trim())}</div>`:""}
       </div>
       <div class="party"><h4>Bill to</h4>
         <div class="nm">${esc($("iName").value||"[Client name]")}</div>
@@ -1436,14 +1549,14 @@ function renderInvoice(){
       ${iIncl?`<tr><td>GST/HST</td><td class="amt">Included</td></tr>`:`<tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>`}
       ${disbSub?`<tr><td>Disbursements</td><td class="amt">${cad(disbSub)}</td></tr>`:""}
       <tr class="total"><td>Total</td><td class="amt">${cad(total)}</td></tr>
-      ${itrust?`<tr><td>Less advance / trust applied</td><td class="amt">−${cad(itrust)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
+      ${itrust?`<tr><td>Less payment received${$("iPaidDate").value?` ${niceDate($("iPaidDate").value)}`:""} and held in trust${left>0.005?` (applied ${cad(applied)} of ${cad(itrust)})`:""}</td><td class="amt">−${cad(applied)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
     </tbody></table>
 
-    <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${iDate?` on ${niceDate(iDate)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
-    <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates. A receipt identifying this invoice will be provided on payment.</p>
-    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> ${itrust?`Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}, plus the advance of ${cad(itrust)} already received — total paid ${cad(total)}.`:`Payment in full of ${cad(total)} received by ${esc($("iPayMethod").value)} with thanks${iDate?` on ${niceDate(iDate)}`:""}.`} This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
+    <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${paidOn?` on ${niceDate(paidOn)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
+    <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates.${paid?"":" A receipt identifying this invoice will be provided on payment."}</p>
+    ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> ${itrust&&due<0.005?`Payment in full of ${cad(applied)}${left>0.005?` (from ${cad(itrust)} received)`:""} was received by ${esc($("iPayMethod").value)}${paidOn?` on ${niceDate(paidOn)}`:""}, held in the RCIC's client (trust) account, and has been applied to this invoice. Balance owing: ${cad(0)}.${left>0.005?` ${cad(left)} remains in trust for future invoices or refund.`:""}`:itrust?`Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${paidOn?` on ${niceDate(paidOn)}`:""}, plus ${cad(applied)} received earlier and held in trust — total paid ${cad(total)}.`:`Payment in full of ${cad(total)} received by ${esc($("iPayMethod").value)} with thanks${paidOn?` on ${niceDate(paidOn)}`:""}.`} This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
-  if(isTypedCopy(iDate)){ const h=$("paper3").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(iDate,"invoice").replace(" signed on"," issued on")); }
+  if(isTypedCopy(iDate)){ const h=$("paper3").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(iDate,"invoice","issued")); }
   addPrintDates("paper3");
 }
 
@@ -1477,29 +1590,33 @@ async function fillFromRepPdf(input){
     if(fam||giv){ $("cliName").value=[giv,fam].filter(Boolean).join(" ").replace(/\s+/g," ").trim(); filled.push("name"); }
     const dobRaw=nth("DOB",0).replace(/^(\d{4})(\d{2})(\d{2})$/,"$1-$2-$3");
     const dob=normNotesDate(dobRaw);
-    const signed=normNotesDate(nth("dateApplicantSigned",0)||nth("dateSigned",0));
+    const signed=strictDate(nth("dateApplicantSigned",0)||nth("dateSigned",0))||"";
     if(signed){ $("adate").value=signed; filled.push("date signed"); }
     // firm / representative details are never changed by the upload
     syncAll(); render(); renderConsult(); renderInvoice();
-    st.style.color="#1f8a5e"; st.textContent="✓ Filled: "+filled.join(", ")+" — add the client's address, phone and email, then review. Your firm details were not changed.";
+    if(!filled.length){ st.style.color="#c2922a"; st.textContent="Couldn't find the client's name or signing date in this form — please type them in."; }
+    else { st.style.color="#1f8a5e"; st.textContent="✓ Filled: "+filled.join(", ")+" — add the client's address, phone and email, then review. Your firm details were not changed."; }
   }catch(e){ st.style.color="#c2922a"; st.textContent=e.message||"Couldn't read that PDF."; }
   finally{ input.value=""; }
 }
 
 /* ── tab switching ───────────────────────────────────── */
 function showTab(name){
-  ["retainer","consult","invoice"].forEach(t=>{
+  ["retainer","consult","invoice","close"].forEach(t=>{
     document.getElementById("tab-"+t).classList.toggle("active", t===name);
     document.getElementById("tabbtn-"+t).classList.toggle("active", t===name);
   });
   if(name==="retainer") render();
   else if(name==="consult") renderConsult();
+  else if(name==="close"){ pullClose(); }
   else { if(!invoiceTouched) pullFromRetainer(); else renderInvoice(); }
 }
 
 /* ── billing method toggle ───────────────────────────── */
 function onFeeMethod(){
   const hourly = document.getElementById("feeMethod").value==="hourly";
+  [...$("payMode").options].forEach(o=>{ if(o.value!=="invoice") o.disabled=hourly; });
+  if(hourly && $("payMode").value!=="invoice"){ $("payMode").value="invoice"; onPayMode(); }
   document.getElementById("flatFields").style.display = hourly ? "none" : "block";
   document.getElementById("hourlyFields").style.display = hourly ? "block" : "none";
   render();
@@ -1511,6 +1628,7 @@ function exportDoc(){
   let paperId, title, refId;
   if(document.getElementById("tab-retainer").classList.contains("active")){ paperId="paper"; title="Service Agreement"; refId="fileNo"; }
   else if(document.getElementById("tab-consult").classList.contains("active")){ paperId="paper2"; title="Consultation Agreement"; refId="cfileNo"; }
+  else if(document.getElementById("tab-close").classList.contains("active")){ paperId="paper4"; title="File Closing Letter"; refId="xFile"; }
   else { paperId="paper3"; title="Invoice"; refId="iNo"; }
   const src = document.getElementById(paperId);
   const clone = src.cloneNode(true);
@@ -1523,6 +1641,13 @@ function exportDoc(){
   });
   // drop decorative inline svgs (Word renders them poorly)
   clone.querySelectorAll("svg").forEach(s=>s.remove());
+  // classic letterhead: flex layout -> simple table Word understands
+  clone.querySelectorAll(".chead").forEach(h=>{ const brand=h.querySelector(".brand"), lic=h.querySelector(".lic"); const t=document.createElement("table"); t.style.cssText="width:100%;border-bottom:3px solid #1c2657"; t.innerHTML=`<tr><td style="border:none;vertical-align:top">${brand?brand.innerHTML:""}</td><td style="border:none;text-align:right;vertical-align:top">${lic?lic.innerHTML:""}</td></tr>`; h.replaceWith(t); });
+  clone.querySelectorAll(".cparties").forEach(cp=>{ const cards=[...cp.children]; const t=document.createElement("table"); let rows=""; for(let i=0;i<cards.length;i+=2){ rows+=`<tr><td style="vertical-align:top;border:1px solid #ccc;border-top:3px solid #1c2657;width:50%">${cards[i].innerHTML}</td><td style="vertical-align:top;border:${cards[i+1]?"1px solid #ccc;border-top:3px solid #c8102e":"none"};width:50%">${cards[i+1]?cards[i+1].innerHTML:""}</td></tr>`; } t.innerHTML=rows; cp.replaceWith(t); });
+  clone.querySelectorAll(".parties").forEach(pp=>{ const ps=[...pp.querySelectorAll(":scope > .party")]; const t=document.createElement("table"); t.innerHTML=`<tr>${ps.map(p=>`<td style="vertical-align:top;border:none;width:50%">${p.innerHTML}</td>`).join("")}</tr>`; pp.replaceWith(t); });
+  clone.querySelectorAll(".sigs").forEach(sg=>{ const ss=[...sg.querySelectorAll(":scope > .sig")]; const t=document.createElement("table"); let rows=""; for(let i=0;i<ss.length;i+=2){ rows+=`<tr><td style="border:none;width:50%;padding-top:30px;vertical-align:bottom">${ss[i].innerHTML}</td><td style="border:none;width:50%;padding-top:30px;vertical-align:bottom">${ss[i+1]?ss[i+1].innerHTML:""}</td></tr>`; } t.innerHTML=rows; sg.replaceWith(t); });
+  // (logo stays embedded; Word for Mac/Windows, Pages, Google Docs and LibreOffice can all open this .doc)
+  clone.querySelectorAll("img.doclogo, .chead img").forEach(im=>im.setAttribute("height","70"));
   const css = `
     body{font-family:Georgia,'Times New Roman',serif;color:#222;font-size:11pt;line-height:1.5}
     .doc-head{text-align:center;border-bottom:2px solid #16233b;padding-bottom:12px;margin-bottom:18px}
@@ -1542,7 +1667,9 @@ function exportDoc(){
     .chead .fname{font-size:18pt;font-weight:bold;color:#1c2657} .chead .rcic{font-size:8pt;color:#c8102e;font-weight:bold} .chead .contact,.chead .lic{font-size:8.5pt;color:#555} .chead img{height:60px}
     .ctitle{text-align:center} .ctitle .t{font-size:22pt;font-weight:bold;color:#1c2657;letter-spacing:2px} .ctitle .st{font-size:9pt;color:#c8102e;letter-spacing:2px;text-transform:uppercase}
     .ccard{border:1px solid #ccc;border-top:3px solid #1c2657;padding:8px;margin-bottom:8px;display:inline-block;width:46%;vertical-align:top;margin-right:2%} .ccard h4{font-size:8pt;margin:0;color:#1c2657;text-transform:uppercase} .ccard .big{font-weight:bold;font-size:12pt} .ccard .lb{font-size:7pt;color:#777;text-transform:uppercase;margin-top:4px} .cfoot{display:none}
-    ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}`;
+    ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}
+    .paidstamp{display:inline-block;border:3px solid #1f8a5e;color:#1f8a5e;font-weight:bold;font-size:20pt;padding:2px 12px;letter-spacing:3px;font-family:Arial,sans-serif} .paidstamp small{display:block;font-size:8pt;letter-spacing:1px}
+    ul.plain li{margin-bottom:4px} ol.pa li{margin-bottom:2px}`;
   const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
   const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
   const blob = new Blob(["\ufeff", html], {type:"application/msword"});
@@ -1555,7 +1682,7 @@ function exportDoc(){
 
 /* ── firm-detail persistence (guarded for sandbox) ───── */
 const FIRM_KEY="rcic_firm_v2"; /* v2: old saved firm details are ignored so the new defaults load */
-const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang"];
+const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang","gstNo"];
 function saveFirm(silent){
   try{
     const data={};
@@ -1586,9 +1713,10 @@ function flashSaved(msg){ const el=$("saveStatus"); if(el){ el.textContent="✓ 
 /* ── validation (shared by Check, Download, Print) ───── */
 function activeTab(){
   return document.getElementById("tab-retainer").classList.contains("active") ? "retainer"
-       : document.getElementById("tab-consult").classList.contains("active") ? "consult" : "invoice";
+       : document.getElementById("tab-consult").classList.contains("active") ? "consult"
+       : document.getElementById("tab-close").classList.contains("active") ? "close" : "invoice";
 }
-function docTitle(tab){ return tab==="retainer" ? "Service Agreement" : tab==="consult" ? "Consultation Agreement" : "Invoice"; }
+function docTitle(tab){ return tab==="retainer" ? "Service Agreement" : tab==="consult" ? "Consultation Agreement" : tab==="close" ? "File Closing Letter" : "Invoice"; }
 function getMissing(tab){
   const miss=[];
   const need=(cond,msg)=>{ if(!cond) miss.push(msg); };
@@ -1601,12 +1729,20 @@ function getMissing(tab){
     if($("feeMethod").value==="hourly") need(+$("rate").value>0 && +$("hours").value>0,"Hourly rate and estimated hours");
     else need(+$("fee").value>0,"Professional fee");
     need($("adate").value,"Agreement date");
+    need($("cliAddr").value.trim(),"Client home address (Code s.24(3)(b))");
+    need($("cliPhone").value.trim()||$("cliEmail").value.trim(),"Client phone or email (Code s.24(3)(b))");
+    need($("timeframe").value.trim(),"Estimated time frame (Code s.24(3)(h))");
     if($("joint").checked) need($("cli2Name").value.trim(),"Second client name (joint retainer)");
   } else if(tab==="consult"){
     need($("rcicName").value.trim(),"RCIC full name");
     need($("firm").value.trim(),"Firm name");
     need($("ccliName").value.trim(),"Potential client name");
     need($("cProBono").checked || +$("cfee").value>0,"Consultation fee (or mark it free)");
+  } else if(tab==="close"){
+    need($("rcicName").value.trim(),"RCIC full name");
+    need($("xName").value.trim(),"Client name");
+    need($("xCloseDate").value,"Closing date");
+    need($("xRecv").value!=="","Total received from the client (for the final accounting)");
   } else {
     need($("rcicName").value.trim(),"RCIC full name");
     need($("firm").value.trim(),"Firm name");
@@ -1623,7 +1759,14 @@ function guardRequired(){
   if(miss.length){ showCheck(docTitle(t), miss, true); return false; }
   return true;
 }
-function printDoc(){ if(guardRequired()) window.print(); }
+function setPageFooter(){
+  let st=$("pageFootStyle"); if(!st){ st=document.createElement("style"); st.id="pageFootStyle"; document.head.appendChild(st); }
+  const on = activeTab()==="retainer" && $("layout") && $("layout").value==="classic";
+  const firm=($("firm").value||"").replace(/["\\]/g,"");
+  st.textContent = on ? `@page{margin:0.6in 0.65in 0.75in 0.65in;@bottom-left{content:"Client initials: __________";font:9pt Arial,sans-serif;color:#888}@bottom-right{content:"Service Agreement · ${firm} · Page " counter(page) " of " counter(pages);font:9pt Arial,sans-serif;color:#888}}` : "";
+}
+window.addEventListener("beforeprint", setPageFooter);
+function printDoc(){ if(guardRequired()){ setPageFooter(); window.print(); } }
 function showCheck(docName, miss, blocked){
   const old=document.getElementById("checkbox-ov"); if(old) old.remove();
   const ok = miss.length===0;
@@ -1651,7 +1794,7 @@ function resetForm(){
   ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
   ov.innerHTML=`<div style="background:#fff;border-radius:14px;max-width:360px;width:90%;padding:22px;box-shadow:0 20px 60px rgba(15,28,46,.3)">
     <div style="font-weight:700;font-size:15px;color:#16233b">Start a new client?</div>
-    <p style="font-size:13px;color:#5d6b7d;margin:8px 0 16px">This clears the client, matter, fees and invoice on all three tabs. Your firm details, logo and settings are kept.</p>
+    <p style="font-size:13px;color:#5d6b7d;margin:8px 0 16px">This clears the client, matter, fees, invoice and closing details on all four tabs. Your firm details, logo and settings are kept.</p>
     <div style="display:flex;gap:8px">
       <button id="rstCancel" style="flex:1;border:1px solid #d8dee6;background:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Cancel</button>
       <button id="rstGo" style="flex:1;border:none;background:#16233b;color:#fff;border-radius:9px;padding:10px;font-weight:600;font-size:13px;cursor:pointer">Reset</button>
@@ -1663,8 +1806,9 @@ function resetForm(){
 }
 function doReset(){
   members = []; renderMembers();
-  const preserve = new Set([...FIRM_FIELDS, "showBadge", "showInsignia"]);
-  ["form","cform","iform"].forEach(fid=>{
+  const preserve = new Set([...FIRM_FIELDS, "showBadge", "showInsignia", "showLogo", "showLogo2", "showLogo3", "showBadge2", "showBadge3", "showInsignia2", "showInsignia3", "layout", "program", "gstNo"]);
+  window._cDateTouched=false; window._xOpenTouched=false; window._xRecvTouched=false; window._xInvTouched=false;
+  xState={}; xCloseManual=false; ["form","cform","iform","xform"].forEach(fid=>{
     document.getElementById(fid).querySelectorAll("input, textarea, select").forEach(el=>{
       if(!el.id || preserve.has(el.id)) return;
       if(el.type==="checkbox"){ el.checked = el.defaultChecked; }
@@ -1693,7 +1837,7 @@ loadFirm();
 syncBrandUI();
 $("program").addEventListener("change", loadProgram);
 $("program").addEventListener("change", ()=>renderConsult());
-$("spRel").addEventListener("change", ()=>render());
+$("spRel").addEventListener("change", ()=>onSpStream());
 $("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
 $("cform").addEventListener("input", renderConsult);
 $("cform").addEventListener("change", renderConsult);
@@ -1702,11 +1846,151 @@ $("form").addEventListener("change", ()=>render());
 invSvc=[{name:"Professional fees",amount:""}];
 invDisb=[{name:"IRCC processing fee",amount:""}];
 renderISvc(); renderIDisb();
-$("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile)/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
+$("iform").addEventListener("input", (e)=>{ if(!/^(showLogo|showBadge|showInsignia|logoFile|iName|iAddr|iEmail|iFile)$/.test((e.target&&e.target.id)||"")) invoiceTouched=true; renderInvoice(); });
 renderInvoice();
 loadProgram();
 syncProgUI();
 renderConsult();
+/* ═════════ CLOSE FILE (Code s.36; Client File Management Regulation s.5.2, 7.1, 7.2, 10.1) ═════════ */
+let xState={}, xCloseManual=false;
+function autoCloseDate(){ const o=$("xOpenDate").value; if(o && !xCloseManual){ $("xCloseDate").value=addYears(o,5); } renderXChecks(); renderClose(); }
+const X_EARLY=["client","rcic","transfer"];
+function addDays(iso,n){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return ""; const d=new Date(+m[1],+m[2]-1,+m[3]+n); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+function addYears(iso,n){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return ""; const y=+m[1]+n, mo=+m[2], d=Math.min(+m[3], new Date(y,mo,0).getDate()); return `${y}-${pad2(mo)}-${pad2(d)}`; }
+function closeItems(){
+  const r=$("xReason").value, early=X_EARLY.includes(r), cd=$("xCloseDate").value;
+  const due30=cd?` — due by ${addDays(cd,30)}`:"", due10=cd?` — due by ${addDays(cd,10)}`:"";
+  const L=[
+    {id:"docs",t:"Client's documents and property returned",c:"Code s.36(1)(a); CFM s.7.1",req:true,due:due30},
+    {id:"acct",t:"Accounting of all funds received given to the client",c:"Code s.36(1)(b)",req:true,due:due30},
+    {id:"inv",t:"Final invoice issued for any amount owing",c:"Code s.36(1)(c)",req:true,due:due30},
+    {id:"ref",t:"Trust funds above the invoiced amount refunded (or no refund owing)",c:"Code s.36(1)(d)",req:true,due:due30},
+    {id:"set",t:"All outstanding fees and refunds settled",c:"CFM s.7.1",req:true,due:""},
+    {id:"ltr",t:"Client told in writing that the agreement has ended (closing letter)",c:"CFM s.7.1",req:true,due:""},
+    {id:"info",t:"Client given all information from the file they may need",c:"Code s.36(2)(a) — if ended early",req:early,show:early,due:""},
+    {id:"succ",t:"Cooperated with the new representative; file delivered within 10 business days of the request",c:"Code s.36(2)(b), s.36(3)",req:r==="transfer",show:r==="transfer",due:""},
+    {id:"ircc",t:"IRCC notified that the RCIC no longer represents the client",c:early?"Code s.36(2)(c) — within 10 days":"Recommended when the file is completed",req:early,due:early?due10:""},
+    {id:"file",t:"File complete: agreements, all correspondence (emails, texts, WhatsApp), applications submitted, invoices and receipts",c:"CFM s.5.2",req:true,due:""}
+  ];
+  return L.filter(i=>i.show!==false);
+}
+function renderXChecks(){
+  const items=closeItems();
+  $("xChecks").innerHTML=items.map(i=>{ const s=xState[i.id]||{}; return `<div style="border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;background:${s.done?"#f0faf4":"#fff"}">
+    <label class="chk" style="margin-top:0!important;align-items:flex-start"><input type="checkbox" ${s.done?"checked":""} onchange="setX('${i.id}','done',this.checked)" style="margin-top:3px" /> <span><b>${i.t}</b>${i.req?"":` <span style="color:var(--muted);font-weight:400">(optional)</span>`}<br/><span style="font-size:11.5px;color:var(--muted)">${i.c}${i.due}</span></span></label>
+    <div style="display:flex;gap:6px;margin-top:6px"><input type="text" placeholder="Date done YYYY-MM-DD" value="${esc(s.date||"")}" onchange="const v=normNotesDate(this.value); if(v) this.value=v; setX('${i.id}','date',this.value)" style="font-size:12.5px;padding:6px 9px" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 9px">📅</button></div>
+  </div>`; }).join("");
+}
+function setX(id,k,v){ xState[id]=xState[id]||{}; xState[id][k]=v; if(k==="done"&&v&&!xState[id].date) xState[id].date=today(); renderXChecks(); renderClose(); }
+function pullClose(){
+  $("xName").value=$("cliName").value; $("xAddr").value=$("cliAddr").value; $("xEmail").value=$("cliEmail").value; $("xFile").value=$("fileNo").value;
+  $("xMatter").value=$("program").value;
+  const taxIncl=$("taxIncl").checked, t=+$("tax").value||0;
+  let tot = $("feeMethod").value==="hourly" ? (+$("rate").value||0)*(+$("hours").value||0) : (+$("fee").value||0);
+  if(!taxIncl) tot=tot*(1+t/100);
+  tot += (disb||[]).reduce((a,d)=>a+(+d.amount||0),0);
+  if(!window._xRecvTouched) $("xRecv").value = $("payMode").value==="paidFull" ? tot.toFixed(2) : "";
+  if(!window._xInvTouched) $("xInv").value = tot.toFixed(2);
+  if(!$("xOpenDate").value) $("xOpenDate").value=$("adate").value||today();
+  autoCloseDate();
+}
+function renderClose(){
+  if(!window._xOpenTouched && $("adate").value && $("xOpenDate").value!==$("adate").value){ $("xOpenDate").value=$("adate").value; if(!xCloseManual) $("xCloseDate").value=addYears($("adate").value,5); }
+  const r=$("xReason").value, early=X_EARLY.includes(r);
+  $("xSuccWrap").style.display = r==="transfer" ? "block" : "none";
+  $("xDecLbl").textContent = early ? "Date the agreement ended" : "Decision date";
+  { const o=$("xOpenDate").value, c=$("xCloseDate").value, h=$("xCloseHint");
+    if(h) h.innerHTML = !o ? "Enter the date the file was opened. The closing date is set automatically to 5 years later; you can change it if the file closes earlier."
+      : (xCloseManual ? `Closing date changed by hand. Click ↺ to reset it to 5 years after opening (${addYears(o,5)}).` : `Closing date set automatically: 5 years after ${o}.`)
+      + (c && daysAgo(c)<0 ? ` <b>The file is still open</b> — closing in ${Math.ceil(-daysAgo(c)/30.4)} months.` : c ? ` <b>The closing date has passed — complete the checklist.</b>` : ""); }
+  const recvBlank=$("xRecv").value==="";
+  const recv=+$("xRecv").value||0, inv=+$("xInv").value||0, refund=Math.max(0,recv-inv), owing=recvBlank?0:Math.max(0,inv-recv);
+  $("xRefWrap").style.display = refund>0.005 ? "block" : "none";
+  $("xMoneyHint").innerHTML = recvBlank ? `Enter the total the client paid you over the whole file, so the letter can show the final accounting.` : refund>0.005 ? `<b style="color:#b45309">Refund owing to the client: ${cad(refund)}</b> — must be paid within 30 days of closing.` : owing>0.005 ? `<b style="color:#b45309">The client still owes ${cad(owing)}.</b> Settle this before closing the file.` : `✓ Nothing owing either way.`;
+  const items=closeItems(), left=items.filter(i=>i.req && !(xState[i.id]||{}).done);
+  const st=$("xStatus");
+  if(left.length){ st.style.cssText="border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:12px;background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12"; st.innerHTML=`<b>${left.length} required step${left.length>1?"s":""} left before this file can be closed.</b>`; }
+  else { st.style.cssText="border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:12px;background:#ecfdf3;border:1px solid #abefc6;color:#05603a"; st.innerHTML=`<b>✓ All required steps are done — the file can be closed.</b>`; }
+
+  const firm=$("firm").value||"[Firm name]", rcic=$("rcicName").value||"[RCIC name]", rno=$("rcicNo").value;
+  const cd=$("xCloseDate").value, dd=$("xDecDate").value, ag=$("adate").value, name=$("xName").value||"[Client name]";
+  const others=[ ...(($("joint").checked&&$("cli2Name").value.trim())?[$("cli2Name").value.trim()]:[]), ...(isG5()?memberList().map(m=>m.name.trim()):[]) ];
+  const allNames=[name,...others];
+  const greet = allNames.length>1 ? allNames.slice(0,-1).join(", ")+" and "+allNames[allNames.length-1] : name;
+  const matter=$("xMatter").value||"your immigration matter", ircc=$("xIrcc").value;
+  const nd=v=>v?niceDate(v):"____-__-__";
+  const opening = {
+    approved:`IRCC has approved your application${dd?` (decision dated ${nd(dd)})`:""}. Congratulations. This completes the services under our Service Agreement${ag?` dated ${nd(ag)}`:""}.`,
+    refused:`IRCC has refused your application${dd?` (decision dated ${nd(dd)})`:""}. This completes the services under our Service Agreement${ag?` dated ${nd(ag)}`:""}. Time limits to challenge a refusal can be very short — for example, an application for leave and judicial review to the Federal Court must be filed within 15 days for decisions made in Canada and within 60 days for decisions made outside Canada. If you wish to challenge the decision or apply again, please seek advice right away; any further services would require a new service agreement.`,
+    decided:`IRCC has made a final decision on your matter${dd?` (dated ${nd(dd)})`:""} and the services under our Service Agreement${ag?` dated ${nd(ag)}`:""} are complete.`,
+    client:`As you instructed, our Service Agreement${ag?` dated ${nd(ag)}`:""} ended on ${nd(dd||cd)}.`,
+    rcic:`As set out in our earlier notice to you, the RCIC withdrew from representing you, effective ${nd(dd||cd)}.`,
+    transfer:`At your request, your file has been transferred to ${esc($("xSucc").value||"your new representative")}, effective ${nd(dd||cd)}.`
+  }[r];
+  const refundLine = refund>0.005 ? ($("xRefDate").value ? `A refund of <b>${cad(refund)}</b> was paid to you by ${esc($("xRefMethod").value)} on ${nd($("xRefDate").value)}.` : `A refund of <b>${cad(refund)}</b> will be sent to you within 30 days of the closing date.`) : owing>0.005 ? `An amount of <b>${cad(owing)}</b> remains owing, as shown on the final invoice.` : `No amount is owing by you or to you.`;
+  const chk=closeItems().map(i=>{ const s=xState[i.id]||{}; return `<tr><td style="width:26px;font-size:15px">${s.done?"☑":"☐"}</td><td>${i.t}<div style="font-size:11px;color:#777">${i.c}${i.req?"":" · optional"}</div></td><td class="amt">${esc(s.date||"")}</td></tr>`; }).join("");
+
+  $("paper4").innerHTML = `
+    <div class="doc-head">
+      ${(logoData&&brand.logo)?`<img class="doclogo" src="${logoData}" alt="Firm logo" />`:""}
+      <div class="firm">${esc(firm)}</div>
+      ${brand.badge?`<div class="regbadge">Regulated by the College of Immigration and Citizenship Consultants${rno?` · RCIC No. ${esc(rno)}`:""}</div>`:""}
+      <div class="ttl">File Closing Letter</div>
+      <div class="meta">File No. ${esc($("xFile").value||"—")} &nbsp;·&nbsp; Dated ${nd(cd)}</div>
+    </div>
+    <p><b>${esc(name)}</b><br/>${esc($("xAddr").value||"")}${$("xEmail").value?`<br/>${esc($("xEmail").value)}`:""}${others.length?`<br/><span style="font-size:13px">and ${others.map(esc).join(", ")}${isG5()?" (Group Members)":""}</span>`:""}</p>
+    <p><b>Re: Closing of your file — ${esc(matter)}</b></p>
+    <p>Dear ${esc(greet)},</p>
+    <p>${opening}</p>
+    <p>${early||r==="transfer" ? `The RCIC no longer represents you before Immigration, Refugees and Citizenship Canada (IRCC)${ircc?`, and IRCC was notified of this on ${nd(ircc)}`:""}.` : `With this letter, our representation of you on this matter has ended${ircc?`, and IRCC was notified on ${nd(ircc)} that the RCIC no longer represents you`:""}. If IRCC contacts you about this matter in future, please let us know if you would like further help — new services would require a new service agreement.`}</p>
+    <h2><span class="sn">1.</span> Accounting of funds</h2>
+    <table class="fees"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>
+      <tr><td>Total received from you</td><td class="amt">${cad(recv)}</td></tr>
+      <tr><td>Total invoiced (professional fees and disbursements)</td><td class="amt">${cad(inv)}</td></tr>
+      <tr class="total"><td>${refund>0.005?"Refund owing to you":owing>0.005?"Balance owing by you":"Balance"}</td><td class="amt">${cad(refund||owing)}</td></tr>
+    </tbody></table>
+    <p>${refundLine}</p>
+    <h2><span class="sn">2.</span> Your documents</h2>
+    <p>${esc($("xDocs").value||"")}</p>
+    <h2><span class="sn">3.</span> Your file</h2>
+    <p>Your file will be kept confidential and stored securely for at least six years after the closing date, as required by the College, and then securely destroyed. You may ask for a copy of any document in your file during that time.</p>
+    <h2><span class="sn">4.</span> Questions or concerns</h2>
+    <p>If you have any questions or concerns about the services you received, please contact the RCIC first. You may also contact the College of Immigration and Citizenship Consultants, the regulator of immigration consultants in Canada:</p>
+    <div class="cicc">College of Immigration and Citizenship Consultants (CICC)<br/>5500 North Service Rd., Suite 1002, Burlington, ON&nbsp; L7L 6W6<br/>Toll-free: 1-877-836-7543 &nbsp;·&nbsp; www.college-ic.ca</div>
+    <p>Thank you for the trust you placed in us.</p>
+    <div class="sigs"><div class="sig"><div class="ln"></div><div class="cap">${esc(rcic)} — RCIC${rno?` (${esc(rno)})`:""}, ${esc(firm)}</div></div><div></div></div>
+
+    <div style="break-before:page;page-break-before:always;margin-top:40px;border-top:2px dashed #ccc;padding-top:24px">
+      <div class="doc-head" style="margin-bottom:14px"><div class="ttl">File Closing Checklist — office copy</div>
+        <div class="meta">${esc(name)} · File No. ${esc($("xFile").value||"—")} · ${esc(matter)}</div></div>
+      <table class="fees"><tbody>
+        <tr><td><b>Reason for closing</b></td><td class="amt">${esc($("xReason").selectedOptions[0].textContent)}</td></tr>
+        <tr><td><b>File opened</b></td><td class="amt">${nd($("xOpenDate").value)}</td></tr>
+        <tr><td><b>Agreement date</b></td><td class="amt">${nd(ag)}</td></tr>
+        <tr><td><b>${early?"Date ended":"Decision date"}</b></td><td class="amt">${nd(dd)}</td></tr>
+        <tr><td><b>Closing date</b></td><td class="amt">${nd(cd)}</td></tr>
+        <tr><td><b>Keep file until (closing + 6 years, CFM s.7.2)</b></td><td class="amt"><b>${cd?addYears(cd,6):"____-__-__"}</b></td></tr>
+      </tbody></table>
+      <table class="fees" style="margin-top:10px"><thead><tr><th></th><th>Step</th><th class="amt">Date done</th></tr></thead><tbody>${chk}</tbody></table>
+      <p style="font-size:13px;margin-top:10px"><b>${left.length?`⚠ ${left.length} required step${left.length>1?"s":""} still open.`:"✓ All required steps completed."}</b></p>
+      <h2><span class="sn"></span> File destruction record (CFM s.10.1)</h2>
+      <p style="font-size:13px">To be completed when the file is destroyed, no earlier than ${cd?addYears(cd,6):"six years after closing"}.</p>
+      <table class="fees"><tbody>
+        <tr><td>Client name and address</td><td class="amt">${esc(name)}${$("xAddr").value?`, ${esc($("xAddr").value)}`:""}</td></tr>
+        <tr><td>Services provided</td><td class="amt">${esc(matter)}</td></tr>
+        <tr><td>File closing date</td><td class="amt">${nd(cd)}</td></tr>
+        <tr><td>Actual destruction date</td><td class="amt">____-__-__</td></tr>
+        <tr><td>Destroyed by (name / initials)</td><td class="amt">____________________</td></tr>
+      </tbody></table>
+    </div>`;
+  if(cd && isTypedCopy(cd)){ const h=$("paper4").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(cd,"closing letter","dated")); }
+}
+CLIENT_SYNC[0].push("xName"); CLIENT_SYNC[2].push("xEmail"); CLIENT_SYNC[3].push("xAddr"); CLIENT_SYNC[4].push("xFile");
+$("xform").addEventListener("input", (e)=>{ const id=e.target&&e.target.id; if(id==="xOpenDate") window._xOpenTouched=true; if(id==="xCloseDate") xCloseManual=true; if(id==="xRecv") window._xRecvTouched=true; if(id==="xInv") window._xInvTouched=true; renderXChecks(); renderClose(); });
+$("xform").addEventListener("change", ()=>{ renderXChecks(); renderClose(); });
+$("xReason").addEventListener("change", ()=>{ renderXChecks(); renderClose(); });
+renderXChecks(); renderClose();
+
 </script>
 </body>
 </html>
