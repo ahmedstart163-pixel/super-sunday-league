@@ -123,6 +123,14 @@
   .inlinedate:hover{background:rgba(194,146,42,.20)}
   .inlinedate:focus{outline:none;background:rgba(194,146,42,.25)}
   .sig .inlinedate{font-weight:400;color:#333}
+  .paper input.inlinedate{cursor:text}
+  .paper input.inlinedate.baddate{background:rgba(220,38,38,.18);border-bottom-color:#dc2626}
+  .paper .pickbtn{border:none;background:none;cursor:pointer;padding:0 2px;margin:0 0 0 2px;font-size:.95em;line-height:1;vertical-align:baseline}
+  .paper .pickbtn:hover{filter:brightness(.8)}
+  .paper input.inlinefile{display:inline-block;min-width:0;text-align:center;font:inherit;color:var(--navy);font-weight:600;
+    border:none;border-bottom:1px dashed var(--gold);border-radius:4px;background:rgba(194,146,42,.10);padding:1px 4px;margin:0;box-shadow:none;vertical-align:baseline}
+  .paper input.inlinefile:hover{background:rgba(194,146,42,.20)}
+  .paper input.inlinefile:focus{outline:none;background:rgba(194,146,42,.25)}
 
   /* v2 additions */
   .paper ol.pa{margin:4px 0 10px;padding-left:22px;columns:2;column-gap:28px}
@@ -174,7 +182,7 @@
   }
   @media print{
     .sitenav{display:none !important}
-    .paper .inlinedate{display:none !important}
+    .paper .inlinedate,.paper .inlinefile,.paper .pickbtn{display:none !important}
     .paper .pdate{display:inline !important}
     .receipt,.sigs{break-inside:avoid}
     body{background:#fff}
@@ -878,7 +886,43 @@ const cleanPA = l => l.replace(/^PA\b\s*[:\-]?\s*/i,"").replace(/\s{2,}/g," ").t
 const paItems = () => ($("paList").value||"").split(/\r?\n/).map(cleanPA).filter(Boolean);
 const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=="hourly";
 const payDateVal = () => $("payDate").value || $("adate").value;
-function addPrintDates(id){ const el=$(id); if(!el) return; el.querySelectorAll('input.inlinedate').forEach(i=>{ const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp); }); }
+function addPrintDates(id){ const el=$(id); if(!el) return;
+  el.querySelectorAll('input.inlinedate').forEach(i=>{
+    const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp);
+    const b=document.createElement('button'); b.type='button'; b.className='pickbtn'; b.textContent='📅'; b.title='Pick from calendar';
+    b.addEventListener('click',()=>pickDate(i)); i.after(b);
+  });
+  el.querySelectorAll('input.inlinefile').forEach(i=>{
+    const fit=()=>{ i.style.width=Math.max(6,(i.value||i.placeholder).length+3)+'ch'; }; fit(); i.addEventListener('input',fit);
+    const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value||'—'; i.after(sp);
+  });
+}
+/* file / invoice numbers typed straight into the agreement header */
+function setFileNo(id,v){
+  v=String(v||'').trim(); const f=$(id); if(!f) return; const old=f.value;
+  if(id==='fileNo' && $("iFile") && ($("iFile").value===old || !$("iFile").value)){ $("iFile").value=v; }
+  f.value=v; f.dispatchEvent(new Event("input",{bubbles:true}));
+  if(id==='fileNo' && typeof renderInvoice==='function') renderInvoice();
+}
+/* Dates typed in the agreement or the form: any common way of writing a date becomes YYYY-MM-DD.
+   Slash dates are read month/day/year (as North American computers show them) unless that's impossible. */
+function typedDate(str){
+  str=String(str||'').trim(); if(!str) return '';
+  let m=str.match(/^(\d{4})[-/. ](\d{1,2})[-/. ](\d{1,2})$/);
+  if(m) return validYmd(+m[1],+m[2],+m[3]);
+  m=str.match(/^(\d{1,2})[-/. ](\d{1,2})[-/. ](\d{2}|\d{4})$/);
+  if(m){ let a=+m[1], b=+m[2], y=+m[3]; if(y<100) y+=2000; return (a>12 && b<=12) ? validYmd(y,b,a) : validYmd(y,a,b); }
+  m=str.match(/^(\d{4})(\d{2})(\d{2})$/); if(m) return validYmd(+m[1],+m[2],+m[3]);
+  return normNotesDate(str);
+}
+function validYmd(y,mo,d){ const dt=new Date(y,mo-1,d); return (dt.getFullYear()===y&&dt.getMonth()===mo-1&&dt.getDate()===d) ? `${y}-${pad2(mo)}-${pad2(d)}` : ''; }
+document.addEventListener('focusin',e=>{ const t=e.target; if(t.matches&&t.matches('input.inlinedate')) t.dataset.prev=t.value; },true);
+document.addEventListener('keydown',e=>{ const t=e.target; if(e.key==='Enter'&&t.matches&&t.matches('input.inlinedate,input.inlinefile')){ e.preventDefault(); t.blur(); } },true);
+document.addEventListener('change',e=>{ const t=e.target; if(!(t.matches&&t.matches('input.inlinedate'))) return;
+  const v=typedDate(t.value);
+  if(v){ t.value=v; return; }
+  if(t.value.trim()){ t.value=t.dataset.prev||''; t.classList.add('baddate'); setTimeout(()=>t.classList.remove('baddate'),1200); e.stopImmediatePropagation(); }
+},true);
 const isSp = () => $("program").value==="Spousal / Common-law Sponsorship";
 const isG5 = () => $("program").value==="Group of Five Refugee Sponsorship";
 function pickProgram(k){
@@ -899,7 +943,7 @@ function daysAgo(iso){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(
 const isTypedCopy = iso => daysAgo(iso) > 30;
 function typedCopyBanner(iso, what){ return `<div class="typedcopy"><b>TYPED COPY.</b> This is a typed copy of the original ${what} signed on ${niceDate(iso)}. Prepared ${today()}. The signed original is kept on file.</div>`; }
 /* year-month-day date fields with a calendar picker */
-function fixDateField(el){ const v=normNotesDate(el.value); if(v) el.value=v; el.dispatchEvent(new Event("input",{bubbles:true})); }
+function fixDateField(el){ const v=typedDate(el.value); if(v) el.value=v; el.dispatchEvent(new Event("input",{bubbles:true})); }
 function pickDate(el){
   const r=el.getBoundingClientRect(), d=document.createElement("input");
   d.type="date"; d.value=/^\d{4}-\d{2}-\d{2}$/.test(el.value)?el.value:"";
@@ -975,7 +1019,7 @@ function render(){
       <div class="firm">${esc(firmName)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${rno?` · RCIC No. ${esc(rno)}`:""}</div>`:""}
       <div class="ttl">Service Agreement</div>
-      <div class="meta">File No. ${esc($("fileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc($("adate").value)}" onchange="setDate(this.value)" onclick="pickDate(this)" title="Tap to change the agreement date" /> &nbsp;·&nbsp; Services provided in ${esc(lang)}</div>
+      <div class="meta">File No. <input type="text" class="inlinefile" value="${esc($("fileNo").value)}" placeholder="ALH-0001" spellcheck="false" onchange="setFileNo('fileNo',this.value)" title="Type to change the file number" /> &nbsp;·&nbsp; Dated <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc($("adate").value)}" onchange="setDate(this.value)" title="Tap to change the agreement date" /> &nbsp;·&nbsp; Services provided in ${esc(lang)}</div>
     </div>
 
     <p>This Service Agreement is made under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between:</p>
@@ -1162,9 +1206,9 @@ function render(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
-      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>`:""}
+      <div class="sig"><div class="ln"></div><div class="cap">${esc(rcic||"RCIC")} — RCIC &nbsp; Date: <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(sigRcicDate||$("adate").value)}" onchange="setSigRcic(this.value)" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("cliName").value||"Client")} — Client &nbsp; Date: <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(sigCliDate||$("adate").value)}" onchange="setSigCli(this.value)" title="Tap to set date" /></div></div>
+      ${joint&&cli2?`<div class="sig"><div class="ln"></div><div class="cap">${esc(cli2)} — Client &nbsp; Date: <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(sigCli2Date||$("adate").value)}" onchange="setSigCli2(this.value)" title="Tap to set date" /></div></div>`:""}
       ${mems.map(m=>`<div class="sig"><div class="ln"></div><div class="cap">${esc(m.name)} — Client (Group Member) &nbsp; Date: ${esc($("adate").value||"____-__-__")}</div></div>`).join("")}
     </div>
     ${(pf&&$("showReceipt").checked)?`<div class="receipt"><h3>Receipt of payment</h3>
@@ -1178,7 +1222,7 @@ function render(){
       const card=(cls,h,big,rows)=>`<div class="ccard ${cls}"><h4>${h}</h4><div class="big">${esc(big)}</div>${rows.filter(r=>r[1]).map(r=>`<div class="lb">${r[0]}</div><div class="v">${r[1]}</div>`).join("")}</div>`;
       const subtitle = sp?`Family Class (${esc(spRel)}) sponsorship`: isG5()?"Group of Five refugee sponsorship": esc(program);
       const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div><div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div><div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
-        <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. ${esc($("fileNo").value||"—")} · Services provided in ${esc(lang)}</div></div>`;
+        <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. <input type="text" class="inlinefile" value="${esc($("fileNo").value)}" placeholder="ALH-0001" spellcheck="false" onchange="setFileNo('fileNo',this.value)" title="Type to change the file number" /> · Services provided in ${esc(lang)}</div></div>`;
       const intro=`<p>This Service Agreement is made on <b>${niceDate($("adate").value)}</b>, under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between the Client${(joint||mems.length)?"s":""} and the RCIC identified below. It sets out the terms on which the RCIC will provide immigration and citizenship consulting services.</p>`;
       const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Date of birth",esc($("cliDob").value)],["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
       const cR=card("r","The RCIC",rcic||"[RCIC name]",[["Firm",esc(firmName)],["College ID",`<b>${esc(rno)}</b>`],["Address",esc(addr)],["Telephone · Email",esc(ph)+(em?" · "+esc(em):"")]]);
@@ -1232,7 +1276,7 @@ function renderConsult(){
       <div class="firm">${esc(cfirm)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${crno?` · RCIC No. ${esc(crno)}`:""}</div>`:""}
       <div class="ttl">Consultation Agreement</div>
-      <div class="meta">File No. ${esc($("cfileNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" onclick="pickDate(this)" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
+      <div class="meta">File No. <input type="text" class="inlinefile" value="${esc($("cfileNo").value)}" placeholder="ALH-C-0001" spellcheck="false" onchange="setFileNo('cfileNo',this.value)" title="Type to change the file number" /> &nbsp;·&nbsp; Dated <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(cAgreementDate)}" onchange="setCDate(this.value)" title="Tap to change the date" /> &nbsp;·&nbsp; Consultation in ${esc(clang)}</div>
     </div>
 
     <p>This Consultation Agreement is made under section 23 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), before any immigration or citizenship consulting services are provided, between:</p>
@@ -1266,8 +1310,8 @@ function renderConsult(){
 
     ${(insigniaData&&brand.insignia)?`<img class="insignia" src="${insigniaData}" alt="Official RCIC insignia" />`:""}
     <div class="sigs">
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(csigR||cAgreementDate)}" onchange="setCSigR(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
-      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="text" readonly class="inlinedate" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" onclick="pickDate(this)" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("rcicName").value||"RCIC")} — RCIC &nbsp; Date: <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(csigR||cAgreementDate)}" onchange="setCSigR(this.value)" title="Tap to set date" /></div></div>
+      <div class="sig"><div class="ln"></div><div class="cap">${esc($("ccliName").value||"Client")} — Client &nbsp; Date: <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(csigC||cAgreementDate)}" onchange="setCSigC(this.value)" title="Tap to set date" /></div></div>
     </div>
     ${cPaid?`<div class="receipt"><h3>Receipt of payment</h3><p>Received from <b>${esc($("ccliName").value||"[Client name]")}</b> the sum of <b>${cad(cTotal)}</b> by <b>${esc($("cPayMethod").value)}</b> on <b>${niceDate(cAgreementDate)}</b> for the consultation under File No. ${esc($("cfileNo").value||"—")}.</p></div>`:""}
     <p style="font-size:13px;color:#777;font-family:'Inter';margin-top:14px">A signed copy of this consultation agreement will be provided to the Client and kept on file by the RCIC.</p>
@@ -1338,7 +1382,7 @@ function renderInvoice(){
       <div class="firm">${esc(ifirm)}</div>
       ${brand.badge?`<div class="regbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Regulated by the College of Immigration and Citizenship Consultants${irno?` · RCIC No. ${esc(irno)}`:""}</div>`:""}
       <div class="ttl">Invoice</div>
-      <div class="meta">Invoice ${esc($("iNo").value||"—")} &nbsp;·&nbsp; Dated <input type="text" readonly class="inlinedate" value="${esc(iDate)}" onchange="setIDate(this.value)" onclick="pickDate(this)" title="Tap to change date" />${$("iMatter").value?` &nbsp;·&nbsp; ${esc($("iMatter").value)}`:""}</div>
+      <div class="meta">Invoice <input type="text" class="inlinefile" value="${esc($("iNo").value)}" placeholder="INV-0001" spellcheck="false" onchange="setFileNo('iNo',this.value)" title="Type to change the invoice number" /> &nbsp;·&nbsp; Dated <input type="text" class="inlinedate" inputmode="numeric" spellcheck="false" value="${esc(iDate)}" onchange="setIDate(this.value)" title="Tap to change date" />${$("iMatter").value?` &nbsp;·&nbsp; ${esc($("iMatter").value)}`:""}</div>
     </div>
     <div class="parties">
       <div class="party"><h4>From</h4>
@@ -1454,6 +1498,8 @@ function exportDoc(){
   const clone = src.cloneNode(true);
   clone.querySelectorAll(".pdate").forEach(s=>s.remove());
   // replace date inputs with their text value
+  clone.querySelectorAll('.pickbtn').forEach(b=>b.remove());
+  clone.querySelectorAll('input.inlinefile').forEach(inp=>{ const span=document.createElement("span"); span.textContent=inp.value||"—"; inp.replaceWith(span); });
   clone.querySelectorAll('input.inlinedate').forEach(inp=>{
     const span=document.createElement("span");
     span.textContent = inp.value ? niceDate(inp.value) : "______________";
