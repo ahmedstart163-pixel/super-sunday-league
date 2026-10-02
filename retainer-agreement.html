@@ -60,7 +60,7 @@
     border-bottom:2px solid var(--gold);margin-bottom:12px;width:100%;display:flex;align-items:center;gap:7px}
   legend .n{width:20px;height:20px;border-radius:5px;background:var(--navy);color:#fff;font-size:13px;
     display:inline-grid;place-items:center;font-family:'Inter';font-weight:700;flex:none}
-  label{display:block;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:10px 0 4px}
+  label{display:block;font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:10px 0 4px}
   input[type=text],input[type=email],input[type=number],input[type=date],select,textarea{
     width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:13px;color:var(--ink);background:#fff}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,146,42,.15)}
@@ -135,6 +135,25 @@
   .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
   .chk input{width:auto}
   .pdate{display:none}
+  .scbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+  .kb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit}
+  .kb.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+  .scmsg{font-size:12px;color:var(--muted)}
+  .scsuggest{display:none;position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 10px 30px rgba(20,30,50,.15);max-height:280px;overflow:auto}
+  .scitem{padding:8px 10px;cursor:pointer;border-bottom:1px solid #eef1f5;font-size:13px;display:flex;flex-direction:column;gap:1px}
+  .scitem:hover{background:#f3f6fb} .scitem span{color:var(--muted);font-size:12px} .scitem .scsv{color:#7c5a10} .scitem.muted{color:var(--navy);font-weight:600}
+  .scov{position:fixed;inset:0;background:rgba(15,28,46,.45);display:grid;place-items:center;z-index:300;padding:16px}
+  .scbox{background:#fff;border-radius:14px;max-width:440px;width:100%;padding:20px;font-family:'Inter',system-ui,sans-serif;max-height:85vh;overflow:auto}
+  .scbox h4{margin:0 0 6px;color:var(--navy);font-size:16px} .scbox p{font-size:13px;color:#5d6b7d;margin:0 0 10px;line-height:1.45}
+  .scpin{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:20px;letter-spacing:10px;text-align:center;margin-bottom:8px}
+  .scerr{color:#b42318;font-size:12.5px;min-height:16px}
+  .scrow{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+  .scbox .impF{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}
+  .scbox label{margin:6px 0 3px;font-size:11px}
+  .scbox .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .scmlist{display:flex;flex-direction:column;gap:6px} .scmrow{border:1px solid var(--line);border-radius:9px;padding:8px 10px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
+  .scmrow span{color:var(--muted);font-size:12px} .scmrow .scsv{color:#7c5a10}
+  @media print{ .scov,.scsuggest{display:none !important} }
   #paper3{position:relative}
   .paidstamp{position:absolute;top:34px;left:40px;transform:rotate(-14deg);border:4px solid #1f8a5e;color:#1f8a5e;border-radius:10px;
     padding:4px 16px 3px;font-family:'Inter',Arial,sans-serif;font-weight:800;font-size:34px;letter-spacing:5px;line-height:1;text-align:center;opacity:.88;pointer-events:none}
@@ -244,7 +263,7 @@
   <div class="form" id="form">
     <div class="progswitch">
       <button type="button" id="ps-g5" onclick="pickProgram('g5')">Group of Five</button>
-      <button type="button" id="ps-sp" onclick="pickProgram('sp')">Spousal</button>
+      <button type="button" id="ps-sp" onclick="pickProgram('sp')">Family sponsorship</button>
       <button type="button" id="ps-ot" onclick="pickProgram('ot')">Other programs</button>
     </div>
     <label style="margin-top:0">Document layout</label>
@@ -255,14 +274,25 @@
 
     <fieldset>
       <legend>Client details</legend>
+      <div id="scBar" class="scbar"></div>
       <label>Full name</label>
-      <input type="text" id="cliName" placeholder="Client full legal name" />
+      <div style="position:relative"><input type="text" id="cliName" placeholder="Client full legal name — start typing to find a saved client" autocomplete="off" /><div id="scSuggest" class="scsuggest"></div></div>
       <div class="two">
         <div><label>Phone</label><input type="text" id="cliPhone" placeholder="(780) 000-0000" onchange="this.value=fmtPhone(this.value);this.dispatchEvent(new Event('input',{bubbles:true}))" /></div>
         <div><label>Email</label><input type="email" id="cliEmail" placeholder="client@..." /></div>
       </div>
-      <label>Address</label>
-      <input type="text" id="cliAddr" placeholder="Street, city, province, postal code" />
+      <label>Street address</label>
+      <input type="text" id="cliStreet" placeholder="e.g. 4350 23 St NW, Unit 12" autocomplete="off" />
+      <div class="two">
+        <div><label>City</label><select id="cliCity" onchange="onCityChange()"><option>Edmonton</option><option>Vancouver</option><option>Ottawa</option><option>Toronto</option><option value="__other">Other…</option></select>
+          <input type="text" id="cliCityOther" placeholder="Type the city" style="display:none;margin-top:6px" /></div>
+        <div><label>Province</label><select id="cliProv"><option value="AB" selected>AB</option><option value="BC">BC</option><option value="MB">MB</option><option value="NB">NB</option><option value="NL">NL</option><option value="NS">NS</option><option value="NT">NT</option><option value="NU">NU</option><option value="ON">ON</option><option value="PE">PE</option><option value="QC">QC</option><option value="SK">SK</option><option value="YT">YT</option></select></div>
+      </div>
+      <div class="two">
+        <div><label>Postal code</label><input type="text" id="cliPostal" placeholder="T5H 4C8" autocomplete="off" /></div>
+        <div><label>Country</label><input type="text" id="cliCountry" value="Canada" /></div>
+      </div>
+      <input type="hidden" id="cliAddr" />
       <input type="hidden" id="cliDob" />
       <div class="hint">Name, phone, email and address fill in automatically on the Consultation, Invoice and Close file tabs.</div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 0">
@@ -371,14 +401,33 @@
       <label>Immigration program</label>
       <select id="program"></select>
       <div id="spFields" class="v2box" style="display:none">
-        <label style="margin-top:0">Spousal sponsorship details</label>
-        <div class="two">
+        <label style="margin-top:0">Who is being sponsored?</label>
+        <select id="famType" onchange="onFamType()">
+          <option value="spouse">Spouse, common-law or conjugal partner</option>
+          <option value="child">Dependent child</option>
+          <option value="pgp">Parents or grandparents</option>
+          <option value="rel">Orphaned relative or other relative</option>
+        </select>
+        <div id="famNote" class="hint" style="margin-top:6px"></div>
+        <div id="famChild" style="display:none">
+          <label>The child is</label><select id="childAge" onchange="render()"><option value="under22">Under 22, with no spouse or partner</option><option value="over22">22 or older, dependent since before 22 because of a physical or mental condition</option></select>
+        </div>
+        <div id="famPgp" style="display:none">
+          <label>Sponsoring</label><select id="pgpRel" onchange="render()"><option value="parent">Parent(s)</option><option value="grandparent">Grandparent(s)</option></select>
+        </div>
+        <div id="famRel" style="display:none">
+          <label>Type of relative</label><select id="relType" onchange="onFamType(true)"><option value="orphan">Orphaned brother, sister, nephew, niece or grandchild (under 18)</option><option value="lone">One relative of any age (sponsor has no other family to sponsor)</option></select>
+          <div class="two"><div><label>Relationship</label><select id="relRel" onchange="render()"><option>brother</option><option>sister</option><option>nephew</option><option>niece</option><option>grandchild</option><option>aunt</option><option>uncle</option><option>cousin</option><option>relative</option></select></div>
+          <div id="relAgeWrap"><label>Relative's age</label><select id="relAge" onchange="render()"><option value="over22">22 or older</option><option value="under22">Under 22</option></select></div></div>
+        </div>
+        <div id="famPAWrap" style="display:none"><label>Name of the person being sponsored</label><input type="text" id="famPAName" placeholder="Full legal name" /><div class="hint">A child under 18 doesn't sign the agreement — the Sponsor signs. Their name appears in Section 3.</div></div>
+        <div class="two" id="famSpouse">
           <div><label>Relationship</label><select id="spRel"><option value="spouse">Spouse</option><option value="common-law partner">Common-law partner</option><option value="conjugal partner">Conjugal partner</option></select></div>
           <div><label>Application</label><select id="spStream" onchange="onSpStream()"><option value="outland">Outside Canada (outland)</option><option value="inland">Inside Canada (inland)</option></select></div>
         </div>
         <label class="chk" id="owpWrap" style="display:none"><input type="checkbox" id="spOwp" onchange="render()" /> Include an open work permit application for the sponsored person</label>
         <label class="chk"><input type="checkbox" id="spGov" checked onchange="render()" /> List IRCC government fees (paid directly by the Client)</label>
-        <div class="hint">The sponsored person is entered as the second client (joint retainer). Government fees: sponsorship $90, principal applicant processing $570, right of permanent residence $600 (effective 2026-04-30) — confirm against IRCC's fee list before signing.</div>
+        <div class="hint" id="famFeeHint">The sponsored person is entered as the second client (joint retainer). Government fees: sponsorship $90, principal applicant processing $570, right of permanent residence $600 (effective 2026-04-30) — confirm against IRCC's fee list before signing.</div>
       </div>
       <label>Scope of services (editable)</label>
       <textarea id="scope" rows="8"></textarea>
@@ -421,9 +470,9 @@
       <div class="v2box">
         <label style="margin-top:0">Payment</label>
         <select id="payMode" onchange="onPayMode()">
-          <option value="invoice">Advance on signing, balance invoiced as work is done</option>
-          <option value="paidFull">Paid in full on signing</option>
-          <option value="onSubmit">Collected when the application is submitted (no advance, no trust account)</option>
+          <option value="onSubmit">Collected when the application is submitted (no advance — nothing held in trust)</option>
+          <option value="invoice">In stages (milestones) — any payment before work is done must be held in trust</option>
+          <option value="paidFull">Paid in full on signing — must be held in trust</option>
         </select>
         <div id="paidFields" style="display:none">
           <div class="two">
@@ -525,6 +574,9 @@
         <option value="auto">Standard topics — same program as the Service Agreement</option>
         <option value="g5">Standard topics — Group of Five refugee sponsorship</option>
         <option value="sp">Standard topics — Spousal / common-law sponsorship</option>
+        <option value="ch">Standard topics — Dependent child sponsorship</option>
+        <option value="pg">Standard topics — Parents &amp; grandparents sponsorship</option>
+        <option value="rl">Standard topics — Orphaned / other relative sponsorship</option>
         <option value="gen">General consultation</option>
       </select>
       <textarea id="cpurpose" rows="3" placeholder="Optional — add anything else this consultation will cover."></textarea>
@@ -642,13 +694,16 @@
         <option value="transfer">File transferred to another representative</option>
       </select>
       <div class="two">
-        <div><label>File opened</label><span style="display:flex;gap:6px"><input type="text" id="xOpenDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); window._xOpenTouched=true; autoCloseDate()" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
-        <div><label>Closing date <span style="text-transform:none;font-weight:400">(opened + 5 years)</span></label><span style="display:flex;gap:6px"><input type="text" id="xCloseDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); xCloseManual=true" /><button type="button" title="Reset to 5 years after the file was opened" onclick="xCloseManual=false; autoCloseDate()" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 9px">↺</button><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        <div><label id="xDecLbl">Date IRCC finalized the application</label><span style="display:flex;gap:6px"><input type="text" id="xDecDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); autoCloseDate()" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        <div><label>Closing date</label><span style="display:flex;gap:6px"><input type="text" id="xCloseDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); xCloseManual=true" /><button type="button" title="Reset to the date IRCC finalized the application" onclick="xCloseManual=false; autoCloseDate()" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 9px">↺</button><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
       </div>
-      <div class="hint" id="xCloseHint">Enter the date the file was opened. The closing date is set automatically to 5 years later; you can change it if the file closes earlier.</div>
+      <div class="hint" id="xCloseHint">Enter the date IRCC finalized the application. The closing date fills in from it, and the file must be kept for at least 6 years after closing.</div>
       <div class="two">
-        <div><label id="xDecLbl">Decision date</label><span style="display:flex;gap:6px"><input type="text" id="xDecDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
-        <div></div>
+        <div><label>File opened <span style="text-transform:none;font-weight:400">(for your records)</span></label><span style="display:flex;gap:6px"><input type="text" id="xOpenDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); window._xOpenTouched=true; renderClose()" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
+        <div><label>Keep file until</label><input type="text" id="xKeep" readonly style="background:#f6f8fb" /></div>
+      </div>
+      <div class="two">
+        <div><label>Date of the closing letter</label><span style="display:flex;gap:6px"><input type="text" id="xLetterDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this); renderClose()" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div><div></div>
       </div>
       <div id="xSuccWrap"><label>New representative (name and firm)</label><input type="text" id="xSucc" /></div>
       <div id="xIrccWrap"><label>Date IRCC was told the RCIC no longer represents the client</label><span style="display:flex;gap:6px"><input type="text" id="xIrcc" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span>
@@ -803,6 +858,50 @@ const PROGRAMS = {
     milestones: [["Upon signing of this Agreement",60],["Upon final decision by IRCC",40]],
     disb: ["IRCC PR Card processing fee","Document translation (if required)","Courier / postage"]
   },
+  "Dependent Child Sponsorship": {
+    scope: [
+      "Assess the eligibility of the Sponsor and confirm that the child meets the definition of a dependent child",
+      "Advise on and collect the documents required, including proof of the parent-child relationship and any custody or consent documents",
+      "Prepare the sponsorship and permanent residence application forms",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Monitor the application and respond to IRCC requests (e.g., additional documents, biometrics, medical exam, DNA testing if requested)",
+      "Communicate IRCC's decision and guide the Client through the next steps"
+    ],
+    milestones:[["Upon submission of the application to IRCC",100]],
+    disb:[],
+    timeframe:"Preparation and submission: approximately 4–8 weeks after the RCIC receives complete documents. IRCC processing times for dependent children vary by the country where the child lives; the RCIC will confirm the current processing time using IRCC's processing-time tool when the application is submitted. The RCIC will respond to the Client's communications within 48 hours",
+    preadvice:"The RCIC reviewed the Client's circumstances and advised on sponsoring a dependent child. A dependent child is a child under 22 who does not have a spouse or common-law partner, or a child 22 or older who has depended on the parent for financial support since before age 22 and cannot support themselves because of a physical or mental condition. The Sponsor must be 18 or older and a Canadian citizen, a person registered under the Indian Act, or a permanent resident living in Canada, and must not be barred from sponsoring (for example, because of default on a previous undertaking, support order or immigration loan, receipt of social assistance other than for disability, or certain criminal convictions). No minimum income is required unless the child has a dependent child of their own. The Sponsor must sign an undertaking to support the child for 10 years or until the child turns 25, whichever comes first (3 years if the child is 22 or older). Custody and the consent of any other parent may be required. The child must be admissible to Canada (medical, criminal and security checks). IRCC makes the final decision; approval is not guaranteed."
+  },
+  "Parents & Grandparents Sponsorship": {
+    scope: [
+      "Assess the Sponsor's eligibility, including the minimum necessary income plus 30% for each of the three tax years before the application, using Canada Revenue Agency notices of assessment",
+      "Advise on the current status of the Parents and Grandparents Program and on alternatives such as the super visa",
+      "Advise on and collect the documents required, including proof of relationship and income",
+      "Prepare the sponsorship and permanent residence application forms when the Sponsor is invited to apply",
+      "Submit the application to IRCC and act as the Clients' authorized representative",
+      "Monitor the application and respond to IRCC requests (e.g., additional documents, biometrics, medical exam)",
+      "Communicate IRCC's decision and guide the Clients through the next steps"
+    ],
+    milestones:[["Upon submission of the application to IRCC",100]],
+    disb:[],
+    timeframe:"IRCC has paused new applications under the Parents and Grandparents Program until further notice; applications already submitted continue to be processed. If IRCC reopens the program and invites the Sponsor to apply, preparation and submission takes approximately 4–8 weeks after the RCIC receives complete documents, and IRCC's processing time will be confirmed at that time. The RCIC will respond to the Clients' communications within 48 hours",
+    preadvice:"The RCIC reviewed the Clients' circumstances and advised on sponsoring a parent or grandparent. The RCIC advised that IRCC has paused the Parents and Grandparents Program: it is not currently accepting interest-to-sponsor forms or new applications, and applications already submitted continue to be processed. When the program is open, sponsors are selected by invitation and must apply within the deadline in the invitation. The Sponsor must be 18 or older, a Canadian citizen, a person registered under the Indian Act, or a permanent resident living in Canada, must meet the minimum necessary income plus 30% for each of the three consecutive tax years before applying (shown by Canada Revenue Agency notices of assessment), and must sign an undertaking to support the sponsored persons for 20 years (10 years for sponsors living in Quebec). The RCIC also advised on the super visa, which lets parents and grandparents visit Canada for up to 5 years at a time. The sponsored persons must be admissible to Canada (medical, criminal and security checks). IRCC makes the final decision; approval is not guaranteed."
+  },
+  "Orphaned / Other Relative Sponsorship": {
+    scope: [
+      "Assess the Sponsor's eligibility and confirm that the relative can be sponsored as an orphaned relative or as a sole relative",
+      "Assess whether the Sponsor meets the minimum necessary income for the size of the family unit",
+      "Advise on and collect the documents required, including proof of the relationship and, for an orphaned relative, the death certificates of both parents",
+      "Prepare the sponsorship and permanent residence application forms, including any accompanying family members",
+      "Submit the application to IRCC and act as the Client's authorized representative",
+      "Monitor the application and respond to IRCC requests (e.g., additional documents, biometrics, medical exam)",
+      "Communicate IRCC's decision and guide the Client through the next steps"
+    ],
+    milestones:[["Upon submission of the application to IRCC",100]],
+    disb:[],
+    timeframe:"Preparation and submission: approximately 4–8 weeks after the RCIC receives complete documents. IRCC processing times for this category vary by the country where the relative lives; the RCIC will confirm the current processing time using IRCC's processing-time tool when the application is submitted. The RCIC will respond to the Client's communications within 48 hours",
+    preadvice:"The RCIC reviewed the Client's circumstances and advised on sponsoring a relative. An orphaned brother, sister, nephew, niece or grandchild can be sponsored only if they are related to the Sponsor by blood or adoption, are under 18, are not married or in a common-law relationship, and both of their parents have died; they cannot be sponsored if a parent is alive, missing, or has abandoned them. Alternatively, one relative of any age related by blood or adoption can be sponsored only if the Sponsor has no living spouse, partner, child, parent, grandparent, orphaned sibling, nephew, niece or grandchild they could sponsor instead, and no relative who is a Canadian citizen, permanent resident or person registered under the Indian Act; the relative's accompanying spouse and children must be included in the same application. The Sponsor must be 18 or older, a Canadian citizen, a person registered under the Indian Act, or a permanent resident living in Canada, must meet the minimum necessary income, must not be barred from sponsoring, and must sign an undertaking to support the relative (10 years, or until age 25 for a relative under 22, whichever comes first). The sponsored persons must be admissible to Canada. IRCC makes the final decision; approval is not guaranteed."
+  },
   "Group of Five Refugee Sponsorship": {
     scope: [
       "Assess the eligibility of the Group to sponsor under the Group of Five category and advise the Client on the requirements",
@@ -909,7 +1008,7 @@ function autofillFromNotes(){
 
   const filled=[];
   if(name){ $("cliName").value=name; filled.push("name"); }
-  if(addr){ $("cliAddr").value=addr; filled.push("address"); }
+  if(addr){ $("cliAddr").value=addr; splitAddrInto(addr); filled.push("address"); }
   if(phone){ $("cliPhone").value=phone; filled.push("phone"); }
   if(email){ $("cliEmail").value=email; filled.push("email"); }
   if(program){ $("program").value=program; loadProgram(); filled.push("program"); }
@@ -974,28 +1073,61 @@ const paidFull = () => $("payMode").value==="paidFull" && $("feeMethod").value!=
 const payDateVal = () => $("payDate").value || $("adate").value;
 function addPrintDates(id){ const el=$(id); if(!el) return; el.querySelectorAll('input.inlinedate').forEach(i=>{ const sp=document.createElement('span'); sp.className='pdate'; sp.textContent=i.value?niceDate(i.value):'______________'; i.after(sp); }); }
 const isSp = () => $("program").value==="Spousal / Common-law Sponsorship";
+const FAM_PROG={spouse:"Spousal / Common-law Sponsorship",child:"Dependent Child Sponsorship",pgp:"Parents & Grandparents Sponsorship",rel:"Orphaned / Other Relative Sponsorship"};
+const famTypeOf = p => ({"Spousal / Common-law Sponsorship":"spouse","Dependent Child Sponsorship":"child","Parents & Grandparents Sponsorship":"pgp","Orphaned / Other Relative Sponsorship":"rel"})[p]||"";
+const isFam = () => !!famTypeOf($("program").value);
+function famAdultPA(){ const t=famTypeOf($("program").value); return t==="spouse"||t==="pgp"||(t==="rel"&&$("relType").value==="lone"); }
+function onFamType(keepProgram){
+  if(keepProgram){ if(famAdultPA()){ if(!$("joint").checked){ $("joint").checked=true; window._autoJoint=true; onJoint(); } } else if(window._autoJoint){ window._autoJoint=false; $("joint").checked=false; onJoint(); } }
+  if(!keepProgram){ $("program").value=FAM_PROG[$("famType").value]; loadProgram(); return; }
+  syncProgUI(); render(); try{ renderConsult(); }catch(e){}
+}
+function famLabel(){
+  const t=famTypeOf($("program").value);
+  if(t==="spouse") return $("spRel").value;
+  if(t==="child") return "dependent child";
+  if(t==="pgp") return $("pgpRel").value;
+  if(t==="rel") return ($("relType").value==="orphan"?"orphaned ":"")+$("relRel").value;
+  return "";
+}
+function famGovRows(){
+  const t=famTypeOf($("program").value), r=(a,b)=>`<tr><td>${a}</td><td class="amt">${typeof b==="number"?cad(b):b}</td></tr>`;
+  if(t==="child") return r("Sponsorship fee",90)+r("Dependent child processing fee",90)+r("Right of permanent residence fee","Not required for a dependent child");
+  if(t==="rel"){ if($("relType").value==="orphan") return r("Sponsorship fee",90)+r("Processing fee for a person under 22",90)+r("Right of permanent residence fee","Not required for an orphaned relative");
+    return r("Sponsorship fee",90)+r($("relAge").value==="under22"?"Processing fee for a person under 22":"Principal applicant processing fee",$("relAge").value==="under22"?90:570)+r("Right of permanent residence fee",600)+r("Each accompanying spouse/partner or dependent child","As applicable"); }
+  return r("Sponsorship fee",90)+r("Principal applicant processing fee",570)+r("Right of permanent residence fee",600)+(t==="pgp"?r("Each accompanying spouse/partner or dependent child","As applicable"):"");
+}
 const isG5 = () => $("program").value==="Group of Five Refugee Sponsorship";
 function pickProgram(k){
   const sel=$("program");
   if(k==="g5") sel.value="Group of Five Refugee Sponsorship";
-  else if(k==="sp") sel.value="Spousal / Common-law Sponsorship";
-  else if(isG5()||isSp()) sel.value="Study Permit";
+  else if(k==="sp") sel.value=FAM_PROG[$("famType").value]||"Spousal / Common-law Sponsorship";
+  else if(isG5()||isFam()) sel.value="Study Permit";
   loadProgram(); renderConsult();
 }
 function syncProgUI(){
-  const g=isG5(), p=isSp();
+  const g=isG5(), p=isFam(), t=famTypeOf($("program").value);
   $("ps-g5").classList.toggle("on",g); $("ps-sp").classList.toggle("on",p); $("ps-ot").classList.toggle("on",!g&&!p);
   $("spFields").style.display = p ? "block" : "none";
+  if(p){ $("famType").value=t;
+    $("famSpouse").style.display = t==="spouse"?"grid":"none"; $("owpWrap").style.setProperty("display",(t==="spouse"&&$("spStream").value==="inland")?"flex":"none","important");
+    const cn=$("conjNote"); if(cn) cn.style.display = t==="spouse"?"block":"none";
+    $("famChild").style.display = t==="child"?"block":"none"; $("famPgp").style.display = t==="pgp"?"block":"none"; $("famRel").style.display = t==="rel"?"block":"none";
+    $("relAgeWrap").style.display = $("relType").value==="lone"?"block":"none";
+    $("famPAWrap").style.display = famAdultPA()?"none":"block";
+    $("famNote").innerHTML = t==="pgp" ? "<b style='color:#b45309'>⚠ IRCC has paused the Parents and Grandparents Program</b> — no new interest-to-sponsor forms or applications until further notice. Applications already submitted continue. The super visa is an alternative." : t==="rel" ? "Only for an orphaned brother, sister, nephew, niece or grandchild (under 18, both parents died), or one relative of any age when the sponsor has no other family to sponsor." : t==="child" ? "Under 22 with no spouse/partner, or 22+ and dependent since before 22 because of a physical or mental condition." : "";
+    $("famFeeHint").textContent = "IRCC fees for this category are listed in Section 8 (effective 2026-04-30) — confirm against IRCC's fee list before signing." + (famAdultPA()?" The sponsored person is entered as the second client (joint retainer).":"");
+  }
   $("g5Box").style.display = g ? "block" : "none";
   $("g5Members").style.display = g ? "block" : "none";
-  onSpStream(true);
+  if(!p || t==="spouse") onSpStream(true);
 }
 function onSpStream(noRender){
   const conj = $("spRel").value==="conjugal partner";
   const inl = [...$("spStream").options].find(o=>o.value==="inland"); if(inl) inl.disabled=conj;
   if(conj && $("spStream").value==="inland") $("spStream").value="outland";
   if(conj) $("spOwp").checked=false;
-  $("owpWrap").style.display = $("spStream").value==="inland" ? "flex" : "none";
+  $("owpWrap").style.setProperty("display", ($("spStream").value==="inland" && famTypeOf($("program").value)==="spouse") ? "flex" : "none", "important");
   let n=$("conjNote"); if(!n){ n=document.createElement("div"); n.id="conjNote"; n.className="hint"; $("owpWrap").before(n); }
   n.textContent = conj ? "Conjugal partners can only be sponsored from outside Canada, so the inside-Canada option and the open work permit are not available." : "";
   if(!noRender) render(); }
@@ -1039,7 +1171,7 @@ function onPayMode(){ $("paidFields").style.display = $("payMode").value==="paid
 /* ── init ────────────────────────────────────────────── */
 function initPrograms(){
   const sel = $("program");
-  const main=["Group of Five Refugee Sponsorship","Spousal / Common-law Sponsorship"];
+  const main=["Group of Five Refugee Sponsorship","Spousal / Common-law Sponsorship","Dependent Child Sponsorship","Parents & Grandparents Sponsorship","Orphaned / Other Relative Sponsorship"];
   const g1=document.createElement("optgroup"); g1.label="Main programs";
   const g2=document.createElement("optgroup"); g2.label="Other programs";
   Object.keys(PROGRAMS).forEach(k=>{ const o=document.createElement("option"); o.textContent=k; o.value=k; (main.includes(k)?g1:g2).appendChild(o); });
@@ -1050,7 +1182,7 @@ function initPrograms(){
 }
 function loadProgram(){
   const p = PROGRAMS[$("program").value];
-  if($("program").value==="Spousal / Common-law Sponsorship"){ if(!$("joint").checked){ $("joint").checked=true; window._autoJoint=true; onJoint(); } }
+  if(isFam() && famAdultPA()){ if(!$("joint").checked){ $("joint").checked=true; window._autoJoint=true; onJoint(); } }
   else if(window._autoJoint){ window._autoJoint=false; $("joint").checked=false; onJoint(); }
   const wasG5 = window._lastProg==="Group of Five Refugee Sponsorship"; window._lastProg=$("program").value;
   try{ localStorage.setItem("rcic_last_program",$("program").value); }catch(e){}
@@ -1058,11 +1190,12 @@ function loadProgram(){
     if(!wasG5) window._preG5Fee=$("fee").value;
     $("groupRep").checked=true;
     $("feeMethod").value="flat"; $("fee").value=1000; $("taxIncl").checked=true;
-    $("payMode").value="paidFull"; $("payMethod").value="cash"; $("payDate").value=""; $("advance").value=0;
+    $("payMode").value="onSubmit"; $("payMethod").value="cash"; $("payDate").value=""; $("advance").value=0;
     onFeeMethod(); onPayMode();
   } else {
     $("groupRep").checked=false;
-    if(wasG5){ $("taxIncl").checked=false; $("payMode").value="invoice"; $("fee").value = (window._preG5Fee && +window._preG5Fee!==1000) ? window._preG5Fee : 2000; $("payMethod").value="cash"; onPayMode(); }
+    if($("feeMethod").value!=="hourly"){ $("payMode").value="onSubmit"; $("advance").value=0; onPayMode(); }
+    if(wasG5){ $("taxIncl").checked=false; $("fee").value = (window._preG5Fee && +window._preG5Fee!==1000) ? window._preG5Fee : 2000; $("payMethod").value="cash"; onPayMode(); }
   }
   $("scope").value = p.scope.join("\n");
   $("timeframe").value = p.timeframe || "";
@@ -1093,7 +1226,7 @@ function render(){
   const taxIncl=$("taxIncl").checked;
   const tax=taxIncl?0:base*taxRate/100, total=base+tax;
   const mems=isG5()?memberList():[];
-  const sp=isSp(), spRel=$("spRel").value, spStream=$("spStream").value, spOwp=sp&&spStream==="inland"&&$("spOwp").checked, onSub=$("payMode").value==="onSubmit"&&$("feeMethod").value!=="hourly";
+  const sp=isFam(), spType=famTypeOf($("program").value), spRel=famLabel(), spStream=$("spStream").value, spOwp=spType==="spouse"&&spStream==="inland"&&$("spOwp").checked, onSub=$("payMode").value==="onSubmit"&&$("feeMethod").value!=="hourly";
   const classic=$("layout").value==="classic", tcopy=isTypedCopy($("adate").value);
   { const h=$("oldDateHint"); if(h){ h.style.display=tcopy?"block":"none"; h.textContent=tcopy?"This date is more than 30 days ago, so the agreement is marked as a typed copy of the signed original.":""; } }
   const pas=paItems(), group=$("groupRep").checked||mems.length>0, pf=paidFull(), pDate=payDateVal(), pMethod=$("payMethod").value;
@@ -1102,6 +1235,7 @@ function render(){
   const dueDays=$("dueDays").value||"15", interest=+$("interest").value||0;
   const joint=$("joint").checked;
   const cli2=$("cli2Name").value.trim();
+  const paName = (joint&&cli2) ? cli2 : $("famPAName").value.trim();
   const retention=$("retention").value.trim()||"at least six years after the file is closed, as required by the College's Client File Management Regulation (s.7.2)";
   const complaintProc=$("complaintProc").value.trim();
 
@@ -1147,7 +1281,7 @@ function render(){
     <p>${preadv?esc(preadv):"No preliminary advice was provided to the Client other than as described in this Agreement."}</p>
 
     <h2><span class="sn">3.</span> Services to be provided by the RCIC</h2>
-    ${sp?`<p>The RCIC will represent the Clients in an application for <b>permanent residence under the Family Class — sponsorship of a ${esc(spRel)}</b> (${spStream==="inland"?"inside Canada":"outside Canada"}). The Sponsor, <b>${esc($("cliName").value||"[Sponsor]")}</b>, is sponsoring their ${esc(spRel)}, <b>${esc(cli2||"[Sponsored Person]")}</b>, the Principal Applicant.${spOwp?` The services also include an open work permit application for the Principal Applicant.`:""} In consideration of the fees set out below, the RCIC agrees to:</p>`:`<p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>`}
+    ${sp?`<p>The RCIC will represent the ${(joint&&cli2)?"Clients":"Client"} in an application for <b>permanent residence under the Family Class — sponsorship of ${/^[aeiou]/i.test(spRel)?"an":"a"} ${esc(spRel)}</b>${spType==="spouse"?` (${spStream==="inland"?"inside Canada":"outside Canada"})`:""}. The Sponsor, <b>${esc($("cliName").value||"[Sponsor]")}</b>, is sponsoring their ${esc(spRel)}, <b>${esc(paName||"[Sponsored Person]")}</b>, the Principal Applicant.${spType==="child"&&$("childAge").value==="over22"?" The child is 22 or older and has depended on the Sponsor since before age 22 because of a physical or mental condition.":""}${spType==="pgp"?" The Clients acknowledge that IRCC has paused the Parents and Grandparents Program; the application can be submitted only if IRCC reopens the program and invites the Sponsor to apply.":""}${spOwp?` The services also include an open work permit application for the Principal Applicant.`:""} In consideration of the fees set out below, the RCIC agrees to:</p>`:`<p>In consideration of the fees set out below, in respect of the Client's <b>${esc(program)}</b> matter, the RCIC agrees to:</p>`}
     <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}${spOwp?`<li>Prepare and submit an open work permit application for the Principal Applicant</li>`:""}</ol>
     ${pas.length?`<p style="margin:10px 0 2px"><b>Principal Applicants covered by this Agreement (${pas.length}):</b></p><ol class="pa">${pas.map(p=>`<li>${esc(p)}</li>`).join("")}</ol>`:""}
     <p><b>Estimated time frame:</b> ${timeframe?esc(timeframe):"to be confirmed with the Client"}. Time frames are estimates only; once an application is submitted, processing times are controlled by IRCC and may change.</p>
@@ -1239,9 +1373,7 @@ function render(){
     <h2><span class="sn">8.</span> Additional costs</h2>
     ${(sp&&$("spGov").checked)?`<p>The Client is responsible for the government fees charged by IRCC. These are paid directly to the Government of Canada when the application is submitted, are not professional fees, and may change without notice:</p>
     <table class="fees"><thead><tr><th>Government fee (IRCC)</th><th class="amt">Amount</th></tr></thead><tbody>
-      <tr><td>Sponsorship fee</td><td class="amt">${cad(90)}</td></tr>
-      <tr><td>Principal applicant processing fee</td><td class="amt">${cad(570)}</td></tr>
-      <tr><td>Right of permanent residence fee</td><td class="amt">${cad(600)}</td></tr>
+      ${famGovRows()}
       <tr><td>Biometrics, medical exam, police certificates${spOwp?", open work permit fees":""}</td><td class="amt">As applicable</td></tr>
     </tbody></table>`:""}
     <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
@@ -1258,7 +1390,7 @@ function render(){
     <p>The RCIC will invoice the Client only after services have been provided or disbursements made. Each invoice will contain a full description of the services and disbursements to which it relates. The RCIC will provide the Client with a receipt for every payment received, identifying the invoice to which it relates.</p>
 
     <h2><span class="sn">12.</span> Refunds</h2>
-    <p>On completion or termination, the RCIC will refund any advance payment held in trust that exceeds the amount invoiced for services rendered and disbursements made. Professional fees are refundable only to the extent they have not been earned to the date of termination; disbursements already incurred are non-refundable.</p>
+    ${onSub?`<p>Because the professional fee is collected only once it has been earned, no advance payment is taken and there is nothing to refund. If this Agreement ends before the application is submitted, the RCIC will invoice only for the work actually completed to that date, and no fee is payable for work not done. Disbursements already incurred are payable by the Client.</p>`:`<p>On completion or termination, the RCIC will refund any advance payment held in trust that exceeds the amount invoiced for services rendered and disbursements made. Professional fees are refundable only to the extent they have not been earned to the date of termination; disbursements already incurred are non-refundable.</p>`}
 
     <h2><span class="sn">13.</span> Conflict of interest</h2>
     <p>${conflict?esc(conflict):"The RCIC is not aware of any actual or potential conflict of interest in relation to this matter. The RCIC will promptly disclose, in writing, any conflict that later arises and will only continue to act with the Client's free and informed written consent, as permitted by the Code of Professional Conduct."}</p>
@@ -1316,7 +1448,7 @@ function render(){
     if(classic){
       const addr=$("firmAddr").value, ph=$("firmPhone").value, em=$("firmEmail").value;
       const card=(cls,h,big,rows)=>`<div class="ccard ${cls}"><h4>${h}</h4><div class="big">${esc(big)}</div>${rows.filter(r=>r[1]).map(r=>`<div class="lb">${r[0]}</div><div class="v">${r[1]}</div>`).join("")}</div>`;
-      const subtitle = sp?`Family Class (${esc(spRel)}) sponsorship`: isG5()?"Group of Five refugee sponsorship": esc(program);
+      const subtitle = sp?`Family Class — ${esc(spRel)} sponsorship`: isG5()?"Group of Five refugee sponsorship": esc(program);
       const head=`<div class="chead"><div class="brand">${(logoData&&brand.logo)?`<img src="${logoData}" alt="Firm logo" />`:""}<div><div class="fname">${esc(firmName)}</div>${brand.badge?`<div class="rcic">REGULATED CANADIAN IMMIGRATION CONSULTANT</div>`:""}<div class="contact">${esc(addr)}${ph?" · "+esc(ph):""}${em?"<br/>"+esc(em):""}</div></div></div><div class="lic">CICC Licence <b>${esc(rno||"R______")}</b></div></div>
         <div class="ctitle"><div class="t">SERVICE AGREEMENT</div><div class="st">${subtitle}</div><div class="m">File No. ${esc($("fileNo").value||"—")} · Services provided in ${esc(lang)}</div></div>`;
       const intro=`<p>This Service Agreement is made on <b>${niceDate($("adate").value)}</b>, under section 24 of the <i>Code of Professional Conduct</i> (SOR/2022-128) of the College of Immigration and Citizenship Consultants (the “College” or “CICC”), between the Client${(joint||mems.length)?"s":""} and the RCIC identified below. It sets out the terms on which the RCIC will provide immigration and citizenship consulting services.</p>`;
@@ -1376,11 +1508,36 @@ const CONSULT_TOPICS={
       "<b>The undertaking</b> — the RCIC will explain the Sponsor's three-year legal commitment to support the sponsored person.",
       "<b>Documents, fees and timelines</b> — the RCIC will explain the documents required, the government fees, and IRCC's current processing times.",
       "<b>Next steps</b> — the RCIC will explain what representation would involve and the estimated professional fees."]},
+  ch:{intro:"During this consultation, the RCIC will explain the following to the potential Client so that they can make an <b>informed decision</b> about whether to proceed with sponsoring their child:",
+    items:[
+      "<b>Who is a dependent child</b> — the RCIC will explain that the child must be under 22 with no spouse or common-law partner, or 22 or older and dependent on the parent since before 22 because of a physical or mental condition.",
+      "<b>Sponsor eligibility</b> — the RCIC will explain the Sponsor's status and residence requirements and what can prevent someone from sponsoring.",
+      "<b>Income</b> — the RCIC will explain that no minimum income is needed unless the child has a child of their own.",
+      "<b>The undertaking</b> — the RCIC will explain the commitment to support the child for 10 years or until age 25, whichever comes first.",
+      "<b>Custody and consent</b> — the RCIC will explain when proof of custody or the consent of the other parent is needed.",
+      "<b>Documents, fees and timelines</b> — the RCIC will explain the documents required, the government fees, and IRCC's current processing times.",
+      "<b>Next steps</b> — the RCIC will explain what representation would involve and the estimated professional fees."]},
+  pg:{intro:"During this consultation, the RCIC will explain the following to the potential Client so that they can make an <b>informed decision</b> about how to bring their parents or grandparents to Canada:",
+    items:[
+      "<b>Program status</b> — the RCIC will inform the Client that IRCC has paused the Parents and Grandparents Program and is not accepting new interest-to-sponsor forms or applications until further notice.",
+      "<b>Sponsor eligibility</b> — the RCIC will explain the status and residence requirements and what can prevent someone from sponsoring.",
+      "<b>Income</b> — the RCIC will explain the minimum necessary income plus 30% for each of the three tax years before applying, shown by CRA notices of assessment.",
+      "<b>The undertaking</b> — the RCIC will explain the 20-year commitment (10 years in Quebec) to support the sponsored persons.",
+      "<b>The super visa</b> — the RCIC will explain the super visa as an alternative that lets parents and grandparents visit for up to 5 years at a time.",
+      "<b>Next steps</b> — the RCIC will explain what representation would involve and the estimated professional fees."]},
+  rl:{intro:"During this consultation, the RCIC will explain the following to the potential Client so that they can make an <b>informed decision</b> about whether a relative can be sponsored:",
+    items:[
+      "<b>Orphaned relatives</b> — the RCIC will explain that an orphaned brother, sister, nephew, niece or grandchild can be sponsored only if they are under 18, not married or in a common-law relationship, and both parents have died.",
+      "<b>One relative of any age</b> — the RCIC will explain that this is possible only if the Sponsor has no other family member they could sponsor and no relative who is a Canadian citizen, permanent resident or registered Indian.",
+      "<b>Sponsor eligibility and income</b> — the RCIC will explain the status, residence and minimum income requirements, and what can prevent someone from sponsoring.",
+      "<b>The undertaking</b> — the RCIC will explain the commitment to support the sponsored relative and their family.",
+      "<b>Documents, fees and timelines</b> — the RCIC will explain the documents required (such as the parents' death certificates), the government fees, and IRCC's current processing times.",
+      "<b>Next steps</b> — the RCIC will explain what representation would involve and the estimated professional fees."]},
   gen:{intro:"During this consultation, the RCIC will assess the potential Client's immigration or citizenship options, review their circumstances and eligibility, answer their questions, and explain the possible pathways and next steps, so that the Client can make an <b>informed decision</b> about whether to proceed.",items:[]}
 };
 function consultTopicsHTML(){
   let k=$("cTopic")?$("cTopic").value:"auto";
-  if(k==="auto"){ const p=$("program").value; k = p==="Group of Five Refugee Sponsorship"?"g5" : p==="Spousal / Common-law Sponsorship"?"sp" : "gen"; }
+  if(k==="auto"){ const p=$("program").value; k = p==="Group of Five Refugee Sponsorship"?"g5" : p==="Spousal / Common-law Sponsorship"?"sp" : p==="Dependent Child Sponsorship"?"ch" : p==="Parents & Grandparents Sponsorship"?"pg" : p==="Orphaned / Other Relative Sponsorship"?"rl" : "gen"; }
   const t=CONSULT_TOPICS[k];
   return `<p>${t.intro}</p>${t.items.length?`<ul class="plain">${t.items.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}<p>The RCIC will answer the Client's questions and confirm that the Client understands the information provided. Any advice given is based on the information the Client provides and on the law and IRCC policies in effect at the time of the consultation.</p>`;
 }
@@ -1805,6 +1962,7 @@ function resetForm(){
   ov.querySelector("#rstGo").onclick=()=>{ ov.remove(); doReset(); };
 }
 function doReset(){
+  setTimeout(()=>{ setCity("Edmonton"); $("cliProv").value="AB"; $("cliCountry").value="Canada"; },0);
   members = []; renderMembers();
   const preserve = new Set([...FIRM_FIELDS, "showBadge", "showInsignia", "showLogo", "showLogo2", "showLogo3", "showBadge2", "showBadge3", "showInsignia2", "showInsignia3", "layout", "program", "gstNo"]);
   window._cDateTouched=false; window._xOpenTouched=false; window._xRecvTouched=false; window._xInvTouched=false;
@@ -1838,6 +1996,7 @@ syncBrandUI();
 $("program").addEventListener("change", loadProgram);
 $("program").addEventListener("change", ()=>renderConsult());
 $("spRel").addEventListener("change", ()=>onSpStream());
+$("famPAName").addEventListener("input", ()=>render());
 $("form").addEventListener("input", ()=>{ render(); saveFirm(true); });
 $("cform").addEventListener("input", renderConsult);
 $("cform").addEventListener("change", renderConsult);
@@ -1853,7 +2012,7 @@ syncProgUI();
 renderConsult();
 /* ═════════ CLOSE FILE (Code s.36; Client File Management Regulation s.5.2, 7.1, 7.2, 10.1) ═════════ */
 let xState={}, xCloseManual=false;
-function autoCloseDate(){ const o=$("xOpenDate").value; if(o && !xCloseManual){ $("xCloseDate").value=addYears(o,5); } renderXChecks(); renderClose(); }
+function autoCloseDate(){ const d=$("xDecDate").value; if(d && !xCloseManual){ $("xCloseDate").value=d; } renderXChecks(); renderClose(); }
 const X_EARLY=["client","rcic","transfer"];
 function addDays(iso,n){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return ""; const d=new Date(+m[1],+m[2]-1,+m[3]+n); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
 function addYears(iso,n){ const m=(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return ""; const y=+m[1]+n, mo=+m[2], d=Math.min(+m[3], new Date(y,mo,0).getDate()); return `${y}-${pad2(mo)}-${pad2(d)}`; }
@@ -1889,20 +2048,23 @@ function pullClose(){
   let tot = $("feeMethod").value==="hourly" ? (+$("rate").value||0)*(+$("hours").value||0) : (+$("fee").value||0);
   if(!taxIncl) tot=tot*(1+t/100);
   tot += (disb||[]).reduce((a,d)=>a+(+d.amount||0),0);
-  if(!window._xRecvTouched) $("xRecv").value = $("payMode").value==="paidFull" ? tot.toFixed(2) : "";
+  if(!window._xRecvTouched) $("xRecv").value = ($("payMode").value==="paidFull"||$("payMode").value==="onSubmit") ? tot.toFixed(2) : "";
   if(!window._xInvTouched) $("xInv").value = tot.toFixed(2);
   if(!$("xOpenDate").value) $("xOpenDate").value=$("adate").value||today();
+  if(!$("xLetterDate").value) $("xLetterDate").value=today();
   autoCloseDate();
 }
 function renderClose(){
-  if(!window._xOpenTouched && $("adate").value && $("xOpenDate").value!==$("adate").value){ $("xOpenDate").value=$("adate").value; if(!xCloseManual) $("xCloseDate").value=addYears($("adate").value,5); }
+  if(!window._xOpenTouched && $("adate").value && $("xOpenDate").value!==$("adate").value){ $("xOpenDate").value=$("adate").value; }
+  if(!xCloseManual && $("xDecDate").value && $("xCloseDate").value!==$("xDecDate").value) $("xCloseDate").value=$("xDecDate").value;
+  if($("xKeep")) $("xKeep").value = $("xCloseDate").value ? addYears($("xCloseDate").value,6) : "";
   const r=$("xReason").value, early=X_EARLY.includes(r);
   $("xSuccWrap").style.display = r==="transfer" ? "block" : "none";
-  $("xDecLbl").textContent = early ? "Date the agreement ended" : "Decision date";
-  { const o=$("xOpenDate").value, c=$("xCloseDate").value, h=$("xCloseHint");
-    if(h) h.innerHTML = !o ? "Enter the date the file was opened. The closing date is set automatically to 5 years later; you can change it if the file closes earlier."
-      : (xCloseManual ? `Closing date changed by hand. Click ↺ to reset it to 5 years after opening (${addYears(o,5)}).` : `Closing date set automatically: 5 years after ${o}.`)
-      + (c && daysAgo(c)<0 ? ` <b>The file is still open</b> — closing in ${Math.ceil(-daysAgo(c)/30.4)} months.` : c ? ` <b>The closing date has passed — complete the checklist.</b>` : ""); }
+  $("xDecLbl").textContent = early ? "Date the agreement ended" : "Date IRCC finalized the application";
+  { const d=$("xDecDate").value, c=$("xCloseDate").value, h=$("xCloseHint"), early=X_EARLY.includes($("xReason").value);
+    if(h) h.innerHTML = !d && !c ? (early?"Enter the date the agreement ended. The closing date fills in from it.":"Enter the date IRCC finalized the application. The closing date fills in from it.")+" The file must be kept for at least 6 years after closing."
+      : (xCloseManual ? `Closing date changed by hand${d?` — click ↺ to reset it to ${d}`:""}.` : `Closing date = ${early?"date the agreement ended":"date IRCC finalized the application"}.`)
+      + (c?` Complete the closing steps by <b>${addDays(c,30)}</b>; keep the file until at least <b>${addYears(c,6)}</b>.`:""); }
   const recvBlank=$("xRecv").value==="";
   const recv=+$("xRecv").value||0, inv=+$("xInv").value||0, refund=Math.max(0,recv-inv), owing=recvBlank?0:Math.max(0,inv-recv);
   $("xRefWrap").style.display = refund>0.005 ? "block" : "none";
@@ -1936,7 +2098,7 @@ function renderClose(){
       <div class="firm">${esc(firm)}</div>
       ${brand.badge?`<div class="regbadge">Regulated by the College of Immigration and Citizenship Consultants${rno?` · RCIC No. ${esc(rno)}`:""}</div>`:""}
       <div class="ttl">File Closing Letter</div>
-      <div class="meta">File No. ${esc($("xFile").value||"—")} &nbsp;·&nbsp; Dated ${nd(cd)}</div>
+      <div class="meta">File No. ${esc($("xFile").value||"—")} &nbsp;·&nbsp; Dated ${nd($("xLetterDate").value||today())}</div>
     </div>
     <p><b>${esc(name)}</b><br/>${esc($("xAddr").value||"")}${$("xEmail").value?`<br/>${esc($("xEmail").value)}`:""}${others.length?`<br/><span style="font-size:13px">and ${others.map(esc).join(", ")}${isG5()?" (Group Members)":""}</span>`:""}</p>
     <p><b>Re: Closing of your file — ${esc(matter)}</b></p>
@@ -1967,9 +2129,9 @@ function renderClose(){
         <tr><td><b>Reason for closing</b></td><td class="amt">${esc($("xReason").selectedOptions[0].textContent)}</td></tr>
         <tr><td><b>File opened</b></td><td class="amt">${nd($("xOpenDate").value)}</td></tr>
         <tr><td><b>Agreement date</b></td><td class="amt">${nd(ag)}</td></tr>
-        <tr><td><b>${early?"Date ended":"Decision date"}</b></td><td class="amt">${nd(dd)}</td></tr>
+        <tr><td><b>${early?"Date ended":"Date IRCC finalized the application"}</b></td><td class="amt">${nd(dd)}</td></tr>
         <tr><td><b>Closing date</b></td><td class="amt">${nd(cd)}</td></tr>
-        <tr><td><b>Keep file until (closing + 6 years, CFM s.7.2)</b></td><td class="amt"><b>${cd?addYears(cd,6):"____-__-__"}</b></td></tr>
+        <tr><td><b>Keep file until (at least 6 years after closing, CFM s.7.2)</b></td><td class="amt"><b>${cd?addYears(cd,6):"____-__-__"}</b></td></tr>
       </tbody></table>
       <table class="fees" style="margin-top:10px"><thead><tr><th></th><th>Step</th><th class="amt">Date done</th></tr></thead><tbody>${chk}</tbody></table>
       <p style="font-size:13px;margin-top:10px"><b>${left.length?`⚠ ${left.length} required step${left.length>1?"s":""} still open.`:"✓ All required steps completed."}</b></p>
@@ -1983,13 +2145,268 @@ function renderClose(){
         <tr><td>Destroyed by (name / initials)</td><td class="amt">____________________</td></tr>
       </tbody></table>
     </div>`;
-  if(cd && isTypedCopy(cd)){ const h=$("paper4").querySelector(".doc-head"); if(h) h.insertAdjacentHTML("afterend", typedCopyBanner(cd,"closing letter","dated")); }
+  /* the closing letter is written on its own date, so no typed-copy label */
 }
 CLIENT_SYNC[0].push("xName"); CLIENT_SYNC[2].push("xEmail"); CLIENT_SYNC[3].push("xAddr"); CLIENT_SYNC[4].push("xFile");
 $("xform").addEventListener("input", (e)=>{ const id=e.target&&e.target.id; if(id==="xOpenDate") window._xOpenTouched=true; if(id==="xCloseDate") xCloseManual=true; if(id==="xRecv") window._xRecvTouched=true; if(id==="xInv") window._xInvTouched=true; renderXChecks(); renderClose(); });
 $("xform").addEventListener("change", ()=>{ renderXChecks(); renderClose(); });
 $("xReason").addEventListener("change", ()=>{ renderXChecks(); renderClose(); });
 renderXChecks(); renderClose();
+
+/* ═════════ ADDRESS PARTS → one address line ═════════ */
+const CITY_PROV={Edmonton:"AB",Vancouver:"BC",Ottawa:"ON",Toronto:"ON"};
+function addrCity(){ const s=$("cliCity").value; return s==="__other" ? $("cliCityOther").value.trim() : s; }
+function setCity(c){ if(CITY_PROV[c]||c===""){ $("cliCity").value=c||"Edmonton"; $("cliCityOther").value=""; } else { $("cliCity").value="__other"; $("cliCityOther").value=c; } $("cliCityOther").style.display=$("cliCity").value==="__other"?"block":"none"; }
+function fmtPostal(p){ const t=(p||"").toUpperCase().replace(/\s+/g,""); return /^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(t)?t.slice(0,3)+" "+t.slice(3):(p||"").toUpperCase().trim(); }
+function composeAddr(){
+  const street=$("cliStreet").value.trim(), city=addrCity(), prov=$("cliProv").value, pc=fmtPostal($("cliPostal").value), country=$("cliCountry").value.trim();
+  const line = street ? [street, city, [prov,pc].filter(Boolean).join(" "), country].filter(Boolean).join(", ") : "";
+  $("cliAddr").value=line; syncFrom("cliAddr"); try{ render(); }catch(e){}
+}
+function onCityChange(){ const s=$("cliCity").value; $("cliCityOther").style.display = s==="__other" ? "block" : "none"; if(CITY_PROV[s]) $("cliProv").value=CITY_PROV[s]; composeAddr(); }
+/* when the one-line address arrives from elsewhere (other tabs, auto-fill), split it into the parts */
+function splitAddrInto(line){
+  line=(line||"").trim(); if(!line){ $("cliStreet").value=""; $("cliPostal").value=""; return; }
+  let parts=line.split(",").map(s=>s.trim()).filter(Boolean), country="Canada";
+  if(parts.length>1 && /^canada$/i.test(parts[parts.length-1])) parts.pop();
+  let prov="", pc="", city="";
+  const last=parts[parts.length-1]||"";
+  let m=last.match(/^([A-Za-z]{2})\s*([A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d)?$/);
+  if(m && parts.length>=3){ prov=m[1].toUpperCase(); pc=m[2]||""; parts.pop(); city=parts.pop(); }
+  else { m=line.match(/^(.*?),\s*([^,]+?),?\s+([A-Za-z]{2})\.?\s+([A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d)(?:,\s*canada)?$/i); if(m){ parts=[m[1]]; city=m[2]; prov=m[3].toUpperCase(); pc=m[4]; } }
+  $("cliStreet").value=parts.join(", "); if(city) setCity(city.replace(/\b\w/g,c=>c.toUpperCase()).replace(/\B\w/g,c=>c.toLowerCase()));
+  if(prov && [...$("cliProv").options].some(o=>o.value===prov)) $("cliProv").value=prov;
+  $("cliPostal").value=fmtPostal(pc); $("cliCountry").value=country;
+}
+["cliStreet","cliPostal","cliCountry"].forEach(id=>$(id).addEventListener("input",composeAddr));
+$("cliCityOther").addEventListener("input",composeAddr);
+$("cliPostal").addEventListener("change",()=>{ $("cliPostal").value=fmtPostal($("cliPostal").value); composeAddr(); });
+$("cliProv").addEventListener("change",composeAddr);
+/* keep the parts in step if the address is changed on another tab or by auto-fill */
+const _syncFromA=syncFrom;
+syncFrom=function(id){ const r=_syncFromA(id); if(r && id!=="cliAddr" && ["ccliAddr","iAddr","xAddr"].includes(id)) splitAddrInto($("cliAddr").value); return r; };
+setCity("Edmonton");
+
+/* ═════════ SAVED CLIENTS (PIN-protected, stored only in this browser) ═════════ */
+const SC_KEY="alh_saved_clients_v1";
+let scKey=null, scSalt=null, scList=null, scLastAct=Date.now(), scFails=0;
+const scB64e=u8=>{ let s=""; for(let i=0;i<u8.length;i+=0x8000) s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(s); };
+const scB64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function scDerive(pin,salt){ const base=await crypto.subtle.importKey("raw",new TextEncoder().encode("alhejra:"+pin),"PBKDF2",false,["deriveKey"]); return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:600000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]); }
+function scRead(){ try{ const r=localStorage.getItem(SC_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+async function scWrite(){ if(!scKey) return; const iv=crypto.getRandomValues(new Uint8Array(12)); const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},scKey,new TextEncoder().encode(JSON.stringify(scList)))); try{ localStorage.setItem(SC_KEY,JSON.stringify({v:1,salt:scB64e(scSalt),iv:scB64e(iv),ct:scB64e(ct)})); }catch(e){ alert("Couldn't save clients on this computer: "+(e.name||e)); } }
+function scModal(html){ return new Promise(res=>{ const ov=document.createElement("div"); ov.className="scov"; ov.innerHTML=`<div class="scbox">${html}</div>`; document.body.appendChild(ov); ov._done=v=>{ ov.remove(); res(v); }; ov.addEventListener("click",e=>{ if(e.target===ov) ov._done(null); }); const f=ov.querySelector("input"); if(f) setTimeout(()=>f.focus(),30); }); }
+function pinField(id,ph){ return `<input id="${id}" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="${ph}" autocomplete="off" class="scpin" />`; }
+async function scUnlock(){
+  if(scKey) return true;
+  if(!(window.crypto&&crypto.subtle)){ alert("This browser can't protect saved clients when the file is opened this way. Open the generator from your website, or in Chrome or Edge."); return false; }
+  const env=scRead();
+  if(!env){
+    const p=scModal(`<h4>Set a 4-digit PIN for saved clients</h4><p>Saved clients (names, phones, emails, addresses) are kept only on this computer, locked with this PIN. If you forget it, the saved list can't be opened — but nothing else in the generator is affected.</p>${pinField("scP1","PIN")}${pinField("scP2","Type it again")}<div class="scerr" id="scErr"></div><div class="scrow"><button class="kb" onclick="this.closest('.scov')._done(null)">Cancel</button><button class="kb pri" id="scGo">Set PIN</button></div>`);
+    const ov=document.querySelector(".scov");
+    const go=async()=>{ const a=$("scP1").value,b=$("scP2").value; if(!/^\d{4}$/.test(a)){ $("scErr").textContent="The PIN must be exactly 4 digits."; return; } if(a!==b){ $("scErr").textContent="The two PINs don't match."; return; } $("scGo").disabled=true; $("scGo").textContent="Setting up…"; scSalt=crypto.getRandomValues(new Uint8Array(16)); scKey=await scDerive(a,scSalt); scList=[]; await scWrite(); ov._done(true); };
+    $("scGo").onclick=go; ov.querySelectorAll("input").forEach(i=>i.addEventListener("keydown",e=>{ if(e.key==="Enter") go(); }));
+    const r=await p; scLastAct=Date.now(); scRenderBar(); return !!r;
+  }
+  const p=scModal(`<h4>Enter your PIN</h4><p>to open your saved clients.</p>${pinField("scP1","4-digit PIN")}<div class="scerr" id="scErr"></div><div class="scrow"><button class="kb" onclick="this.closest('.scov')._done(null)">Cancel</button><button class="kb pri" id="scGo">Unlock</button></div>`);
+  const ov=document.querySelector(".scov");
+  const go=async()=>{ const a=$("scP1").value; if(!/^\d{4}$/.test(a)){ $("scErr").textContent="Enter your 4 digits."; return; }
+    if(scFails>=5){ $("scErr").textContent="Too many wrong tries. Wait a minute and try again."; return; }
+    $("scGo").disabled=true; $("scGo").textContent="Checking…";
+    try{ const salt=scB64d(env.salt); const k=await scDerive(a,salt); const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:scB64d(env.iv)},k,scB64d(env.ct)); scList=JSON.parse(new TextDecoder().decode(pt)); scKey=k; scSalt=salt; scFails=0; ov._done(true); }
+    catch(e){ scFails++; if(scFails>=5) setTimeout(()=>{ scFails=0; },60000); $("scErr").textContent="Wrong PIN."; $("scP1").value=""; $("scGo").disabled=false; $("scGo").textContent="Unlock"; } };
+  $("scGo").onclick=go; $("scP1").addEventListener("keydown",e=>{ if(e.key==="Enter") go(); });
+  const r=await p; scLastAct=Date.now(); scRenderBar(); return !!r;
+}
+function scLock(){ scKey=null; scList=null; scRenderBar(); scHideSuggest(); }
+["mousemove","keydown","click"].forEach(ev=>document.addEventListener(ev,()=>{ scLastAct=Date.now(); },{passive:true}));
+setInterval(()=>{ if(scKey && Date.now()-scLastAct>30*60000) scLock(); },30000);
+
+/* current client details from the form */
+function scCurrent(){ return { name:$("cliName").value.trim(), phone:$("cliPhone").value.trim(), email:$("cliEmail").value.trim(),
+  street:$("cliStreet").value.trim(), city:addrCity(), prov:$("cliProv").value, postal:$("cliPostal").value.trim(), country:$("cliCountry").value.trim() }; }
+async function scSave(silent){
+  const c=scCurrent(); if(!c.name){ if(!silent) alert("Type the client's name first."); return; }
+  if(!scKey){ if(silent) return; if(!await scUnlock()) return; }
+  const i=scList.findIndex(x=>x.name.toLowerCase()===c.name.toLowerCase());
+  const svc={date:$("adate").value||today(), program:$("program").value, fileNo:$("fileNo").value};
+  if(i>=0){ const old=scList[i]; const services=old.services||[]; if(!services.some(s=>s.fileNo===svc.fileNo&&s.program===svc.program)) services.push(svc); scList[i]={...old,...c,services,updated:new Date().toISOString()}; }
+  else scList.push({id:Date.now().toString(36),...c,services:[svc],updated:new Date().toISOString()});
+  await scWrite(); scRenderBar(silent?"":"✓ Saved "+c.name);
+}
+function scFill(id){
+  const c=(scList||[]).find(x=>x.id===id); if(!c) return;
+  $("cliName").value=c.name; $("cliPhone").value=c.phone||""; $("cliEmail").value=c.email||"";
+  $("cliStreet").value=c.street||""; setCity(c.city||""); $("cliProv").value=c.prov||"AB"; $("cliPostal").value=c.postal||""; $("cliCountry").value=c.country||"Canada";
+  composeAddr(); ["cliName","cliPhone","cliEmail"].forEach(i=>syncFrom(i));
+  scHideSuggest(); try{ render(); renderConsult(); renderInvoice(); }catch(e){}
+  scRenderBar("✓ Filled from saved client"+(c.services&&c.services.length?` — ${c.services.length} earlier service${c.services.length>1?"s":""}`:""));
+}
+async function scDelete(id){ const c=scList.find(x=>x.id===id); if(!c||!confirm(`Delete ${c.name} from saved clients? Documents you already printed are not affected.`)) return; scList=scList.filter(x=>x.id!==id); await scWrite(); scManager(true); }
+function scHideSuggest(){ const b=$("scSuggest"); if(b) b.style.display="none"; }
+function scSuggest(){
+  const box=$("scSuggest"); const q=$("cliName").value.trim().toLowerCase();
+  if(!q || q.length<2){ box.style.display="none"; return; }
+  if(!scKey){ if(scRead()){ box.innerHTML=`<div class="scitem muted" onmousedown="event.preventDefault(); scUnlock().then(ok=>{ if(ok) scSuggest(); })">🔒 Enter your PIN to search saved clients</div>`; box.style.display="block"; } else box.style.display="none"; return; }
+  const m=scList.filter(c=>c.name.toLowerCase().includes(q)||(c.phone||"").replace(/\D/g,"").includes(q.replace(/\D/g,"")||"~")).slice(0,6);
+  if(!m.length){ box.style.display="none"; return; }
+  box.innerHTML=m.map(c=>`<div class="scitem" onmousedown="event.preventDefault(); scFill('${c.id}')"><b>${esc(c.name)}</b><span>${esc([c.phone,[c.street,c.city].filter(Boolean).join(", ")].filter(Boolean).join(" · "))}</span>${c.services&&c.services.length?`<span class="scsv">${c.services.length} earlier service${c.services.length>1?"s":""}: ${esc(c.services.map(s=>`${s.program.replace(" Refugee Sponsorship","").replace(" / Common-law Sponsorship"," sponsorship")} (${s.date})`).join("; "))}</span>`:""}</div>`).join("");
+  box.style.display="block";
+}
+async function scManager(reopen){
+  if(!await scUnlock()) return;
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc([c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow"><button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
+  scModal(`<h4>Saved clients (${scList.length})</h4><div class="scmlist">${rows}</div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshot</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
+}
+async function scChangePin(){
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  const p=scModal(`<h4>New 4-digit PIN</h4>${pinField("scP1","New PIN")}${pinField("scP2","Type it again")}<div class="scerr" id="scErr"></div><div class="scrow"><button class="kb" onclick="this.closest('.scov')._done(null)">Cancel</button><button class="kb pri" id="scGo">Change</button></div>`);
+  const ov=document.querySelector(".scov");
+  $("scGo").onclick=async()=>{ const a=$("scP1").value,b=$("scP2").value; if(!/^\d{4}$/.test(a)){ $("scErr").textContent="The PIN must be exactly 4 digits."; return; } if(a!==b){ $("scErr").textContent="The two PINs don't match."; return; } scSalt=crypto.getRandomValues(new Uint8Array(16)); scKey=await scDerive(a,scSalt); await scWrite(); ov._done(true); alert("PIN changed."); };
+  await p;
+}
+function scRenderBar(msg){
+  const b=$("scBar"); if(!b) return;
+  const has=!!scRead();
+  b.innerHTML=`<button type="button" class="kb" onclick="scSave()">💾 Save client</button><button type="button" class="kb" onclick="scImport()">📷 Import from screenshot</button><button type="button" class="kb" onclick="scManager()">📇 Saved clients</button>${scKey?`<button type="button" class="kb" onclick="scLock()" title="Lock saved clients">🔒</button>`:""}<span class="scmsg">${msg||(scKey?"Unlocked":has?"Locked — start typing a name or click Saved clients":"")}</span>`;
+}
+$("cliName").addEventListener("input",scSuggest);
+$("cliName").addEventListener("focus",scSuggest);
+$("cliName").addEventListener("blur",()=>setTimeout(scHideSuggest,150));
+/* auto-save when printing or downloading (only while unlocked, never asks for the PIN) */
+const _scPrint=printDoc; printDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scPrint(); };
+const _scExport=exportDoc; exportDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scExport(); };
+scRenderBar();
+
+/* ═════════ READ CLIENT DETAILS FROM A SCREENSHOT OF AN IRCC FORM (runs in the browser) ═════════ */
+const OCR_KEYS=[ // order matters
+  ["email",/mail/i],["cell",/business|cell/i],["home",/home|telep|ome\s*tel/i],["postal",/postal|ostal|code/i],["prov",/prov/i],
+  ["apt",/apt|unit|unt\b/i],["street",/addr|street|number\s*and/i],["uci",/uci|unique/i],["rel",/relat|principal/i],
+  ["dob",/birth|bith|yyyy/i],["given",/giv|first/i],["family",/famil|surname|last\s*name/i],["city",/\bc[iry1l]{1,2}t?y\b|city|cty/i]
+];
+function loadImageFile(file){ return new Promise((res,rej)=>{ const url=URL.createObjectURL(file); const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=url; }); }
+function findGrid(img){
+  const W=img.naturalWidth,H=img.naturalHeight, c=document.createElement("canvas"); c.width=W; c.height=H; const g=c.getContext("2d"); g.drawImage(img,0,0);
+  const d=g.getImageData(0,0,W,H).data, dark=new Uint8Array(W*H);
+  for(let i=0;i<W*H;i++){ const v=d[i*4]*0.3+d[i*4+1]*0.59+d[i*4+2]*0.11; dark[i]=v<175?1:0; }
+  // horizontal lines
+  const hl=[]; for(let y=0;y<H;y++){ let run=0,best=0; for(let x=0;x<W;x++){ if(dark[y*W+x]){ run++; if(run>best) best=run; } else run=0; } if(best>W*0.35) hl.push(y); }
+  const hs=[]; hl.forEach(y=>{ if(!hs.length||y-hs[hs.length-1].e>2) hs.push({s:y,e:y}); else hs[hs.length-1].e=y; });
+  const cells=[];
+  for(let i=0;i<hs.length-1;i++){
+    const top=hs[i].e+1, bot=hs[i+1].s-1, h=bot-top; if(h<18) continue;
+    // vertical lines inside this band
+    const vl=[]; for(let x=0;x<W;x++){ let n=0; for(let y=top+2;y<=bot-2;y++) n+=dark[y*W+x]; if(n>=(h-4)*0.78) vl.push(x); }
+    const vs=[]; vl.forEach(x=>{ if(!vs.length||x-vs[vs.length-1].e>2) vs.push({s:x,e:x}); else vs[vs.length-1].e=x; });
+    for(let k=0;k<vs.length-1;k++){ const l=vs[k].e+1, r=vs[k+1].s-1; if(r-l>12) cells.push({x:l,y:top,w:r-l,h, row:i}); }
+  }
+  return {canvas:c, cells};
+}
+function inkBox(src,x,y,w,h){ const g=src.getContext("2d"); const d=g.getImageData(x,y,w,h).data; let x0=w,y0=h,x1=-1,y1=-1,n=0;
+  for(let j=0;j<h;j++) for(let i=0;i<w;i++){ const k=(j*w+i)*4, v=d[k]*0.3+d[k+1]*0.59+d[k+2]*0.11; if(v<150){ n++; if(i<x0)x0=i; if(i>x1)x1=i; if(j<y0)y0=j; if(j>y1)y1=j; } }
+  return n<6?null:{x:x+x0,y:y+y0,w:x1-x0+1,h:y1-y0+1}; }
+function cropText(src,box,targetH){ const pad=Math.max(3,Math.round(box.h*0.35)); const sc=Math.min(8,Math.max(1.5,targetH/box.h));
+  return cropScaled(src,Math.max(0,box.x-pad),Math.max(0,box.y-pad),box.w+pad*2,box.h+pad*2,sc); }
+function cropScaled(src,x,y,w,h,scale){ const c=document.createElement("canvas"); c.width=Math.max(1,Math.round(w*scale)); c.height=Math.max(1,Math.round(h*scale)); const g=c.getContext("2d"); g.imageSmoothingEnabled=true; g.imageSmoothingQuality="high"; g.fillStyle="#fff"; g.fillRect(0,0,c.width,c.height); g.drawImage(src,x,y,w,h,0,0,c.width,c.height);
+  const id=g.getImageData(0,0,c.width,c.height), p=id.data; for(let i=0;i<p.length;i+=4){ const v=p[i]*0.3+p[i+1]*0.59+p[i+2]*0.11, b=v<165?0:255; p[i]=p[i+1]=p[i+2]=b; } g.putImageData(id,0,0); return c; }
+async function ocrScreenshot(file, onProgress){
+  const img=await loadImageFile(file); const {canvas,cells}=findGrid(img);
+  if(!cells.length) throw new Error("Couldn't find the form's boxes in this picture. Take the screenshot so the boxes and their borders are fully visible.");
+  const worker=await Tesseract.createWorker("eng");
+  await worker.setParameters({tessedit_pageseg_mode:"6"});
+  const out=[]; let n=0;
+  for(const cell of cells){
+    n++; onProgress&&onProgress(n,cells.length);
+    // label = top part of the cell (small text); value = lower part
+    const split=Math.round(cell.h*0.42);
+    const lb=inkBox(canvas,cell.x+3,cell.y+2,cell.w-6,split-2); if(!lb) continue;
+    const lab=cropText(canvas,lb,40);
+    const vb=inkBox(canvas,cell.x+3,cell.y+split,cell.w-6,cell.h-split-2);
+    const L=(await worker.recognize(lab)).data.text.replace(/\s+/g," ").trim();
+    let key=null; for(const [k,re] of OCR_KEYS){ if(re.test(L)){ key=k; break; } }
+    if(!key) continue;
+    if(["uci","rel","dob"].includes(key)){ out.push({key,row:cell.row,x:cell.x,val:""}); continue; }
+    if(!vb){ out.push({key,row:cell.row,x:cell.x,val:"",label:L}); continue; }
+
+    const WL={street:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-#.' ",city:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-.' ",family:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-' ",given:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-' ",email:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._-+",home:"0123456789()- +",cell:"0123456789()- +",postal:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ",prov:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",apt:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-# "};
+    await worker.setParameters({tessedit_pageseg_mode:"7", tessedit_char_whitelist: WL[key]||""});
+    let best={c:-1,t:""};
+    for(const th of [34,48,64]){ const r=(await worker.recognize(cropText(canvas,vb,th))).data; const t=r.text.replace(/\s+/g," ").trim(); if(t && r.confidence>best.c) best={c:r.confidence,t}; }
+    const V=best.t;
+    await worker.setParameters({tessedit_pageseg_mode:"6", tessedit_char_whitelist:""});
+    out.push({key,row:cell.row,x:cell.x,val:V,label:L});
+  }
+  await worker.terminate();
+  // assemble people: a new person starts at each "family" cell
+  const people=[]; let cur=null;
+  out.sort((a,b)=>a.row-b.row||a.x-b.x).forEach(o=>{ if(o.key==="family"||!cur){ cur={}; people.push(cur); } if(o.val&&!cur[o.key]) cur[o.key]=o.val; });
+  const cap=s=>(s||"").toLowerCase().replace(/(^|[\s\-'’])([a-z])/g,(m,a,b)=>a+b.toUpperCase()).trim();
+  const fixStreet=s=>cap(s).replace(/\s+(Nw|Ow|Mw|0w|Hw|Nv)$/i," NW").replace(/\s+(Ne|0e|Oe)$/i," NE").replace(/\s+(Sw|5w)$/i," SW").replace(/\s+(Se|5e)$/i," SE").replace(/\b(Nw|Ne|Sw|Se)\b/g,m=>m.toUpperCase());
+  const L2D={O:"0",Q:"0",D:"0",I:"1",L:"1",Z:"2",S:"5",B:"8",G:"6",E:"6",T:"7"}, D2L={0:"O",1:"L",2:"Z",5:"S",8:"B",6:"G",4:"A"};
+  const fixPostal=p=>{ let a=(p||"").toUpperCase().replace(/[^A-Z0-9]/g,""); const fit=x=>x.split("").map((ch,i)=>i%2===0?(/[A-Z]/.test(ch)?ch:(D2L[ch]||ch)):(/\d/.test(ch)?ch:(L2D[ch]||ch))).join("");
+    const ok=x=>/^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(x);
+    if(a.length===6){ const f=fit(a); return ok(f)?f.slice(0,3)+" "+f.slice(3):p; }
+    if(a.length===7){ for(let i=0;i<7;i++){ const f=fit(a.slice(0,i)+a.slice(i+1)); if(ok(f)) return f.slice(0,3)+" "+f.slice(3); } }
+    return (p||"").toUpperCase().trim(); };
+  const fixPhone=p=>{ const d=(p||"").replace(/\D/g,""); if(d.length===10) return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; if(d.length===11&&d[0]==="1") return `(${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; return (p||"").trim(); };
+  const fixEmail=e=>{ e=(e||"").replace(/\s+/g,"").replace(/[,;]+/g,".").replace(/\.con$/i,".com").replace(/\.c0m$/i,".com"); if(!e.includes("@")){ const m=e.match(/^(.+?)[8&Q]((?:gmail|hotmail|yahoo|outlook|icloud|live|me|shaw|telus|rogers|bell|msn|aol|protonmail)\.[a-z.]+)$/i); if(m) e=m[1]+"@"+m[2]; } return e.toLowerCase(); };
+  return people.map(p=>({
+    family:cap(p.family), given:cap(p.given), name:[cap(p.given),cap(p.family)].filter(Boolean).join(" "),
+    street:[p.apt?p.apt.replace(/\s/g,"")+"-":"", fixStreet(p.street)].join("").trim(), city:(cap(p.city).replace(/[^A-Za-z\s\-\.]/g,"").trim().length>=3?cap(p.city).trim():""),
+    prov:(p.prov||"").toUpperCase().replace(/[^A-Z]/g,"").slice(0,2), postal:fixPostal(p.postal),
+    phone:fixPhone(p.home||p.cell||""), email:fixEmail(p.email)
+  })).filter(p=>p.name);
+}
+
+/* ═════════ IMPORT CLIENTS FROM A SCREENSHOT ═════════ */
+function loadTesseract(){ if(window.Tesseract) return Promise.resolve(); return new Promise((ok,fail)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"; s.onload=ok; s.onerror=()=>fail(new Error("Couldn't load the text reader — check your internet connection.")); document.head.appendChild(s); }); }
+async function scImport(){
+  if(!await scUnlock()) return;
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  scModal(`<h4>Import from screenshot</h4><p>Take a screenshot of the client's section of the IRCC form (for example IMM 5670) and <b>paste it here with Ctrl+V</b> (Cmd+V on Mac), or choose the image file. Zoom in on the form first — bigger text is read more accurately. The picture is read on this computer and is not sent anywhere.</p>
+    <label class="kb" style="display:inline-block;margin:0 0 8px;text-transform:none;letter-spacing:0">🖼 Choose image<input type="file" accept="image/*" style="display:none" onchange="scImportFile(this.files[0])" /></label>
+    <div id="scImpStatus" class="scmsg" style="display:block;margin:6px 0"></div><div id="scImpReview"></div>
+    <div class="scrow" style="margin-top:10px"><button class="kb" onclick="this.closest('.scov')._done()">Close</button></div>`);
+}
+document.addEventListener("paste",e=>{ if(!document.getElementById("scImpStatus")) return; const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type&&i.type.startsWith("image/")); if(it){ e.preventDefault(); scImportFile(it.getAsFile()); } });
+async function scImportFile(file){
+  if(!file) return; const st=$("scImpStatus"); $("scImpReview").innerHTML="";
+  try{
+    st.textContent="Loading the text reader (first time only, about 10 MB)…"; await loadTesseract();
+    const people=await ocrScreenshot(file,(n,t)=>{ st.textContent=`Reading the form… box ${n} of ${t}`; });
+    if(!people.length){ st.textContent="No client details found. Make sure the screenshot shows the form boxes with the labels (Family name, Given name(s), Address…)."; return; }
+    st.innerHTML=`Found <b>${people.length}</b> person${people.length>1?"s":""}. <b>Check each field</b> — the reader can mix up similar characters like 0 and 6 — then save.`;
+    const PROVS=["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"];
+    $("scImpReview").innerHTML=people.map((p,i)=>`<div class="scmrow" style="display:block" data-i="${i}">
+      <label class="chk" style="margin:0 0 6px!important"><input type="checkbox" class="impSel" checked /> <b>Person ${i+1}</b></label>
+      <div class="two"><div><label>Given name(s)</label><input class="impF" data-k="given" value="${esc(p.given)}" /></div><div><label>Family name</label><input class="impF" data-k="family" value="${esc(p.family)}" /></div></div>
+      <label>Street address</label><input class="impF" data-k="street" value="${esc(p.street)}" />
+      <div class="two"><div><label>City</label><input class="impF" data-k="city" value="${esc(p.city)}" placeholder="City" /></div><div><label>Province</label><select class="impF" data-k="prov">${PROVS.map(x=>`<option ${x===(p.prov||"AB")?"selected":""}>${x}</option>`).join("")}</select></div></div>
+      <div class="two"><div><label>Postal code</label><input class="impF" data-k="postal" value="${esc(p.postal)}" /></div><div><label>Phone</label><input class="impF" data-k="phone" value="${esc(p.phone)}" /></div></div>
+      <label>Email</label><input class="impF" data-k="email" value="${esc(p.email)}" />
+    </div>`).join("")+`<div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImportSave(false)">💾 Save selected</button><button class="kb pri" onclick="scImportSave(true)">Save &amp; use in this agreement</button></div>`;
+  }catch(err){ st.textContent=err.message||"Couldn't read that picture."; }
+}
+async function scImportSave(use){
+  const cards=[...document.querySelectorAll("#scImpReview .scmrow")].filter(c=>c.querySelector(".impSel").checked);
+  if(!cards.length){ alert("Tick at least one person to save."); return; }
+  const people=cards.map(c=>{ const o={}; c.querySelectorAll(".impF").forEach(f=>o[f.dataset.k]=f.value.trim()); o.name=[o.given,o.family].filter(Boolean).join(" "); o.postal=fmtPostal(o.postal); o.phone=fmtPhone(o.phone); o.email=o.email.toLowerCase(); o.country="Canada"; return o; }).filter(o=>o.name);
+  people.forEach(o=>{ const rec={name:o.name,phone:o.phone,email:o.email,street:o.street,city:o.city,prov:o.prov,postal:o.postal,country:"Canada"};
+    const i=scList.findIndex(x=>x.name.toLowerCase()===o.name.toLowerCase());
+    if(i>=0) scList[i]={...scList[i],...rec,updated:new Date().toISOString()}; else scList.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),...rec,services:[],updated:new Date().toISOString()}); });
+  await scWrite();
+  if(use){
+    const first=scList.find(x=>x.name.toLowerCase()===people[0].name.toLowerCase()); scFill(first.id);
+    if(people.length>1){
+      if(!isG5()) pickProgram("g5");
+      members=people.slice(1).map(o=>({name:o.name,phone:o.phone,email:o.email,addr:[o.street,o.city,[o.prov,o.postal].filter(Boolean).join(" "),"Canada"].filter(Boolean).join(", ")}));
+      renderMembers(); render();
+    }
+  }
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  scRenderBar(`✓ Saved ${people.length} client${people.length>1?"s":""}${use&&people.length>1?` — ${people[0].name} is the group contact, ${people.length-1} group member${people.length>2?"s":""} added`:""}`);
+}
 
 </script>
 </body>
