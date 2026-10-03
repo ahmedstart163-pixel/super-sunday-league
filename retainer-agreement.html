@@ -151,6 +151,9 @@
   .scbox .impF{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}
   .scbox label{margin:6px 0 3px;font-size:11px}
   .scbox .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .scdrop{border:2px dashed var(--line);border-radius:10px;padding:16px;text-align:center;font-size:13px;color:var(--muted);background:#fafbfd}
+  .scdrop.on{border-color:var(--gold);background:#fbf7ec}
+  #scImpReview{display:flex;flex-direction:column;gap:6px}
   .scmlist{display:flex;flex-direction:column;gap:6px} .scmrow{border:1px solid var(--line);border-radius:9px;padding:8px 10px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
   .scmrow span{color:var(--muted);font-size:12px} .scmrow .scsv{color:#7c5a10}
   @media print{ .scov,.scsuggest{display:none !important} }
@@ -2257,7 +2260,7 @@ async function scManager(reopen){
   if(!await scUnlock()) return;
   document.querySelectorAll(".scov").forEach(o=>o.remove());
   const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc([c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow"><button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
-  scModal(`<h4>Saved clients (${scList.length})</h4><div class="scmlist">${rows}</div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshot</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
+  scModal(`<h4>Saved clients (${scList.length})</h4><div class="scmlist">${rows}</div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshots</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
 }
 async function scChangePin(){
   document.querySelectorAll(".scov").forEach(o=>o.remove());
@@ -2269,7 +2272,7 @@ async function scChangePin(){
 function scRenderBar(msg){
   const b=$("scBar"); if(!b) return;
   const has=!!scRead();
-  b.innerHTML=`<button type="button" class="kb" onclick="scSave()">💾 Save client</button><button type="button" class="kb" onclick="scImport()">📷 Import from screenshot</button><button type="button" class="kb" onclick="scManager()">📇 Saved clients</button>${scKey?`<button type="button" class="kb" onclick="scLock()" title="Lock saved clients">🔒</button>`:""}<span class="scmsg">${msg||(scKey?"Unlocked":has?"Locked — start typing a name or click Saved clients":"")}</span>`;
+  b.innerHTML=`<button type="button" class="kb" onclick="scSave()">💾 Save client</button><button type="button" class="kb" onclick="scImport()">📷 Import from screenshots</button><button type="button" class="kb" onclick="scManager()">📇 Saved clients</button>${scKey?`<button type="button" class="kb" onclick="scLock()" title="Lock saved clients">🔒</button>`:""}<span class="scmsg">${msg||(scKey?"Unlocked":has?"Locked — start typing a name or click Saved clients":"")}</span>`;
 }
 $("cliName").addEventListener("input",scSuggest);
 $("cliName").addEventListener("focus",scSuggest);
@@ -2361,35 +2364,73 @@ async function ocrScreenshot(file, onProgress){
 
 /* ═════════ IMPORT CLIENTS FROM A SCREENSHOT ═════════ */
 function loadTesseract(){ if(window.Tesseract) return Promise.resolve(); return new Promise((ok,fail)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"; s.onload=ok; s.onerror=()=>fail(new Error("Couldn't load the text reader — check your internet connection.")); document.head.appendChild(s); }); }
+let impQueue=[], impBusy=false, impShot=0, impPerson=0;
 async function scImport(){
   if(!await scUnlock()) return;
   document.querySelectorAll(".scov").forEach(o=>o.remove());
-  scModal(`<h4>Import from screenshot</h4><p>Take a screenshot of the client's section of the IRCC form (for example IMM 5670) and <b>paste it here with Ctrl+V</b> (Cmd+V on Mac), or choose the image file. Zoom in on the form first — bigger text is read more accurately. The picture is read on this computer and is not sent anywhere.</p>
-    <label class="kb" style="display:inline-block;margin:0 0 8px;text-transform:none;letter-spacing:0">🖼 Choose image<input type="file" accept="image/*" style="display:none" onchange="scImportFile(this.files[0])" /></label>
-    <div id="scImpStatus" class="scmsg" style="display:block;margin:6px 0"></div><div id="scImpReview"></div>
+  impQueue=[]; impBusy=false; impShot=0; impPerson=0;
+  scModal(`<h4>Import from screenshots</h4><p>Take screenshots of the clients' sections of the IRCC form (for example IMM 5670). <b>Paste them here with Ctrl+V</b> (Cmd+V on Mac) one after another, <b>drag and drop</b> several at once, choose the files — or upload <b>one PDF</b> with all the screenshots inside (every page is read). Zoom in on the form first — bigger text is read more accurately. The pictures are read on this computer and are not sent anywhere.</p>
+    <div id="scDrop" class="scdrop">🖼 Drop screenshots or a PDF of screenshots here, paste with Ctrl+V, or <label style="display:inline;margin:0;text-transform:none;letter-spacing:0;font-size:inherit;color:var(--navy);text-decoration:underline;cursor:pointer">choose files<input type="file" accept="image/*,application/pdf,.pdf" multiple style="display:none" onchange="scImportAdd([...this.files]); this.value=''" /></label></div>
+    <div id="scImpStatus" class="scmsg" style="display:block;margin:8px 0"></div><div id="scImpReview"></div>
+    <div id="scImpActions" class="scrow" style="margin-top:10px;display:none"><button class="kb" onclick="scImportSave(false)">💾 Save all ticked</button><button class="kb pri" onclick="scImportSave(true)">Save &amp; use in this agreement</button></div>
     <div class="scrow" style="margin-top:10px"><button class="kb" onclick="this.closest('.scov')._done()">Close</button></div>`);
+  const dz=$("scDrop");
+  ["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.add("on"); }));
+  ["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove("on"); }));
+  dz.addEventListener("drop",e=>scImportAdd(e.dataTransfer.files));
 }
-document.addEventListener("paste",e=>{ if(!document.getElementById("scImpStatus")) return; const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type&&i.type.startsWith("image/")); if(it){ e.preventDefault(); scImportFile(it.getAsFile()); } });
-async function scImportFile(file){
-  if(!file) return; const st=$("scImpStatus"); $("scImpReview").innerHTML="";
+document.addEventListener("paste",e=>{ if(!document.getElementById("scImpStatus")) return; const files=[...(e.clipboardData||{}).items||[]].filter(i=>i.type&&i.type.startsWith("image/")).map(i=>i.getAsFile()); if(files.length){ e.preventDefault(); scImportAdd(files); } });
+function scImportFile(file){ if(file) scImportAdd([file]); }
+async function pdfToImages(file){
+  const lib=await loadPdfJs(); const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const out=[];
+  for(let i=1;i<=doc.numPages;i++){ const page=await doc.getPage(i); const vp=page.getViewport({scale:1}); const scale=Math.min(4,Math.max(2,2200/vp.width)); const v=page.getViewport({scale});
+    const c=document.createElement("canvas"); c.width=Math.round(v.width); c.height=Math.round(v.height); const g=c.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,c.width,c.height);
+    await page.render({canvasContext:g,viewport:v}).promise; const blob=await new Promise(r=>c.toBlob(r,"image/png")); out.push(new File([blob],`${file.name} — page ${i}`,{type:"image/png"})); }
+  return out;
+}
+async function scImportAdd(files){
+  const list=[...(files||[])].filter(f=>f&&f.type&&(f.type.startsWith("image/")||f.type==="application/pdf"||/\.pdf$/i.test(f.name||"")));
+  for(const f of list){
+    if(f.type==="application/pdf"||/\.pdf$/i.test(f.name||"")){
+      const st=$("scImpStatus"); if(st && !impBusy) st.textContent=`Opening ${f.name}…`;
+      try{ const pages=await pdfToImages(f); pages.forEach(pf=>{ impShot++; impQueue.push({file:pf,n:impShot,name:pf.name}); }); }
+      catch(err){ const R=$("scImpReview"); if(R) R.insertAdjacentHTML("beforeend",`<div class="scmrow" style="display:block;background:#fff7ed;border-color:#fed7aa"><b>${esc(f.name)}</b>: couldn't open this PDF (${esc(err.message||"error")}).</div>`); }
+    } else { impShot++; impQueue.push({file:f,n:impShot,name:f.name&&f.name!=="image.png"?f.name:"pasted image"}); }
+  }
+  if(!impBusy) scImportRun();
+}
+function scImpStatusQueue(){ const st=$("scImpStatus"); if(st && impBusy) st.dataset.q=impQueue.length; }
+async function scImportRun(){
+  const st=$("scImpStatus"); if(!st) return; impBusy=true;
+  const PROVS=["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"];
   try{
     st.textContent="Loading the text reader (first time only, about 10 MB)…"; await loadTesseract();
-    const people=await ocrScreenshot(file,(n,t)=>{ st.textContent=`Reading the form… box ${n} of ${t}`; });
-    if(!people.length){ st.textContent="No client details found. Make sure the screenshot shows the form boxes with the labels (Family name, Given name(s), Address…)."; return; }
-    st.innerHTML=`Found <b>${people.length}</b> person${people.length>1?"s":""}. <b>Check each field</b> — the reader can mix up similar characters like 0 and 6 — then save.`;
-    const PROVS=["AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT"];
-    $("scImpReview").innerHTML=people.map((p,i)=>`<div class="scmrow" style="display:block" data-i="${i}">
-      <label class="chk" style="margin:0 0 6px!important"><input type="checkbox" class="impSel" checked /> <b>Person ${i+1}</b></label>
+    while(impQueue.length){
+      const job=impQueue.shift(); if(!$("scImpStatus")) { impBusy=false; return; }
+      const total=impShot;
+      let people=[];
+      try{ people=await ocrScreenshot(job.file,(n,t)=>{ const s=$("scImpStatus"); if(s) s.textContent=`Reading screenshot ${job.n} of ${total}… box ${n} of ${t}`; }); }
+      catch(err){ people=[]; job.err=err.message; }
+      const R=$("scImpReview"); if(!R){ impBusy=false; return; }
+      if(!people.length){ R.insertAdjacentHTML("beforeend",`<div class="scmrow" style="display:block;background:#fff7ed;border-color:#fed7aa"><b>Screenshot ${job.n}</b> (${esc(job.name)}): ${esc(job.err||"no client details found — make sure the form boxes and their labels (Family name, Given name(s), Address…) are in the picture.")}</div>`); continue; }
+      R.insertAdjacentHTML("beforeend",people.map(p=>{ impPerson++; return `<div class="scmrow" style="display:block" data-i="${impPerson}">
+      <label class="chk" style="margin:0 0 6px!important"><input type="checkbox" class="impSel" checked /> <b>Person ${impPerson}</b> <span style="font-weight:400;color:var(--muted)">— from screenshot ${job.n} (${esc(job.name)})</span></label>
       <div class="two"><div><label>Given name(s)</label><input class="impF" data-k="given" value="${esc(p.given)}" /></div><div><label>Family name</label><input class="impF" data-k="family" value="${esc(p.family)}" /></div></div>
       <label>Street address</label><input class="impF" data-k="street" value="${esc(p.street)}" />
       <div class="two"><div><label>City</label><input class="impF" data-k="city" value="${esc(p.city)}" placeholder="City" /></div><div><label>Province</label><select class="impF" data-k="prov">${PROVS.map(x=>`<option ${x===(p.prov||"AB")?"selected":""}>${x}</option>`).join("")}</select></div></div>
       <div class="two"><div><label>Postal code</label><input class="impF" data-k="postal" value="${esc(p.postal)}" /></div><div><label>Phone</label><input class="impF" data-k="phone" value="${esc(p.phone)}" /></div></div>
       <label>Email</label><input class="impF" data-k="email" value="${esc(p.email)}" />
-    </div>`).join("")+`<div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImportSave(false)">💾 Save selected</button><button class="kb pri" onclick="scImportSave(true)">Save &amp; use in this agreement</button></div>`;
-  }catch(err){ st.textContent=err.message||"Couldn't read that picture."; }
+    </div>`; }).join(""));
+      $("scImpActions").style.display="flex";
+    }
+    const found=document.querySelectorAll("#scImpReview .impSel").length;
+    st.innerHTML = found ? `Read <b>${impShot}</b> screenshot${impShot>1?"s":""}/page${impShot>1?"s":""} and found <b>${found}</b> person${found>1?"s":""}. <b>Check each field</b> — the reader can mix up similar characters like 0 and 6 — untick anyone you don't want, then save. You can add more screenshots any time.` : `No client details found yet. Add more screenshots or check that the form boxes are visible.`;
+  }catch(err){ st.textContent=err.message||"Couldn't read the screenshots."; }
+  impBusy=false;
+  if(impQueue.length) scImportRun();
 }
 async function scImportSave(use){
-  const cards=[...document.querySelectorAll("#scImpReview .scmrow")].filter(c=>c.querySelector(".impSel").checked);
+  const cards=[...document.querySelectorAll("#scImpReview .scmrow")].filter(c=>c.querySelector(".impSel")&&c.querySelector(".impSel").checked);
   if(!cards.length){ alert("Tick at least one person to save."); return; }
   const people=cards.map(c=>{ const o={}; c.querySelectorAll(".impF").forEach(f=>o[f.dataset.k]=f.value.trim()); o.name=[o.given,o.family].filter(Boolean).join(" "); o.postal=fmtPostal(o.postal); o.phone=fmtPhone(o.phone); o.email=o.email.toLowerCase(); o.country="Canada"; return o; }).filter(o=>o.name);
   people.forEach(o=>{ const rec={name:o.name,phone:o.phone,email:o.email,street:o.street,city:o.city,prov:o.prov,postal:o.postal,country:"Canada"};
