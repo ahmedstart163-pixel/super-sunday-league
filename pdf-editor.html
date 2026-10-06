@@ -315,6 +315,7 @@
   }
   .anno.selected .del{display:grid}
   .anno.text{padding:0; min-width:24px; cursor:move}
+  .anno.text.editing.selected{outline:none} .anno.text.editing .handle, .anno.text.editing .del{display:none !important}
   .anno.text .text-edit{color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-height:1em; caret-color:currentColor}
   .anno.text .text-edit[contenteditable="true"]{cursor:text}
   .anno.text .text-edit:empty::before{content:"Type\2026"; color:#9aa3b2;}
@@ -1921,7 +1922,7 @@ async function detectDocDefaults(){
 async function applyDocFontDefaults(){
   const { size, font } = await detectDocDefaults();
   if(size){ fontRange.value = size; fontVal.textContent = size; }
-  docDefaultFont = (font && FONT_REG[font]) ? font : "courier";
+  docDefaultFont = "courier"; // new text is always Courier, whatever the document uses
 }
 
 let fileGroups=null;          // index -> source-file group, consumed by renderAll
@@ -2356,6 +2357,12 @@ $("#frRun").onclick=async()=>{
 };
 
 /* contextual controls */
+// Colour for NEW text boxes. Kept apart from the shared colour picker, which whiteout, stamps and
+// highlights also change — that is how new text used to come out white (after a solid whiteout).
+let lastTextColor="#1a1a1a";
+const isLightColor=c=>{ const m=/^#?([0-9a-f]{6})$/i.exec(c||""); if(!m) return false; const n=parseInt(m[1],16); return (0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255))>200; };
+function rememberTextColor(c){ if(c && !isLightColor(c)) lastTextColor=c; }
+const textColor=()=> isLightColor(lastTextColor) ? "#1a1a1a" : lastTextColor;
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
@@ -2372,6 +2379,7 @@ function refreshCtx(){
   if(woSel){ const m = (selected.smart && selected.patchSrc) ? "smart" : "solid"; document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===m)); if(m==="solid"){ $("#ctxColor").classList.remove("hide"); colorPick.value=selected.color||"#ffffff"; } }
   else document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===whiteoutMode));
   if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
+  else if(!selected && tool==="text") colorPick.value=textColor();
   if(selected && ["rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
   if(typeof markSwatch==="function") markSwatch();
@@ -2384,7 +2392,7 @@ const SWATCHES=["#1a1a1a","#e02424","#1f9d4d","#f5c211","#1f6fe0"]; // black, re
   SWATCHES.forEach(c=>{
     const b=el("button","sw"); b.style.background=c; b.title=c; b.dataset.c=c;
     b.addEventListener("mousedown", e=>e.preventDefault()); // keep any active text selection intact
-    b.onclick=()=>{ colorPick.value=c; applyColor(c); markSwatch(); };
+    b.onclick=()=>{ colorPick.value=c; if(tool==="text" && !selected) rememberTextColor(c); applyColor(c); markSwatch(); };
     host.appendChild(b);
   });
 })();
@@ -2396,7 +2404,7 @@ function applyColor(c){
   if(selected && selected.type==="text" && selected._editing && applyPartialColorLive(selected, c)){ snapshot(); return; }
   if(selected && selected.type==="whiteout" && !(selected.smart && selected.patchSrc)){ selected.color=c; renderAnno(selected); snapshot(); return; }
   if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){
-    selected.color=c; if(selected.type==="text") selected.colorRuns=null;
+    selected.color=c; if(selected.type==="text"){ selected.colorRuns=null; rememberTextColor(c); }
     renderAnno(selected); snapshot();
   }
 }
@@ -2413,7 +2421,8 @@ colorPick.oninput=()=>{
     if(applyPartialColorLive(selected, colorPick.value)) return;
   }
   if(selected && selected.type==="whiteout" && !(selected.smart && selected.patchSrc)){ selected.color=colorPick.value; renderAnno(selected); return; }
-  if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; renderAnno(selected);}
+  if(selected && ["text","rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ selected.color=colorPick.value; if(selected.type==="text") rememberTextColor(colorPick.value); renderAnno(selected);}
+  else if(!selected && tool==="text") rememberTextColor(colorPick.value);
 };
 colorPick.onchange=()=>{ if(selected) snapshot(); };
 
@@ -2789,7 +2798,7 @@ function bindPage(rec){
       // leaving a ghost box behind when the user clicks to place the next one
       discardIfEmptyText(selected);
       const a=makeAnno({type:"text",page:rec.index,x:start.x,y:start.y,w:180,h:0,
-                        fontSize:+fontRange.value,color:colorPick.value,font:docDefaultFont,bold:false,italic:false,text:""});
+                        fontSize:+fontRange.value,color:textColor(),font:docDefaultFont,bold:false,italic:false,text:""});
       annos.push(a); renderAnno(a);
       // stay on the Text tool so the next click places another box right away —
       // matches how Stamp already behaves, instead of forcing Select each time
@@ -3036,7 +3045,7 @@ function renderAnno(a){
         // discard if it's still unfocused and still empty
         setTimeout(()=>{
           if(document.activeElement===ed) return; // focus came back — still editing
-          ed.contentEditable="false"; a._editing=false; captureRichText(a);
+          ed.contentEditable="false"; a._editing=false; if(a._node) a._node.classList.remove("editing"); captureRichText(a);
           discardIfEmptyText(a); // never typed anything — discard rather than leave an empty box behind
           snapshot();
         },80);
@@ -3072,7 +3081,7 @@ function renderAnno(a){
     n.style.width=a.w+"px";
     const ed=a._edit;
     ed.style.fontSize=a.fontSize+"px";
-    ed.style.color=a.color;
+    ed.style.color=a.color; ed.style.caretColor=isLightColor(a.color)?"#111":a.color;
     ed.style.fontWeight=a.bold?"700":"400";
     ed.style.fontStyle=a.italic?"italic":"normal";
     ed.style.fontFamily=cssFont(a.font||"helv");
@@ -3206,7 +3215,7 @@ function updateTextbar(){
   if(!selected || selected.type!=="text"){ textbar.classList.add("hide"); return; }
   $("#tbBold").classList.toggle("on", !!selected.bold);
   $("#tbItalic").classList.toggle("on", !!selected.italic);
-  $("#tbSize").value = selected.fontSize;
+  { const sz=$("#tbSize"), v=String(selected.fontSize); if(![...sz.options].some(o=>o.value===v)){ const o=document.createElement("option"); o.value=v; o.textContent=v; const after=[...sz.options].find(x=>+x.value>+v); sz.insertBefore(o, after||null); } sz.value=v; }
   $("#tbFont").value = selected.font||"helv";
   $("#tbColor").value = selected.color;
   textbar.classList.remove("hide");
@@ -3293,7 +3302,7 @@ $("#tbBold").onclick=()=>{ if(!selected)return; selected.bold=!selected.bold; re
 $("#tbItalic").onclick=()=>{ if(!selected)return; selected.italic=!selected.italic; renderAnno(selected); updateTextbar(); snapshot(); };
 $("#tbSize").onchange=()=>{ if(!selected)return; selected.fontSize=+$("#tbSize").value; renderAnno(selected); fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; snapshot(); };
 $("#tbFont").onchange=()=>{ if(!selected)return; selected.font=$("#tbFont").value; renderAnno(selected); snapshot(); };
-$("#tbColor").oninput=()=>{ if(!selected)return; selected.color=$("#tbColor").value; renderAnno(selected); };
+$("#tbColor").oninput=()=>{ if(!selected)return; selected.color=$("#tbColor").value; rememberTextColor(selected.color); renderAnno(selected); };
 $("#tbColor").onchange=()=>{ if(selected) snapshot(); };
 $("#tbDup").onclick=()=>{
   if(!selected || selected.type!=="text") return;
@@ -3441,7 +3450,7 @@ function startResize(e,a,corner){
 function enterEdit(a){
   if(!a || a.type!=="text") return;
   select(a);
-  a._editing=true;
+  a._editing=true; if(a._node) a._node.classList.add("editing");
   a._edit.contentEditable="true";
   a._edit.focus(); placeCaretEnd(a._edit);
   // Safety net: on some browsers, focusing a just-created contentEditable during
