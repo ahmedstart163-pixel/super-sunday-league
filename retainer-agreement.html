@@ -33,8 +33,7 @@
   .btn-outline:hover{background:rgba(255,255,255,.10);color:#fff}
   .btn-ghost{background:transparent;color:#fff;border:1px solid #3a4c69}
   .moneywrap{position:relative;display:block}
-  .moneywrap::before{content:"$";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
-  .moneywrap input{padding-left:21px}
+  .moneywrap::before{content:none}
 
   /* ── disclaimer ──────────────────────────────────── */
   .note{background:#fbfaf6;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px;padding:7px 20px;line-height:1.5}
@@ -135,6 +134,7 @@
   .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
   .chk input{width:auto}
   .pdate{display:none}
+  .feesub{font-size:.86em;color:#5d6b7d}
   .scbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
   .kb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit}
   .kb.pri{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -217,6 +217,158 @@
     .inlinedate::-webkit-calendar-picker-indicator{display:none}
   }
 </style>
+<style id="ircc-forms-css">
+/* IRCC Form Filler — all colours are variables so it can match the host app */
+.ff-root {
+  --ff-bg: #ffffff; --ff-panel: #f6f7f9; --ff-line: #dfe3e8; --ff-text: #1d2430; --ff-muted: #5f6b7a;
+  --ff-accent: #0f7a5c; --ff-accent-ink: #ffffff; --ff-accent-soft: #e3f3ee;
+  --ff-warn: #9a5b00; --ff-warn-soft: #fff4e0; --ff-bad: #b42318;
+  --ff-c-profile: #1f9d55; --ff-c-saved: #8a94a3; --ff-c-ai: #7c3aed; --ff-c-default: #d97706; --ff-c-edited: #0e7490; --ff-c-empty: transparent;
+  --ff-radius: 10px;
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ff-text); background: var(--ff-bg);
+}
+@media (prefers-color-scheme: dark) { .ff-root.ff-auto-dark {
+  --ff-bg: #12161c; --ff-panel: #1a2029; --ff-line: #2c3542; --ff-text: #e7ebf0; --ff-muted: #9aa6b5;
+  --ff-accent: #2fbf8f; --ff-accent-ink: #0b1a14; --ff-accent-soft: #163329; --ff-warn: #f2b65a; --ff-warn-soft: #2d2414; --ff-bad: #ff7b72; } }
+.ff-root *, .ff-root *::before, .ff-root *::after { box-sizing: border-box; }
+.ff-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 16px; border-bottom: 1px solid var(--ff-line); margin-bottom: 16px; }
+.ff-title { display: flex; flex-direction: column; padding-bottom: 8px; }
+.ff-title strong { font-size: 18px; } .ff-title span { color: var(--ff-muted); font-size: 13px; }
+.ff-tabs { display: flex; gap: 2px; overflow-x: auto; }
+.ff-tab { border: 0; background: none; padding: 10px 14px; font: inherit; color: var(--ff-muted); border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+.ff-tab.on { color: var(--ff-text); border-bottom-color: var(--ff-accent); font-weight: 600; }
+.ff-tab:focus-visible, .ff-btn:focus-visible, .ff-drop:focus-visible { outline: 2px solid var(--ff-accent); outline-offset: 2px; }
+.ff-body { display: flex; flex-direction: column; gap: 14px; }
+.ff-muted { color: var(--ff-muted); margin: 0; }
+.ff-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 160px; padding: 24px; border: 2px dashed var(--ff-line); border-radius: var(--ff-radius); background: var(--ff-panel); text-align: center; cursor: pointer; color: var(--ff-muted); }
+.ff-drop.over { border-color: var(--ff-accent); background: var(--ff-accent-soft); color: var(--ff-text); }
+.ff-drop-icon { font-size: 28px; color: var(--ff-accent); }
+.ff-lib h3 { margin: 6px 0; font-size: 15px; }
+.ff-librow { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--ff-line); }
+.ff-link { border: 0; background: none; padding: 0; color: var(--ff-accent); font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
+.ff-pill { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: var(--ff-accent-soft); color: var(--ff-accent); }
+.ff-bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; background: var(--ff-panel); border: 1px solid var(--ff-line); border-radius: var(--ff-radius); }
+.ff-formname { font-weight: 700; font-size: 16px; } .ff-formname small { font-weight: 400; color: var(--ff-muted); }
+.ff-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--ff-muted); font-size: 12.5px; }
+.ff-stats .ff-dot { margin-left: 6px; }
+.ff-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ff-btn { border: 1px solid var(--ff-line); background: var(--ff-bg); color: var(--ff-text); padding: 8px 14px; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+.ff-btn:hover { border-color: var(--ff-accent); }
+.ff-btn.primary { background: var(--ff-accent); border-color: var(--ff-accent); color: var(--ff-accent-ink); }
+.ff-btn:disabled { opacity: .55; cursor: default; }
+.ff-btn.small { padding: 4px 10px; font-size: 13px; margin-top: 6px; }
+.ff-check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.ff-x { border: 0; background: none; color: var(--ff-muted); font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.ff-x:hover { color: var(--ff-bad); background: var(--ff-panel); }
+.ff-checks { padding: 10px 14px; border-radius: var(--ff-radius); background: var(--ff-warn-soft); border: 1px solid color-mix(in srgb, var(--ff-warn) 35%, transparent); color: var(--ff-text); }
+.ff-checks strong { color: var(--ff-warn); } .ff-checks ul { margin: 4px 0 0; padding-left: 20px; }
+.ff-sec { border: 1px solid var(--ff-line); border-radius: var(--ff-radius); padding: 14px 16px; background: var(--ff-bg); }
+.ff-sec h3 { margin: 0 0 10px; font-size: 15px; } .ff-sec h3 small { font-weight: 400; color: var(--ff-muted); }
+.ff-form { display: flex; flex-direction: column; gap: 14px; }
+.ff-form .ff-sec { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px 16px; align-content: start; }
+.ff-form .ff-sec > h3, .ff-form .ff-sec > .ff-q, .ff-form .ff-sec > .ff-tablewrap, .ff-form .ff-sec > .ff-group, .ff-form .ff-sec > .ff-repeat, .ff-field.wide, .ff-sub { grid-column: 1 / -1; }
+.ff-sub { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--ff-line); font-size: 13.5px; }
+.ff-sec > h3 + .ff-sub, .ff-group > .ff-sub:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+.ff-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px 16px; padding: 10px; border-radius: 8px; background: var(--ff-panel); }
+.ff-group > .ff-q, .ff-group > .ff-tablewrap, .ff-group > .ff-muted { grid-column: 1 / -1; }
+.ff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px 16px; }
+.ff-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ff-label { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ff-muted); }
+.ff-label em { color: var(--ff-bad); font-style: normal; }
+.ff-tag { font-size: 11px; padding: 0 6px; border-radius: 99px; background: var(--ff-panel); border: 1px solid var(--ff-line); }
+.ff-root input:not([type=checkbox]):not([type=radio]), .ff-root select, .ff-root textarea { width: 100%; padding: 7px 9px; border: 1px solid var(--ff-line); border-radius: 7px; background: var(--ff-bg); color: var(--ff-text); font: inherit; min-width: 0; }
+.ff-root input:focus, .ff-root select:focus, .ff-root textarea:focus { outline: 2px solid var(--ff-accent-soft); border-color: var(--ff-accent); }
+.ff-root textarea { resize: vertical; }
+.ff-dot { display: inline-block; flex: none; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ff-line); }
+.ff-dot.profile { background: var(--ff-c-profile); border-color: var(--ff-c-profile); }
+.ff-dot.saved, .ff-dot.inform { background: var(--ff-c-saved); border-color: var(--ff-c-saved); }
+.ff-dot.ai { background: var(--ff-c-ai); border-color: var(--ff-c-ai); }
+.ff-dot.default { background: var(--ff-c-default); border-color: var(--ff-c-default); }
+.ff-dot.edited { background: var(--ff-c-edited); border-color: var(--ff-c-edited); }
+.ff-q { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--ff-line); }
+.ff-qtext { font-size: 13.5px; }
+.ff-radios { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ff-radio { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--ff-line); border-radius: 99px; cursor: pointer; font-size: 13px; }
+.ff-radio.on { border-color: var(--ff-accent); background: var(--ff-accent-soft); font-weight: 600; }
+.ff-radio input { accent-color: var(--ff-accent); }
+.ff-scroll { overflow-x: auto; }
+.ff-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ff-table th { text-align: left; font-size: 12px; color: var(--ff-muted); font-weight: 600; padding: 6px; border-bottom: 1px solid var(--ff-line); white-space: nowrap; }
+.ff-table td { padding: 3px; border-bottom: 1px solid var(--ff-line); vertical-align: top; min-width: 90px; }
+.ff-table td.n, .ff-table th.n { min-width: 0; width: 1%; color: var(--ff-muted); white-space: nowrap; }
+.ff-table td.src-profile input { box-shadow: inset 3px 0 0 var(--ff-c-profile); }
+.ff-table td.src-ai input { box-shadow: inset 3px 0 0 var(--ff-c-ai); }
+.ff-table td.src-default input { box-shadow: inset 3px 0 0 var(--ff-c-default); }
+.ff-table td.src-saved input, .ff-table td.src-inform input { box-shadow: inset 3px 0 0 var(--ff-c-saved); }
+.ff-table td.src-edited input { box-shadow: inset 3px 0 0 var(--ff-c-edited); }
+.ff-table .pre { white-space: pre-line; }
+.ff-tablewrap { display: flex; flex-direction: column; gap: 6px; }
+.ff-repeat h4 { margin: 4px 0; }
+.ff-foot { display: flex; flex-direction: column; gap: 6px; padding: 8px 2px 20px; }
+.ff-review { display: flex; flex-direction: column; gap: 10px; }
+.ff-review h3 { margin: 0; }
+.ff-busy { padding: 10px 14px; border-radius: var(--ff-radius); background: var(--ff-accent-soft); color: var(--ff-text); font-weight: 600; }
+.ff-busy::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 8px; border: 2px solid var(--ff-accent); border-right-color: transparent; border-radius: 50%; animation: ff-spin .8s linear infinite; vertical-align: -1px; }
+@keyframes ff-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ff-busy::before { animation: none; } }
+.ff-toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 99; max-width: min(560px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 8px; background: var(--ff-text); color: var(--ff-bg); box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+.ff-toast.bad { background: var(--ff-bad); color: #fff; }
+@media (max-width: 640px) { .ff-q { grid-template-columns: auto 1fr; } .ff-q .ff-radios { grid-column: 2; } .ff-bar { position: static; } }
+
+.ff-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+.ff-steps > div { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--ff-line); border-radius: var(--ff-radius); background: var(--ff-panel); font-size: 13px; }
+.ff-steps b { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ff-accent); color: var(--ff-accent-ink); font-size: 12px; }
+.ff-p { margin: 4px 0 8px; }
+.ff-error { padding: 10px 14px; border-radius: var(--ff-radius); background: color-mix(in srgb, var(--ff-bad) 8%, var(--ff-bg)); border: 1px solid color-mix(in srgb, var(--ff-bad) 40%, transparent); }
+.ff-error strong { color: var(--ff-bad); }
+.ff-next { padding: 12px 14px; border-radius: var(--ff-radius); background: var(--ff-accent-soft); border: 1px solid color-mix(in srgb, var(--ff-accent) 30%, transparent); }
+.ff-next .ff-actions { margin-top: 4px; }
+a.ff-btn { text-decoration: none; display: inline-flex; align-items: center; }
+.ff-small-link { margin-left: 10px; font-size: 12px; font-weight: 500; color: var(--ff-muted); }
+.ff-pill.old { background: var(--ff-warn-soft); color: var(--ff-warn); }
+
+/* IRCC forms tab inside the retainer app */
+body.forms-active .topbar .actions{display:none}
+@media print{ #tab-forms{display:none !important} }
+#tab-forms{min-height:calc(100vh - 160px)}
+.fswrap{display:grid;grid-template-columns:260px 1fr;align-items:start}
+.fsside{position:sticky;top:0;display:flex;flex-direction:column;gap:8px;padding:16px;background:#fff;border-right:1px solid var(--line);min-height:calc(100vh - 160px)}
+.fsside-h{display:flex;justify-content:space-between;align-items:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:6px}
+.fsside input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+.fscur{width:100%;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fslist{display:flex;flex-direction:column;gap:2px;max-height:55vh;overflow:auto}
+.fsc{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:0;background:none;text-align:left;padding:8px 10px;border-radius:8px;cursor:pointer;font-family:inherit;color:var(--ink)}
+.fsc b{font-size:13px;font-weight:600} .fsc span{font-size:11.5px;color:var(--muted)}
+.fsc:hover{background:var(--soft)} .fsc.on{background:#fbf7ec;box-shadow:inset 3px 0 0 var(--gold)}
+.fsnew{display:flex;gap:6px;margin-top:4px} .fsnew input{flex:1;min-width:0}
+.fsempty{color:var(--muted);font-size:13px;padding:8px 2px} .fsempty.big{padding:60px 20px;text-align:center;font-size:14px}
+.fsmain{padding:18px 22px 60px;min-width:0}
+#fsMount{max-width:1200px;margin:0 auto}
+.fslocked{display:grid;place-items:center;padding:70px 16px}
+.fsl-card{max-width:440px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;text-align:center}
+.fsl-card h2{font-family:'Fraunces',serif;color:var(--navy);margin:0 0 8px} .fsl-card p{color:var(--muted);font-size:13.5px;line-height:1.5;margin:0 0 16px}
+@media(max-width:880px){ .fswrap{grid-template-columns:1fr} .fsside{position:static;min-height:0;border-right:0;border-bottom:1px solid var(--line)} .fslist{max-height:30vh} .fsmain{padding:12px} }
+/* match the app's navy + gold */
+#tab-forms .ff-root{--ff-bg:#fff;--ff-panel:var(--soft);--ff-line:var(--line);--ff-text:var(--ink);--ff-muted:var(--muted);
+  --ff-accent:var(--navy);--ff-accent-ink:#fff;--ff-accent-soft:#fbf7ec;--ff-warn:#8a5a00;--ff-warn-soft:#fdf6e6;
+  --ff-c-profile:#1f9d55;--ff-c-edited:var(--gold);font-family:'Inter',system-ui,sans-serif;background:transparent}
+#tab-forms .ff-title strong,#tab-forms .ff-sec h3,#tab-forms .ff-review h3{font-family:'Fraunces',serif;color:var(--navy);font-weight:600}
+#tab-forms .ff-tab.on{border-bottom-color:var(--gold);color:var(--navy)}
+#tab-forms .ff-btn.primary{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+#tab-forms .ff-btn.primary:hover{background:#b3842b}
+#tab-forms .ff-btn:hover{border-color:var(--gold)}
+#tab-forms .ff-radio.on{border-color:var(--gold);background:#fbf7ec}
+#tab-forms .ff-drop.over{border-color:var(--gold)}
+#tab-forms .ff-drop-icon{color:var(--gold)}
+#tab-forms .ff-root input:focus,#tab-forms .ff-root select:focus,#tab-forms .ff-root textarea:focus{outline:2px solid var(--gold-soft);border-color:var(--gold)}
+/* the app styles every <label> as an uppercase heading; undo that inside the forms tab */
+#tab-forms label{display:revert;font-size:inherit;font-weight:inherit;color:inherit;text-transform:none;letter-spacing:0;margin:0}
+#tab-forms .ff-field{display:flex} #tab-forms .ff-radio,#tab-forms .ff-check{display:inline-flex} #tab-forms .ff-drop{display:flex}
+#tab-forms .ff-radio.on{font-weight:600}
+/* five tabs: let the tab bar scroll on phones instead of pushing the page sideways */
+@media(max-width:880px){ .tabs{overflow-x:auto;scrollbar-width:none} .tabs::-webkit-scrollbar{display:none} .tab{white-space:nowrap;flex:none} }
+
+</style>
 </head>
 <body><div class="sitenav" style="background:#070d1a;border-bottom:1px solid rgba(201,168,76,0.15);padding:0 20px;display:flex;align-items:center;">
   <div style="display:flex;align-items:center;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
@@ -258,6 +410,7 @@
   <button class="tab" id="tabbtn-consult" onclick="showTab('consult')">Initial Consultation</button>
   <button class="tab" id="tabbtn-invoice" onclick="showTab('invoice')">Invoice</button>
   <button class="tab" id="tabbtn-close" onclick="showTab('close')">Close file</button>
+  <button class="tab" id="tabbtn-forms" onclick="showTab('forms')">IRCC Forms</button>
 </div>
 
 <div class="tabpanel active" id="tab-retainer">
@@ -430,7 +583,7 @@
         </div>
         <label class="chk" id="owpWrap" style="display:none"><input type="checkbox" id="spOwp" onchange="render()" /> Include an open work permit application for the sponsored person</label>
         <label class="chk"><input type="checkbox" id="spGov" checked onchange="render()" /> List IRCC government fees (paid directly by the Client)</label>
-        <div class="hint" id="famFeeHint">The sponsored person is entered as the second client (joint retainer). Government fees: sponsorship $90, principal applicant processing $570, right of permanent residence $600 (effective 2026-04-30) — confirm against IRCC's fee list before signing.</div>
+        <div class="hint" id="famFeeHint">The sponsored person is entered as the second client (joint retainer). Government fee: $1,260 for the spouse or partner (sponsorship, processing and right of permanent residence fees together), plus $180 per dependent child (effective 2026-04-30) — confirm against IRCC's fee list before signing.</div>
       </div>
       <label>Scope of services (editable)</label>
       <textarea id="scope" rows="8"></textarea>
@@ -741,6 +894,8 @@
   </div>
 </div>
 </div><!-- /tab-close -->
+
+<div class="tabpanel" id="tab-forms"></div><!-- /tab-forms -->
 
 
 <script>
@@ -1094,11 +1249,18 @@ function famLabel(){
   return "";
 }
 function famGovRows(){
-  const t=famTypeOf($("program").value), r=(a,b)=>`<tr><td>${a}</td><td class="amt">${typeof b==="number"?cad(b):b}</td></tr>`;
-  if(t==="child") return r("Sponsorship fee",90)+r("Dependent child processing fee",90)+r("Right of permanent residence fee","Not required for a dependent child");
-  if(t==="rel"){ if($("relType").value==="orphan") return r("Sponsorship fee",90)+r("Processing fee for a person under 22",90)+r("Right of permanent residence fee","Not required for an orphaned relative");
-    return r("Sponsorship fee",90)+r($("relAge").value==="under22"?"Processing fee for a person under 22":"Principal applicant processing fee",$("relAge").value==="under22"?90:570)+r("Right of permanent residence fee",600)+r("Each accompanying spouse/partner or dependent child","As applicable"); }
-  return r("Sponsorship fee",90)+r("Principal applicant processing fee",570)+r("Right of permanent residence fee",600)+(t==="pgp"?r("Each accompanying spouse/partner or dependent child","As applicable"):"");
+  const t=famTypeOf($("program").value);
+  const r=(a,b,sub)=>`<tr><td>${a}${sub?`<br/><span class="feesub">${sub}</span>`:""}</td><td class="amt">${typeof b==="number"?cad(b):b}</td></tr>`;
+  const ALL="Includes the sponsorship fee, the processing fee and the right of permanent residence fee.";
+  const NO_RPRF="Includes the sponsorship fee and the processing fee.";
+  if(t==="child") return r("Sponsor a dependent child",180,NO_RPRF);
+  if(t==="rel"){
+    if($("relType").value==="orphan") return r("Sponsor an orphaned relative",180,NO_RPRF);
+    if($("relAge").value==="under22") return r("Sponsor a relative under 22",180,NO_RPRF)+r("Each accompanying family member","As applicable");
+    return r("Sponsor a relative",1260,ALL)+r("Each accompanying family member","As applicable");
+  }
+  if(t==="pgp") return r("Sponsor a parent or grandparent",1260,ALL)+r("Each accompanying spouse/partner or dependent child","As applicable");
+  return r("Sponsor your spouse or partner",1260,ALL)+r("Each dependent child included",180,"Per child.");
 }
 const isG5 = () => $("program").value==="Group of Five Refugee Sponsorship";
 function pickProgram(k){
@@ -1377,7 +1539,8 @@ function render(){
     ${(sp&&$("spGov").checked)?`<p>The Client is responsible for the government fees charged by IRCC. These are paid directly to the Government of Canada when the application is submitted, are not professional fees, and may change without notice:</p>
     <table class="fees"><thead><tr><th>Government fee (IRCC)</th><th class="amt">Amount</th></tr></thead><tbody>
       ${famGovRows()}
-      <tr><td>Biometrics, medical exam, police certificates${spOwp?", open work permit fees":""}</td><td class="amt">As applicable</td></tr>
+      <tr><td>Biometrics<br/><span class="feesub">Per person. $170 maximum for a family of 2 or more applying at the same time.</span></td><td class="amt">${cad(85)}</td></tr>
+      <tr><td>Medical exam, police certificates${spOwp?", open work permit fees":""}</td><td class="amt">As applicable</td></tr>
     </tbody></table>`:""}
     <p>Beyond the fees and disbursements above, the Client may be required to pay further government fees, re-submission fees, or translation and courier costs that arise as the matter progresses. Any such additional cost will be explained to the Client before it is incurred.</p>
 
@@ -2448,6 +2611,1582 @@ async function scImportSave(use){
   document.querySelectorAll(".scov").forEach(o=>o.remove());
   scRenderBar(`✓ Saved ${people.length} client${people.length>1?"s":""}${use&&people.length>1?` — ${people[0].name} is the group contact, ${people.length-1} group member${people.length>2?"s":""} added`:""}`);
 }
+
+</script>
+<script id="ircc-forms-js">
+/* ---- pdfcore.js ---- */
+/* PDF core: parser, Standard-security decryption, incremental writer.
+   No dependencies. Works in browsers and Node 18+. */
+const PdfCore = (() => {
+  'use strict';
+  const te = new TextEncoder(), td = new TextDecoder('latin1');
+  const latin = (s) => { const b = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i) & 255; return b; };
+  const unlatin = (b) => { let s = ''; for (let i = 0; i < b.length; i += 8192) s += String.fromCharCode.apply(null, b.subarray(i, i + 8192)); return s; };
+  const concat = (arrs) => { let n = 0; for (const a of arrs) n += a.length; const o = new Uint8Array(n); let p = 0; for (const a of arrs) { o.set(a, p); p += a.length; } return o; };
+
+  /* ---------- object model ---------- */
+  class Name { constructor(v) { this.v = v; } }
+  class Ref { constructor(n, g) { this.n = n; this.g = g; } }
+  class Str { constructor(b, hex) { this.b = b; this.hex = !!hex; } get text() { return decodeTextString(this.b); } }
+  class Dict { constructor() { this.m = new Map(); } get(k) { return this.m.get(k); } set(k, v) { this.m.set(k, v); return this; } has(k) { return this.m.has(k); } delete(k) { this.m.delete(k); } keys() { return [...this.m.keys()]; } }
+  class Stream { constructor(dict, raw) { this.dict = dict; this.raw = raw; } }
+  const N = (v) => new Name(v);
+  const isName = (o, v) => o instanceof Name && (v === undefined || o.v === v);
+
+  function decodeTextString(b) {
+    if (b.length >= 2 && b[0] === 0xfe && b[1] === 0xff) { let s = ''; for (let i = 2; i + 1 < b.length; i += 2) s += String.fromCharCode((b[i] << 8) | b[i + 1]); return s; }
+    if (b.length >= 3 && b[0] === 0xef && b[1] === 0xbb && b[2] === 0xbf) return new TextDecoder().decode(b.subarray(3));
+    return unlatin(b);
+  }
+
+  /* ---------- lexer / parser ---------- */
+  const WS = new Uint8Array(256); [0, 9, 10, 12, 13, 32].forEach((c) => (WS[c] = 1));
+  const DL = new Uint8Array(256); '()<>[]{}/%'.split('').forEach((c) => (DL[c.charCodeAt(0)] = 1));
+
+  class Lexer {
+    constructor(buf, pos) { this.b = buf; this.p = pos || 0; }
+    skip() {
+      const b = this.b;
+      for (;;) {
+        while (this.p < b.length && WS[b[this.p]]) this.p++;
+        if (b[this.p] === 37) { while (this.p < b.length && b[this.p] !== 10 && b[this.p] !== 13) this.p++; } else break;
+      }
+    }
+    token() {
+      this.skip();
+      const b = this.b, c = b[this.p];
+      if (this.p >= b.length) return null;
+      if (c === 91 || c === 93 || c === 123 || c === 125) { this.p++; return String.fromCharCode(c); }
+      if (c === 60) { if (b[this.p + 1] === 60) { this.p += 2; return '<<'; } return { hexstr: this.hexString() }; }
+      if (c === 62 && b[this.p + 1] === 62) { this.p += 2; return '>>'; }
+      if (c === 40) return { str: this.litString() };
+      if (c === 47) { this.p++; const s = this.p; while (this.p < b.length && !WS[b[this.p]] && !DL[b[this.p]]) this.p++; return { name: unlatin(b.subarray(s, this.p)).replace(/#([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16))) }; }
+      const s = this.p; while (this.p < b.length && !WS[b[this.p]] && !DL[b[this.p]]) this.p++;
+      if (s === this.p) { this.p++; return String.fromCharCode(c); }
+      return unlatin(b.subarray(s, this.p));
+    }
+    hexString() {
+      const b = this.b; this.p++; let h = '';
+      while (this.p < b.length && b[this.p] !== 62) { const c = b[this.p++]; if (!WS[c]) h += String.fromCharCode(c); }
+      this.p++; if (h.length % 2) h += '0';
+      const o = new Uint8Array(h.length / 2); for (let i = 0; i < o.length; i++) o[i] = parseInt(h.substr(i * 2, 2), 16); return o;
+    }
+    litString() {
+      const b = this.b; this.p++; let depth = 1; const out = [];
+      while (this.p < b.length) {
+        let c = b[this.p++];
+        if (c === 40) depth++;
+        else if (c === 41) { if (--depth === 0) break; }
+        else if (c === 92) {
+          c = b[this.p++];
+          const map = { 110: 10, 114: 13, 116: 9, 98: 8, 102: 12 };
+          if (map[c] !== undefined) { out.push(map[c]); continue; }
+          if (c === 13) { if (b[this.p] === 10) this.p++; continue; }
+          if (c === 10) continue;
+          if (c >= 48 && c <= 55) { let v = c - 48; for (let k = 0; k < 2 && b[this.p] >= 48 && b[this.p] <= 55; k++) v = v * 8 + (b[this.p++] - 48); out.push(v & 255); continue; }
+          out.push(c); continue;
+        }
+        out.push(c);
+      }
+      return Uint8Array.from(out);
+    }
+  }
+
+  function parseObj(lx, tok) {
+    if (tok === undefined) tok = lx.token();
+    if (tok === null) throw new Error('Unexpected end of PDF data');
+    if (typeof tok === 'object') {
+      if (tok.name !== undefined) return N(tok.name);
+      if (tok.str) return new Str(tok.str, false);
+      if (tok.hexstr) return new Str(tok.hexstr, true);
+    }
+    if (tok === '[') { const a = []; for (;;) { const t = lx.token(); if (t === ']') return a; a.push(parseObj(lx, t)); } }
+    if (tok === '<<') {
+      const d = new Dict();
+      for (;;) { const t = lx.token(); if (t === '>>') return d; if (!t || t.name === undefined) throw new Error('Bad dictionary key'); d.set(t.name, parseObj(lx)); }
+    }
+    if (tok === 'true') return true; if (tok === 'false') return false; if (tok === 'null') return null;
+    if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(tok)) {
+      if (/^\d+$/.test(tok)) { // maybe a reference
+        const save = lx.p; const t2 = lx.token();
+        if (typeof t2 === 'string' && /^\d+$/.test(t2)) { const t3 = lx.token(); if (t3 === 'R') return new Ref(+tok, +t2); }
+        lx.p = save;
+      }
+      return parseFloat(tok);
+    }
+    return tok; // keyword (obj, endobj, stream...)
+  }
+
+  /* ---------- crypto primitives (MD5, RC4, AES) ---------- */
+  function md5(data) {
+    const K = new Int32Array(64), S = [7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21];
+    for (let i = 0; i < 64; i++) K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296);
+    const len = data.length, nblk = ((len + 8) >> 6) + 1, w = new Int32Array(nblk * 16);
+    for (let i = 0; i < len; i++) w[i >> 2] |= data[i] << ((i % 4) * 8);
+    w[len >> 2] |= 0x80 << ((len % 4) * 8); w[nblk * 16 - 2] = len * 8; w[nblk * 16 - 1] = Math.floor(len / 536870912);
+    let a0 = 0x67452301, b0 = 0xefcdab89 | 0, c0 = 0x98badcfe | 0, d0 = 0x10325476;
+    for (let o = 0; o < w.length; o += 16) {
+      let a = a0, b = b0, c = c0, d = d0;
+      for (let i = 0; i < 64; i++) {
+        let f, g;
+        if (i < 16) { f = (b & c) | (~b & d); g = i; } else if (i < 32) { f = (d & b) | (~d & c); g = (5 * i + 1) % 16; } else if (i < 48) { f = b ^ c ^ d; g = (3 * i + 5) % 16; } else { f = c ^ (b | ~d); g = (7 * i) % 16; }
+        const t = d; d = c; c = b; const x = (a + f + K[i] + w[o + g]) | 0, s = S[(i >> 4) * 4 + (i % 4)];
+        b = (b + ((x << s) | (x >>> (32 - s)))) | 0; a = t;
+      }
+      a0 = (a0 + a) | 0; b0 = (b0 + b) | 0; c0 = (c0 + c) | 0; d0 = (d0 + d) | 0;
+    }
+    const out = new Uint8Array(16); [a0, b0, c0, d0].forEach((v, i) => { for (let j = 0; j < 4; j++) out[i * 4 + j] = (v >>> (j * 8)) & 255; });
+    return out;
+  }
+  function rc4(key, data) {
+    const s = new Uint8Array(256); for (let i = 0; i < 256; i++) s[i] = i;
+    for (let i = 0, j = 0; i < 256; i++) { j = (j + s[i] + key[i % key.length]) & 255; const t = s[i]; s[i] = s[j]; s[j] = t; }
+    const out = new Uint8Array(data.length);
+    for (let k = 0, i = 0, j = 0; k < data.length; k++) { i = (i + 1) & 255; j = (j + s[i]) & 255; const t = s[i]; s[i] = s[j]; s[j] = t; out[k] = data[k] ^ s[(s[i] + s[j]) & 255]; }
+    return out;
+  }
+  const AES = (() => {
+    const sbox = new Uint8Array(256), inv = new Uint8Array(256);
+    let p = 1, q = 1;
+    do { p = p ^ ((p << 1) & 255) ^ (p & 128 ? 0x1b : 0); q ^= q << 1; q ^= q << 2; q ^= q << 4; q &= 255; if (q & 128) q ^= 0x09;
+      const x = q ^ ((q << 1) | (q >> 7)) ^ ((q << 2) | (q >> 6)) ^ ((q << 3) | (q >> 5)) ^ ((q << 4) | (q >> 4));
+      sbox[p] = (x ^ 0x63) & 255; } while (p !== 1);
+    sbox[0] = 0x63; for (let i = 0; i < 256; i++) inv[sbox[i]] = i;
+    const xt = (a) => ((a << 1) ^ (a & 128 ? 0x1b : 0)) & 255;
+    const mul = (a, b) => { let r = 0; while (b) { if (b & 1) r ^= a; a = xt(a); b >>= 1; } return r; };
+    function expand(key) {
+      const nk = key.length / 4, nr = nk + 6, w = new Uint8Array(16 * (nr + 1)); w.set(key);
+      let rcon = 1;
+      for (let i = nk; i < 4 * (nr + 1); i++) {
+        let t = w.slice((i - 1) * 4, i * 4);
+        if (i % nk === 0) { t = Uint8Array.of(sbox[t[1]] ^ rcon, sbox[t[2]], sbox[t[3]], sbox[t[0]]); rcon = xt(rcon); }
+        else if (nk > 6 && i % nk === 4) t = t.map((v) => sbox[v]);
+        for (let j = 0; j < 4; j++) w[i * 4 + j] = w[(i - nk) * 4 + j] ^ t[j];
+      }
+      return { w, nr };
+    }
+    function encBlock(st, { w, nr }) {
+      const s = st.slice(); for (let i = 0; i < 16; i++) s[i] ^= w[i];
+      for (let r = 1; r <= nr; r++) {
+        for (let i = 0; i < 16; i++) s[i] = sbox[s[i]];
+        const t = s.slice(); for (let c = 0; c < 4; c++) for (let rr = 0; rr < 4; rr++) s[c * 4 + rr] = t[((c + rr) % 4) * 4 + rr];
+        if (r < nr) for (let c = 0; c < 4; c++) { const a = s.slice(c * 4, c * 4 + 4); for (let rr = 0; rr < 4; rr++) s[c * 4 + rr] = mul(a[rr], 2) ^ mul(a[(rr + 1) % 4], 3) ^ a[(rr + 2) % 4] ^ a[(rr + 3) % 4]; }
+        for (let i = 0; i < 16; i++) s[i] ^= w[r * 16 + i];
+      }
+      return s;
+    }
+    function decBlock(st, { w, nr }) {
+      const s = st.slice(); for (let i = 0; i < 16; i++) s[i] ^= w[nr * 16 + i];
+      for (let r = nr - 1; r >= 0; r--) {
+        const t = s.slice(); for (let c = 0; c < 4; c++) for (let rr = 0; rr < 4; rr++) s[((c + rr) % 4) * 4 + rr] = t[c * 4 + rr];
+        for (let i = 0; i < 16; i++) s[i] = inv[s[i]];
+        for (let i = 0; i < 16; i++) s[i] ^= w[r * 16 + i];
+        if (r > 0) for (let c = 0; c < 4; c++) { const a = s.slice(c * 4, c * 4 + 4); for (let rr = 0; rr < 4; rr++) s[c * 4 + rr] = mul(a[rr], 14) ^ mul(a[(rr + 1) % 4], 11) ^ mul(a[(rr + 2) % 4], 13) ^ mul(a[(rr + 3) % 4], 9); }
+      }
+      return s;
+    }
+    function cbcDecrypt(key, data, iv, unpad = true) {
+      const k = expand(key), out = new Uint8Array(data.length); let prev = iv;
+      for (let o = 0; o + 16 <= data.length; o += 16) { const blk = data.subarray(o, o + 16), d = decBlock(blk, k); for (let i = 0; i < 16; i++) out[o + i] = d[i] ^ prev[i]; prev = blk; }
+      if (!unpad) return out;
+      const n = out[out.length - 1]; return n > 0 && n <= 16 ? out.subarray(0, out.length - n) : out;
+    }
+    function cbcEncrypt(key, data, iv, pad = true) {
+      const k = expand(key); let src = data;
+      if (pad) { const n = 16 - (data.length % 16); src = new Uint8Array(data.length + n); src.set(data); src.fill(n, data.length); }
+      const out = new Uint8Array(src.length); let prev = iv;
+      for (let o = 0; o < src.length; o += 16) { const blk = src.slice(o, o + 16); for (let i = 0; i < 16; i++) blk[i] ^= prev[i]; prev = encBlock(blk, k); out.set(prev, o); }
+      return out;
+    }
+    return { cbcDecrypt, cbcEncrypt };
+  })();
+  const randomBytes = (n) => { const b = new Uint8Array(n); (globalThis.crypto || require('crypto').webcrypto).getRandomValues(b); return b; };
+  async function sha(alg, data) { const c = globalThis.crypto || require('crypto').webcrypto; return new Uint8Array(await c.subtle.digest(alg, data)); }
+
+  const PAD = Uint8Array.from([0x28, 0xbf, 0x4e, 0x5e, 0x4e, 0x75, 0x8a, 0x41, 0x64, 0x00, 0x4e, 0x56, 0xff, 0xfa, 0x01, 0x08, 0x2e, 0x2e, 0x00, 0xb6, 0xd0, 0x68, 0x3e, 0x80, 0x2f, 0x0c, 0xa9, 0xfe, 0x64, 0x53, 0x69, 0x7a]);
+
+  /* ---------- filters ---------- */
+  async function inflate(data) {
+    if (typeof DecompressionStream !== 'undefined') {
+      for (const fmt of ['deflate', 'deflate-raw']) {
+        try {
+          const src = fmt === 'deflate' ? data : data.subarray(2);
+          const ds = new DecompressionStream(fmt), w = ds.writable.getWriter();
+          w.write(src).catch(() => {}); w.close().catch(() => {});
+          const chunks = [], r = ds.readable.getReader();
+          try { for (;;) { const { done, value } = await r.read(); if (done) break; chunks.push(value); } }
+          catch (e) { if (!chunks.length) throw e; } // tolerate trailing garbage
+          return concat(chunks);
+        } catch (e) { if (fmt === 'deflate-raw') throw e; }
+      }
+    }
+    return new Uint8Array(require('zlib').inflateSync(data));
+  }
+  function unpredict(data, parms) {
+    const pred = (parms && parms.get('Predictor')) || 1; if (pred < 10) return data;
+    const colors = parms.get('Colors') || 1, bpc = parms.get('BitsPerComponent') || 8, cols = parms.get('Columns') || 1;
+    const bpp = Math.max(1, (colors * bpc) >> 3), rowLen = Math.ceil((colors * bpc * cols) / 8);
+    const rows = Math.floor(data.length / (rowLen + 1)), out = new Uint8Array(rows * rowLen); let prev = new Uint8Array(rowLen);
+    for (let r = 0; r < rows; r++) {
+      const ft = data[r * (rowLen + 1)], row = data.slice(r * (rowLen + 1) + 1, (r + 1) * (rowLen + 1));
+      for (let i = 0; i < rowLen; i++) {
+        const a = i >= bpp ? row[i - bpp] : 0, b = prev[i], c = i >= bpp ? prev[i - bpp] : 0;
+        if (ft === 1) row[i] = (row[i] + a) & 255; else if (ft === 2) row[i] = (row[i] + b) & 255; else if (ft === 3) row[i] = (row[i] + ((a + b) >> 1)) & 255;
+        else if (ft === 4) { const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c); row[i] = (row[i] + (pa <= pb && pa <= pc ? a : pb <= pc ? b : c)) & 255; }
+      }
+      out.set(row, r * rowLen); prev = row;
+    }
+    return out;
+  }
+  async function applyFilters(data, dict, resolve) {
+    let f = resolve(dict.get('Filter')), p = resolve(dict.get('DecodeParms'));
+    if (!f) return data;
+    const fs = Array.isArray(f) ? f : [f], ps = Array.isArray(p) ? p : [p];
+    for (let i = 0; i < fs.length; i++) {
+      const name = resolve(fs[i]).v, parms = resolve(ps[i]);
+      if (name === 'FlateDecode' || name === 'Fl') data = unpredict(await inflate(data), parms);
+      else if (name === 'ASCIIHexDecode' || name === 'AHx') data = new Lexer(latin('<' + unlatin(data).replace(/>.*$/s, '') + '>')).hexString();
+      else if (name === 'Crypt') continue;
+      else throw new Error('Unsupported PDF filter: ' + name);
+    }
+    return data;
+  }
+
+  /* ---------- document ---------- */
+  class PdfDoc {
+    static async load(bytes) { const d = new PdfDoc(Uint8Array.from(bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes)); await d.init(); return d; }
+    constructor(bytes) { this.bytes = bytes; this.xref = new Map(); this.cache = new Map(); this.objStmCache = new Map(); this.crypt = null; }
+    async init() {
+      const tail = unlatin(this.bytes.subarray(Math.max(0, this.bytes.length - 2048)));
+      const m = /startxref\s+(\d+)/g; let mm, last; while ((mm = m.exec(tail))) last = mm; if (!last) throw new Error('Not a valid PDF (no startxref)');
+      this.startxref = +last[1];
+      let off = this.startxref, first = true; const seen = new Set();
+      while (off != null && !seen.has(off)) {
+        seen.add(off);
+        const t = await this.readXrefSection(off);
+        if (first) { this.trailer = t.trailer; this.lastXrefIsStream = t.isStream; first = false; }
+        if (t.trailer.get('XRefStm') != null) await this.readXrefSection(t.trailer.get('XRefStm'));
+        off = t.trailer.get('Prev');
+      }
+      if (this.xref.size === 0) throw new Error('Could not read the PDF cross-reference table');
+      const enc = this.trailer.get('Encrypt');
+      if (enc) await this.setupCrypt(await this.resolveAsync(enc), enc instanceof Ref ? enc.n : -1);
+    }
+    findObjHeader(off) { // tolerate slightly wrong offsets
+      const lx = new Lexer(this.bytes, off); const a = lx.token();
+      if (a === 'xref') return off;
+      for (let d = 0; d < 64; d++) for (const s of [off + d, off - d]) { if (s < 0) continue; const l = new Lexer(this.bytes, s); const t = l.token(); if (/^\d+$/.test(t) && /^\d+$/.test(l.token()) && l.token() === 'obj') return s; }
+      return off;
+    }
+    async readXrefSection(off) {
+      off = this.findObjHeader(off);
+      const lx = new Lexer(this.bytes, off); const t0 = lx.token();
+      if (t0 === 'xref') {
+        for (;;) {
+          const t = lx.token(); if (t === 'trailer') break;
+          let start = +t; const count = +lx.token();
+          for (let i = 0; i < count; i++) {
+            const o = +lx.token(), g = +lx.token(), ty = lx.token(), n = start + i;
+            if (!this.xref.has(n)) this.xref.set(n, ty === 'n' ? { type: 1, off: o, gen: g } : { type: 0 });
+          }
+        }
+        return { trailer: parseObj(lx), isStream: false };
+      }
+      lx.p = off; const { obj } = this.parseIndirectAt(off);
+      if (!(obj instanceof Stream)) throw new Error('Bad cross-reference stream');
+      const d = obj.dict, W = d.get('W'), size = d.get('Size'), idx = d.get('Index') || [0, size];
+      const data = await applyFilters(obj.raw, d, (x) => x);
+      const rowLen = W[0] + W[1] + W[2]; let p = 0;
+      const rd = (n) => { let v = 0; for (let i = 0; i < n; i++) v = v * 256 + data[p++]; return v; };
+      for (let k = 0; k < idx.length; k += 2) for (let i = 0; i < idx[k + 1]; i++) {
+        if (p + rowLen > data.length) break;
+        const ty = W[0] ? rd(W[0]) : 1, f2 = rd(W[1]), f3 = rd(W[2]), n = idx[k] + i;
+        if (!this.xref.has(n)) this.xref.set(n, ty === 1 ? { type: 1, off: f2, gen: f3 } : ty === 2 ? { type: 2, stm: f2, idx: f3 } : { type: 0 });
+      }
+      return { trailer: d, isStream: true };
+    }
+    parseIndirectAt(off) {
+      const lx = new Lexer(this.bytes, off); const n = +lx.token(), g = +lx.token(); if (lx.token() !== 'obj') throw new Error('Expected obj at ' + off);
+      let obj = parseObj(lx); const save = lx.p; const t = lx.token();
+      if (t === 'stream' && obj instanceof Dict) {
+        let p = lx.p; if (this.bytes[p] === 13) p++; if (this.bytes[p] === 10) p++;
+        let len = obj.get('Length'); if (len instanceof Ref) len = this.lengthFromRef(len);
+        let end = p + (typeof len === 'number' ? len : 0);
+        const chk = unlatin(this.bytes.subarray(end, end + 30));
+        if (typeof len !== 'number' || !/^\s*endstream/.test(chk)) { // recover
+          const s = unlatin(this.bytes.subarray(p, Math.min(this.bytes.length, p + 50000000))); const e = s.indexOf('endstream'); end = p + e;
+          while (end > p && (this.bytes[end - 1] === 10 || this.bytes[end - 1] === 13)) end--;
+        }
+        obj = new Stream(obj, this.bytes.subarray(p, end));
+      } else lx.p = save;
+      return { n, g, obj };
+    }
+    lengthFromRef(r) { const e = this.xref.get(r.n); if (e && e.type === 1) { const { obj } = this.parseIndirectAt(this.findObjHeader(e.off)); return obj; } return null; }
+    async getObj(n) {
+      if (this.cache.has(n)) return this.cache.get(n);
+      const e = this.xref.get(n); let obj = null;
+      if (e && e.type === 1) { const r = this.parseIndirectAt(this.findObjHeader(e.off)); obj = r.obj; if (this.crypt && n !== this.encryptNum) obj = this.decryptObj(obj, r.n, r.g); }
+      else if (e && e.type === 2) obj = await this.fromObjStm(e.stm, e.idx, n);
+      this.cache.set(n, obj); return obj;
+    }
+    async fromObjStm(sn, idx, n) {
+      let s = this.objStmCache.get(sn);
+      if (!s) {
+        const stm = await this.getObj(sn); const data = await this.streamData(stm, sn, true);
+        const N_ = stm.dict.get('N'), first = stm.dict.get('First'); const lx = new Lexer(data, 0); const offs = [];
+        for (let i = 0; i < N_; i++) offs.push([+lx.token(), +lx.token()]);
+        s = { data, first, offs }; this.objStmCache.set(sn, s);
+      }
+      let o = s.offs[idx]; if (!o || o[0] !== n) o = s.offs.find((x) => x[0] === n); if (!o) return null;
+      return parseObj(new Lexer(s.data, s.first + o[1]));
+    }
+    async resolveAsync(o) { while (o instanceof Ref) o = await this.getObj(o.n); return o; }
+    // stream contents fully decoded (already decrypted at load)
+    async streamData(stm, num, alreadyDecrypted = true) { return applyFilters(stm.raw, stm.dict, (x) => x); }
+
+    /* ----- encryption ----- */
+    async setupCrypt(enc, encNum) {
+      this.encryptNum = encNum;
+      const filter = enc.get('Filter'); if (!isName(filter, 'Standard')) throw new Error('This PDF uses an unsupported security handler (' + (filter && filter.v) + ').');
+      const V = enc.get('V') || 0, R = enc.get('R'), O = enc.get('O').b, U = enc.get('U').b, P = enc.get('P');
+      const ids = this.trailer.get('ID'); const id0 = ids && ids[0] ? ids[0].b : new Uint8Array(0);
+      const encMeta = enc.get('EncryptMetadata') !== false;
+      let method = 'RC4', strMethod = 'RC4', keyLen = (enc.get('Length') || 40) / 8;
+      if (V >= 4) {
+        const cf = enc.get('CF'), cfmOf = (nm) => { if (!nm || nm.v === 'Identity') return 'None'; const c = cf && cf.get(nm.v); const m = c && c.get('CFM'); return !m ? 'None' : m.v === 'V2' ? 'RC4' : m.v === 'AESV2' ? 'AES' : m.v === 'AESV3' ? 'AES256' : 'None'; };
+        method = cfmOf(enc.get('StmF')); strMethod = cfmOf(enc.get('StrF'));
+        const c = cf && cf.get((enc.get('StmF') || {}).v); if (c && c.get('Length')) { const L = c.get('Length'); keyLen = L > 32 ? L / 8 : L; }
+      }
+      let key;
+      if (R <= 4) {
+        if (V < 4 || method !== 'AES') keyLen = V === 1 ? 5 : keyLen; if (V >= 4 && method === 'AES') keyLen = 16;
+        const pb = new Uint8Array(4); for (let i = 0; i < 4; i++) pb[i] = (P >> (i * 8)) & 255;
+        let h = md5(concat([PAD, O.subarray(0, 32), pb, id0, R >= 4 && !encMeta ? Uint8Array.of(255, 255, 255, 255) : new Uint8Array(0)]));
+        if (R >= 3) for (let i = 0; i < 50; i++) h = md5(h.subarray(0, keyLen));
+        key = h.subarray(0, keyLen);
+        // verify empty user password
+        let ok;
+        if (R === 2) { const u = rc4(key, PAD); ok = u.every((v, i) => v === U[i]); }
+        else { let x = rc4(key, md5(concat([PAD, id0]))); for (let i = 1; i <= 19; i++) x = rc4(key.map((b) => b ^ i), x); ok = x.every((v, i) => v === U[i]); }
+        if (!ok) throw new Error('This PDF is password-protected. Remove the password, or download a fresh blank copy from IRCC.');
+      } else {
+        const salt = U.subarray(32, 40), ksalt = U.subarray(40, 48), UE = enc.get('UE').b;
+        const h1 = R === 5 ? await sha('SHA-256', salt) : await hash2B(new Uint8Array(0), salt, new Uint8Array(0));
+        if (!h1.every((v, i) => v === U[i])) throw new Error('This PDF is password-protected. Remove the password, or download a fresh blank copy from IRCC.');
+        const ik = R === 5 ? await sha('SHA-256', ksalt) : await hash2B(new Uint8Array(0), ksalt, new Uint8Array(0));
+        key = AES.cbcDecrypt(ik, UE, new Uint8Array(16), false);
+        method = strMethod = 'AES256';
+      }
+      this.crypt = { key, method, strMethod, encMeta };
+    }
+    objKey(n, g, aes) {
+      const k = this.crypt.key; if (this.crypt.method === 'AES256') return k;
+      const ex = Uint8Array.of(n & 255, (n >> 8) & 255, (n >> 16) & 255, g & 255, (g >> 8) & 255);
+      const h = md5(concat([k, ex, aes ? latin('sAlT') : new Uint8Array(0)]));
+      return h.subarray(0, Math.min(k.length + 5, 16));
+    }
+    decBytes(b, n, g, method) {
+      if (method === 'None') return b;
+      if (method === 'RC4') return rc4(this.objKey(n, g, false), b);
+      if (b.length < 32 && b.length % 16) return b;
+      return AES.cbcDecrypt(method === 'AES256' ? this.crypt.key : this.objKey(n, g, true), b.subarray(16), b.subarray(0, 16));
+    }
+    encBytes(b, n, g, method) {
+      if (method === 'None') return b;
+      if (method === 'RC4') return rc4(this.objKey(n, g, false), b);
+      const iv = randomBytes(16); return concat([iv, AES.cbcEncrypt(method === 'AES256' ? this.crypt.key : this.objKey(n, g, true), b, iv)]);
+    }
+    decryptObj(o, n, g) {
+      const c = this.crypt;
+      const walk = (x) => {
+        if (x instanceof Str) return new Str(this.decBytes(x.b, n, g, c.strMethod), x.hex);
+        if (Array.isArray(x)) return x.map(walk);
+        if (x instanceof Dict) { const d = new Dict(); for (const [k, v] of x.m) d.set(k, walk(v)); return d; }
+        if (x instanceof Stream) {
+          const d = walk(x.dict); const ty = x.dict.get('Type');
+          if (isName(ty, 'XRef')) return new Stream(x.dict, x.raw);
+          if (isName(ty, 'Metadata') && !c.encMeta) return new Stream(d, x.raw);
+          const f = x.dict.get('Filter'); const fl = Array.isArray(f) ? f : [f];
+          if (fl.some((y) => isName(y, 'Crypt'))) return new Stream(d, x.raw);
+          return new Stream(d, this.decBytes(x.raw, n, g, c.method));
+        }
+        return x;
+      };
+      return walk(o);
+    }
+
+    /* ----- writer: incremental update ----- */
+    serialize(o, n, g) {
+      const c = this.crypt;
+      if (o === null || o === undefined) return 'null';
+      if (o === true) return 'true'; if (o === false) return 'false';
+      if (typeof o === 'number') return Number.isInteger(o) ? String(o) : String(+o.toFixed(6));
+      if (o instanceof Name) return '/' + o.v.replace(/[^!-~]|[#()<>\[\]{}\/%]/g, (ch) => '#' + ch.charCodeAt(0).toString(16).padStart(2, '0'));
+      if (o instanceof Ref) return o.n + ' ' + o.g + ' R';
+      if (o instanceof Str) { const b = c ? this.encBytes(o.b, n, g, c.strMethod) : o.b; return '<' + Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('') + '>'; }
+      if (Array.isArray(o)) return '[' + o.map((x) => this.serialize(x, n, g)).join(' ') + ']';
+      if (o instanceof Dict) { let s = '<<'; for (const [k, v] of o.m) s += this.serialize(N(k), n, g) + ' ' + this.serialize(v, n, g); return s + '>>'; }
+      throw new Error('Cannot serialize object');
+    }
+    nextObjNum() { let mx = this.trailer.get('Size') || 0; for (const k of this.xref.keys()) if (k + 1 > mx) mx = k + 1; if (this._next == null || this._next < mx) this._next = mx; return this._next++; }
+    /* updates: Map<num, {gen, obj (Dict|Array|Stream with plain data)}>; stream objects are given with decoded raw data and we flate-free store them */
+    buildIncrement(updates) {
+      const parts = [], offsets = new Map(); let pos = this.bytes.length;
+      const push = (b) => { parts.push(b); pos += b.length; };
+      push(latin('\n'));
+      for (const [n, { gen = 0, obj }] of [...updates].sort((a, b) => a[0] - b[0])) {
+        offsets.set(n, { off: pos, gen });
+        if (obj instanceof Stream) {
+          const d = obj.dict; d.delete('Filter'); d.delete('DecodeParms'); d.delete('DL');
+          const data = this.crypt ? this.encBytes(obj.raw, n, gen, this.crypt.method) : obj.raw;
+          d.set('Length', data.length);
+          push(latin(`${n} ${gen} obj\n${this.serialize(d, n, gen)}\nstream\n`)); push(data); push(latin('\nendstream\nendobj\n'));
+        } else push(latin(`${n} ${gen} obj\n${this.serialize(obj, n, gen)}\nendobj\n`));
+      }
+      const size = Math.max(this.nextObjNum(), ...[...offsets.keys()].map((k) => k + 1));
+      const tr = new Dict();
+      for (const k of ['Root', 'Encrypt', 'Info', 'ID']) if (this.trailer.get(k) != null) tr.set(k, this.trailer.get(k));
+      tr.set('Prev', this.startxref);
+      const xrefStart = pos;
+      if (this.lastXrefIsStream) {
+        const xn = size; offsets.set(xn, { off: xrefStart, gen: 0 });
+        const nums = [...offsets.keys()].sort((a, b) => a - b); const index = []; const rows = [];
+        for (let i = 0; i < nums.length; i++) { if (i === 0 || nums[i] !== nums[i - 1] + 1) index.push(nums[i], 0); index[index.length - 1]++; const { off, gen } = offsets.get(nums[i]); rows.push(1, (off >>> 24) & 255, (off >>> 16) & 255, (off >>> 8) & 255, off & 255, (gen >> 8) & 255, gen & 255); }
+        tr.set('Type', N('XRef')).set('Size', xn + 1).set('W', [1, 4, 2]).set('Index', index).set('Length', rows.length);
+        // trailer values in an xref stream are never encrypted: serialize without crypt
+        const saved = this.crypt; this.crypt = null; const dictStr = this.serialize(tr, 0, 0); this.crypt = saved;
+        push(latin(`${xn} 0 obj\n${dictStr}\nstream\n`)); push(Uint8Array.from(rows)); push(latin(`\nendstream\nendobj\nstartxref\n${xrefStart}\n%%EOF\n`));
+      } else {
+        const nums = [...offsets.keys()].sort((a, b) => a - b); let s = 'xref\n';
+        for (let i = 0; i < nums.length;) { let j = i; while (j + 1 < nums.length && nums[j + 1] === nums[j] + 1) j++; s += `${nums[i]} ${j - i + 1}\n`; for (let k = i; k <= j; k++) { const { off, gen } = offsets.get(nums[k]); s += `${String(off).padStart(10, '0')} ${String(gen).padStart(5, '0')} n\r\n`; } i = j + 1; }
+        tr.set('Size', size);
+        const saved = this.crypt; this.crypt = null; const trStr = this.serialize(tr, 0, 0); this.crypt = saved;
+        push(latin(`${s}trailer\n${trStr}\nstartxref\n${xrefStart}\n%%EOF\n`));
+      }
+      return concat([this.bytes, ...parts]);
+    }
+  }
+
+  return { PdfDoc, Name, Ref, Str, Dict, Stream, N, isName, latin, unlatin, concat, md5, AES, rc4, te, td, decodeTextString };
+
+  async function hash2B(pw, salt, udata) {
+    let K = await sha('SHA-256', concat([pw, salt, udata]));
+    for (let i = 0; ; i++) {
+      const k1 = concat(Array(64).fill(concat([pw, K, udata])));
+      const E = AES.cbcEncrypt(K.subarray(0, 16), k1, K.subarray(16, 32), false);
+      let sum = 0; for (let j = 0; j < 16; j++) sum += E[j];
+      const alg = ['SHA-256', 'SHA-384', 'SHA-512'][sum % 3];
+      K = await sha(alg, E);
+      if (i >= 63 && E[E.length - 1] <= i - 32) break;
+    }
+    return K.subarray(0, 32);
+  }
+})();
+
+
+/* ---- xfa.js ---- */
+/* XFA layer: read any IRCC (Adobe LiveCycle / XFA) PDF form, build a field model,
+   read existing data, and write new data back as an incremental update. */
+const XfaForm = (() => {
+  'use strict';
+  const P = typeof PdfCore !== 'undefined' ? PdfCore : require('./pdfcore.js');
+  const { Ref, Str, Dict, Stream, N, isName, latin, unlatin } = P;
+  const utf8 = new TextDecoder('utf-8'), enc8 = new TextEncoder();
+
+  const kids = (el) => Array.from(el.childNodes).filter((n) => n.nodeType === 1);
+  const ln = (el) => el.localName || el.nodeName.replace(/^.*:/, '');
+  const child = (el, name) => kids(el).find((k) => ln(k) === name);
+  const clean = (s) => (s || '').replace(/\s+/g, ' ').trim();
+  const textOf = (el) => (el ? clean(el.textContent) : '');
+
+  function valueText(el) { // text of <value> (text or exData) under a draw/caption
+    const v = el && child(el, 'value'); if (!v) return '';
+    return textOf(v);
+  }
+  function captionOf(el) { const c = child(el, 'caption'); return c ? valueText(c) : ''; }
+  function assistOf(el) { const a = child(el, 'assist'); if (!a) return ''; const t = child(a, 'toolTip'); return t ? textOf(t) : ''; }
+  function occurOf(el) { const o = child(el, 'occur'); if (!o) return { min: 1, max: 1, initial: 1 }; const g = (k, d) => (o.getAttribute(k) == null ? d : +o.getAttribute(k)); const max = g('max', 1); const min = g('min', 1); return { min, max, initial: g('initial', min) }; }
+  function bindOf(el) { const b = child(el, 'bind'); return b ? { match: b.getAttribute('match') || 'once', ref: b.getAttribute('ref') || '' } : { match: 'once', ref: '' }; }
+  const isHidden = (el) => /^(hidden|invisible|inactive)$/.test(el.getAttribute('presence') || '');
+
+  function uiKind(field) {
+    const ui = child(field, 'ui'); const u = ui && kids(ui).find((k) => ln(k) !== 'picture' && ln(k) !== 'extras');
+    const t = u ? ln(u) : 'textEdit';
+    const val = child(field, 'value'); const vt = val && kids(val)[0] ? ln(kids(val)[0]) : 'text';
+    if (t === 'checkButton') return 'check';
+    if (t === 'choiceList') return 'choice';
+    if (t === 'dateTimeEdit' || vt === 'date') return 'date';
+    if (t === 'numericEdit' || vt === 'decimal' || vt === 'integer' || vt === 'float') return 'number';
+    if (t === 'signature') return 'signature';
+    if (t === 'button') return 'button';
+    if (t === 'imageEdit' || vt === 'image') return 'image';
+    if (t === 'barcode') return 'barcode';
+    if (t === 'passwordEdit') return 'password';
+    return 'text';
+  }
+  function itemsOf(field) {
+    const lists = kids(field).filter((k) => ln(k) === 'items');
+    if (!lists.length) return [];
+    const vals = (l) => kids(l).map((x) => x.textContent);
+    const saveL = lists.find((l) => l.getAttribute('save') === '1');
+    const dispL = lists.find((l) => l !== saveL) || saveL;
+    const d = vals(dispL), s = saveL ? vals(saveL) : d;
+    return d.map((t, i) => ({ text: clean(t), value: s[i] != null ? s[i] : t }));
+  }
+  function pictureOf(field) {
+    const f = child(field, 'format'); const p = f && child(f, 'picture'); if (p) return p.textContent.trim();
+    const ui = child(field, 'ui'); const up = ui && child(ui, 'picture'); return up ? up.textContent.trim() : '';
+  }
+  function maxCharsOf(field) { const v = child(field, 'value'); const t = v && child(v, 'text'); return t && t.getAttribute('maxChars') ? +t.getAttribute('maxChars') : 0; }
+  function multiLine(field) { const ui = child(field, 'ui'); const te = ui && child(ui, 'textEdit'); return !!(te && te.getAttribute('multiLine') === '1'); }
+  function required(field) { const v = child(field, 'validate'); return !!(v && v.getAttribute('nullTest') === 'error'); }
+
+  /* Build the field model.  Each bindable node gets a data path: array of segments {n, i}.
+     Repeating subforms produce "repeat" nodes whose instances are indexed. */
+  function buildModel(templateDoc) {
+    const tmpl = templateDoc.documentElement;
+    const root = kids(tmpl).find((k) => ln(k) === 'subform');
+    if (!root) throw new Error('This PDF has no XFA form template.');
+    const rootName = root.getAttribute('name') || 'form1';
+    const fields = []; let lastDraw = '', section = '';
+    const counters = new Map(); // scopeKey -> Map(name -> count) for sibling index in data
+
+    function nextIndex(scopeKey, name) { let m = counters.get(scopeKey); if (!m) counters.set(scopeKey, (m = new Map())); const i = m.get(name) || 0; m.set(name, i + 1); return i; }
+    const pathKey = (path) => path.map((s) => s.n + '[' + s.i + ']').join('.');
+
+    function parseRef(ref, ctx) {
+      // returns data path (array of names) or null
+      let r = ref.trim(); if (!r) return null;
+      let base;
+      if (r.startsWith('$record')) { base = [{ n: rootName, i: 0 }]; r = r.replace(/^\$record\.?/, ''); }
+      else if (r.startsWith('$data')) { base = []; r = r.replace(/^\$data\.?/, ''); }
+      else if (r.startsWith('$')) { base = ctx.slice(); r = r.replace(/^\$\.?/, ''); }
+      else if (r.startsWith('!')) return null;
+      else base = ctx.slice();
+      if (r.startsWith('.')) return null; // descendant search not supported
+      const segs = r ? r.split('.') : [];
+      const out = base.slice();
+      for (const s of segs) {
+        const m = /^([^\[]+)(?:\[(\*|\d+)\])?$/.exec(s); if (!m) return null;
+        if (m[1] === '#') continue;
+        out.push({ n: m[1], i: m[2] === undefined || m[2] === '*' ? 0 : +m[2], star: m[2] === '*' });
+      }
+      return out;
+    }
+
+    // walk: ctx = data path of the current data group. Returns list of model nodes.
+    function walk(el, ctx, scopeKey, repeat, depth) {
+      const out = [];
+      for (const k of kids(el)) {
+        const t = ln(k);
+        if (t === 'draw') { const tx = valueText(k); if (tx) { lastDraw = tx; if (/^\d+\.\s/.test(tx) || (k.getElementsByTagName('font')[0] && /bold/.test(k.getElementsByTagName('font')[0].getAttribute('weight') || '') && tx.length < 120)) section = tx; } continue; }
+        if (t === 'subform' || t === 'subformSet' || t === 'area') {
+          const name = k.getAttribute('name') || ''; const occ = t === 'subform' ? occurOf(k) : { min: 1, max: 1, initial: 1 };
+          const bind = bindOf(k);
+          if (t === 'subform' && (k.getAttribute('layout') === 'row' || /^HeaderRow/i.test(name)) && !k.getElementsByTagName('field').length && !k.getElementsByTagName('exclGroup').length) {
+            continue; // header rows: handled by table logic
+          }
+          let newCtx = ctx, newScope = scopeKey;
+          if (t === 'subform' && name && bind.match !== 'none') {
+            if (bind.match === 'dataRef') { const p = parseRef(bind.ref, ctx); if (p) { newCtx = p; newScope = pathKey(p); } }
+            else { const i = occ.max === 1 ? nextIndex(scopeKey, name) : 0; newCtx = ctx.concat([{ n: name, i }]); newScope = pathKey(newCtx); }
+          }
+          const node = { type: 'group', name, el: t, layout: k.getAttribute('layout') || '', children: [], hidden: isHidden(k) };
+          if (t === 'subform' && name && (occ.max === -1 || occ.max > 1)) {
+            node.type = 'repeat'; node.occur = occ;
+            node.dataPath = newCtx; // instance 0 path; later instances vary last segment index
+            if (!(bind.match === 'dataRef')) { const base = ctx.concat([{ n: name, i: 0 }]); node.dataPath = base; newCtx = base; newScope = pathKey(base) + '#rep'; }
+          }
+          if (node.layout === 'table') {
+            const hdr = kids(k).find((x) => ln(x) === 'subform' && (/^HeaderRow/i.test(x.getAttribute('name') || '') || ((child(x, 'assist') && child(child(x, 'assist'), 'role') )) ));
+            const hdrRow = hdr || kids(k).find((x) => ln(x) === 'subform' && !x.getElementsByTagName('field').length);
+            node.headers = hdrRow ? kids(hdrRow).filter((x) => ln(x) === 'draw' || ln(x) === 'field').map((x) => valueText(x) || captionOf(x)) : [];
+            node.type = node.type === 'repeat' ? 'repeat' : 'table'; node.isTable = true;
+          }
+          node.section = section; node.context = lastDraw;
+          node.children = walk(k, newCtx, newScope, node.type === 'repeat' ? node : repeat, depth + 1);
+          if (node.children.length) out.push(node);
+          continue;
+        }
+        if (t === 'field' || t === 'exclGroup') {
+          const name = k.getAttribute('name') || ''; const bind = bindOf(k);
+          let kind = t === 'exclGroup' ? 'radio' : uiKind(k);
+          if (kind === 'button' || kind === 'barcode' || kind === 'image') continue;
+          const f = { type: 'field', kind, name, label: captionOf(k), tip: assistOf(k), context: lastDraw, section, hidden: isHidden(k), repeat: repeat || null };
+          if (!name || bind.match === 'none') { if (kind !== 'radio') continue; }
+          let path = null;
+          if (bind.match === 'dataRef') path = parseRef(bind.ref, ctx);
+          else if (bind.match === 'global') path = ctx.concat([{ n: name, i: 0 }]), (f.global = true);
+          else if (name) path = ctx.concat([{ n: name, i: nextIndex(scopeKey, name) }]);
+          if (!path) continue;
+          f.path = path; f.id = pathKey(path);
+          if (kind === 'radio') {
+            f.options = kids(k).filter((x) => ln(x) === 'field').map((x) => { const it = itemsOf(x); return { name: x.getAttribute('name') || '', text: captionOf(x) || assistOf(x) || x.getAttribute('name') || '', value: it[0] ? it[0].value : '1' }; });
+            if (!f.label) f.label = f.tip || '';
+          } else if (kind === 'check') {
+            const it = itemsOf(k); f.on = it[0] ? it[0].value : '1'; f.off = it[1] ? it[1].value : '0';
+          } else if (kind === 'choice') {
+            f.items = itemsOf(k); const ui = child(k, 'ui'); const cl = ui && child(ui, 'choiceList'); f.open = !!(cl && cl.getAttribute('open') === 'multiSelect'); f.textEntry = !!(cl && cl.getAttribute('textEntry') === '1');
+          }
+          if (kind === 'date' || kind === 'text') { const pic = pictureOf(k); if (pic) f.picture = pic; }
+          f.maxChars = maxCharsOf(k); f.multiLine = multiLine(k); f.required = required(k);
+          out.push(f); fields.push(f);
+          continue;
+        }
+        if (t === 'pageSet' || t === 'proto' || t === 'variables' || t === 'event' || t === 'occur' || t === 'bind') continue;
+      }
+      return out;
+    }
+    const rootCtx = [{ n: rootName, i: 0 }];
+    const tree = walk(root, rootCtx, pathKey(rootCtx), null, 0);
+    // table geometry: each field inside a table learns its table, row and column
+    (function mark(nodes, groups) {
+      for (const n of nodes) {
+        if (n.type === 'field') continue;
+        if (n.isTable) {
+          let r = 0;
+          for (const row of n.children) {
+            const flat = []; (function fl(x) { for (const c of x) c.type === 'field' ? flat.push(c) : fl(c.children); })(row.type === 'field' ? [row] : row.children);
+            flat.forEach((f, c) => { f.table = n; f.row = r; f.col = c; f.colLabel = (n.headers && n.headers[c]) || f.tip || f.label || f.name; f.rowRepeat = row.type === 'repeat' ? row : null; });
+            n.rowCount = ++r; n.cols = Math.max(n.cols || 0, flat.length);
+          }
+          continue;
+        }
+        n.groups = groups; mark(n.children, groups.concat([n.name]));
+      }
+    })(tree, []);
+    (function grp(nodes, names) { for (const n of nodes) { if (n.type === 'field') n.groups = names; else grp(n.children, names.concat([n.name])); } })(tree, []);
+    // label fallbacks
+    for (const f of fields) {
+      f.display = f.label || f.tip || (f.kind === 'radio' ? f.context : '') || f.name;
+      if (f.kind === 'radio' && f.options.every((o) => /^(yes|no|y|n)$/i.test(o.text))) f.question = f.context;
+    }
+    return { rootName, tree, fields, byId: new Map(fields.map((f) => [f.id, f])) };
+  }
+
+  /* data XML */
+  const escXml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  /* values: Map or object  id -> string. Repeat instances: id with the repeating segment index changed (see instanceId). */
+  function buildDataXml(model, values) {
+    const get = (id) => (values instanceof Map ? values.get(id) : values[id]);
+    const root = { name: model.rootName, kids: [] };
+    const ensure = (path) => {
+      let cur = root;
+      for (let s = 1; s < path.length; s++) {
+        const { n, i } = path[s];
+        let same = cur.kids.filter((k) => k.name === n);
+        while (same.length <= i) { const nk = { name: n, kids: [] }; cur.kids.push(nk); same.push(nk); }
+        cur = same[i];
+      }
+      return cur;
+    };
+    const allIds = new Set([...(values instanceof Map ? values.keys() : Object.keys(values))]);
+    // emit in template order: first the template's own ids, then extra repeat-instance ids
+    const order = [];
+    for (const f of model.fields) order.push([f.id, f.path]);
+    for (const id of allIds) if (!model.byId.has(id)) { const p = parseId(id); if (p) order.push([id, p]); }
+    // make sure all template groups exist (Acrobat merges better when structure is present)
+    for (const [id, path] of order) {
+      const v = get(id); if (v == null || v === '') continue;
+      const node = ensure(path); node.value = String(v);
+    }
+    const ser = (n) => (n.kids.length ? `<${n.name}>${n.kids.map(ser).join('')}</${n.name}>` : n.value != null ? `<${n.name}>${escXml(n.value)}</${n.name}>` : `<${n.name}/>`);
+    return `<xfa:datasets xmlns:xfa="http://www.xfa.org/schema/xfa-data/1.0/"><xfa:data>${ser(root)}</xfa:data></xfa:datasets>\n`;
+  }
+  function parseId(id) { const segs = id.split('.'); const out = []; for (const s of segs) { const m = /^(.+)\[(\d+)\]$/.exec(s); if (!m) return null; out.push({ n: m[1], i: +m[2] }); } return out; }
+  // id of a field inside repeat instance k (repeat node's dataPath last segment index -> k)
+  function instanceId(field, k) {
+    if (!field.repeat) return field.id;
+    const rp = field.repeat.dataPath; const p = field.path.map((s) => ({ ...s }));
+    const at = rp.length - 1; if (p[at] && p[at].n === rp[at].n) p[at].i = rp[at].i + k;
+    return p.map((s) => s.n + '[' + s.i + ']').join('.');
+  }
+
+  function readData(model, datasetsDoc) {
+    const values = new Map(); if (!datasetsDoc) return values;
+    const de = datasetsDoc.documentElement; const data = kids(de).find((k) => ln(k) === 'data'); if (!data) return values;
+    const recRoot = kids(data).find((k) => ln(k) === model.rootName) || kids(data)[0]; if (!recRoot) return values;
+    (function walk(el, path) {
+      const counts = new Map();
+      for (const k of kids(el)) {
+        const n = ln(k); const i = counts.get(n) || 0; counts.set(n, i + 1);
+        const p = path.concat([{ n, i }]);
+        if (kids(k).length) walk(k, p);
+        else { const v = k.textContent; if (v !== '') values.set(p.map((s) => s.n + '[' + s.i + ']').join('.'), v); }
+      }
+    })(recRoot, [{ n: model.rootName, i: 0 }]);
+    return values;
+  }
+
+  /* ---------- load & save ---------- */
+  async function load(bytes, opts = {}) {
+    const Parser = opts.DOMParser || (typeof DOMParser !== 'undefined' ? DOMParser : null);
+    if (!Parser) throw new Error('No XML parser available');
+    const doc = await P.PdfDoc.load(bytes);
+    const rootRef = doc.trailer.get('Root'); const catalog = await doc.resolveAsync(rootRef);
+    const acroRef = catalog.get('AcroForm'); const acro = await doc.resolveAsync(acroRef);
+    if (!acro || !acro.get('XFA')) throw new Error('This PDF is not an XFA (IRCC-style) form. Fillable forms of this kind come from IRCC as "dynamic" PDFs.');
+    const xfaObjRef = acro.get('XFA'); const xfa = await doc.resolveAsync(xfaObjRef);
+    const packets = [];
+    if (xfa instanceof Stream) { packets.push({ name: '*', ref: xfaObjRef, xml: utf8.decode(await doc.streamData(xfa)) }); }
+    else for (let i = 0; i < xfa.length; i += 2) { const s = await doc.resolveAsync(xfa[i + 1]); packets.push({ name: xfa[i].text, ref: xfa[i + 1], xml: s ? utf8.decode(await doc.streamData(s)) : '' }); }
+    const parse = (s) => new Parser().parseFromString(s, 'text/xml');
+    let tmplXml, dsXml;
+    if (packets[0] && packets[0].name === '*') {
+      const all = packets[0].xml; tmplXml = (/<template[\s\S]*<\/template>/.exec(all) || [])[0]; dsXml = (/<xfa:datasets[\s\S]*<\/xfa:datasets>/.exec(all) || [])[0];
+    } else { tmplXml = (packets.find((p) => p.name === 'template') || {}).xml; dsXml = (packets.find((p) => p.name === 'datasets') || {}).xml; }
+    if (!tmplXml) throw new Error('No form template found inside this PDF.');
+    const model = buildModel(parse(tmplXml));
+    const existing = readData(model, dsXml ? parse(dsXml) : null);
+    // form identification: code (IMM 5669), edition (05-2021), title
+    const allText = tmplXml.replace(/<[^>]+>/g, ' ');
+    const tdoc = parse(tmplXml); const rootSf = kids(tdoc.documentElement).find((k) => ln(k) === 'subform');
+    const named = (parent, nm) => { const p = parent && kids(parent).find((k) => ln(k) === nm); return p ? Object.fromEntries(kids(p).filter((k) => ln(k) === 'text' && k.getAttribute('name')).map((k) => [k.getAttribute('name'), clean(k.textContent)])) : {}; };
+    const vars = named(rootSf, 'variables'), desc = named(rootSf, 'desc');
+    const dTitle = desc.title || '';
+    const code = /\b(IMM|CIT|IRM|EMP|CIC)\s?(\d{4})/.exec(dTitle) || /\b(IMM|CIT|IRM|EMP|CIC)\s?(\d{4})/.exec(allText) || [];
+    let version = (/^\d{1,2}-\d{4}$/.test(vars.Version || '') ? vars.Version : '');
+    if (!version) { const m = /\b(IMM|CIT|IRM|EMP)\s?\d{4}\s*\((\d{2}-\d{4})\)/.exec(allText); if (m) version = m[2]; }
+    const lang = /^[EF]$/.test(vars.Language || '') ? vars.Language : (/\b\d{4}\s*([EF])\s*:/.exec(dTitle) || [])[1] || '';
+    const info = { code: code[1] ? code[1] + ' ' + code[2] : '', version, lang, root: model.rootName, title: clean(dTitle.replace(/^.*?:\s*/, '')) };
+    return new LoadedForm(doc, { catalog, rootRef, acro, acroRef, xfa, xfaObjRef, packets }, model, existing, info);
+  }
+
+  class LoadedForm {
+    constructor(doc, parts, model, existing, info) { Object.assign(this, { doc, parts, model, existing, info }); }
+    get key() { return (this.info.code || this.model.rootName).replace(/\s+/g, ''); }
+    async save(values) {
+      const { doc } = this; const { catalog, rootRef, acro, acroRef, xfa, xfaObjRef, packets } = this.parts;
+      const dataXml = buildDataXml(this.model, values);
+      const updates = new Map();
+      const mkStream = (txt) => new Stream(new Dict(), enc8.encode(txt));
+      if (xfa instanceof Stream) {
+        let all = packets[0].xml; const ds = dataXml.trim();
+        all = /<xfa:datasets[\s\S]*<\/xfa:datasets>/.test(all) ? all.replace(/<xfa:datasets[\s\S]*<\/xfa:datasets>/, ds) : all.replace(/(<\/template>)/, '$1' + ds);
+        all = all.replace(/<form [^>]*xmlns="http:\/\/www\.xfa\.org\/schema\/xfa-form[\s\S]*?<\/form>/, '');
+        updates.set(xfaObjRef.n, { gen: xfaObjRef.g, obj: mkStream(all) });
+      } else {
+        const arr = []; let dsRef = null;
+        for (let i = 0; i < xfa.length; i += 2) { const nm = xfa[i].text; if (nm === 'form') continue; if (nm === 'datasets' && xfa[i + 1] instanceof Ref) dsRef = xfa[i + 1]; arr.push(xfa[i], xfa[i + 1]); }
+        if (dsRef) updates.set(dsRef.n, { gen: dsRef.g, obj: mkStream(dataXml) });
+        else {
+          dsRef = new Ref(doc.nextObjNum(), 0); updates.set(dsRef.n, { gen: 0, obj: mkStream(dataXml) });
+          let at = arr.findIndex((x, i) => i % 2 === 0 && x.text === 'localeSet'); if (at < 0) at = arr.findIndex((x, i) => i % 2 === 0 && x.text === 'template');
+          arr.splice(at >= 0 ? at + 2 : arr.length - 2, 0, new Str(latin('datasets')), dsRef);
+        }
+        const changed = arr.length !== xfa.length || arr.some((x, i) => x !== xfa[i]);
+        if (changed) {
+          if (xfaObjRef instanceof Ref) updates.set(xfaObjRef.n, { gen: xfaObjRef.g, obj: arr });
+          else {
+            const a2 = new Dict(); for (const [k, v] of acro.m) a2.set(k, v); a2.set('XFA', arr);
+            if (acroRef instanceof Ref) updates.set(acroRef.n, { gen: acroRef.g, obj: a2 });
+            else catalog.set('AcroForm', a2);
+          }
+        }
+      }
+      // drop Adobe "Reader extensions" (it would report the change as tampering); Acrobat Reader fills/saves without it
+      if (catalog.has('Perms') || !(acroRef instanceof Ref) || updates.has(rootRef.n)) {
+        const c2 = new Dict(); for (const [k, v] of catalog.m) if (k !== 'Perms') c2.set(k, v);
+        if (!(acroRef instanceof Ref) && catalog.get('AcroForm')) c2.set('AcroForm', catalog.get('AcroForm'));
+        updates.set(rootRef.n, { gen: rootRef.g, obj: c2 });
+      }
+      return doc.buildIncrement(updates);
+    }
+  }
+
+  return { load, buildModel, buildDataXml, readData, instanceId, parseId };
+})();
+
+
+/* ---- mapper.js ---- */
+/* Maps a client profile <-> any XFA form's fields, by field names, captions, tooltips and table headers. */
+const FormMapper = (() => {
+  'use strict';
+
+  const LISTS = {
+    education: { label: 'Education', cols: { from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', institution: 'Institution', cityCountry: 'City and country', certificate: 'Certificate / diploma', field: 'Field of study' } },
+    history: { label: 'Personal history (since age 18 or last 10 years)', cols: { from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', activity: 'Activity / occupation', cityCountry: 'City and country', status: 'Status in country', employer: 'Employer / school / facility' } },
+    addresses: { label: 'Addresses', cols: { from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', street: 'Street and number', city: 'City or town', province: 'Province / state / district', postal: 'Postal code', country: 'Country' } },
+    memberships: { label: 'Organizations / memberships', none: true, cols: { from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', name: 'Name of organization', type: 'Type of organization', position: 'Activities / positions held', cityCountry: 'City and country' } },
+    government: { label: 'Government positions', none: true, cols: { from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', jurisdiction: 'Country and level of jurisdiction', department: 'Department / branch', position: 'Activities / positions held' } },
+    military: { label: 'Military / paramilitary service', none: true, cols: { country: 'Country', from: 'From (YYYY-MM)', to: 'To (YYYY-MM)', branch: 'Branch, unit, commanding officers', rank: 'Rank(s)', combat: 'Dates and places of active combat', reason: 'Reason for end of service' } },
+    travel: { label: 'Travel history', cols: { from: 'From (YYYY-MM-DD)', to: 'To (YYYY-MM-DD)', length: 'Length of stay', destination: 'City and country', purpose: 'Purpose of travel' } },
+  };
+  const PEOPLE = {
+    person: { label: 'Applicant', keys: { familyName: 'Family name', givenNames: 'Given name(s)', nativeName: 'Full name in native language/script', sex: 'Sex', dob: 'Date of birth (YYYY-MM-DD)', birthCity: 'City of birth', birthCountry: 'Country of birth', citizenship: 'Citizenship', maritalStatus: 'Marital status', uci: 'UCI', email: 'Email', phone: 'Phone', role: 'Role (principal / dependant)' } },
+    father: { label: 'Father', keys: { familyName: 'Family name', givenNames: 'Given name(s)', dob: 'Date of birth', birthCity: 'City of birth', birthCountry: 'Country of birth', dod: 'Date of death (if deceased)' } },
+    mother: { label: 'Mother', keys: { familyName: 'Family name at birth', givenNames: 'Given name(s)', dob: 'Date of birth', birthCity: 'City of birth', birthCountry: 'Country of birth', dod: 'Date of death (if deceased)' } },
+    spouse: { label: 'Spouse / partner', keys: { familyName: 'Family name', givenNames: 'Given name(s)', dob: 'Date of birth', birthCity: 'City of birth', birthCountry: 'Country of birth' } },
+  };
+  const BG = 'abcdefghijk'.split('');
+
+  function emptyProfile() {
+    const p = { person: {}, father: {}, mother: {}, spouse: {}, bg: {}, eduYears: {} };
+    for (const k of Object.keys(LISTS)) p[k] = [];
+    return p;
+  }
+
+  const norm = (s) => (s || '').toLowerCase().replace(/\s+/g, ' ');
+  const SKIP_GROUP = /cicuse|officeuse|foroffice|for_office|cic_use|barcode/i;
+  const SKIP_FIELD = /signature|interpreter|langug|translation|declaredbefore|nameofapplicant|representative|websitelink|^day$|^month$|^year$|datesigned|dateapplicantsigned|signed/i;
+
+  function listOfTable(t, f) {
+    const s = norm(t.name + ' ' + (t.headers || []).join(' ') + ' ' + t.context + ' ' + t.section);
+    if (/military|paramilitary|branch of service|rank/.test(s)) return 'military';
+    if (/government|jurisdiction|civil servant/.test(s)) return 'government';
+    if (/member|organi[sz]ation/.test(s)) return 'memberships';
+    if (/educat|institution|diploma/.test(s)) return 'education';
+    if (/address|street|postal/.test(s)) return 'addresses';
+    if (/personal ?history|activity|occupation/.test(s)) return 'history';
+    if (/travel|trip|purpose/.test(s)) return 'travel';
+    return null;
+  }
+  function colKey(list, label) {
+    const l = norm(label);
+    if (/^from|start/.test(l)) return 'from';
+    if (/^to\b|^to\s|end date|until/.test(l)) return 'to';
+    const R = {
+      education: [['institution', /institution|school/], ['certificate', /certificate|diploma|degree/], ['field', /field|major|study/], ['cityCountry', /city|country/]],
+      history: [['employer', /company|employer|facility|school/], ['activity', /activity|occupation|job/], ['status', /status/], ['cityCountry', /city|town|country/]],
+      addresses: [['street', /street|number|address/], ['postal', /postal|zip/], ['province', /province|state|district/], ['city', /city|town/], ['country', /country/]],
+      memberships: [['name', /name of/], ['type', /type/], ['position', /activit|position/], ['cityCountry', /city|country/]],
+      government: [['jurisdiction', /jurisdiction|level|country/], ['department', /department|branch/], ['position', /activit|position/]],
+      military: [['branch', /branch|unit|command/], ['rank', /rank/], ['combat', /combat/], ['reason', /reason/]],
+      travel: [['length', /length|duration|days/], ['purpose', /purpose|reason/], ['destination', /city|country|destination|place|location/]],
+    }[list] || [];
+    for (const [k, re] of R) if (re.test(l)) return k;
+    return null;
+  }
+
+  /* Returns a descriptor telling where in the profile this field's value lives, or null. */
+  function classify(f) {
+    const groups = (f.groups || []).join(' ');
+    if (SKIP_GROUP.test(groups) || SKIP_GROUP.test(f.name)) return { skip: true, office: true };
+    if (f.kind === 'signature' || SKIP_FIELD.test(f.name)) return { skip: true };
+    if (f.table) {
+      const list = listOfTable(f.table, f); if (!list) return null;
+      const col = colKey(list, f.colLabel || f.display); if (!col) return null;
+      let group = 0; const m = /(\d+)$/.exec(f.table.name); if (list === 'military' && m) group = +m[1] - 1;
+      return { list, row: f.row, col, group };
+    }
+    const nm = f.name, all = norm(nm + ' ' + f.display + ' ' + f.tip);
+    if (f.kind === 'radio') {
+      const m = /^([a-z])yesno$/i.exec(nm); if (m) return { path: 'bg.' + m[1].toLowerCase(), yesno: true };
+      if (f.options && f.options.length === 2 && f.options.every((o) => /^(yes|no)$/i.test(o.text))) return { path: 'bgq.' + norm(f.question || f.display).replace(/[^a-z0-9 ]/g, '').slice(0, 80), yesno: true };
+      if (f.options && f.options.some((o) => /principal applicant/i.test(o.text))) return { path: 'person.role', radio: true };
+    }
+    if (/^country(\d)$/i.test(nm) && /military|service/i.test(f.section + ' ' + f.context)) return { militaryCountry: +/(\d)$/.exec(nm)[1] - 1 };
+    if (/if.*yes|explain|provide details/i.test(nm + ' ' + f.display)) return { path: 'bg.details' };
+    for (const k of ['elementary', 'secondary', 'university', 'trade']) if (new RegExp('^' + k, 'i').test(nm)) return { path: 'eduYears.' + k };
+    // whose detail is this?
+    const who = /father/i.test(nm) ? 'father' : /mother/i.test(nm) ? 'mother' : /spouse|partner/i.test(nm) ? 'spouse'
+      : /father/i.test(f.section) ? 'father' : /mother/i.test(f.section) ? 'mother' : 'person';
+    let key = null;
+    if (/death|deceased/.test(all)) key = 'dod';
+    else if (/native|original ?language|script/.test(all)) key = 'nativeName';
+    else if (/family ?name|surname|last ?name/.test(all)) key = 'familyName';
+    else if (/given ?name|first ?name/.test(all)) key = 'givenNames';
+    else if (/birth.?date|date ?of ?birth|\bdob\b|birthdate/.test(all)) key = 'dob';
+    else if (/birth.?(city|town|place)|(city|town|place).*birth/.test(all)) key = 'birthCity';
+    else if (/birth.?country|country.*birth/.test(all)) key = 'birthCountry';
+    else if (/marital/.test(all)) key = 'maritalStatus';
+    else if (/citizenship/.test(all)) key = 'citizenship';
+    else if (/\buci\b|client id/.test(all)) key = 'uci';
+    else if (/e-?mail/.test(all)) key = 'email';
+    else if (/^sex$|\bsex\b|gender/.test(all) && who === 'person') key = 'sex';
+    if (!key || !(key in PEOPLE[who].keys)) return null;
+    return { path: who + '.' + key };
+  }
+
+  const getPath = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o);
+  function setPath(o, p, v) { const ks = p.split('.'); let c = o; for (let i = 0; i < ks.length - 1; i++) c = c[ks[i]] || (c[ks[i]] = {}); c[ks[ks.length - 1]] = v; }
+
+  /* value conversion profile -> form */
+  function toForm(f, v) {
+    if (v == null || v === '') return '';
+    v = String(v).trim();
+    if (f.kind === 'radio') {
+      const o = f.options || [];
+      const pick = (re) => { const x = o.find((y) => re.test(y.text) || re.test(y.name)); return x ? x.value : ''; };
+      if (/^(y|yes|true|1)$/i.test(v)) return pick(/^y(es)?$/i) || v;
+      if (/^(n|no|false|0)$/i.test(v) && o.length) return pick(/^no?$/i) || v;
+      if (/principal/i.test(v)) return pick(/principal/i);
+      if (/dependant|dependent|spouse|partner|child/i.test(v)) return pick(/spouse|dependent|dependant|partner/i);
+      const exact = o.find((y) => norm(y.text) === norm(v) || y.value === v); return exact ? exact.value : '';
+    }
+    if (f.kind === 'check') return /^(y|yes|true|1|x|on)$/i.test(v) ? f.on : f.off;
+    if (f.kind === 'choice') {
+      const it = f.items || []; const x = it.find((i) => i.value === v) || it.find((i) => norm(i.text) === norm(v)) || it.find((i) => norm(i.text).startsWith(norm(v)));
+      return x ? x.value : f.textEntry ? v : '';
+    }
+    const pic = f.picture || '';
+    if (f.kind === 'date' || /date\{/.test(pic)) {
+      const d = normDate(v);
+      if (/YYYY-MM\}$/.test(pic) || /YYYY-MM$/.test(pic)) return d && /^\d{4}-\d{2}/.test(d) ? d.slice(0, 7) : v;
+      return d || v;
+    }
+    return v;
+  }
+  function normDate(v) {
+    v = String(v).trim();
+    let m;
+    if ((m = /^(\d{4})[-\/. ]?(\d{1,2})(?:[-\/. ]?(\d{1,2}))?$/.exec(v))) return m[1] + '-' + m[2].padStart(2, '0') + (m[3] ? '-' + m[3].padStart(2, '0') : '');
+    if ((m = /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/.exec(v))) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+    return '';
+  }
+  /* value conversion form -> profile */
+  function fromForm(f, v) {
+    if (v == null || v === '') return '';
+    if (f.kind === 'radio') { const o = (f.options || []).find((x) => x.value === v); if (!o) return v; if (/^y(es)?$/i.test(o.text)) return 'yes'; if (/^no?$/i.test(o.text)) return 'no'; if (/principal/i.test(o.text)) return 'principal'; if (/spouse|dependent/i.test(o.text)) return 'dependant'; return o.text; }
+    if (f.kind === 'choice') { const it = (f.items || []).find((i) => i.value === v); return it ? it.text : v; }
+    if (f.kind === 'check') return v === f.on ? 'yes' : 'no';
+    return v;
+  }
+
+  /* Fill a form from saved answers + profile. Returns Map id -> {value, src} */
+  function fill(model, profile, saved, X) {
+    const out = new Map(); profile = profile || emptyProfile();
+    const tables = new Map();
+    for (const f of model.fields) {
+      const d = classify(f); f.map = d;
+      if (d && d.list) { if (!tables.has(f.table)) tables.set(f.table, { list: d.list, group: d.group, fields: [] }); tables.get(f.table).fields.push(f); }
+    }
+    for (const f of model.fields) {
+      const d = f.map; if (!d || d.skip || d.list) continue;
+      let v = '', src = 'profile';
+      if (d.path) { v = d.path.startsWith('bgq.') ? (profile.bgq || {})[d.path.slice(4)] : getPath(profile, d.path); }
+      else if (d.militaryCountry != null) { const cs = militaryCountries(profile); v = cs[d.militaryCountry] || (!cs.length ? 'NONE' : ''); if (v === 'NONE') src = 'default'; }
+      const fv = toForm(f, v); if (fv !== '') out.set(f.id, { value: fv, src });
+    }
+    for (const [t, { list, group, fields }] of tables) {
+      let rows = profile[list] || [];
+      if (list === 'military') { const cs = militaryCountries(profile); rows = rows.filter((r) => (r.country || '') === (cs[group] || '')); }
+      const repeat = fields.find((f) => f.rowRepeat);
+      const staticRows = t.rowCount || 0;
+      if (!rows.length) {
+        if (LISTS[list].none && !(list === 'military')) { // IRCC asks for "NONE"
+          const nameCol = fields.find((f) => f.row === 0 && f.map.col && !/from|to/.test(f.map.col)) ; const fromCol = fields.find((f) => f.row === 0 && f.map.col === 'from');
+          if (nameCol) out.set(nameCol.id, { value: 'NONE', src: 'default' });
+          if (fromCol && !/date\{/.test(fromCol.picture || '')) out.set(fromCol.id, { value: 'NA', src: 'default' });
+        }
+        continue;
+      }
+      const lastRepeatRow = repeat ? Math.max(...fields.filter((f) => f.rowRepeat).map((f) => f.row)) : -1;
+      rows.forEach((r, i) => {
+        for (const f of fields) {
+          let id = null;
+          if (f.row === lastRepeatRow && i >= f.row) id = X.instanceId(f, i - f.row);
+          else if (f.row === i) id = f.id;
+          if (!id) continue;
+          const fv = toForm(f, r[f.map.col]); if (fv !== '') out.set(id, { value: fv, src: 'profile' });
+        }
+      });
+      const capacity = repeat ? Infinity : staticRows;
+      if (rows.length > capacity) out.set('__overflow__' + t.name, { value: `${rows.length - capacity} more ${LISTS[list].label.toLowerCase()} rows than the form has room for — attach a separate sheet`, src: 'warning' });
+    }
+    // saved answers for this exact form override the profile
+    if (saved) for (const [id, v] of Object.entries(saved)) if (v !== '' && v != null) out.set(id, { value: v, src: 'saved' });
+    return out;
+  }
+  const militaryCountries = (p) => [...new Set((p.military || []).map((r) => r.country || '').filter(Boolean))];
+
+  /* Pull profile data out of a filled form (digital XFA) */
+  function extract(model, values, profile, X) {
+    profile = profile || emptyProfile();
+    const get = (id) => (values instanceof Map ? values.get(id) : values[id]);
+    const lists = {};
+    const milCountries = [];
+    for (const f of model.fields) {
+      const d = f.map !== undefined ? f.map : classify(f); f.map = d; if (!d || d.skip) continue;
+      if (d.militaryCountry != null) { const v = get(f.id); if (v && !/^none$/i.test(v)) milCountries[d.militaryCountry] = v; continue; }
+      if (d.list) {
+        const ids = [f.id]; if (f.rowRepeat) for (let k = 1; k < 200; k++) { const id = X.instanceId(f, k); if (get(id) == null) break; ids.push(id); }
+        ids.forEach((id, k) => { const v = get(id); if (v == null || v === '') return; const L = (lists[d.list + '#' + d.group] = lists[d.list + '#' + d.group] || []); const r = f.row + k; L[r] = L[r] || {}; L[r][d.col] = fromForm(f, v); });
+        continue;
+      }
+      const v = fromForm(f, get(f.id)); if (v === '') continue;
+      if (d.path.startsWith('bgq.')) { profile.bgq = profile.bgq || {}; profile.bgq[d.path.slice(4)] = v; } else setPath(profile, d.path, v);
+    }
+    const merged = {};
+    for (const [k, rows] of Object.entries(lists)) {
+      const [list, group] = k.split('#'); let rs = rows.filter(Boolean).filter((r) => !Object.values(r).every((v) => /^(none|na|n\/a)$/i.test(v)));
+      if (list === 'military') rs = rs.map((r) => ({ country: milCountries[+group] || '', ...r }));
+      merged[list] = (merged[list] || []).concat(rs);
+    }
+    for (const [list, rows] of Object.entries(merged)) profile[list] = rows;
+    return profile;
+  }
+
+  return { LISTS, PEOPLE, BG, emptyProfile, classify, fill, extract, toForm, fromForm, normDate, getPath, setPath };
+})();
+
+
+/* ---- ai.js ---- */
+/* Claude API helpers: read an old/scanned form into a profile, and fill leftover fields. Runs from the browser with the user's own API key. */
+const FormAI = (() => {
+  'use strict';
+  const M = typeof FormMapper !== 'undefined' ? FormMapper : require('./mapper.js');
+  const MODELS = [
+    { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 (recommended)' },
+    { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (most careful)' },
+    { id: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5 (cheapest)' },
+  ];
+
+  async function call(apiKey, model, content, tool, system) {
+    if (!apiKey) { const e = new Error('No Claude API key yet. Add one in AI settings.'); e.code = 'nokey'; throw e; }
+    let res;
+    try { res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: model || MODELS[0].id, max_tokens: 16000, system, tools: [tool], tool_choice: { type: 'tool', name: tool.name }, messages: [{ role: 'user', content }] }),
+    }); } catch (err) { const e = new Error('Could not reach Claude. Check your internet connection and try again.'); e.code = 'network'; throw e; }
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = (j.error && j.error.message) || '';
+      const e = new Error(res.status === 401 ? 'Claude did not accept your API key. Check it in AI settings (it starts with sk-ant-).'
+        : res.status === 403 ? 'Your API key is not allowed to do this: ' + msg
+        : res.status === 413 ? 'The files are too large to send at once. Try fewer pages or one file at a time.'
+        : res.status === 429 ? 'Too many requests right now. Wait a minute and try again.'
+        : res.status === 529 || res.status >= 500 ? 'Claude is busy right now. Try again in a minute.'
+        : /credit|billing|balance/i.test(msg) ? 'Your Anthropic account has no credit left. Add credit at console.anthropic.com → Billing.'
+        : 'Claude API error ' + res.status + (msg ? ': ' + msg : ''));
+      e.code = 'api' + res.status; throw e;
+    }
+    const t = (j.content || []).find((c) => c.type === 'tool_use');
+    if (!t) throw new Error('Claude did not return structured data. Try again.');
+    return t.input;
+  }
+
+  const S = { type: 'string' };
+  const obj = (keys) => ({ type: 'object', properties: Object.fromEntries(keys.map((k) => [k, S])) });
+  function profileSchema() {
+    const props = {};
+    for (const [who, d] of Object.entries(M.PEOPLE)) props[who] = obj(Object.keys(d.keys));
+    props.bg = { type: 'object', description: 'Background questions a..k as "yes"/"no" (IMM 5669 question 6 letters), plus "details" text', properties: Object.fromEntries(M.BG.map((k) => [k, { type: 'string', enum: ['yes', 'no', ''] }]).concat([['details', S]])) };
+    props.eduYears = obj(['elementary', 'secondary', 'university', 'trade']);
+    for (const [k, d] of Object.entries(M.LISTS)) props[k] = { type: 'array', items: obj(Object.keys(d.cols)) };
+    props.formCode = { type: 'string', description: 'The form number printed on the document, e.g. "IMM 5669", if it is an IRCC form' };
+    props.formEdition = { type: 'string', description: 'The edition date printed next to the form number, e.g. "06-2019" from "IMM 5669 (06-2019) E"' };
+    props.notes = { type: 'array', items: S, description: 'Problems a consultant should check: typos, unreadable text, impossible or overlapping dates, gaps in history/addresses, names that differ between places, missing required items.' };
+    return { type: 'object', properties: props, required: ['person', 'notes'] };
+  }
+  const SYS = 'You are a careful assistant to a Regulated Canadian Immigration Consultant (RCIC). You transcribe client data for IRCC forms. Never invent information. Copy names, places and institutions exactly as written (keep the original capitalization), do not translate, and leave anything you cannot read empty. Dates: YYYY-MM-DD for full dates, YYYY-MM for month precision. Write "NONE" rows only if the document itself says NONE; otherwise return empty lists.';
+
+  /* files: [{name, type, base64}] — PDFs or images of old/filled/scanned forms or documents */
+  async function importProfile(apiKey, model, files) {
+    const content = [];
+    for (const f of files) {
+      if (/pdf/.test(f.type)) content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 } });
+      else content.push({ type: 'image', source: { type: 'base64', media_type: f.type, data: f.base64 } });
+    }
+    content.push({ type: 'text', text: 'Extract this person\'s information from the attached document(s) into the client profile. For list sections, include every row in the order shown. Put each row\'s city and country together in cityCountry where the column combines them. Report anything suspicious in notes (plain English, one issue per item).' });
+    const out = await call(apiKey, model, content, { name: 'save_profile', description: 'Save the extracted client profile', input_schema: profileSchema() }, SYS);
+    const p = M.emptyProfile(); for (const k of Object.keys(p)) if (out[k] != null) p[k] = out[k];
+    return { profile: p, notes: out.notes || [], formCode: out.formCode || '', formEdition: out.formEdition || '' };
+  }
+
+  /* fields: model fields still empty; returns Map id -> value */
+  async function fillRemaining(apiKey, model, form, fields, profile, values) {
+    const list = fields.map((f) => {
+      const o = { id: f.id, label: f.display, section: f.section || '', kind: f.kind };
+      if (f.question) o.question = f.question;
+      if (f.table) o.column = f.colLabel, o.table = (f.table.headers || []).join(' | '), o.row = f.row + 1;
+      if (f.options) o.options = f.options.map((x) => ({ value: x.value, text: x.text }));
+      if (f.items && f.items.length) o.options = f.items.slice(0, 300).map((x) => ({ value: x.value, text: x.text }));
+      if (f.picture) o.format = f.picture; if (f.maxChars) o.maxChars = f.maxChars;
+      return o;
+    });
+    const filled = {}; for (const [k, v] of values) if (v) filled[k] = v;
+    const content = [{ type: 'text', text: `Form: ${form.info.code} ${form.info.title}\n\nClient profile (JSON):\n${JSON.stringify(profile)}\n\nAlready filled (field id -> value):\n${JSON.stringify(filled)}\n\nEmpty fields to consider:\n${JSON.stringify(list)}\n\nFill only the empty fields whose answer is clearly supported by the profile or already-filled values. For radio/choice fields return one of the option "value"s. Skip signatures, dates of signing, interpreter or officer sections, and anything you are not sure about. Never guess personal facts.` }];
+    const out = await call(apiKey, model, content, {
+      name: 'fill_fields', description: 'Return values for empty fields',
+      input_schema: { type: 'object', properties: { values: { type: 'array', items: { type: 'object', properties: { id: S, value: S }, required: ['id', 'value'] } }, notes: { type: 'array', items: S } }, required: ['values'] },
+    }, SYS);
+    const ids = new Set(fields.map((f) => f.id));
+    return { values: new Map((out.values || []).filter((v) => ids.has(v.id) && v.value !== '').map((v) => [v.id, v.value])), notes: out.notes || [] };
+  }
+
+  return { MODELS, importProfile, fillRemaining };
+})();
+
+
+/* ---- forms-ui.js ---- */
+/* IRCC Form Filler UI. Mount inside any page:
+   FormsApp.mount(el, { getClient, saveClient, getSettings, saveSettings })
+   client = { id, name, profile, forms: { [formKey]: { values, updated, file } } } */
+const FormsApp = (() => {
+  'use strict';
+  const X = XfaForm, M = FormMapper, AI = FormAI;
+
+  /* ---------- tiny DOM helper ---------- */
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v; else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else if (k === 'value') el.value = v; else if (k === 'checked') el.checked = v; else if (k === 'html') el.innerHTML = v; else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
+    return el;
+  }
+  const toast = (root, msg, kind) => { const t = h('div', { class: 'ff-toast ' + (kind || '') }, msg); root.append(t); setTimeout(() => t.remove(), 4200); };
+  const pretty = (s) => (s || '').replace(/([a-z])([A-Z0-9])/g, '$1 $2').replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase());
+  const readFile = (file) => new Promise((ok, bad) => { const r = new FileReader(); r.onload = () => ok(new Uint8Array(r.result)); r.onerror = bad; r.readAsArrayBuffer(file); });
+  const b64 = (u8) => { let s = ''; for (let i = 0; i < u8.length; i += 32768) s += String.fromCharCode.apply(null, u8.subarray(i, i + 32768)); return btoa(s); };
+  const today = () => new Date().toISOString().slice(0, 10);
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  function download(bytes, name) { const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })); const a = h('a', { href: url, download: name }); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000); }
+
+  /* ---------- blank form library (IndexedDB; blank IRCC forms only, no client data) ---------- */
+  const Lib = {
+    db: null,
+    open() { if (this.db) return Promise.resolve(this.db); return new Promise((ok, bad) => { try { const r = indexedDB.open('ircc-form-library', 1); r.onupgradeneeded = () => r.result.createObjectStore('forms', { keyPath: 'key' }); r.onsuccess = () => ok((this.db = r.result)); r.onerror = () => bad(r.error); } catch (e) { bad(e); } }); },
+    async all() { try { const db = await this.open(); return await new Promise((ok) => { const q = db.transaction('forms').objectStore('forms').getAll(); q.onsuccess = () => ok(q.result || []); q.onerror = () => ok([]); }); } catch { return []; } },
+    async put(rec) { try { const db = await this.open(); db.transaction('forms', 'readwrite').objectStore('forms').put(rec); } catch {} },
+    async del(key) { try { const db = await this.open(); db.transaction('forms', 'readwrite').objectStore('forms').delete(key); } catch {} },
+  };
+
+  /* ---------- checks: gaps in history / addresses ---------- */
+  const ym = (s) => { const m = /^(\d{4})-(\d{2})/.exec(s || ''); return m ? +m[1] * 12 + (+m[2] - 1) : null; };
+  const ymStr = (n) => Math.floor(n / 12) + '-' + String((n % 12) + 1).padStart(2, '0');
+  function gapCheck(rows, dob, label) {
+    const now = ym(today()); const issues = [];
+    let start = now - 120; const b = ym(dob); if (b != null && b + 18 * 12 > start) start = b + 18 * 12;
+    const rs = (rows || []).map((r) => ({ f: ym(r.from), t: /present|now|current/i.test(r.to || '') || !r.to ? now : ym(r.to), r })).filter((x) => x.f != null).sort((a, b) => a.f - b.f);
+    if (!rs.length) return (rows || []).length ? [] : [`${label}: no entries yet.`];
+    let cover = start - 1;
+    for (const x of rs) { if (x.t == null) continue; if (x.f > cover + 1 && x.f > start) issues.push(`${label}: nothing covers ${ymStr(Math.max(cover + 1, start))} to ${ymStr(x.f - 1)}.`); cover = Math.max(cover, x.t); }
+    if (cover < now) issues.push(`${label}: last entry ends ${ymStr(cover)} — IRCC needs every month up to today (${ymStr(now)}).`);
+    return issues;
+  }
+  function profileChecks(p) {
+    return [...gapCheck(p.history, p.person && p.person.dob, 'Personal history'), ...gapCheck(p.addresses, p.person && p.person.dob, 'Addresses')];
+  }
+
+  /* ======================================================================= */
+  function mount(root, api) {
+    root.classList.add('ff-root'); root.innerHTML = '';
+    let client = api.getClient(); client.profile = Object.assign(M.emptyProfile(), client.profile || {}); client.forms = client.forms || {};
+    const state = { importError: null, nextFill: null, newer: null, tab: 'fill', form: null, fileName: '', values: new Map(), src: new Map(), notes: [], onlyEmpty: false, updateProfile: true, imported: null };
+    const save = async () => { try { await api.saveClient(client); } catch (e) { toast(root, 'Could not save: ' + e.message, 'bad'); } };
+
+    const tabs = h('div', { class: 'ff-tabs', role: 'tablist' });
+    const body = h('div', { class: 'ff-body' });
+    root.append(h('div', { class: 'ff-head' }, h('div', { class: 'ff-title' }, h('strong', {}, 'IRCC forms'), h('span', {}, client.name || '')), tabs), body);
+    const TABS = [['fill', 'Fill a form'], ['profile', 'Client profile'], ['import', 'Import old forms'], ['settings', 'AI settings']];
+    function renderTabs() { tabs.innerHTML = ''; for (const [k, l] of TABS) tabs.append(h('button', { class: 'ff-tab' + (state.tab === k ? ' on' : ''), role: 'tab', onclick: () => { state.tab = k; render(); } }, l)); }
+    function render() { renderTabs(); body.innerHTML = ''; ({ fill: renderFill, profile: renderProfile, import: renderImport, settings: renderSettings })[state.tab](); }
+
+    /* ---------------- FILL ---------------- */
+    async function openForm(bytes, name) {
+      const busy = h('div', { class: 'ff-busy' }, 'Reading form…'); body.prepend(busy);
+      try {
+        const f = await X.load(bytes);
+        state.form = f; state.fileName = name; state.notes = [];
+        const filled = M.fill(f.model, client.profile, (client.forms[f.key] || {}).values, X);
+        state.values = new Map(); state.src = new Map();
+        for (const [id, v] of filled) { if (id.startsWith('__')) { state.notes.push(v.value); continue; } state.values.set(id, v.value); state.src.set(id, v.src); }
+        for (const [id, v] of f.existing) { state.values.set(id, v); state.src.set(id, 'inform'); }
+        state.newer = null;
+        if (f.existing.size && f.info.code) { const nb = await newestBlank(f.info.code); if (nb && edNum(nb.key.split('|')[1]) > edNum(f.info.version)) state.newer = nb; }
+        if (!f.existing.size) Lib.put({ key: f.key + '|' + f.info.version, label: (f.info.code || name) + (f.info.version ? ' (' + f.info.version + ')' : ''), name, bytes, added: Date.now() });
+        render();
+      } catch (e) { busy.remove(); toast(root, e.message, 'bad'); console.error(e); }
+    }
+    function dropZone(text, multiple, accept, onFiles) {
+      const input = h('input', { type: 'file', accept, multiple, hidden: true, onchange: () => input.files.length && onFiles([...input.files]) });
+      const z = h('label', { class: 'ff-drop', tabindex: 0, onkeydown: (e) => (e.key === 'Enter' || e.key === ' ') && input.click() }, input, h('span', { class: 'ff-drop-icon' }, '⇪'), h('span', {}, text));
+      z.addEventListener('dragover', (e) => { e.preventDefault(); z.classList.add('over'); });
+      z.addEventListener('dragleave', () => z.classList.remove('over'));
+      z.addEventListener('drop', (e) => { e.preventDefault(); z.classList.remove('over'); const fs = [...e.dataTransfer.files]; if (fs.length) onFiles(fs); });
+      return z;
+    }
+    function renderFill() {
+      if (!state.form) {
+        body.append(dropZone('Drop a blank IRCC form (PDF from canada.ca) — or one you filled before — or click to choose', false, 'application/pdf,.pdf', async ([file]) => openForm(await readFile(file), file.name)));
+        const lib = h('div', { class: 'ff-lib' }, h('p', { class: 'ff-muted' }, 'Loading your saved blank forms…')); body.append(lib);
+        Lib.all().then((recs) => {
+          lib.innerHTML = '';
+          if (!recs.length) { lib.append(h('p', { class: 'ff-muted' }, 'Blank forms you open are kept here so you can reuse them for other clients. Always download the newest version from IRCC when a form changes.')); return; }
+          lib.append(h('h3', {}, 'Your blank forms'));
+          const newestEd = {}; for (const r of recs) { const [c, e] = r.key.split('|'); newestEd[c] = Math.max(newestEd[c] || 0, edNum(e)); }
+          for (const r of recs.sort((a, b) => a.label.localeCompare(b.label))) {
+            const done = client.forms[r.key.split('|')[0]]; const older = edNum(r.key.split('|')[1]) < newestEd[r.key.split('|')[0]];
+            lib.append(h('div', { class: 'ff-librow' }, h('button', { class: 'ff-link', onclick: () => openForm(r.bytes, r.name) }, r.label), older ? h('span', { class: 'ff-pill old' }, 'older edition') : null, done ? h('span', { class: 'ff-pill' }, 'filled ' + (done.updated || '').slice(0, 10)) : null,
+              h('button', { class: 'ff-x', title: 'Remove from list', 'aria-label': 'Remove ' + r.label, onclick: async () => { await Lib.del(r.key); render(); } }, '×')));
+          }
+        });
+        return;
+      }
+      const f = state.form; const fields = f.model.fields;
+      const count = (s) => [...state.src.values()].filter((x) => x === s).length;
+      const rowUsed = (x) => !x.table || fields.some((y) => y.table === x.table && y.row === x.row && state.values.get(y.id));
+      const empty = fields.filter((x) => !state.values.get(x.id) && !(x.map && x.map.skip) && !x.hidden && rowUsed(x)).length;
+      const checks = [...profileChecks(client.profile), ...state.notes];
+      if (f.existing.size && state.newer) body.append(h('div', { class: 'ff-next' }, h('strong', {}, `This is an older edition (${f.info.version || 'unknown date'}) with answers already in it.`),
+        h('p', { class: 'ff-p' }, `You have the newer ${state.newer.label} in your list. The app can copy this form's answers into the client profile and open the newer edition, already filled.`),
+        h('div', { class: 'ff-actions' }, h('button', { class: 'ff-btn primary', onclick: async () => { const vals = new Map([...state.values].filter(([, v]) => v)); client.profile = mergeProfile(client.profile, M.extract(f.model, vals, M.emptyProfile(), X)); await save(); const nb = state.newer; state.newer = null; openForm(nb.bytes, nb.name); } }, `Move answers into ${state.newer.label}`))));
+      else if (f.existing.size && f.info.code) body.append(h('div', { class: 'ff-next' }, h('strong', {}, 'This PDF already has answers in it.'), h('p', { class: 'ff-p' }, `To move them into a newer edition, first open the current blank ${f.info.code} from IRCC once (it's then kept in your list), then open this file again.`), h('div', { class: 'ff-actions' }, h('a', { class: 'ff-btn', href: ircLink(f.info.code), target: '_blank', rel: 'noopener' }, 'Get the current form from IRCC ↗'))));
+      body.append(h('div', { class: 'ff-bar' },
+        h('div', {}, h('div', { class: 'ff-formname' }, f.info.code || state.fileName, f.info.version ? h('small', {}, ' · edition ' + f.info.version) : null, f.info.code ? h('a', { class: 'ff-small-link', href: ircLink(f.info.code), target: '_blank', rel: 'noopener', title: 'Open the IRCC page for this form to compare the edition date' }, 'Latest on IRCC ↗') : null), h('div', { class: 'ff-stats' },
+          h('span', { class: 'ff-dot profile' }), `${count('profile')} from profile`, h('span', { class: 'ff-dot saved' }), `${count('saved') + count('inform')} from before`, h('span', { class: 'ff-dot ai' }), `${count('ai')} by AI`, h('span', { class: 'ff-dot default' }), `${count('default')} auto "NONE"`, h('span', { class: 'ff-dot blank' }), `${empty} empty`, h('span', { title: 'Unused table rows are not counted' }, ''))),
+        h('div', { class: 'ff-actions' },
+          h('label', { class: 'ff-check' }, h('input', { type: 'checkbox', checked: state.onlyEmpty, onchange: (e) => { state.onlyEmpty = e.target.checked; render(); } }), 'Only empty'),
+          h('button', { class: 'ff-btn', onclick: () => { state.form = null; render(); } }, 'Other form'),
+          h('button', { class: 'ff-btn', onclick: aiFill }, '✦ AI: fill the rest'),
+          h('button', { class: 'ff-btn primary', onclick: doDownload }, 'Download filled PDF'))));
+      if (checks.length) body.append(h('div', { class: 'ff-checks' }, h('strong', {}, 'Check before submitting'), h('ul', {}, checks.map((c) => h('li', {}, c)))));
+      const wrap = h('div', { class: 'ff-form' }); body.append(wrap);
+      for (const n of f.model.tree) renderNode(n, wrap, 0);
+      body.append(h('div', { class: 'ff-foot' }, h('label', { class: 'ff-check' }, h('input', { type: 'checkbox', checked: state.updateProfile, onchange: (e) => (state.updateProfile = e.target.checked) }), 'When I download, also update this client\'s profile with what\'s in the form'),
+        h('p', { class: 'ff-muted' }, 'Signatures, signing dates and the interpreter/officer sections are never filled. Open the downloaded PDF in Adobe Acrobat or Reader to check, sign and validate.')));
+    }
+    function visible(n) { if (n.type === 'field') return !n.hidden && !(n.map && n.map.office) && (!state.onlyEmpty || !state.values.get(n.id)); return n.children.some(visible); }
+    function renderNode(n, parent, depth) {
+      if (!visible(n) && !(n.type === 'repeat')) return;
+      const sec = n.section || '';
+      if (sec && parent.dataset.sec !== sec && (n.type === 'field' || n.isTable)) { parent.dataset.sec = sec; parent.append(h('h4', { class: 'ff-sub' }, sec.length > 160 ? sec.slice(0, 160) + '…' : sec)); }
+      if (n.type === 'field') { parent.append(fieldRow(n)); return; }
+      if (n.isTable) { parent.append(tableBlock(n)); return; }
+      if (n.type === 'repeat') { parent.append(repeatBlock(n, depth)); return; }
+      if (!n.name || /^(page\d*|subform\d*)$/i.test(n.name) && depth > 0) { for (const c of n.children) renderNode(c, parent, depth); return; }
+      if (depth === 0 || /^page/i.test(n.name)) {
+        const sec = h('section', { class: 'ff-sec' }, h('h3', {}, pretty(n.name))); parent.append(sec);
+        for (const c of n.children) renderNode(c, sec, depth + 1); if (sec.children.length === 1) sec.remove(); return;
+      }
+      const g = h('div', { class: 'ff-group' }); parent.append(g);
+      for (const c of n.children) renderNode(c, g, depth + 1);
+    }
+    function setVal(id, v) { if (v === '' || v == null) state.values.delete(id); else state.values.set(id, v); state.src.set(id, 'edited'); }
+    function srcDot(id) { const s = state.values.get(id) ? state.src.get(id) || 'edited' : 'blank'; return h('span', { class: 'ff-dot ' + s, title: { profile: 'From client profile', saved: 'From last time this form was filled', inform: 'Already in the PDF', ai: 'Filled by AI — check it', default: 'Filled automatically', edited: 'Edited here', blank: 'Empty' }[s] }); }
+    function control(f, id, compact) {
+      const v = state.values.get(id) || '';
+      const lab = compact ? f.colLabel || f.display : f.display;
+      if (f.kind === 'radio') {
+        const grp = h('div', { class: 'ff-radios', role: 'radiogroup', 'aria-label': lab });
+        for (const o of f.options) grp.append(h('label', { class: 'ff-radio' + (v === o.value ? ' on' : '') }, h('input', { type: 'radio', name: id, value: o.value, checked: v === o.value, onchange: () => { setVal(id, o.value); rerenderField(id); } }), o.text.length > 60 ? o.text.slice(0, 60) + '…' : pretty(o.text)));
+        if (v) grp.append(h('button', { class: 'ff-x', title: 'Clear', 'aria-label': 'Clear answer', onclick: () => { setVal(id, ''); rerenderField(id); } }, '×'));
+        return grp;
+      }
+      if (f.kind === 'check') return h('input', { type: 'checkbox', 'aria-label': lab, checked: v === f.on, onchange: (e) => setVal(id, e.target.checked ? f.on : '') });
+      if (f.kind === 'choice' && !f.textEntry) {
+        const sel = h('select', { 'aria-label': lab, onchange: (e) => setVal(id, e.target.value) }, h('option', { value: '' }, '—'));
+        for (const it of f.items) sel.append(h('option', { value: it.value, selected: it.value === v ? true : null }, it.text || it.value));
+        sel.value = v; return sel;
+      }
+      const ph = /YYYY-MM-DD/.test(f.picture || '') ? 'YYYY-MM-DD' : /YYYY-MM/.test(f.picture || '') ? 'YYYY-MM' : f.kind === 'date' ? 'YYYY-MM-DD' : '';
+      const attrs = { 'aria-label': lab, value: v, placeholder: ph, maxlength: f.maxChars || null, onchange: (e) => { let x = e.target.value.trim(); if (ph) { const d = M.toForm(f, x); if (d) x = d; e.target.value = x; } setVal(id, x); const dot = e.target.parentElement.querySelector('.ff-dot'); if (dot) dot.replaceWith(srcDot(id)); } };
+      if (f.items && f.items.length) { const dl = 'dl' + Math.random().toString(36).slice(2); attrs.list = dl; return h('span', {}, h('input', attrs), h('datalist', { id: dl }, f.items.map((i) => h('option', { value: i.value }, i.text)))); }
+      return f.multiLine || (f.maxChars > 200) || /explain|details/i.test(f.name) ? h('textarea', { ...attrs, rows: 3 }, v) : h('input', attrs);
+    }
+    function rerenderField(id) { const el = body.querySelector(`[data-id="${CSS.escape(id)}"]`); const f = state.form.model.byId.get(id); if (el && f) el.replaceWith(fieldRow(f)); }
+    function fieldRow(f) {
+      const q = f.question; const id = f.id;
+      if (q) return h('div', { class: 'ff-q', 'data-id': id }, srcDot(id), h('div', { class: 'ff-qtext' }, q), control(f, id));
+      return h('div', { class: 'ff-field' + (f.kind === 'radio' ? ' wide' : ''), 'data-id': id }, h('div', { class: 'ff-label' }, srcDot(id), h('span', {}, f.display || pretty(f.name)), f.required ? h('em', { title: 'Required' }, '*') : null, f.map && f.map.skip ? h('span', { class: 'ff-tag' }, 'you fill / sign') : null), control(f, id));
+    }
+    function tableBlock(t) {
+      const rows = []; (function collect(nodes) { for (const r of nodes) rows.push(r); })(t.children);
+      const head = (t.headers && t.headers.length ? t.headers : (rows[0] && flat(rows[0]).map((f) => f.colLabel))) || [];
+      const tbl = h('table', { class: 'ff-table' }, h('thead', {}, h('tr', {}, h('th', { class: 'n' }, '#'), head.map((x) => h('th', {}, x)))));
+      const tb = h('tbody'); tbl.append(tb); let rn = 0;
+      for (const r of rows) {
+        const fs = flat(r);
+        if (r.type === 'repeat') {
+          const inst = instancesOf(fs);
+          for (let k = 0; k < inst; k++) tb.append(h('tr', {}, h('td', { class: 'n' }, ++rn), fs.map((f) => cell(f, X.instanceId(f, k)))));
+          tb.append(h('tr', {}, h('td', { colspan: head.length + 1 }, h('button', { class: 'ff-btn small', onclick: () => { const nid = X.instanceId(fs[0], inst); state.values.set(nid, ' '); state.src.set(nid, 'edited'); render(); state.values.set(nid, ''); } }, '+ Add row'))));
+        } else tb.append(h('tr', {}, h('td', { class: 'n' }, ++rn), fs.map((f) => cell(f, f.id))));
+      }
+      return h('div', { class: 'ff-tablewrap' }, t.context && t.context.length < 300 ? h('p', { class: 'ff-muted' }, t.context) : null, h('div', { class: 'ff-scroll' }, tbl));
+    }
+    function instancesOf(fs) { let n = 1; for (const f of fs) for (let k = 1; k < 500; k++) { if (state.values.has(X.instanceId(f, k))) n = Math.max(n, k + 1); else if (k > n) break; } return n; }
+    const flat = (n) => { const o = []; (function w(x) { if (x.type === 'field') o.push(x); else x.children.forEach(w); })(n); return o; };
+    function cell(f, id) { const c = control(f, id, true); return h('td', { class: 'src-' + (state.values.get(id) ? state.src.get(id) || 'edited' : 'blank') }, c); }
+    function repeatBlock(n, depth) {
+      const fs = flat(n); const inst = instancesOf(fs); const box = h('div', { class: 'ff-repeat' }, h('h4', {}, pretty(n.name)));
+      for (let k = 0; k < inst; k++) { const g = h('div', { class: 'ff-group' }, h('div', { class: 'ff-muted' }, pretty(n.name) + ' ' + (k + 1))); for (const f of fs) { const id = X.instanceId(f, k); g.append(h('div', { class: 'ff-field', 'data-id': id }, h('div', { class: 'ff-label' }, srcDot(id), f.display), control(f, id))); } box.append(g); }
+      box.append(h('button', { class: 'ff-btn small', onclick: () => { const nid = X.instanceId(fs[0], inst); state.values.set(nid, ' '); render(); state.values.set(nid, ''); } }, '+ Add another'));
+      return box;
+    }
+    async function aiFill() {
+      const s = api.getSettings() || {}; const f = state.form;
+      const emptyF = f.model.fields.filter((x) => !x.hidden && !state.values.get(x.id) && x.kind !== 'signature' && !(x.map && x.map.skip) && !/signature|interpreter|signed/i.test(x.name));
+      if (!emptyF.length) { toast(root, 'Nothing left to fill.'); return; }
+      const busy = h('div', { class: 'ff-busy' }, `AI is looking at ${emptyF.length} empty fields…`); body.prepend(busy);
+      try {
+        const r = await AI.fillRemaining(s.apiKey, s.model, f, emptyF, client.profile, state.values);
+        for (const [id, v] of r.values) { state.values.set(id, v); state.src.set(id, 'ai'); }
+        state.notes = state.notes.concat(r.notes);
+        render(); toast(root, `AI filled ${r.values.size} field${r.values.size === 1 ? '' : 's'} — they're marked purple. Check each one.`);
+      } catch (e) { busy.remove(); toast(root, e.message, 'bad'); }
+    }
+    async function doDownload() {
+      const f = state.form; const vals = new Map([...state.values].filter(([, v]) => v != null && String(v).trim() !== '').map(([k, v]) => [k, String(v).trim()]));
+      try {
+        const out = await f.save(vals);
+        const p = client.profile.person || {}; const nm = [f.key, (p.familyName || '').toUpperCase(), p.givenNames || ''].filter(Boolean).join('_').replace(/[^\w-]+/g, '_');
+        download(out, nm + '.pdf');
+        client.forms[f.key] = { values: Object.fromEntries(vals), updated: new Date().toISOString(), file: state.fileName, version: f.info.version };
+        if (state.updateProfile) client.profile = mergeProfile(client.profile, M.extract(f.model, vals, M.emptyProfile(), X), 'fill');
+        await save(); toast(root, 'Downloaded. Answers saved to this client.');
+      } catch (e) { toast(root, 'Could not create the PDF: ' + e.message, 'bad'); console.error(e); }
+    }
+
+    /* merge: scalars from src overwrite when non-empty; lists replaced when src has rows */
+    function mergeProfile(base, src, mode) {
+      const out = clone(base);
+      for (const [k, v] of Object.entries(src)) {
+        if (Array.isArray(v)) { if (v.length) out[k] = v; continue; }
+        if (v && typeof v === 'object') { out[k] = out[k] || {}; for (const [kk, vv] of Object.entries(v)) if (vv !== '' && vv != null) out[k][kk] = vv; }
+      }
+      return out;
+    }
+
+    /* ---------------- PROFILE ---------------- */
+    function renderProfile() {
+      const p = client.profile; let dirty = false;
+      const mark = () => { dirty = true; saveBtn.disabled = false; saveBtn.textContent = 'Save profile'; };
+      const saveBtn = h('button', { class: 'ff-btn primary', disabled: true, onclick: async () => { await save(); dirty = false; saveBtn.disabled = true; saveBtn.textContent = 'Saved'; renderChecks(); } }, 'Saved');
+      const checksBox = h('div');
+      const renderChecks = () => { checksBox.innerHTML = ''; const c = profileChecks(p); if (c.length) checksBox.append(h('div', { class: 'ff-checks' }, h('strong', {}, 'Gaps to fix'), h('ul', {}, c.map((x) => h('li', {}, x))))); };
+      renderChecks();
+      body.append(h('div', { class: 'ff-bar' }, h('div', { class: 'ff-muted' }, 'Fill this once. Every IRCC form for this client is filled from it.'), saveBtn), checksBox);
+      const inp = (obj, key, label, ph) => h('label', { class: 'ff-field' }, h('div', { class: 'ff-label' }, label), h('input', { value: obj[key] || '', placeholder: ph || '', oninput: (e) => { obj[key] = e.target.value; mark(); } }));
+      for (const [who, d] of Object.entries(M.PEOPLE)) {
+        p[who] = p[who] || {};
+        const sec = h('section', { class: 'ff-sec' }, h('h3', {}, d.label)); const grid = h('div', { class: 'ff-grid' }); sec.append(grid);
+        for (const [k, l] of Object.entries(d.keys)) {
+          if (k === 'role') { grid.append(h('label', { class: 'ff-field' }, h('div', { class: 'ff-label' }, l), h('select', { onchange: (e) => { p.person.role = e.target.value; mark(); } }, ['', 'principal', 'dependant'].map((o) => h('option', { value: o, selected: (p.person.role || '') === o ? true : null }, o ? pretty(o) + (o === 'dependant' ? ' (spouse/partner/child 18+)' : ' applicant') : '—'))))); continue; }
+          grid.append(inp(p[who], k, l, /dob|dod/.test(k) ? 'YYYY-MM-DD' : ''));
+        }
+        body.append(sec);
+      }
+      const bg = h('section', { class: 'ff-sec' }, h('h3', {}, 'Background questions (IMM 5669 question 6)'));
+      const QS = { a: 'Convicted of a crime in Canada (no pardon)', b: 'Convicted of / charged with a crime elsewhere', c: 'Made a refugee claim (Canada, abroad or UNHCR)', d: 'Refused refugee status, PR or a visa (any country)', e: 'Refused admission to / ordered to leave any country', f: 'Involved in genocide, war crime or crime against humanity', g: 'Used, planned or advocated armed struggle or violence', h: 'Associated with a group that uses armed struggle/violence', i: 'Member of an organization engaged in a pattern of crime', j: 'Detained, incarcerated or jailed', k: 'Serious disease or physical or mental disorder' };
+      for (const k of M.BG) bg.append(h('div', { class: 'ff-q' }, h('div', { class: 'ff-qtext' }, k + ') ' + QS[k]), h('div', { class: 'ff-radios' }, ['yes', 'no'].map((o) => h('label', { class: 'ff-radio' + (p.bg[k] === o ? ' on' : '') }, h('input', { type: 'radio', name: 'bg' + k, checked: p.bg[k] === o, onchange: (e) => { p.bg[k] = o; e.target.closest('.ff-radios').querySelectorAll('.ff-radio').forEach((x) => x.classList.toggle('on', x.contains(e.target))); mark(); } }), pretty(o))))));
+      bg.append(h('label', { class: 'ff-field wide' }, h('div', { class: 'ff-label' }, 'Details for any YES answer'), h('textarea', { rows: 3, oninput: (e) => { p.bg.details = e.target.value; mark(); } }, p.bg.details || '')));
+      body.append(bg);
+      const ey = h('section', { class: 'ff-sec' }, h('h3', {}, 'Years of school completed')); const g2 = h('div', { class: 'ff-grid' }); ey.append(g2);
+      for (const [k, l] of [['elementary', 'Elementary / primary'], ['secondary', 'Secondary / high school'], ['university', 'University / college'], ['trade', 'Trade / other post-secondary']]) g2.append(inp(p.eduYears, k, l));
+      body.append(ey);
+      for (const [k, d] of Object.entries(M.LISTS)) body.append(listEditor(k, d, p, mark));
+    }
+    function listEditor(k, d, p, mark) {
+      p[k] = p[k] || []; const cols = Object.entries(d.cols);
+      const sec = h('section', { class: 'ff-sec' }, h('h3', {}, d.label, d.none ? h('small', {}, ' — leave empty and the form gets "NONE"') : null));
+      const tb = h('tbody');
+      const draw = () => {
+        tb.innerHTML = '';
+        p[k].forEach((r, i) => tb.append(h('tr', {}, cols.map(([c, l]) => h('td', {}, h('input', { 'aria-label': l + ' row ' + (i + 1), value: r[c] || '', placeholder: /YYYY/.exec(l) ? l.replace(/.*\((.*)\)/, '$1') : '', oninput: (e) => { r[c] = e.target.value; mark(); } }))),
+          h('td', { class: 'n' }, h('button', { class: 'ff-x', title: 'Move up', 'aria-label': 'Move row up', onclick: () => { if (i) { [p[k][i - 1], p[k][i]] = [p[k][i], p[k][i - 1]]; draw(); mark(); } } }, '↑'), h('button', { class: 'ff-x', title: 'Delete row', 'aria-label': 'Delete row', onclick: () => { p[k].splice(i, 1); draw(); mark(); } }, '×')))));
+      };
+      draw();
+      sec.append(h('div', { class: 'ff-scroll' }, h('table', { class: 'ff-table' }, h('thead', {}, h('tr', {}, cols.map(([, l]) => h('th', {}, l)), h('th', { class: 'n' }))), tb)),
+        h('button', { class: 'ff-btn small', onclick: () => { p[k].push({}); draw(); mark(); tb.lastElementChild.querySelector('input').focus(); } }, '+ Add row'));
+      return sec;
+    }
+
+    /* ---------------- IMPORT ---------------- */
+    function renderImport() {
+      const hasKey = !!(api.getSettings() || {}).apiKey;
+      body.append(h('div', { class: 'ff-steps' },
+        h('div', {}, h('b', {}, '1'), h('span', {}, h('strong', {}, 'Import the old form here. '), 'Its answers go into the client profile.')),
+        h('div', {}, h('b', {}, '2'), h('span', {}, h('strong', {}, 'Fill a form: '), 'open the current blank from IRCC. It fills from the profile.')),
+        h('div', {}, h('b', {}, '3'), h('span', {}, h('strong', {}, 'Check and download '), 'the new form.'))));
+      if (!hasKey && !(state.importError && state.importError.code === 'nokey')) body.append(h('div', { class: 'ff-checks' }, h('strong', {}, 'Scanned forms and photos need AI'), h('p', { class: 'ff-p' }, 'A scan is only a picture, so the app sends it to Claude to read. Add your Claude API key first. Filled digital IRCC PDFs (typed in Adobe) are read without AI. Or type the details into Client profile yourself.'), h('button', { class: 'ff-btn small', onclick: () => { state.tab = 'settings'; render(); } }, 'Add API key')));
+      if (state.importError) body.append(h('div', { class: 'ff-error', role: 'alert' }, h('strong', {}, 'Import didn\'t finish'), h('p', { class: 'ff-p' }, state.importError.code === 'nokey' ? 'This is a scanned form (a picture), so Claude has to read it, and there is no API key yet. Add your key, then drop the file again. Filled digital IRCC PDFs are read without AI.' : state.importError.msg), state.importError.files ? h('p', { class: 'ff-p ff-muted' }, 'Files: ' + state.importError.files.join(', ')) : null,
+        state.importError.code === 'nokey' ? h('button', { class: 'ff-btn small', onclick: () => { state.importError = null; state.tab = 'settings'; render(); } }, 'Add API key') : null));
+      if (state.nextFill) body.append(nextStepBox());
+      body.append(dropZone('Drop the old form(s) here: PDF, JPG or PNG. You can drop several at once.', true, 'application/pdf,.pdf,image/png,image/jpeg,image/webp', importFiles));
+      if (state.imported) body.append(reviewImport());
+    }
+    async function importFiles(files) {
+      state.importError = null; state.nextFill = null;
+      body.querySelectorAll('.ff-error').forEach((e) => e.remove());
+      const busy = h('div', { class: 'ff-busy' }, 'Reading…'); body.prepend(busy);
+      const toAI = [];
+      try {
+        let prof = M.emptyProfile(); const notes = []; let direct = 0; const found = [];
+        for (const file of files) {
+          const bytes = await readFile(file);
+          if (/pdf/i.test(file.type) || /\.pdf$/i.test(file.name)) {
+            let f = null; try { f = await X.load(bytes); } catch (e) { /* not a digital IRCC form */ }
+            if (f && f.existing.size) { prof = mergeProfile(prof, M.extract(f.model, f.existing, M.emptyProfile(), X)); client.forms[f.key] = client.forms[f.key] || { values: Object.fromEntries(f.existing), updated: new Date().toISOString(), file: file.name, version: f.info.version }; direct++; found.push({ code: f.info.code, edition: f.info.version }); continue; }
+            if (f && !f.existing.size) { notes.push(`${file.name} is a blank ${f.info.code || 'form'} with nothing filled in. Open blank forms in "Fill a form".`); continue; }
+          }
+          toAI.push({ name: file.name, type: /pdf/i.test(file.type) || /\.pdf$/i.test(file.name) ? 'application/pdf' : file.type || 'image/jpeg', base64: b64(bytes) });
+        }
+        if (toAI.length) {
+          busy.textContent = `Claude is reading ${toAI.length} file${toAI.length > 1 ? 's' : ''}… this can take a minute.`;
+          const s = api.getSettings() || {}; const r = await AI.importProfile(s.apiKey, s.model, toAI);
+          prof = mergeProfile(prof, r.profile); notes.push(...r.notes);
+          if (r.formCode) found.push({ code: normCode(r.formCode), edition: r.formEdition || '' });
+        }
+        if (direct) await save();
+        state.imported = { profile: prof, notes, direct, ai: toAI.length, found };
+        render();
+      } catch (e) {
+        console.error(e);
+        state.importError = { msg: e.message || String(e), code: e.code || '', files: toAI.map((f) => f.name) };
+        render();
+      }
+    }
+    const normCode = (c) => { const m = /(IMM|CIT|IRM|EMP|CIC)\s*-?\s*(\d{4})/i.exec(c || ''); return m ? m[1].toUpperCase() + ' ' + m[2] : ''; };
+    const edNum = (e) => { const m = /^(\d{1,2})-(\d{4})$/.exec(e || ''); return m ? +m[2] * 12 + +m[1] : 0; };
+    const ircLink = (code) => /^IMM \d{4}$/.test(code) ? 'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/' + code.replace(' ', '').toLowerCase() + '.html' : 'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides.html';
+    async function newestBlank(code) { const recs = (await Lib.all()).filter((r) => r.key.split('|')[0] === code.replace(/\s+/g, '')); recs.sort((a, b) => edNum(b.key.split('|')[1]) - edNum(a.key.split('|')[1])); return recs[0] || null; }
+    function nextStepBox() {
+      const { code, edition } = state.nextFill;
+      const box = h('div', { class: 'ff-next' }, h('strong', {}, 'Profile updated. Next: fill the current version' + (code ? ' of ' + code : '') + '.'));
+      const line = h('div', { class: 'ff-actions' }); box.append(line);
+      if (code) newestBlank(code).then((r) => {
+        if (r) {
+          const ed = r.key.split('|')[1];
+          box.insertBefore(h('p', { class: 'ff-p' }, `Old form: ${code}${edition ? ' (' + edition + ')' : ''}. The newest blank in your list is ${code}${ed ? ' (' + ed + ')' : ''}. Check IRCC in case there is a newer one.`), line);
+          line.prepend(h('button', { class: 'ff-btn primary', onclick: () => { state.nextFill = null; state.tab = 'fill'; openForm(r.bytes, r.name); } }, `Fill ${r.label} now`));
+        } else box.insertBefore(h('p', { class: 'ff-p' }, `Download the current blank ${code} from IRCC, then open it in "Fill a form". Everything you just imported fills in automatically.`), line);
+      });
+      else box.append(h('p', { class: 'ff-p' }, 'Download the current blank form from IRCC, then open it in "Fill a form".'));
+      line.append(h('a', { class: 'ff-btn', href: ircLink(code), target: '_blank', rel: 'noopener' }, 'Get the current form from IRCC ↗'), h('button', { class: 'ff-btn', onclick: () => { state.nextFill = null; state.tab = 'fill'; state.form = null; render(); } }, 'Go to Fill a form'), h('button', { class: 'ff-btn', onclick: () => { state.tab = 'profile'; render(); } }, 'Review profile'));
+      return box;
+    }
+    function reviewImport() {
+      const { profile: ip, notes, found } = state.imported; const cur = client.profile; const picks = [];
+      const what = (found || []).filter((x) => x.code).map((x) => x.code + (x.edition ? ' (' + x.edition + ' edition)' : '')).join(', ');
+      const box = h('div', { class: 'ff-review' }, h('h3', {}, 'Review what was found' + (what ? ' in ' + what : '')), h('p', { class: 'ff-muted' }, 'Ticked items go into the client profile. Untick anything wrong. You can also fix things later in Client profile.'));
+      if (notes.length) box.append(h('div', { class: 'ff-checks' }, h('strong', {}, 'Things to check'), h('ul', {}, notes.map((n) => h('li', {}, n)))));
+      const tbl = h('table', { class: 'ff-table' }, h('thead', {}, h('tr', {}, h('th', { class: 'n' }), h('th', {}, 'Item'), h('th', {}, 'Now in profile'), h('th', {}, 'Found')))); const tb = h('tbody'); tbl.append(tb);
+      const row = (label, now, found, apply) => { const same = (now || '') === (found || ''); if (!found || same) return; const cb = h('input', { type: 'checkbox', checked: true, 'aria-label': 'Copy ' + label }); picks.push([cb, apply]); tb.append(h('tr', {}, h('td', { class: 'n' }, cb), h('td', {}, label), h('td', { class: 'ff-muted' }, now || '—'), h('td', {}, found))); };
+      for (const [who, d] of Object.entries(M.PEOPLE)) for (const [k, l] of Object.entries(d.keys)) row(d.label + ': ' + l, (cur[who] || {})[k], (ip[who] || {})[k], () => { cur[who] = cur[who] || {}; cur[who][k] = ip[who][k]; });
+      for (const k of [...M.BG, 'details']) row('Background ' + k, cur.bg[k], (ip.bg || {})[k], () => (cur.bg[k] = ip.bg[k]));
+      for (const k of Object.keys(ip.eduYears || {})) row('Years of school: ' + k, cur.eduYears[k], ip.eduYears[k], () => (cur.eduYears[k] = ip.eduYears[k]));
+      for (const [k, d] of Object.entries(M.LISTS)) {
+        const rows = ip[k] || []; if (!rows.length) continue;
+        const summary = rows.map((r) => Object.values(r).filter(Boolean).join(' · ')).join('\n');
+        if (JSON.stringify(rows) === JSON.stringify(cur[k] || [])) continue;
+        const cb = h('input', { type: 'checkbox', checked: true, 'aria-label': 'Replace ' + d.label }); picks.push([cb, () => (cur[k] = clone(rows))]);
+        tb.append(h('tr', {}, h('td', { class: 'n' }, cb), h('td', {}, d.label + ` (${rows.length} rows, replaces current)`), h('td', { class: 'ff-muted pre' }, (cur[k] || []).length + ' rows'), h('td', { class: 'pre' }, summary)));
+      }
+      const first = (found || []).find((x) => x.code) || {};
+      const done = async () => { state.imported = null; state.nextFill = { code: first.code || '', edition: first.edition || '' }; await save(); render(); };
+      if (!picks.length) box.append(h('p', {}, 'Nothing new. The profile already matches.'), h('div', { class: 'ff-actions' }, h('button', { class: 'ff-btn primary', onclick: done }, 'Continue')));
+      else box.append(h('div', { class: 'ff-scroll' }, tbl), h('div', { class: 'ff-actions' },
+        h('button', { class: 'ff-btn', onclick: () => { state.imported = null; render(); } }, 'Discard'),
+        h('button', { class: 'ff-btn primary', onclick: async () => { for (const [cb, ap] of picks) if (cb.checked) ap(); await done(); } }, 'Copy ticked items to profile')));
+      return box;
+    }
+
+    /* ---------------- SETTINGS ---------------- */
+    function renderSettings() {
+      const s = Object.assign({ apiKey: '', model: AI.MODELS[0].id }, api.getSettings() || {});
+      const key = h('input', { type: 'password', value: s.apiKey, placeholder: 'sk-ant-…', autocomplete: 'off' });
+      const model = h('select', {}, AI.MODELS.map((m) => h('option', { value: m.id, selected: s.model === m.id ? true : null }, m.label)));
+      body.append(h('section', { class: 'ff-sec' }, h('h3', {}, 'AI settings'),
+        h('p', { class: 'ff-muted' }, 'AI is optional. Profiles, saved answers and form filling all work without it. AI is used only when you press "AI: fill the rest" or import scans/photos. Get a key at console.anthropic.com. Client data you send goes to Anthropic\'s API.'),
+        h('label', { class: 'ff-field wide' }, h('div', { class: 'ff-label' }, 'Claude API key'), key),
+        h('label', { class: 'ff-field wide' }, h('div', { class: 'ff-label' }, 'Model'), model),
+        h('button', { class: 'ff-btn primary', onclick: async () => { await api.saveSettings({ apiKey: key.value.trim(), model: model.value }); toast(root, 'Saved.'); } }, 'Save')));
+    }
+
+    render();
+    return { reload() { client = api.getClient(); client.profile = Object.assign(M.emptyProfile(), client.profile || {}); client.forms = client.forms || {}; state.form = null; state.imported = null; render(); } };
+  }
+
+  return { mount, gapCheck };
+})();
+
+</script>
+<script id="ircc-forms-glue">
+/* ═════════ IRCC FORMS TAB — uses the PIN-locked saved-clients list ═════════ */
+(function(){
+  const SET_KEY="alh_ircc_settings_v1";
+  let fsSettings=null, fsCurrent=null, fsApp=null, fsQuery="";
+  const panel=()=>document.getElementById("tab-forms");
+  const escH=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  /* settings (API key) — encrypted with the same PIN key as saved clients */
+  async function fsLoadSettings(){
+    if(!scKey){ fsSettings=null; return; }
+    try{ const r=localStorage.getItem(SET_KEY); if(!r){ fsSettings={}; return; } const env=JSON.parse(r);
+      const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:scB64d(env.iv)},scKey,scB64d(env.ct)); fsSettings=JSON.parse(new TextDecoder().decode(pt)); }
+    catch(e){ fsSettings={}; }
+  }
+  async function fsWriteSettings(){
+    if(!scKey||!fsSettings) return;
+    const iv=crypto.getRandomValues(new Uint8Array(12));
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},scKey,new TextEncoder().encode(JSON.stringify(fsSettings))));
+    try{ localStorage.setItem(SET_KEY,JSON.stringify({v:1,iv:scB64e(iv),ct:scB64e(ct)})); }catch(e){}
+  }
+  /* keep settings readable after a PIN change; load them on unlock; clear the tab on lock */
+  const _w=scWrite; scWrite=async function(){ await _w.apply(this,arguments); await fsWriteSettings(); };
+  const _u=scUnlock; scUnlock=async function(){ const ok=await _u.apply(this,arguments); if(ok&&!fsSettings) await fsLoadSettings(); if(ok&&panel().classList.contains("active")) fsRender(); return ok; };
+  const _l=scLock; scLock=function(){ _l.apply(this,arguments); fsSettings=null; fsCurrent=null; fsApp=null; if(panel()) fsRender(); };
+
+  function fsClient(){ return (scList||[]).find(c=>c.id===fsCurrent); }
+  async function fsOpen(id){
+    fsCurrent=id; fsRenderList();
+    const c=fsClient(); if(!c) return;
+    c.ircc=c.ircc||{profile:{},forms:{}};
+    const p=c.ircc.profile; p.person=p.person||{};
+    if(!p.person.email&&c.email) p.person.email=c.email;
+    if(!p.person.phone&&c.phone) p.person.phone=c.phone;
+    fsApp=FormsApp.mount(document.getElementById("fsMount"),{
+      getClient:()=>{ const x=fsClient(); return { id:x.id, name:x.name, profile:x.ircc.profile, forms:x.ircc.forms }; },
+      saveClient:async(cl)=>{ const x=fsClient(); if(!x) throw new Error("Saved clients are locked — enter your PIN again."); x.ircc={profile:cl.profile,forms:cl.forms}; x.updated=new Date().toISOString(); await scWrite(); fsRenderList(); },
+      getSettings:()=>fsSettings||{},
+      saveSettings:async(s)=>{ fsSettings=s; await fsWriteSettings(); },
+    });
+  }
+  async function fsNew(name){
+    name=(name||"").trim(); if(!name) return;
+    let c=scList.find(x=>x.name.toLowerCase()===name.toLowerCase());
+    if(!c){ c={id:Date.now().toString(36),name,services:[],updated:new Date().toISOString()}; scList.push(c); await scWrite(); }
+    fsOpen(c.id);
+  }
+  function fsRenderList(){
+    const box=document.getElementById("fsList"); if(!box) return;
+    const q=fsQuery.toLowerCase();
+    const rows=(scList||[]).slice().sort((a,b)=>a.name.localeCompare(b.name)).filter(c=>!q||c.name.toLowerCase().includes(q));
+    box.innerHTML=rows.length?rows.map(c=>{ const n=c.ircc&&c.ircc.forms?Object.keys(c.ircc.forms).length:0;
+      return `<button type="button" class="fsc${c.id===fsCurrent?" on":""}" data-id="${escH(c.id)}"><b>${escH(c.name)}</b><span>${n?n+" form"+(n>1?"s":"")+" filled":"no forms yet"}</span></button>`; }).join("")
+      :`<div class="fsempty">${q?"No match.":"No saved clients yet."}</div>`;
+    box.querySelectorAll(".fsc").forEach(b=>b.onclick=()=>fsOpen(b.dataset.id));
+  }
+  window.fsRender=function(){
+    const el=panel(); if(!el) return;
+    if(!scKey){
+      const has=!!scRead();
+      el.innerHTML=`<div class="fslocked"><div class="fsl-card"><h2>IRCC forms</h2><p>Fill any IRCC PDF form from a client's saved profile. Client profiles live in your saved clients, locked with your PIN.</p><button type="button" class="btn btn-primary" id="fsUnlock">${has?"🔒 Enter PIN to open":"Set up a PIN to start"}</button></div></div>`;
+      document.getElementById("fsUnlock").onclick=()=>scUnlock();
+      return;
+    }
+    const cur=$("cliName")?$("cliName").value.trim():"";
+    el.innerHTML=`<div class="fswrap"><aside class="fsside">
+        <div class="fsside-h">Clients <button type="button" class="kb" title="Lock saved clients" onclick="scLock()">🔒</button></div>
+        ${cur?`<button type="button" class="kb pri fscur" id="fsCur">Use ${escH(cur)}</button>`:""}
+        <input type="search" id="fsSearch" placeholder="Search clients" aria-label="Search clients" value="${escH(fsQuery)}">
+        <div id="fsList" class="fslist"></div>
+        <div class="fsnew"><input id="fsNewName" placeholder="New client name" aria-label="New client name"><button type="button" class="kb" id="fsAdd">Add</button></div>
+      </aside><section class="fsmain"><div id="fsMount"><div class="fsempty big">Pick a client on the left${cur?`, or use ${escH(cur)} from the agreement`:""}.</div></div></section></div>`;
+    document.getElementById("fsSearch").oninput=e=>{ fsQuery=e.target.value; fsRenderList(); };
+    const add=()=>{ const i=document.getElementById("fsNewName"); const v=i.value; i.value=""; fsNew(v); };
+    document.getElementById("fsAdd").onclick=add; document.getElementById("fsNewName").onkeydown=e=>{ if(e.key==="Enter") add(); };
+    if(cur) document.getElementById("fsCur").onclick=()=>fsNew(cur);
+    fsRenderList();
+    if(fsCurrent&&fsClient()) fsOpen(fsCurrent);
+  };
+
+  /* tab wiring */
+  const _show=showTab;
+  showTab=function(name){
+    const on=name==="forms";
+    panel().classList.toggle("active",on); document.getElementById("tabbtn-forms").classList.toggle("active",on);
+    document.body.classList.toggle("forms-active",on);
+    if(on){ ["retainer","consult","invoice","close"].forEach(t=>{ document.getElementById("tab-"+t).classList.remove("active"); document.getElementById("tabbtn-"+t).classList.remove("active"); }); const built=!!panel().querySelector(".fswrap")&&!!scKey; if(scKey&&!fsSettings) fsLoadSettings().then(()=>{ if(!built) fsRender(); }); else if(!built) fsRender(); return; }
+    _show(name);
+  };
+})();
 
 </script>
 </body>
