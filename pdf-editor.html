@@ -202,6 +202,17 @@
   .tbSep{width:1px; height:20px; background:#e3eefa; margin:0 3px}
   .tbSel{border:1px solid #dfe7f2; border-radius:7px; height:30px; font-size:13px; color:#16223f; padding:0 4px; background:#fff; cursor:pointer}
   .tbSel:hover{border-color:#bcdcf7}
+  .tbSize{position:relative; display:flex; align-items:stretch; height:30px; border:1px solid #dfe7f2; border-radius:7px; background:#fff}
+  .tbSize:hover, .tbSize:focus-within{border-color:#bcdcf7}
+  .tbSize input{width:30px; border:0; outline:none; background:none; text-align:center; font:inherit; font-size:13px; font-weight:600; color:#16223f; padding:0 0 0 4px}
+  .tbSpin{display:flex; flex-direction:column; border-left:1px solid #e8eef6}
+  .tbSpin button{flex:1; width:18px; border:0; padding:0; background:none; display:grid; place-items:center; cursor:pointer; color:#2275c9}
+  .tbSpin button:hover{background:#eef4fc}
+  .tbSpin svg{width:8px; height:5px; stroke:currentColor; stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round}
+  .tbSizeList{position:absolute; top:calc(100% + 4px); left:-1px; width:52px; max-height:240px; overflow:auto; background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow-lg); padding:4px 0; z-index:2}
+  .tbSizeList.hide{display:none}
+  .tbSizeList button{display:block; width:100%; border:0; background:none; padding:5px 0; font:inherit; font-size:13px; color:#16223f; cursor:pointer; text-align:center}
+  .tbSizeList button:hover, .tbSizeList button.on{background:#eef4fc; color:#1763b3; font-weight:700}
   .tbColor{position:relative; width:30px; height:30px; border-radius:7px; border:1px solid #dfe7f2; overflow:hidden; cursor:pointer}
   .fldprops{position:fixed; z-index:131; width:240px; background:#fff; border:1px solid var(--line);
     border-radius:var(--r-lg); box-shadow:var(--shadow-lg); padding:12px; font-size:13px; color:#16213b}
@@ -1166,7 +1177,11 @@
   <button class="tbBtn" id="tbBold" title="Bold"><b>B</b></button>
   <button class="tbBtn" id="tbItalic" title="Italic"><i>I</i></button>
   <span class="tbSep"></span>
-  <select class="tbSel" id="tbSize" title="Font size"></select>
+  <div class="tbSize" id="tbSizeBox" title="Font size (points)">
+    <input id="tbSize" type="text" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Font size in points">
+    <span class="tbSpin"><button type="button" id="tbSizeUp" tabindex="-1" aria-label="Bigger"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button><button type="button" id="tbSizeDown" tabindex="-1" aria-label="Smaller"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button></span>
+    <div class="tbSizeList hide" id="tbSizeList" role="listbox"></div>
+  </div>
   <select class="tbSel" id="tbFont" title="Font"></select>
   <label class="tbColor" title="Text color"><input type="color" id="tbColor" value="#1a1a1a"></label>
   <span class="tbSep"></span>
@@ -1921,7 +1936,7 @@ async function detectDocDefaults(){
 }
 async function applyDocFontDefaults(){
   const { size, font } = await detectDocDefaults();
-  if(size){ fontRange.value = size; fontVal.textContent = size; }
+  if(size){ fontRange.value = size; fontVal.textContent = toPt(size); }
   docDefaultFont = "courier"; // new text is always Courier, whatever the document uses
 }
 
@@ -2363,6 +2378,8 @@ let lastTextColor="#1a1a1a";
 const isLightColor=c=>{ const m=/^#?([0-9a-f]{6})$/i.exec(c||""); if(!m) return false; const n=parseInt(m[1],16); return (0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255))>200; };
 function rememberTextColor(c){ if(c && !isLightColor(c)) lastTextColor=c; }
 const textColor=()=> isLightColor(lastTextColor) ? "#1a1a1a" : lastTextColor;
+// Sizes are shown in points (what ends up in the PDF); boxes store screen pixels at BASE scale.
+const toPt=px=>Math.max(1,Math.round(+px/BASE)), fromPt=pt=>pt*BASE;
 const colorPick=$("#colorPick"), fontRange=$("#fontRange"), fontVal=$("#fontVal"),
       strokeRange=$("#strokeRange"), strokeVal=$("#strokeVal");
 function refreshCtx(){
@@ -2378,7 +2395,7 @@ function refreshCtx(){
   $("#ctxWhiteout").classList.toggle("hide", !(tool==="whiteout" || woSel));
   if(woSel){ const m = (selected.smart && selected.patchSrc) ? "smart" : "solid"; document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===m)); if(m==="solid"){ $("#ctxColor").classList.remove("hide"); colorPick.value=selected.color||"#ffffff"; } }
   else document.querySelectorAll("#woSeg button").forEach(b=>b.classList.toggle("on", b.dataset.mode===whiteoutMode));
-  if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; colorPick.value=selected.color; }
+  if(selected && selected.type==="text"){ fontRange.value=selected.fontSize; fontVal.textContent=toPt(selected.fontSize); colorPick.value=selected.color; }
   else if(!selected && tool==="text") colorPick.value=textColor();
   if(selected && ["rect","stamp","wstamp","draw","strike","underline","highlight"].includes(selected.type)){ colorPick.value=selected.color; }
   if(selected && selected.type==="draw"){ strokeRange.value=selected.width; strokeVal.textContent=selected.width; }
@@ -2408,7 +2425,7 @@ function applyColor(c){
     renderAnno(selected); snapshot();
   }
 }
-fontRange.oninput=()=>{ fontVal.textContent=fontRange.value;
+fontRange.oninput=()=>{ fontVal.textContent=toPt(fontRange.value);
   if(selected && selected.type==="text"){ selected.fontSize=+fontRange.value; renderAnno(selected); } };
 fontRange.onchange=()=>{ if(selected&&selected.type==="text") snapshot(); };
 strokeRange.oninput=()=>{ strokeVal.textContent=strokeRange.value;
@@ -3045,6 +3062,7 @@ function renderAnno(a){
         // discard if it's still unfocused and still empty
         setTimeout(()=>{
           if(document.activeElement===ed) return; // focus came back — still editing
+          if(textbar.contains(document.activeElement)) return; // using the size/font/colour controls — keep the box open
           ed.contentEditable="false"; a._editing=false; if(a._node) a._node.classList.remove("editing"); captureRichText(a);
           discardIfEmptyText(a); // never typed anything — discard rather than leave an empty box behind
           snapshot();
@@ -3177,6 +3195,13 @@ function select(a){
 
 /* ---------------- floating text formatting bar ---------------- */
 const textbar=$("#textbar");
+// leaving the text toolbar for somewhere other than the text box finishes the edit (and drops an empty box)
+textbar.addEventListener("focusout",()=>setTimeout(()=>{
+  const a=selected; if(!a || a.type!=="text" || !a._editing || !a._edit) return;
+  const f=document.activeElement; if(f===a._edit || textbar.contains(f)) return;
+  a._edit.contentEditable="false"; a._editing=false; if(a._node) a._node.classList.remove("editing");
+  captureRichText(a); discardIfEmptyText(a); snapshot();
+},80));
 /* Font registry. std = built-in PDF font (free, exact). src = @fontsource id (embedded on download). */
 const FONT_REG = {
   helv:      {label:"Helvetica",       css:"Helvetica,Arial,sans-serif",        std:"helv"},
@@ -3201,10 +3226,10 @@ const FONT_REG = {
   carlito:   {label:"Carlito (Calibri)",css:"Carlito,Calibri,sans-serif",         src:"carlito",    fb:"helv"},
   caladea:   {label:"Caladea (Cambria)",css:"Caladea,Cambria,serif",              src:"caladea",    fb:"times"}
 };
-const SIZES=[8,9,10,11,12,14,16,18,20,24,28,32,40,48,64];
+const SIZES=[8,9,10,11,12,14,16,18,20,24,28,36,48,60,72]; // suggestions, in points — any 1–99 can be typed
 function cssFont(v){ return (FONT_REG[v]||FONT_REG.helv).css; }
 (function initTextbar(){
-  const sz=$("#tbSize"); SIZES.forEach(s=>{ const o=el("option"); o.value=s; o.textContent=s; sz.appendChild(o); });
+  const list=$("#tbSizeList"); SIZES.forEach(s=>{ const b=el("button"); b.type="button"; b.textContent=s; b.dataset.v=s; b.tabIndex=-1; list.appendChild(b); });
   const fn=$("#tbFont"); Object.keys(FONT_REG).forEach(k=>{ const o=el("option"); o.value=k; o.textContent=FONT_REG[k].label; o.style.fontFamily=FONT_REG[k].css; fn.appendChild(o); });
   const fams=[...new Set(Object.values(FONT_REG).filter(r=>r.google).map(r=>r.google))];
   if(fams.length){ const link=el("link"); link.rel="stylesheet";
@@ -3215,7 +3240,7 @@ function updateTextbar(){
   if(!selected || selected.type!=="text"){ textbar.classList.add("hide"); return; }
   $("#tbBold").classList.toggle("on", !!selected.bold);
   $("#tbItalic").classList.toggle("on", !!selected.italic);
-  { const sz=$("#tbSize"), v=String(selected.fontSize); if(![...sz.options].some(o=>o.value===v)){ const o=document.createElement("option"); o.value=v; o.textContent=v; const after=[...sz.options].find(x=>+x.value>+v); sz.insertBefore(o, after||null); } sz.value=v; }
+  if(document.activeElement!==$("#tbSize")) $("#tbSize").value = toPt(selected.fontSize);
   $("#tbFont").value = selected.font||"helv";
   $("#tbColor").value = selected.color;
   textbar.classList.remove("hide");
@@ -3300,7 +3325,43 @@ $("#tbBold").addEventListener("mousedown",e=>e.preventDefault());
 $("#tbItalic").addEventListener("mousedown",e=>e.preventDefault());
 $("#tbBold").onclick=()=>{ if(!selected)return; selected.bold=!selected.bold; renderAnno(selected); updateTextbar(); snapshot(); };
 $("#tbItalic").onclick=()=>{ if(!selected)return; selected.italic=!selected.italic; renderAnno(selected); updateTextbar(); snapshot(); };
-$("#tbSize").onchange=()=>{ if(!selected)return; selected.fontSize=+$("#tbSize").value; renderAnno(selected); fontRange.value=selected.fontSize; fontVal.textContent=selected.fontSize; snapshot(); };
+/* font size: type any 1–99, step with the arrows (or ↑/↓ keys), or pick a suggestion */
+(function(){
+  const inp=$("#tbSize"), list=$("#tbSizeList");
+  const editing=()=> (selected && selected.type==="text" && selected._editing && selected._edit) ? selected : null;
+  const backToText=()=>{ const a=editing(); if(a){ a._edit.focus(); placeCaretEnd(a._edit); } };
+  function setPt(pt, keepFocus){
+    if(!selected || selected.type!=="text") return;
+    pt=Math.max(1,Math.min(99,Math.round(+pt||0))); if(!pt) return;
+    inp.value=pt;
+    if(toPt(selected.fontSize)!==pt || selected.fontSize!==fromPt(pt)){
+      selected.fontSize=fromPt(pt); renderAnno(selected);
+      fontRange.value=selected.fontSize; fontVal.textContent=pt; snapshot();
+    }
+    markList();
+    if(!keepFocus) backToText();
+  }
+  const markList=()=>[...list.children].forEach(b=>b.classList.toggle("on", +b.dataset.v===+inp.value));
+  const openList=()=>{ markList(); list.classList.remove("hide"); const on=list.querySelector(".on"); if(on) list.scrollTop=on.offsetTop-list.clientHeight/2; };
+  const closeList=()=>list.classList.add("hide");
+  // arrows and list items never take focus, so the text box keeps its cursor
+  [$("#tbSizeUp"),$("#tbSizeDown"),list].forEach(n=>n.addEventListener("mousedown",e=>e.preventDefault()));
+  $("#tbSizeUp").onclick=()=>setPt((+inp.value||toPt(selected?selected.fontSize:12))+1, document.activeElement===inp);
+  $("#tbSizeDown").onclick=()=>setPt((+inp.value||toPt(selected?selected.fontSize:12))-1, document.activeElement===inp);
+  list.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; closeList(); setPt(+b.dataset.v); });
+  // clicking into the box selects the number, so typing replaces it (the mouseup would otherwise undo the selection)
+  let justFocused=false;
+  inp.addEventListener("focus",()=>{ inp.select(); justFocused=true; openList(); });
+  inp.addEventListener("mouseup",e=>{ if(justFocused){ e.preventDefault(); justFocused=false; } });
+  inp.addEventListener("click",()=>openList());
+  inp.addEventListener("input",()=>{ inp.value=inp.value.replace(/\D/g,"").slice(0,2); markList(); });
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="ArrowUp"||e.key==="ArrowDown"){ e.preventDefault(); setPt((+inp.value||0)+(e.key==="ArrowUp"?1:-1), true); inp.select(); }
+    else if(e.key==="Enter"){ e.preventDefault(); closeList(); setPt(inp.value); }
+    else if(e.key==="Escape"){ e.preventDefault(); closeList(); if(selected) inp.value=toPt(selected.fontSize); backToText(); }
+  });
+  inp.addEventListener("blur",()=>{ closeList(); if(selected && selected.type==="text" && +inp.value) setPt(inp.value, true); else if(selected) inp.value=toPt(selected.fontSize); });
+})();
 $("#tbFont").onchange=()=>{ if(!selected)return; selected.font=$("#tbFont").value; renderAnno(selected); snapshot(); };
 $("#tbColor").oninput=()=>{ if(!selected)return; selected.color=$("#tbColor").value; rememberTextColor(selected.color); renderAnno(selected); };
 $("#tbColor").onchange=()=>{ if(selected) snapshot(); };
