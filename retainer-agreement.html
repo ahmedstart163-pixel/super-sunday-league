@@ -518,6 +518,8 @@ body.forms-active .topbar .actions{display:none}
       </div>
       <label>GST/HST registration no. <span style="text-transform:none;font-weight:400">(optional — printed on invoices)</span></label>
       <input type="text" id="gstNo" placeholder="e.g. 123456789 RT0001" value="764705802 RT0001" />
+      <label>How clients can pay <span style="text-transform:none;font-weight:400">(printed on agreements and invoices)</span></label>
+      <input type="text" id="payAccept" value="cash or Interac e-Transfer to info@hijra2canada.com" placeholder="e.g. cash or Interac e-Transfer to info@..." />
       <label>People likely to assist (s.24(3)(e))</label>
       <input type="text" id="assist" placeholder="Leave empty if no one assists you" />
       <div class="two">
@@ -641,7 +643,7 @@ body.forms-active .topbar .actions{display:none}
         </select>
         <div id="paidFields" style="display:none">
           <div class="two">
-            <div><label>Paid by</label><select id="payMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+            <div><label>Paid by</label><select id="payMethod"><option>cash</option><option>Interac e-Transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
             <div><label>Date paid</label><span style="display:flex;gap:6px"><input type="text" id="payDate" placeholder="YYYY-MM-DD" inputmode="numeric" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" title="Pick from calendar" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
           </div>
           <div class="hint">Leave the date blank to use the agreement date. Works with the flat-fee method.</div>
@@ -728,7 +730,7 @@ body.forms-active .topbar .actions{display:none}
       </div>
       <label class="chk"><input type="checkbox" id="cPaid" /> Fee paid on signing (adds a receipt line)</label>
       <div class="two">
-        <div><label>Paid by</label><select id="cPayMethod"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+        <div><label>Paid by</label><select id="cPayMethod"><option>cash</option><option>Interac e-Transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
         <div><label>Tax</label><select id="cTaxIncl"><option value="add">Add GST/HST on top</option><option value="incl">Fee includes tax</option></select></div>
       </div>
       <label>Purpose &amp; scope of consultation (s.23(2)(e))</label>
@@ -823,7 +825,7 @@ body.forms-active .topbar .actions{display:none}
       <label>Date payment was received <span style="text-transform:none;font-weight:400">(blank = invoice date)</span></label>
       <span style="display:flex;gap:6px"><input type="text" id="iPaidDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span>
       <div class="two">
-        <div><label>Paid by</label><select id="iPayMethod" onchange="renderInvoice()"><option>cash</option><option>e-transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
+        <div><label>Paid by</label><select id="iPayMethod" onchange="renderInvoice()"><option>cash</option><option>Interac e-Transfer</option><option>debit</option><option>credit card</option><option>cheque</option></select></div>
         <div><label>Tax</label><select id="iTaxIncl" onchange="renderInvoice()"><option value="add">Add GST/HST on top</option><option value="incl">Amounts include tax</option></select></div>
       </div>
     </fieldset>
@@ -882,7 +884,7 @@ body.forms-active .topbar .actions{display:none}
       </div>
       <div id="xRefWrap">
         <div class="two">
-          <div><label>Refund paid by</label><select id="xRefMethod"><option>cash</option><option>e-transfer</option><option>cheque</option><option>debit</option><option>credit card</option></select></div>
+          <div><label>Refund paid by</label><select id="xRefMethod"><option>cash</option><option>Interac e-Transfer</option><option>cheque</option><option>debit</option><option>credit card</option></select></div>
           <div><label>Refund date (blank = not yet sent)</label><span style="display:flex;gap:6px"><input type="text" id="xRefDate" placeholder="YYYY-MM-DD" onchange="fixDateField(this)" /><button type="button" onclick="pickDate(this.previousElementSibling)" style="border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;padding:0 10px">📅</button></span></div>
         </div>
       </div>
@@ -1564,6 +1566,8 @@ function render(){
     <p>The Client paid the professional fee of <b>${cad(total)}</b> in full by <b>${esc(pMethod)}</b> on <b>${niceDate(pDate)}</b>. The RCIC has provided the Client with a receipt. Funds received before services are rendered are held in trust in a client account at a financial institution approved by the College, kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`:`<h2><span class="sn">10.</span> Advance payments &amp; client account</h2>
     <p>${adv>0?`An advance payment of <b>${cad(adv)}</b> is collected on signing. The RCIC will provide the Client with a receipt and will hold the funds`:`No advance payment is collected on signing. If the Client pays any amount before services are provided, the RCIC will provide a receipt and will hold the funds`} in trust in a client account at a financial institution approved by the College. The funds are kept separate from the RCIC's own funds, with deposit and withdrawal records maintained for the Client, and are used only for the purpose for which they were paid. The RCIC will invoice the Client before withdrawing any funds and will withdraw the invoiced amount within 30 days of issuing the invoice.</p>`}
 
+    ${(!pf && $("payAccept").value.trim())?`<p>The Client may pay by ${esc($("payAccept").value.trim())}.</p>`:""}
+
     <h2><span class="sn">11.</span> Invoices &amp; receipts</h2>
     <p>The RCIC will invoice the Client only after services have been provided or disbursements made. Each invoice will contain a full description of the services and disbursements to which it relates. The RCIC will provide the Client with a receipt for every payment received, identifying the invoice to which it relates.</p>
 
@@ -1762,7 +1766,7 @@ function renderConsult(){
     <p>This is an initial consultation only. It does not create a representation relationship and does not commit either party to proceed. Any ongoing immigration or citizenship consulting services would require a separate written service agreement.</p>
 
     <h2><span class="sn">2.</span> Consultation fee</h2>
-    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cIncl?" (any applicable tax included)":""}${(!cIncl&&cgst>0)?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.`}</p>
+    <p>${probono?"This initial consultation is provided free of charge — no fee is payable.":`The fee for this consultation is <b>${cad(cfee)}</b>${cIncl?" (any applicable tax included)":""}${(!cIncl&&cgst>0)?`, plus GST/HST (${cgst}%) of ${cad(cTaxAmt)}, for a total of <b>${cad(cTotal)}</b>`:""}. The fee is payable for the consultation whether or not the Client proceeds with any application.${$("payAccept").value.trim()?` The Client may pay by ${esc($("payAccept").value.trim())}.`:""}`}</p>
 
     <h2><span class="sn">3.</span> The College's role</h2>
     <p>The RCIC is a Regulated Canadian Immigration Consultant licensed by, and subject to the Code of Professional Conduct of, the College of Immigration and Citizenship Consultants (CICC) — the national body that regulates immigration and citizenship consultants in Canada to protect the public. If the Client has a concern, they may contact the College:</p>
@@ -1887,7 +1891,7 @@ function renderInvoice(){
       ${itrust?`<tr><td>Less payment received${$("iPaidDate").value?` ${niceDate($("iPaidDate").value)}`:""} and held in trust${left>0.005?` (applied ${cad(applied)} of ${cad(itrust)})`:""}</td><td class="amt">−${cad(applied)}</td></tr><tr class="total"><td>Amount due</td><td class="amt">${cad(due)}</td></tr>`:""}
     </tbody></table>
 
-    <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${paidOn?` on ${niceDate(paidOn)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value?` ${esc($("iPay").value)}`:""}`}</p>
+    <p style="margin-top:12px">${paid?`Paid in full by ${esc($("iPayMethod").value)}${paidOn?` on ${niceDate(paidOn)}`:""}. Balance owing: ${cad(0)}.`:`Payable within ${esc(idue)} days of this invoice.${$("iPay").value.trim()?` ${esc($("iPay").value.trim())}`:$("payAccept").value.trim()?` Pay by ${esc($("payAccept").value.trim())}.`:""}`}</p>
     <p style="font-size:13px;color:#666">This invoice contains a full description of the professional services and disbursements to which it relates.${paid?"":" A receipt identifying this invoice will be provided on payment."}</p>
     ${paid?`<div class="cicc" style="border-color:#1f8a5e;background:#e9f6ef;color:#15603f;margin-top:8px"><b>PAID — RECEIPT.</b> ${itrust&&due<0.005?`Payment in full of ${cad(applied)}${left>0.005?` (from ${cad(itrust)} received)`:""} was received by ${esc($("iPayMethod").value)}${paidOn?` on ${niceDate(paidOn)}`:""}, held in the RCIC's client (trust) account, and has been applied to this invoice. Balance owing: ${cad(0)}.${left>0.005?` ${cad(left)} remains in trust for future invoices or refund.`:""}`:itrust?`Payment of ${cad(due)} received by ${esc($("iPayMethod").value)} with thanks${paidOn?` on ${niceDate(paidOn)}`:""}, plus ${cad(applied)} received earlier and held in trust — total paid ${cad(total)}.`:`Payment in full of ${cad(total)} received by ${esc($("iPayMethod").value)} with thanks${paidOn?` on ${niceDate(paidOn)}`:""}.`} This receipt relates to invoice ${esc($("iNo").value||"")}.</div>`:""}
   `;
@@ -2017,7 +2021,7 @@ function exportDoc(){
 
 /* ── firm-detail persistence (guarded for sandbox) ───── */
 const FIRM_KEY="rcic_firm_v2"; /* v2: old saved firm details are ignored so the new defaults load */
-const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang","gstNo"];
+const FIRM_FIELDS=["firm","rcicName","rcicNo","firmAddr","firmPhone","firmEmail","prov","lang","gstNo","payAccept"];
 function saveFirm(silent){
   try{
     const data={};
