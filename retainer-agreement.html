@@ -517,7 +517,7 @@ body.forms-active .topbar .actions{display:none}
         <div><label>Email</label><input type="email" id="firmEmail" placeholder="info@..." value="info@hijra2canada.com" /></div>
       </div>
       <label>GST/HST registration no. <span style="text-transform:none;font-weight:400">(optional — printed on invoices)</span></label>
-      <input type="text" id="gstNo" placeholder="e.g. 123456789 RT0001" />
+      <input type="text" id="gstNo" placeholder="e.g. 123456789 RT0001" value="764705802 RT0001" />
       <label>People likely to assist (s.24(3)(e))</label>
       <input type="text" id="assist" placeholder="Leave empty if no one assists you" />
       <div class="two">
@@ -2034,7 +2034,7 @@ function loadFirm(){
   try{
     const raw=localStorage.getItem(FIRM_KEY); if(!raw) return;
     const d=JSON.parse(raw);
-    FIRM_FIELDS.forEach(id=>{ if(d[id]!=null && $(id)) $(id).value=d[id]; });
+    FIRM_FIELDS.forEach(id=>{ if(d[id]!=null && $(id) && !(id==="gstNo" && !String(d[id]).trim())) $(id).value=d[id]; });
     brand.badge = d.showBadge!==false;
     brand.insignia = d.showInsignia!==false;
     brand.logo = d.showLogo!==false;
