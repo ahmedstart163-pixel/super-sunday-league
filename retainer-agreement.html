@@ -66,7 +66,7 @@
   textarea{resize:vertical;line-height:1.5}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .three{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
-  .disb-row{display:grid;grid-template-columns:1fr 96px;gap:8px;margin-bottom:6px}
+  .disb-row{display:grid;grid-template-columns:1fr 96px auto;gap:8px;margin-bottom:6px;align-items:center}
   .disb-row input{font-size:13px;padding:7px 9px}
   .hint{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.4}
 
@@ -134,6 +134,7 @@
   .chk{display:flex!important;align-items:center;gap:8px;text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--ink)!important;margin-top:8px!important}
   .chk input{width:auto}
   .pdate{display:none}
+  .pdfpaper{box-shadow:none !important;border:0 !important;margin:0 !important;padding:0 !important;max-width:none !important;width:100% !important;border-radius:0 !important;background:#fff !important}
   .feesub{font-size:.86em;color:#5d6b7d}
   .scbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
   .kb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit}
@@ -397,7 +398,11 @@ body.forms-active .topbar .actions{display:none}
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
       Word
     </button>
-    <button class="btn btn-primary" onclick="printDoc()" title="Print or save as PDF">Print / PDF</button>
+    <button class="btn btn-primary" id="pdfBtn" onclick="downloadPdf()" title="Download as a PDF file">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+      PDF
+    </button>
+    <button class="btn btn-light" onclick="printDoc()" title="Print">Print</button>
   </div>
 </div>
 
@@ -514,7 +519,7 @@ body.forms-active .topbar .actions{display:none}
       <label>GST/HST registration no. <span style="text-transform:none;font-weight:400">(optional — printed on invoices)</span></label>
       <input type="text" id="gstNo" placeholder="e.g. 123456789 RT0001" />
       <label>People likely to assist (s.24(3)(e))</label>
-      <input type="text" id="assist" placeholder="e.g., authorized staff and agents of the firm" />
+      <input type="text" id="assist" placeholder="Leave empty if no one assists you" />
       <div class="two">
         <div><label>Governing province</label>
           <select id="prov">
@@ -1369,17 +1374,19 @@ function loadProgram(){
   $("scope").value = p.scope.join("\n");
   $("timeframe").value = p.timeframe || "";
   $("preadvice").value = p.preadvice || "";
-  disb = p.disb.map(name=>({name, amount:""}));
+  disb = []; /* no disbursements by default: government fees are paid directly by the client */
   renderDisb();
   syncProgUI();
   render();
 }
 function renderDisb(){
-  $("disbList").innerHTML = disb.map((d,i)=>`
+  $("disbList").innerHTML = (disb.length?disb.map((d,i)=>`
     <div class="disb-row">
-      <input type="text" value="${esc(d.name)}" oninput="disb[${i}].name=this.value;render()" />
+      <input type="text" value="${esc(d.name)}" placeholder="e.g. Certified translation" oninput="disb[${i}].name=this.value;render()" />
       <input type="number" placeholder="CAD" value="${d.amount}" min="0" step="1" oninput="disb[${i}].amount=this.value;render()" />
-    </div>`).join("");
+      <button type="button" class="kb" title="Remove" onclick="disb.splice(${i},1);renderDisb();render()">×</button>
+    </div>`).join(""):`<div class="hint" style="margin-top:0">None. The agreement says no disbursements are expected, and that the Client pays government fees directly to IRCC.</div>`)
+    + `<button type="button" class="kb" style="margin-top:6px" onclick="disb.push({name:'',amount:''});renderDisb();render()">+ Add a disbursement</button>`;
 }
 
 /* ── render the document ─────────────────────────────── */
@@ -1412,7 +1419,7 @@ function render(){
   const rcicLine = (rcic||"[RCIC name]") + (rno?` (RCIC No. ${esc(rno)})`:" (RCIC No. R______)");
 
   const milestoneRows = ms.map(([label,pct])=>`<tr><td>${esc(label)}</td><td class="amt">${pct}%</td><td class="amt">${cad(fee*pct/100)}</td></tr>`).join("");
-  const disbRows = disb.filter(d=>d.name.trim()).map(d=>`<tr><td>${esc(d.name)}</td><td class="amt">${d.amount!==""?cad(d.amount):"To be confirmed"}</td></tr>`).join("");
+  const disbRows = disb.filter(d=>d.name.trim()).map(d=>`<tr><td>${esc(d.name)}</td><td class="amt">${d.amount!==""?cad(d.amount):"Estimate needed"}</td></tr>`).join("");
 
   $("paper").innerHTML = `
     <div class="doc-head">
@@ -1455,7 +1462,7 @@ function render(){
     <ol class="svc">${scopeItems.map(s=>`<li>${esc(s)}</li>`).join("")}${spOwp?`<li>Prepare and submit an open work permit application for the Principal Applicant</li>`:""}</ol>
     ${pas.length?`<p style="margin:10px 0 2px"><b>Principal Applicants covered by this Agreement (${pas.length}):</b></p><ol class="pa">${pas.map(p=>`<li>${esc(p)}</li>`).join("")}</ol>`:""}
     <p><b>Estimated time frame:</b> ${timeframe?esc(timeframe):"to be confirmed with the Client"}. Time frames are estimates only; once an application is submitted, processing times are controlled by IRCC and may change.</p>
-    <p>The RCIC endeavours to provide quality immigration and citizenship consulting services and to adequately supervise any person who assists in providing them. The following persons are likely to assist the RCIC: ${assist?esc(assist):"the RCIC and authorized staff of the firm"}.</p>
+    <p>The RCIC endeavours to provide quality immigration and citizenship consulting services and to adequately supervise any person who assists in providing them. ${assist?`The following persons are likely to assist the RCIC: ${esc(assist)}.`:"The RCIC will provide all services personally. No other person will assist the RCIC in providing these services."}</p>
     <p>The RCIC will provide services in ${esc(lang)} and will give the Client a signed copy of this Agreement.</p>
 
     ${group?`<h2><span class="sn">4.</span> Client's instructions &amp; responsibility for the Group</h2>
@@ -1873,7 +1880,7 @@ function renderInvoice(){
     <table class="fees"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>${disbRows}</tbody></table>`:""}
 
     <table class="fees" style="margin-top:12px"><tbody>
-      <tr><td>Professional services</td><td class="amt">${cad(svcSub)}</td></tr>
+      <tr><td>Subtotal — professional services</td><td class="amt">${cad(svcSub)}</td></tr>
       ${iIncl?`<tr><td>GST/HST</td><td class="amt">Included</td></tr>`:`<tr><td>GST/HST (${itax}%)</td><td class="amt">${cad(taxAmt)}</td></tr>`}
       ${disbSub?`<tr><td>Disbursements</td><td class="amt">${cad(disbSub)}</td></tr>`:""}
       <tr class="total"><td>Total</td><td class="amt">${cad(total)}</td></tr>
@@ -1998,12 +2005,12 @@ function exportDoc(){
     ol.alpha{list-style-type:lower-alpha} .receipt{margin-top:24px;border-top:1px dashed #999;padding-top:10px} .receipt h3{font-size:10pt;color:#16233b;text-transform:uppercase;margin:0 0 6px}
     .paidstamp{display:inline-block;border:3px solid #1f8a5e;color:#1f8a5e;font-weight:bold;font-size:20pt;padding:2px 12px;letter-spacing:3px;font-family:Arial,sans-serif} .paidstamp small{display:block;font-size:8pt;letter-spacing:1px}
     ul.plain li{margin-bottom:4px} ol.pa li{margin-bottom:2px}`;
-  const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_");
+  const fileRef = (document.getElementById(refId).value||"document").replace(/[^\w-]/g,"_"); void fileRef;
   const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${clone.innerHTML}</body></html>`;
   const blob = new Blob(["\ufeff", html], {type:"application/msword"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${title.replace(/ /g,"_")}_${fileRef}.doc`;
+  a.download = docFileName(activeTab())+".doc";
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
 }
@@ -2061,6 +2068,8 @@ function getMissing(tab){
     need($("cliPhone").value.trim()||$("cliEmail").value.trim(),"Client phone or email (Code s.24(3)(b))");
     need($("timeframe").value.trim(),"Estimated time frame (Code s.24(3)(h))");
     if($("joint").checked) need($("cli2Name").value.trim(),"Second client name (joint retainer)");
+    if($("joint").checked&&$("cli2Name").value.trim()) need($("cli2Addr").value.trim(),"Second client home address (Code s.24(3)(b))");
+    disb.filter(d=>d.name.trim()&&d.amount==="").forEach(d=>need(false,`Estimated amount for "${d.name.trim()}" (Code s.24(3)(j))`));
   } else if(tab==="consult"){
     need($("rcicName").value.trim(),"RCIC full name");
     need($("firm").value.trim(),"Firm name");
@@ -2094,7 +2103,55 @@ function setPageFooter(){
   st.textContent = on ? `@page{margin:0.6in 0.65in 0.75in 0.65in;@bottom-left{content:"Client initials: __________";font:9pt Arial,sans-serif;color:#888}@bottom-right{content:"Service Agreement · ${firm} · Page " counter(page) " of " counter(pages);font:9pt Arial,sans-serif;color:#888}}` : "";
 }
 window.addEventListener("beforeprint", setPageFooter);
-function printDoc(){ if(guardRequired()){ setPageFooter(); window.print(); } }
+/* file names: "RCIC Retainer Agreement (Nada Hussein)", "Invoice #15654123 (Nada Hussein)" */
+function shortName(full){ const w=(full||"").trim().split(/\s+/).filter(Boolean); return w.length>2 ? w[0]+" "+w[w.length-1] : w.join(" "); }
+function docFileName(tab){
+  const v=id=>($(id)&&$(id).value||"").trim();
+  const nm=shortName(tab==="invoice"?(v("iName")||v("cliName")):tab==="consult"?(v("ccliName")||v("cliName")):tab==="close"?(v("xName")||v("cliName")):v("cliName"));
+  let base = tab==="retainer"?"RCIC Retainer Agreement" : tab==="consult"?"RCIC Initial Consultation" : tab==="close"?"RCIC File Closing Letter" : "Invoice #"+(v("iNo").replace(/^#/,"")||"");
+  const out=(base+(nm?` (${nm})`:"")).replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
+  return out;
+}
+function printDoc(){ if(guardRequired()){ setPageFooter(); const t=document.title; document.title=docFileName(activeTab()); window.print(); setTimeout(()=>{ document.title=t; },1000); } }
+
+/* real PDF download (no print dialog) */
+function loadHtml2Pdf(){
+  if(window.html2pdf) return Promise.resolve();
+  return new Promise((ok,fail)=>{ const sc=document.createElement("script"); sc.src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"; sc.onload=ok; sc.onerror=()=>fail(new Error("Couldn't load the PDF maker — check your internet connection, or use Print and choose \"Save as PDF\".")); document.head.appendChild(sc); });
+}
+async function downloadPdf(){
+  if(!guardRequired()) return;
+  const tab=activeTab(); const paperId={retainer:"paper",consult:"paper2",invoice:"paper3",close:"paper4"}[tab];
+  const btn=$("pdfBtn"); const label=btn.innerHTML; btn.disabled=true; btn.textContent="Making PDF…";
+  let holder=null;
+  try{
+    await loadHtml2Pdf();
+    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    const src=$(paperId); const clone=src.cloneNode(true);
+    clone.querySelectorAll('input.inlinedate').forEach(inp=>{ const sp=document.createElement("span"); sp.textContent=inp.value?niceDate(inp.value):"______________"; inp.replaceWith(sp); });
+    clone.querySelectorAll(".pdate").forEach(x=>x.remove());
+    clone.querySelectorAll(".noprint,.no-print").forEach(x=>x.remove());
+    clone.classList.add("pdfpaper");
+    clone.style.cssText+=";box-shadow:none;border:0;margin:0;padding:0;max-width:none;width:100%;border-radius:0;background:#fff";
+    const classic = tab==="retainer" && $("layout") && $("layout").value==="classic";
+    const firm=$("firm").value||"";
+    const name=docFileName(tab);
+    await html2pdf().set({
+      margin:[0.55,0.6,0.65,0.6], filename:name+".pdf",
+      image:{type:"jpeg",quality:0.95},
+      html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0},
+      jsPDF:{unit:"in",format:"letter",orientation:"portrait"},
+      pagebreak:{mode:["css","legacy"],avoid:[".sigs",".sig",".receipt",".cicc","tr","h2",".ccard",".party",".paidstamp",".typedcopy"]}
+    }).from(clone).toPdf().get("pdf").then(pdf=>{
+      const n=pdf.internal.getNumberOfPages(), W=pdf.internal.pageSize.getWidth(), H=pdf.internal.pageSize.getHeight();
+      pdf.setProperties({title:name, author:firm, creator:firm});
+      for(let i=1;i<=n;i++){ pdf.setPage(i); pdf.setFontSize(8); pdf.setTextColor(140);
+        if(classic) pdf.text("Client initials: __________", 0.6, H-0.3);
+        pdf.text(`${tab==="invoice"?"Invoice":docTitle(tab)}${firm?" · "+firm:""} · Page ${i} of ${n}`, W-0.6, H-0.3, {align:"right"}); }
+    }).save();
+  }catch(e){ alert(e.message||String(e)); }
+  finally{ if(holder) holder.remove(); btn.disabled=false; btn.innerHTML=label; }
+}
 function showCheck(docName, miss, blocked){
   const old=document.getElementById("checkbox-ov"); if(old) old.remove();
   const ok = miss.length===0;
@@ -2451,6 +2508,7 @@ $("cliName").addEventListener("blur",()=>setTimeout(scHideSuggest,150));
 /* auto-save when printing or downloading (only while unlocked, never asks for the PIN) */
 const _scPrint=printDoc; printDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scPrint(); };
 const _scExport=exportDoc; exportDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scExport(); };
+const _scPdf=downloadPdf; downloadPdf=function(){ if(scKey && activeTab()==="retainer") scSave(true); return _scPdf(); };
 scRenderBar();
 
 /* ═════════ READ CLIENT DETAILS FROM A SCREENSHOT OF AN IRCC FORM (runs in the browser) ═════════ */
