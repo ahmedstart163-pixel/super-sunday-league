@@ -155,6 +155,7 @@
   .scdrop.on{border-color:var(--gold);background:#fbf7ec}
   #scImpReview{display:flex;flex-direction:column;gap:6px}
   .scmlist{display:flex;flex-direction:column;gap:6px} .scmrow{border:1px solid var(--line);border-radius:9px;padding:8px 10px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
+  .scmsearch{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:14px;font-family:inherit;margin:4px 0 10px;position:sticky;top:0}
   .scmrow span{color:var(--muted);font-size:12px} .scmrow .scsv{color:#7c5a10}
   @media print{ .scov,.scsuggest{display:none !important} }
   #paper3{position:relative}
@@ -543,6 +544,9 @@ body.forms-active .topbar .actions{display:none}
           <div><label>Phone</label><input type="text" id="cli2Phone" placeholder="(780) 000-0000" onchange="this.value=fmtPhone(this.value);this.dispatchEvent(new Event('input',{bubbles:true}))" /></div>
           <div><label>Email</label><input type="email" id="cli2Email" placeholder="client2@..." /></div>
         </div>
+        <label>Address</label>
+        <input type="text" id="cli2Addr" placeholder="Street, city, province/region, country" />
+        <button type="button" class="kb" style="margin-top:6px" onclick="$('cli2Addr').value=$('cliAddr').value; render();">Same address as first client</button>
       </div>
       <div class="v2box" id="g5Members">
         <label style="margin-top:0">Other group members / co-sponsors</label>
@@ -1432,6 +1436,7 @@ function render(){
         <div>${esc($("cliAddr").value||"[Address]")}</div>
         <div>${[esc($("cliPhone").value),esc($("cliEmail").value)].filter(Boolean).join(" · ")}</div>
         ${joint&&cli2?`${sp?`<h4 style="margin-top:10px">Sponsored ${esc(spRel)} — Principal Applicant</h4>`:""}<div class="nm" style="margin-top:${sp?0:8}px">${esc(cli2)}</div>
+        ${$("cli2Addr").value.trim()?`<div>${esc($("cli2Addr").value.trim())}</div>`:""}
         <div>${[esc($("cli2Phone").value),esc($("cli2Email").value)].filter(Boolean).join(" · ")}</div>`:""}
       </div>
     </div>
@@ -1621,7 +1626,7 @@ function render(){
       const c1=card("",sp?"The Client — Sponsor":mems.length?"The Client — Group contact":"The Client",$("cliName").value||"[Client name]",[["Home address",esc($("cliAddr").value)],["Telephone",esc($("cliPhone").value)],["Email",esc($("cliEmail").value)]]);
       const cR=card("r","The RCIC",rcic||"[RCIC name]",[["Firm",esc(firmName)],["College ID",`<b>${esc(rno)}</b>`],["Address",esc(addr)],["Telephone · Email",esc(ph)+(em?" · "+esc(em):"")]]);
       let extra="";
-      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
+      if(joint&&cli2) extra+=card("",sp?`Sponsored ${esc(spRel)} — Principal Applicant`:"Second client",cli2,[["Home address",esc($("cli2Addr").value.trim())],["Telephone",esc($("cli2Phone").value)],["Email",esc($("cli2Email").value)]]);
       mems.forEach(m=>{ extra+=card("","Client — Group member",m.name,[["Home address",esc(m.addr)],["Telephone",esc(m.phone)],["Email",esc(m.email)]]); });
       const parties=`<div class="cparties">${c1}${cR}${extra}</div>`;
       const oldHead=P.querySelector(".doc-head"), oldIntro=oldHead.nextElementSibling, oldParties=P.querySelector(".parties");
@@ -2422,8 +2427,11 @@ function scSuggest(){
 async function scManager(reopen){
   if(!await scUnlock()) return;
   document.querySelectorAll(".scov").forEach(o=>o.remove());
-  const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc([c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow"><button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
-  scModal(`<h4>Saved clients (${scList.length})</h4><div class="scmlist">${rows}</div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshots</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
+  const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow" data-q="${esc([c.name,c.phone,(c.phone||"").replace(/\D/g,""),c.email,c.street,c.city,c.postal,(c.services||[]).map(x=>x.program+" "+(x.fileNo||"")).join(" ")].filter(Boolean).join(" ").toLowerCase())}"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc([c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow"><button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
+  scModal(`<h4>Saved clients (${scList.length})</h4>${scList.length?`<input type="search" id="scmSearch" class="scmsearch" placeholder="Search name, phone, email, address or file no." aria-label="Search saved clients" autocomplete="off" />`:""}<div class="scmlist">${rows}<p id="scmNone" style="display:none">No client matches.</p></div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshots</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
+  const sb=$("scmSearch"); if(sb) sb.addEventListener("input",()=>{ const terms=sb.value.toLowerCase().trim().split(/\s+/).filter(Boolean); let n=0;
+    document.querySelectorAll(".scmrow").forEach(r=>{ const q=r.dataset.q||""; const ok=terms.every(t=>q.includes(t)||(/^[\d()+.\-]+$/.test(t)&&t.replace(/\D/g,"").length>=3&&q.includes(t.replace(/\D/g,"")))); r.style.display=ok?"":"none"; if(ok) n++; });
+    $("scmNone").style.display=n?"none":"block"; });
 }
 async function scChangePin(){
   document.querySelectorAll(".scov").forEach(o=>o.remove());
