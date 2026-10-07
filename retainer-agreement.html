@@ -135,6 +135,11 @@
   .chk input{width:auto}
   .pdate{display:none}
   .pdfpaper{box-shadow:none !important;border:0 !important;margin:0 !important;padding:0 !important;max-width:none !important;width:100% !important;border-radius:0 !important;background:#fff !important}
+  .doctoast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:400;display:flex;gap:10px;align-items:center;max-width:calc(100vw - 32px);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(15,28,46,.3);font-size:13.5px;transition:opacity .2s,transform .2s}
+  .doctoast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+  .doctoast .kb{white-space:nowrap}
+  @media print{ .doctoast{display:none !important} }
+  @media (prefers-reduced-motion: reduce){ .doctoast{transition:none} }
   .feesub{font-size:.86em;color:#5d6b7d}
   .scbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
   .kb{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit}
@@ -392,6 +397,7 @@ body.forms-active .topbar .actions{display:none}
   </div>
   
   <div class="actions">
+    <button class="btn btn-outline" onclick="docSave()" title="Save this document in the client's file">💾 Save</button>
     <button class="btn btn-outline" onclick="resetForm()" title="Start a new file">Reset</button>
     <button class="btn btn-outline" onclick="verifyDoc()" title="Check required fields">Check</button>
     <button class="btn btn-light" onclick="exportDoc()" title="Download as Word">
@@ -2462,15 +2468,26 @@ async function scSave(silent){
   if(!scKey){ if(silent) return; if(!await scUnlock()) return; }
   const i=scList.findIndex(x=>x.name.toLowerCase()===c.name.toLowerCase());
   const svc={date:$("adate").value||today(), program:$("program").value, fileNo:$("fileNo").value};
-  if(i>=0){ const old=scList[i]; const services=old.services||[]; if(!services.some(s=>s.fileNo===svc.fileNo&&s.program===svc.program)) services.push(svc); scList[i]={...old,...c,services,updated:new Date().toISOString()}; }
-  else scList.push({id:Date.now().toString(36),...c,services:[svc],updated:new Date().toISOString()});
+  const j2 = $("joint").checked && $("cli2Name").value.trim() ? { name:$("cli2Name").value.trim(), phone:$("cli2Phone").value.trim(), email:$("cli2Email").value.trim(), addr:$("cli2Addr").value.trim() } : null;
+  if(i>=0){ const old=scList[i]; const services=old.services||[]; if(!services.some(s=>s.fileNo===svc.fileNo&&s.program===svc.program)) services.push(svc); scList[i]={...old,...c,services,updated:new Date().toISOString()}; if(j2) scList[i].joint=j2; }
+  else scList.push({id:Date.now().toString(36),...c,services:[svc],updated:new Date().toISOString(),...(j2?{joint:j2}:{})});
+  if(j2){ /* the second client also gets their own saved-client entry, linked to the first */
+    const first=scList.find(x=>x.name.toLowerCase()===c.name.toLowerCase());
+    const k=scList.findIndex(x=>x.name.toLowerCase()===j2.name.toLowerCase());
+    const rec={ name:j2.name, phone:j2.phone, email:j2.email, addrFull:j2.addr, jointWith:first?first.id:"", updated:new Date().toISOString() };
+    if(k>=0){ const o=scList[k]; scList[k]={...o, name:rec.name, phone:rec.phone||o.phone||"", email:rec.email||o.email||"", addrFull:rec.addrFull||o.addrFull||"", jointWith:rec.jointWith||o.jointWith||"", updated:rec.updated}; }
+    else scList.push({id:Date.now().toString(36)+"j",...rec,services:[]});
+  }
   await scWrite(); scRenderBar(silent?"":"✓ Saved "+c.name);
 }
 function scFill(id){
   const c=(scList||[]).find(x=>x.id===id); if(!c) return;
   $("cliName").value=c.name; $("cliPhone").value=c.phone||""; $("cliEmail").value=c.email||"";
-  $("cliStreet").value=c.street||""; setCity(c.city||""); $("cliProv").value=c.prov||"AB"; $("cliPostal").value=c.postal||""; $("cliCountry").value=c.country||"Canada";
-  composeAddr(); ["cliName","cliPhone","cliEmail"].forEach(i=>syncFrom(i));
+  if(!c.street && c.addrFull){ $("cliStreet").value=c.addrFull; $("cliPostal").value=""; composeAddr(); $("cliAddr").value=c.addrFull; syncFrom("cliAddr"); }
+  else { $("cliStreet").value=c.street||""; setCity(c.city||""); $("cliProv").value=c.prov||"AB"; $("cliPostal").value=c.postal||""; $("cliCountry").value=c.country||"Canada"; composeAddr(); }
+  ["cliName","cliPhone","cliEmail"].forEach(i=>syncFrom(i));
+  if(c.joint && c.joint.name){ $("joint").checked=true; onJoint(); $("cli2Name").value=c.joint.name; $("cli2Phone").value=c.joint.phone||""; $("cli2Email").value=c.joint.email||""; $("cli2Addr").value=c.joint.addr||""; }
+  else { ["cli2Name","cli2Phone","cli2Email","cli2Addr"].forEach(id=>$(id).value=""); if($("joint").checked && !window._autoJoint){ $("joint").checked=false; onJoint(); } }
   scHideSuggest(); try{ render(); renderConsult(); renderInvoice(); }catch(e){}
   scRenderBar("✓ Filled from saved client"+(c.services&&c.services.length?` — ${c.services.length} earlier service${c.services.length>1?"s":""}`:""));
 }
@@ -2488,7 +2505,7 @@ function scSuggest(){
 async function scManager(reopen){
   if(!await scUnlock()) return;
   document.querySelectorAll(".scov").forEach(o=>o.remove());
-  const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow" data-q="${esc([c.name,c.phone,(c.phone||"").replace(/\D/g,""),c.email,c.street,c.city,c.postal,(c.services||[]).map(x=>x.program+" "+(x.fileNo||"")).join(" ")].filter(Boolean).join(" ").toLowerCase())}"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc([c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow"><button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
+  const rows=scList.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="scmrow" data-q="${esc([c.name,c.phone,(c.phone||"").replace(/\D/g,""),c.email,c.street,c.city,c.postal,c.addrFull,c.joint&&c.joint.name,(c.services||[]).map(x=>x.program+" "+(x.fileNo||"")).join(" ")].filter(Boolean).join(" ").toLowerCase())}"><div><b>${esc(c.name)}</b><br/><span>${esc([c.phone,c.email].filter(Boolean).join(" · "))}</span><br/><span>${esc(c.addrFull||[c.street,c.city,c.prov,c.postal].filter(Boolean).join(", "))}</span>${c.joint&&c.joint.name?`<br/><span class="scsv">Joint with ${esc(c.joint.name)}</span>`:c.jointWith&&(scList.find(x=>x.id===c.jointWith)||{}).name?`<br/><span class="scsv">Joint with ${esc(scList.find(x=>x.id===c.jointWith).name)}</span>`:""}${c.services&&c.services.length?`<br/><span class="scsv">${esc(c.services.map(s=>`${s.program} · ${s.fileNo||""} · ${s.date}`).join(" | "))}</span>`:""}</div><div class="scrow">${(c.docs&&c.docs.length)?`<button class="kb" onclick="docList('${c.id}')">📄 ${c.docs.length} document${c.docs.length>1?"s":""}</button>`:""}<button class="kb pri" onclick="this.closest('.scov')._done(); scFill('${c.id}')">Use</button><button class="kb" onclick="scDelete('${c.id}')">Delete</button></div></div>`).join("") || `<p>No saved clients yet. Fill in a client and click 💾 Save client — clients are also saved automatically when you print or download while unlocked.</p>`;
   scModal(`<h4>Saved clients (${scList.length})</h4>${scList.length?`<input type="search" id="scmSearch" class="scmsearch" placeholder="Search name, phone, email, address or file no." aria-label="Search saved clients" autocomplete="off" />`:""}<div class="scmlist">${rows}<p id="scmNone" style="display:none">No client matches.</p></div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scImport()">📷 Import from screenshots</button><button class="kb" onclick="scChangePin()">Change PIN</button><button class="kb" onclick="this.closest('.scov')._done(); scLock()">🔒 Lock</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
   const sb=$("scmSearch"); if(sb) sb.addEventListener("input",()=>{ const terms=sb.value.toLowerCase().trim().split(/\s+/).filter(Boolean); let n=0;
     document.querySelectorAll(".scmrow").forEach(r=>{ const q=r.dataset.q||""; const ok=terms.every(t=>q.includes(t)||(/^[\d()+.\-]+$/.test(t)&&t.replace(/\D/g,"").length>=3&&q.includes(t.replace(/\D/g,"")))); r.style.display=ok?"":"none"; if(ok) n++; });
@@ -2513,6 +2530,83 @@ $("cliName").addEventListener("blur",()=>setTimeout(scHideSuggest,150));
 const _scPrint=printDoc; printDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scPrint(); };
 const _scExport=exportDoc; exportDoc=function(){ if(scKey && activeTab()==="retainer") scSave(true); _scExport(); };
 const _scPdf=downloadPdf; downloadPdf=function(){ if(scKey && activeTab()==="retainer") scSave(true); return _scPdf(); };
+
+/* ═════════ SAVED DOCUMENTS — each finished agreement, invoice or letter is kept in the client's encrypted file ═════════ */
+const DOC_FORMS=["form","cform","iform","xform"];
+const DOC_SKIP=new Set([...FIRM_FIELDS,"showBadge","showInsignia","showLogo","showLogo2","showLogo3","showBadge2","showBadge3","showInsignia2","showInsignia3","payAccept","assist"]);
+const DOC_KIND={retainer:"Retainer agreement",consult:"Initial consultation",invoice:"Invoice",close:"File closing letter"};
+const docCopy=o=>JSON.parse(JSON.stringify(o==null?null:o));
+function docSnapshot(){
+  const f={};
+  DOC_FORMS.forEach(fid=>{ const fm=$(fid); if(fm) fm.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{ if(el.type==="file"||DOC_SKIP.has(el.id)) return; f[el.id]=(el.type==="checkbox"||el.type==="radio")?el.checked:el.value; }); });
+  return {v:1,f,members:docCopy(members),disb:docCopy(disb),invSvc:docCopy(invSvc),invDisb:docCopy(invDisb),xState:docCopy(xState),xCloseManual,sigRcicDate,sigCliDate,sigCli2Date,csigR,csigC,cAgreementDate,iDate};
+}
+function docRestore(sn){
+  DOC_FORMS.forEach(fid=>{ const fm=$(fid); if(fm) fm.querySelectorAll("input[id],select[id],textarea[id]").forEach(el=>{ if(!(el.id in sn.f)) return; if(el.type==="checkbox"||el.type==="radio") el.checked=!!sn.f[el.id]; else el.value=sn.f[el.id]; }); });
+  members=sn.members||[]; disb=sn.disb||[]; invSvc=sn.invSvc||[]; invDisb=sn.invDisb||[]; xState=sn.xState||{}; xCloseManual=!!sn.xCloseManual;
+  sigRcicDate=sn.sigRcicDate||""; sigCliDate=sn.sigCliDate||""; sigCli2Date=sn.sigCli2Date||""; csigR=sn.csigR||""; csigC=sn.csigC||"";
+  cAgreementDate=sn.cAgreementDate||today(); iDate=sn.iDate||today();
+  window._cDateTouched=true; window._xOpenTouched=true; window._xRecvTouched=true; window._xInvTouched=true; invoiceTouched=true; window._autoJoint=false; window._lastProg=$("program").value;
+  if($("cliCityOther")) $("cliCityOther").style.display=$("cliCity").value==="__other"?"block":"none";
+  [()=>onJoint(),()=>onFeeMethod(),()=>onPayMode(),()=>syncProgUI(),()=>onSpStream(true),()=>renderMembers(),()=>renderDisb(),()=>renderISvc(),()=>renderIDisb(),()=>renderXChecks(),()=>renderAll(),()=>renderClose()].forEach(fn=>{ try{ fn(); }catch(e){ console.warn(e); } });
+}
+function docTabName(tab){ const v=id=>($(id)&&$(id).value||"").trim(); return tab==="invoice"?(v("iName")||v("cliName")):tab==="consult"?(v("ccliName")||v("cliName")):tab==="close"?(v("xName")||v("cliName")):v("cliName"); }
+function docRef(tab){ const v=id=>($(id)&&$(id).value||"").trim(); return tab==="invoice"?v("iNo"):tab==="consult"?v("cfileNo"):tab==="close"?v("xFile"):v("fileNo"); }
+let docOpenIds={}; /* per tab: the saved document on screen, so Save updates it instead of adding a copy */
+function docToast(msg,btn){
+  let t=$("docToast"); if(!t){ t=document.createElement("div"); t.id="docToast"; t.className="doctoast"; t.setAttribute("role","status"); document.body.appendChild(t); }
+  t.innerHTML=`<span>${msg}</span>`+(btn?`<button type="button" class="kb">${btn.label}</button>`:"");
+  if(btn) t.querySelector("button").onclick=()=>{ t.classList.remove("on"); btn.fn(); };
+  t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),btn?9000:4000);
+}
+async function docSave(silent){
+  const tab=activeTab(); const name=docTabName(tab);
+  if(!name){ if(!silent) alert("Type the client's name first."); return false; }
+  if(!scKey){ if(silent){ docToast(`Not saved to ${esc(name)}'s file — saved clients are locked.`,{label:"🔒 Unlock and save",fn:()=>docSave(false)}); return false; } if(!await scUnlock()) return false; }
+  if(tab==="retainer" && name.toLowerCase()===($("cliName").value||"").trim().toLowerCase()) await scSave(true);
+  let c=scList.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  if(!c){ c={id:Date.now().toString(36),name,services:[],updated:new Date().toISOString()}; if(name.toLowerCase()===($("cliName").value||"").trim().toLowerCase()) Object.assign(c,scCurrent()); scList.push(c); }
+  c.docs=c.docs||[];
+  const ref=docRef(tab), now=new Date().toISOString();
+  const rec={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),kind:tab,title:docFileName(tab),ref,saved:now,snap:docSnapshot()};
+  let i=c.docs.findIndex(d=>d.id===docOpenIds[tab] && d.kind===tab);
+  if(i<0) i=c.docs.findIndex(d=>d.kind===tab && (d.ref||"")===ref && ref);
+  if(i>=0){ rec.id=c.docs[i].id; rec.created=c.docs[i].created||c.docs[i].saved; c.docs[i]=rec; } else { rec.created=now; c.docs.push(rec); }
+  docOpenIds[tab]=rec.id; c.updated=now;
+  await scWrite(); scRenderBar(`✓ Saved ${rec.title}`);
+  docToast(`✓ Saved in ${esc(c.name)}'s file — reopen it any time from 📇 Saved clients.`);
+  return true;
+}
+async function docList(cid){
+  if(!await scUnlock()) return;
+  const c=scList.find(x=>x.id===cid); if(!c) return;
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  const docs=(c.docs||[]).slice().sort((a,b)=>(b.saved||"").localeCompare(a.saved||""));
+  const rows=docs.map(d=>`<div class="scmrow"><div><b>${esc(d.title)}</b><br/><span>${esc(DOC_KIND[d.kind]||d.kind)}${d.ref?" · "+esc(d.ref):""} · saved ${esc((d.saved||"").slice(0,10))}</span></div><div class="scrow"><button class="kb pri" onclick="docOpen('${c.id}','${d.id}')">Open</button><button class="kb" onclick="docDelete('${c.id}','${d.id}')">Delete</button></div></div>`).join("")||"<p>No saved documents yet.</p>";
+  scModal(`<h4>${esc(c.name)} — documents (${docs.length})</h4><p>Open a document to view it, print it again, or make changes. Press 💾 Save to keep the changes.</p><div class="scmlist">${rows}</div><div class="scrow" style="margin-top:10px"><button class="kb" onclick="scManager(true)">← Saved clients</button><button class="kb pri" onclick="this.closest('.scov')._done()">Close</button></div>`);
+}
+function docOpen(cid,did){
+  const c=(scList||[]).find(x=>x.id===cid); const d=c&&(c.docs||[]).find(x=>x.id===did); if(!d) return;
+  if(($("cliName").value||"").trim() && !Object.values(docOpenIds).includes(did) && !confirm(`Open "${d.title}"? It replaces what's on screen now. Save the current document first if you need it.`)) return;
+  document.querySelectorAll(".scov").forEach(o=>o.remove());
+  docRestore(d.snap); docOpenIds={}; docOpenIds[d.kind]=d.id; showTab(d.kind);
+  docToast(`Opened ${esc(d.title)}.`);
+}
+async function docDelete(cid,did){
+  const c=scList.find(x=>x.id===cid); const d=c&&(c.docs||[]).find(x=>x.id===did); if(!d) return;
+  if(!confirm(`Delete "${d.title}" from ${c.name}'s file? Copies you already downloaded or printed are not affected.`)) return;
+  c.docs=c.docs.filter(x=>x.id!==did); for(const k in docOpenIds) if(docOpenIds[k]===did) delete docOpenIds[k]; await scWrite(); docList(cid);
+}
+/* save automatically whenever a finished document is downloaded or printed */
+function docAuto(){ if(getMissing(activeTab()).length) return; docSave(true); }
+{ const _p=printDoc; printDoc=function(){ _p(); docAuto(); };
+  const _e=exportDoc; exportDoc=function(){ _e(); docAuto(); };
+  const _d=downloadPdf; downloadPdf=function(){ const r=_d(); docAuto(); return r; }; }
+/* a new file starts a new document */
+{ const _r=doReset; doReset=function(){ docOpenIds={}; return _r.apply(this,arguments); }; }
+/* picking a different saved client starts a new document */
+{ const _f=scFill; scFill=function(){ docOpenIds={}; return _f.apply(this,arguments); }; }
+
 scRenderBar();
 
 /* ═════════ READ CLIENT DETAILS FROM A SCREENSHOT OF AN IRCC FORM (runs in the browser) ═════════ */
