@@ -1605,6 +1605,53 @@
 (function(){
 "use strict";
 const { PDFDocument, rgb, degrees, StandardFonts, PDFName, PDFString, PDFArray } = PDFLib;
+
+/* Locked PDFs. Many government forms (IRCC, CRA…) are encrypted with an "owner password": anyone can
+   open and fill them, but the file itself is encrypted, and pdf-lib refuses to edit encrypted files.
+   When that happens Majd unlocks a copy in the browser (only files that open without a password) using
+   a pdf-lib fork that can decrypt, loaded only when a locked file actually turns up. Nothing is uploaded. */
+const UNLOCK_LIB_URL="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.11.1/dist/pdf-lib.min.js";
+let unlockLibP=null;
+function loadUnlockLib(){
+  if(unlockLibP) return unlockLibP;
+  unlockLibP=new Promise((res,rej)=>{
+    const keep=window.PDFLib, s=document.createElement("script"); s.src=UNLOCK_LIB_URL;
+    s.onload=()=>{ const lib=window.PDFLib; window.PDFLib=keep; (lib && lib!==keep) ? res(lib) : rej(new Error("unlock helper missing")); };
+    s.onerror=()=>{ window.PDFLib=keep; unlockLibP=null; rej(new Error("Couldn't load the unlock helper — check your connection.")); };
+    document.head.appendChild(s);
+  });
+  return unlockLibP;
+}
+function pdfLooksEncrypted(bytes){
+  // "/Encrypt" sits in the trailer (or the cross-reference stream) of every encrypted PDF
+  const pat=[47,69,110,99,114,121,112,116]; // "/Encrypt"
+  outer: for(let i=0, n=bytes.length-pat.length; i<=n; i++){
+    if(bytes[i]!==47) continue;
+    for(let k=1;k<pat.length;k++) if(bytes[i+k]!==pat[k]) continue outer;
+    return true;
+  }
+  return false;
+}
+async function unlockPdfBytes(bytes){
+  if(!pdfLooksEncrypted(bytes)) return bytes;
+  try{ await PDFLib.PDFDocument.load(bytes,{updateMetadata:false}); return bytes; } // not actually encrypted
+  catch(e){ if(!/encrypt/i.test(e&&e.message||"")) return bytes; }
+  const lib=await loadUnlockLib();
+  const d=await lib.PDFDocument.load(bytes,{password:"",updateMetadata:false});
+  const ctx=d.context, N=n=>lib.PDFName.of(n);
+  // drop what only made sense in the encrypted file: the /Encrypt dictionary, the old object and
+  // cross-reference streams (already unpacked) and anything unreadable
+  for(const [ref,obj] of ctx.enumerateIndirectObjects()){
+    if(obj instanceof lib.PDFInvalidObject){ ctx.delete(ref); continue; }
+    const dict = obj instanceof lib.PDFDict ? obj : (obj && obj.dict instanceof lib.PDFDict ? obj.dict : null);
+    if(!dict) continue;
+    const type=dict.get(N("Type")), filter=dict.get(N("Filter"));
+    if(type===N("XRef") || type===N("ObjStm") || (filter===N("Standard") && dict.has(N("O")) && dict.has(N("U")))) ctx.delete(ref);
+  }
+  if(ctx.trailerInfo) delete ctx.trailerInfo.Encrypt;
+  return await d.save({useObjectStreams:false});
+}
+const LOCKED_MSG="This PDF is locked with a password, so Majd can't change it. Open it, use Print → Save as PDF, then edit the new copy.";
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 const BASE = 1.5;            // render scale (px per pt)
@@ -1732,6 +1779,8 @@ async function loadFile(file){
 async function loadDoc(bytes, name){
   busy(true);
   try{
+    // locked (owner-password) PDFs are unlocked first so every tool can edit them
+    try{ bytes = await unlockPdfBytes(bytes); }catch(e){ console.warn("unlock failed", e); }
     originalBytes = bytes;
     // pdf.js may detach the buffer it's given — hand it a copy.
     pdfDoc = await pdfjsLib.getDocument({ data: originalBytes.slice() }).promise;
@@ -4878,7 +4927,7 @@ async function exportPdf(){
     const suffix=mode==="secure"?"-redacted":mode==="flatten"?"-flattened":mode==="grayscale"?"-grayscale":"-edited";
     a.download=base+suffix+".pdf"; a.click(); setTimeout(()=>URL.revokeObjectURL(url),4000);
     toast(mode==="secure"?"Secure redaction verified and downloaded.":"Downloaded your PDF.");
-  }catch(err){ console.error(err); toast(err.message||"Export failed — see console for details.",true); }
+  }catch(err){ console.error(err); toast(/encrypt/i.test(err&&err.message||"") ? LOCKED_MSG : (err.message||"Export failed — see console for details."),true); }
   finally{ busy(false); }
 }
 
@@ -5043,7 +5092,8 @@ $("#mergeInput").onchange=async e=>{
     const names = orgGroupNames.slice();
     let added=0;
     for(const f of files){
-      const src=await PDFDocument.load(new Uint8Array(await f.arrayBuffer()));
+      let fb=new Uint8Array(await f.arrayBuffer()); try{ fb=await unlockPdfBytes(fb); }catch(_){ }
+      const src=await PDFDocument.load(fb);
       const idxs=src.getPageIndices();
       const copied=await out.copyPages(src, idxs);
       copied.forEach(p=>{ out.addPage(p); groupsArr.push(g); added++; });
