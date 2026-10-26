@@ -325,6 +325,12 @@
     display:none; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.3); z-index:6;
   }
   .anno.selected .del{display:grid}
+  .anno .dup{position:absolute; right:20px; top:-31px; width:24px; height:24px; border-radius:50%; padding:0;
+    background:#fff; color:#2563eb; border:2px solid #2563eb; display:none; place-items:center; box-shadow:0 1px 3px rgba(0,0,0,.25); z-index:6; cursor:pointer}
+  .anno .dup svg{width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+  .anno .dup:hover{background:#2563eb; color:#fff; border-color:#2563eb}
+  .anno.selected .dup{display:grid}
+  .anno.text .dup, .anno.field .dup{display:none !important}
   .anno.text{padding:0; min-width:24px; cursor:move}
   .anno.text.editing.selected{outline:none} .anno.text.editing .handle, .anno.text.editing .del{display:none !important}
   .anno.text .text-edit{color:#111; font-family:Helvetica,Arial,sans-serif; line-height:1.18; white-space:pre-wrap; word-break:break-word; outline:none; min-height:1em; caret-color:currentColor}
@@ -353,6 +359,7 @@
   .swatches .sw.on{box-shadow:0 0 0 2px var(--navy)}
   .stroke-bar{position:fixed; z-index:120}
   .stroke-bar.hide{display:none}
+  .stroke-bar{display:flex; gap:6px} .stroke-bar button.sb-dup{background:#2563eb}
   .stroke-bar button{display:flex; align-items:center; gap:6px; background:var(--danger); color:#fff;
     border:0; border-radius:9px; padding:9px 13px; font-size:13px; font-weight:700; font-family:inherit;
     box-shadow:0 3px 12px rgba(0,0,0,.28)}
@@ -3062,7 +3069,9 @@ function ensureStrokeBar(){
   strokeBar=el("div","stroke-bar hide");
   const btn=el("button"); btn.innerHTML='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg> Delete drawing';
   btn.onclick=()=>{ if(selected && selected.type==="draw") removeAnno(selected); };
-  strokeBar.appendChild(btn);
+  const dbtn=el("button","sb-dup"); dbtn.innerHTML='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/></svg> Duplicate';
+  dbtn.onclick=()=>{ if(selected && selected.type==="draw") duplicateAnno(selected); };
+  strokeBar.append(dbtn, btn);
   document.body.appendChild(strokeBar);
 }
 function positionStrokeBar(){
@@ -3071,7 +3080,7 @@ function positionStrokeBar(){
   const rec=pages[selected.page], bb=strokeBBox(selected);
   const r=rec.pageEl.getBoundingClientRect();
   const left=r.left + bb.maxX*zoom, top=r.top + bb.minY*zoom;
-  strokeBar.style.left=Math.min(window.innerWidth-150, Math.max(8, left-60))+"px";
+  strokeBar.style.left=Math.min(window.innerWidth-270, Math.max(8, left-60))+"px";
   strokeBar.style.top=Math.max(66, top-46)+"px";
   strokeBar.classList.remove("hide");
 }
@@ -3088,6 +3097,12 @@ function renderAnno(a){
     del.onpointerdown=ev=>ev.stopPropagation();
     del.onclick=ev=>{ ev.stopPropagation(); removeAnno(a); };
     n.appendChild(del); n._del=del;
+    // duplicate (signatures, images, stamps, shapes…) — text boxes have it in their own toolbar
+    const dup=el("button","dup"); dup.title="Duplicate (Ctrl+D)"; dup.setAttribute("aria-label","Duplicate");
+    dup.innerHTML='<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 012-2h10"/></svg>';
+    dup.onpointerdown=ev=>ev.stopPropagation();
+    dup.onclick=ev=>{ ev.stopPropagation(); duplicateAnno(a); };
+    n.appendChild(dup);
     ["nw","ne","sw","se","n","s","e","w"].forEach(corner=>{
       const h=el("div","handle "+corner);
       h.onpointerdown=ev=>startResize(ev,a,corner);
@@ -3209,6 +3224,22 @@ function renderAnno(a){
   }
 }
 
+// copy of an object, placed a little down and to the right (kept on the page), then selected
+function duplicateAnno(a){
+  if(!a || a.type==="field") return null;
+  const c={}; for(const k of Object.keys(a)) if(k[0]!=="_") c[k]=a[k];
+  const copy=JSON.parse(JSON.stringify(c)); copy.id=nextId++;
+  const rec=pages[a.page], pw=rec?rec.pageEl.offsetWidth/zoom:1e9, ph=rec?rec.pageEl.offsetHeight/zoom:1e9, off=16;
+  if(a.type==="draw"){ const bb=strokeBBox(a); const dx=bb.maxX+off<pw?off:-off, dy=bb.maxY+off<ph?off:-off; copy.pts=copy.pts.map(q=>[q[0]+dx,q[1]+dy]); }
+  else {
+    const w=a.w||0, h=a.h||(a._node?a._node.offsetHeight:0);
+    copy.x=a.x+(a.x+w+off<=pw?off:-off); copy.y=a.y+(a.y+h+off<=ph?off:-off);
+  }
+  annos.push(copy);
+  if(copy.type==="draw") redrawPageStrokes(copy.page); else renderAnno(copy);
+  select(copy); snapshot();
+  return copy;
+}
 function removeAnno(a){
   if(a._node) a._node.remove();
   annos=annos.filter(x=>x!==a);
@@ -3414,11 +3445,7 @@ $("#tbItalic").onclick=()=>{ if(!selected)return; selected.italic=!selected.ital
 $("#tbFont").onchange=()=>{ if(!selected)return; selected.font=$("#tbFont").value; renderAnno(selected); snapshot(); };
 $("#tbColor").oninput=()=>{ if(!selected)return; selected.color=$("#tbColor").value; rememberTextColor(selected.color); renderAnno(selected); };
 $("#tbColor").onchange=()=>{ if(selected) snapshot(); };
-$("#tbDup").onclick=()=>{
-  if(!selected || selected.type!=="text") return;
-  const c=Object.assign({},selected); delete c._node; c.id=nextId++; c.x+=14; c.y+=14;
-  annos.push(c); renderAnno(c); select(c); snapshot();
-};
+$("#tbDup").onclick=()=>{ if(selected && selected.type==="text") duplicateAnno(selected); };
 $("#tbDel").onclick=()=>{ if(selected) removeAnno(selected); };
 $("#tbLink").onclick=()=> toast("Clickable links aren't in this build yet — want me to add them?",true);
 $("#tbMove").addEventListener("pointerdown",e=>{
@@ -4568,6 +4595,7 @@ document.addEventListener("keydown",e=>{
   const typing = tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(ae&&ae.isContentEditable);
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z" && !typing){ e.preventDefault(); e.shiftKey?doRedo():doUndo(); }
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="y" && !typing){ e.preventDefault(); doRedo(); }
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="d" && !typing && selected && selected.type!=="field"){ e.preventDefault(); duplicateAnno(selected); }
   if((e.key==="Delete"||e.key==="Backspace") && selected && !typing){ e.preventDefault(); removeAnno(selected); }
 });
 
