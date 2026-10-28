@@ -1041,7 +1041,8 @@
   <button class="enav" id="readerNav"><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h6v16H5a2 2 0 01-2-2z"/><path d="M21 5a2 2 0 00-2-2h-6v16h6a2 2 0 002-2z"/></svg>Reader</button>
 </nav>
 
-<div class="toolbar" id="toolbar" style="display:none">
+<!-- id/class chosen so ad-block lists that hide "body > div#toolbar" or div[class="toolbar"] leave it alone -->
+<div class="toolbar majd-tools" id="majdTools" style="display:none">
   <div class="toolgroup">
   <button class="tool active" data-tool="select"><svg viewBox="0 0 24 24"><path d="M4 4l7 16 2-7 7-2z"/></svg><span>Select</span></button>
   <button class="tool" id="textBtn"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M9 19h6"/></svg><span>Text</span><svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -1693,7 +1694,7 @@ function toast(msg, err){
 const busy = on => $("#busy").classList.toggle("hide", !on);
 
 function layout(){
-  const tb=$("#topbar"), nv=$("#editNav"), tl=$("#toolbar");
+  const tb=$("#topbar"), nv=$("#editNav"), tl=$("#majdTools");
   let h = tb ? tb.offsetHeight : 56;
   if(nv && nv.style.display!=="none") h += nv.offsetHeight;
   if(tl && tl.style.display!=="none") h += tl.offsetHeight;
@@ -1704,7 +1705,7 @@ function layout(){
 }
 window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitToWidth(); });
 // re-measure whenever a bar above the page changes height or is shown/hidden, so the page never slides under the toolbar
-if(window.ResizeObserver){ const ro=new ResizeObserver(()=>layout()); ["#topbar","#editNav","#toolbar"].forEach(s=>{ const n=document.querySelector(s); if(n) ro.observe(n); }); }
+if(window.ResizeObserver){ const ro=new ResizeObserver(()=>layout()); ["#topbar","#editNav","#majdTools"].forEach(s=>{ const n=document.querySelector(s); if(n) ro.observe(n); }); }
 
 /* ---------------- file loading ---------------- */
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
@@ -1731,7 +1732,7 @@ function goHome(){
   const ph=$("#pages"); if(ph) ph.innerHTML="";
   { const ov=$("#orgView"); if(ov) ov.classList.add("hide"); }
   $("#editNav").style.display="none";
-  $("#toolbar").style.display="none";
+  $("#majdTools").style.display="none";
   $("#zoomBox").style.display="none";
   $("#pagesBtn").classList.add("hide");
   setSidebarOpen(false);
@@ -1798,7 +1799,7 @@ async function loadDoc(bytes, name){
     $("#empty").style.display="none";
     $("#stage").style.display="block";
     $("#editNav").style.display="flex";
-    $("#toolbar").style.display="flex";
+    $("#majdTools").style.display="flex";
     $("#zoomBox").style.display="flex";
     $("#pagesBtn").classList.remove("hide");
     $("#downloadBtn").disabled=false;
@@ -5075,7 +5076,7 @@ function positionOrgView(){
 async function showOrganizeView(){
   if(!pdfDoc) return;
   setNav($("#organizeBtn"));
-  $("#toolbar").style.display="none";
+  $("#majdTools").style.display="none";
   $("#stage").style.display="none";
   if(typeof showFab==="function") showFab(false);
   positionOrgView();
@@ -5085,7 +5086,7 @@ async function showOrganizeView(){
 function showEditView(){
   setNav(navEdit);
   $("#orgView").classList.add("hide");
-  $("#toolbar").style.display="flex";
+  $("#majdTools").style.display="flex";
   $("#stage").style.display="block";
   layout(); // the page area must start below the toolbar again (it may have been measured while the toolbar was hidden)
   if(pdfDoc && !userZoomed) fitToWidth();
