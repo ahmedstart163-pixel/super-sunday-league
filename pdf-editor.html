@@ -1703,6 +1703,8 @@ function layout(){
   if(sb) sb.style.top=h+"px";
 }
 window.addEventListener("resize",()=>{ layout(); if(pdfDoc && !userZoomed) fitToWidth(); });
+// re-measure whenever a bar above the page changes height or is shown/hidden, so the page never slides under the toolbar
+if(window.ResizeObserver){ const ro=new ResizeObserver(()=>layout()); ["#topbar","#editNav","#toolbar"].forEach(s=>{ const n=document.querySelector(s); if(n) ro.observe(n); }); }
 
 /* ---------------- file loading ---------------- */
 $("#openBtn").onclick = $("#openBtn2").onclick = ()=> $("#fileInput").click();
@@ -5085,6 +5087,8 @@ function showEditView(){
   $("#orgView").classList.add("hide");
   $("#toolbar").style.display="flex";
   $("#stage").style.display="block";
+  layout(); // the page area must start below the toolbar again (it may have been measured while the toolbar was hidden)
+  if(pdfDoc && !userZoomed) fitToWidth();
   if(typeof showFab==="function") showFab(true);
 }
 navEdit.onclick=showEditView;
